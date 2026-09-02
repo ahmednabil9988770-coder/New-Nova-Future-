@@ -133,6 +133,106 @@
 
 
         // ================================
+        // تحميل الدروس
+        // ================================
+
+        async function loadLessons() {
+
+            const lessonsList =
+                document.getElementById("lessonsList");
+
+            lessonsList.innerHTML =
+                "جاري تحميل الدروس...";
+
+
+            try {
+
+                const lessonsSnapshot =
+                    await getDocs(
+                        collection(db, "lessons")
+                    );
+
+
+                lessonsList.innerHTML = "";
+
+
+                if (lessonsSnapshot.empty) {
+
+                    lessonsList.innerHTML =
+                        "<p>لا توجد دروس متاحة حاليًا.</p>";
+
+                    return;
+                }
+
+
+                lessonsSnapshot.forEach((lessonDoc) => {
+
+                    const lessonData =
+                        lessonDoc.data();
+
+
+                    const lessonCard =
+                        document.createElement("div");
+
+
+                    lessonCard.style.border =
+                        "1px solid #ddd";
+
+                    lessonCard.style.padding =
+                        "15px";
+
+                    lessonCard.style.marginBottom =
+                        "10px";
+
+                    lessonCard.style.borderRadius =
+                        "10px";
+
+
+                    const title =
+                        document.createElement("h3");
+
+                    title.textContent =
+                        lessonData.title || "بدون عنوان";
+
+
+                    const course =
+                        document.createElement("p");
+
+                    course.textContent =
+                        "الدورة: " +
+                        (lessonData.courseName || "غير محددة");
+
+
+                    const content =
+                        document.createElement("p");
+
+                    content.textContent =
+                        lessonData.content || "بدون محتوى";
+
+
+                    lessonCard.appendChild(title);
+
+                    lessonCard.appendChild(course);
+
+                    lessonCard.appendChild(content);
+
+                    lessonsList.appendChild(lessonCard);
+
+                });
+
+
+            } catch (error) {
+
+                console.error("Lessons error:", error);
+
+                lessonsList.innerHTML =
+                    "<p>حدث خطأ أثناء تحميل الدروس ❌</p>";
+            }
+
+        }
+
+
+        // ================================
         // التحقق من صلاحية الطالب
         // ================================
 
@@ -196,9 +296,11 @@
                 }
 
 
-                // بعد التأكد أن الحساب طالب
-                // نحمل الدورات
-                loadCourses();
+                // تحميل الدورات
+                await loadCourses();
+
+                // تحميل الدروس
+                await loadLessons();
 
 
             } catch (error) {
@@ -206,7 +308,7 @@
                 console.error("Student error:", error);
 
                 alert(
-                    "حدث خطأ أثناء التحقق من الصلاحيات ❌"
+                    "حدث خطأ أثناء تحميل لوحة الطالب ❌"
                 );
 
                 window.location.href =
@@ -231,6 +333,8 @@
 
 
     <main>
+
+        <!-- الترحيب -->
 
         <section>
 
@@ -259,6 +363,23 @@
 
             <div id="coursesList">
                 جاري تحميل الدورات...
+            </div>
+
+        </section>
+
+
+        <!-- الدروس -->
+
+        <section>
+
+            <h2>الدروس 📖</h2>
+
+            <p>
+                الدروس المتاحة لك:
+            </p>
+
+            <div id="lessonsList">
+                جاري تحميل الدروس...
             </div>
 
         </section>
