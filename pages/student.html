@@ -10,11 +10,21 @@
 
     <script type="module">
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+        import {
+            doc,
+            getDoc,
+            collection,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
         import { auth, db } from "../js/firebase-config.js";
 
 
+        // ================================
         // تسجيل الخروج
+        // ================================
+
         window.logoutStudent = async function () {
 
             try {
@@ -32,7 +42,100 @@
         };
 
 
+        // ================================
+        // تحميل الدورات
+        // ================================
+
+        async function loadCourses() {
+
+            const coursesList =
+                document.getElementById("coursesList");
+
+            coursesList.innerHTML =
+                "جاري تحميل الدورات...";
+
+
+            try {
+
+                const coursesSnapshot =
+                    await getDocs(
+                        collection(db, "courses")
+                    );
+
+
+                coursesList.innerHTML = "";
+
+
+                if (coursesSnapshot.empty) {
+
+                    coursesList.innerHTML =
+                        "<p>لا توجد دورات متاحة حاليًا.</p>";
+
+                    return;
+                }
+
+
+                coursesSnapshot.forEach((courseDoc) => {
+
+                    const courseData =
+                        courseDoc.data();
+
+
+                    const courseCard =
+                        document.createElement("div");
+
+
+                    courseCard.style.border =
+                        "1px solid #ddd";
+
+                    courseCard.style.padding =
+                        "15px";
+
+                    courseCard.style.marginBottom =
+                        "10px";
+
+                    courseCard.style.borderRadius =
+                        "10px";
+
+
+                    const title =
+                        document.createElement("h3");
+
+                    title.textContent =
+                        courseData.name || "بدون اسم";
+
+
+                    const description =
+                        document.createElement("p");
+
+                    description.textContent =
+                        courseData.description || "بدون وصف";
+
+
+                    courseCard.appendChild(title);
+
+                    courseCard.appendChild(description);
+
+                    coursesList.appendChild(courseCard);
+
+                });
+
+
+            } catch (error) {
+
+                console.error("Courses error:", error);
+
+                coursesList.innerHTML =
+                    "<p>حدث خطأ أثناء تحميل الدورات ❌</p>";
+            }
+
+        }
+
+
+        // ================================
         // التحقق من صلاحية الطالب
+        // ================================
+
         onAuthStateChanged(auth, async (user) => {
 
             if (!user) {
@@ -42,53 +145,72 @@
                 return;
             }
 
+
             try {
 
-                const userDoc = await getDoc(
-                    doc(db, "users", user.uid)
-                );
+                const userDoc =
+                    await getDoc(
+                        doc(db, "users", user.uid)
+                    );
 
 
                 if (!userDoc.exists()) {
 
                     alert("بيانات المستخدم غير موجودة ❌");
 
-                    window.location.href = "login.html";
+                    window.location.href =
+                        "login.html";
 
                     return;
                 }
 
 
-                const userData = userDoc.data();
+                const userData =
+                    userDoc.data();
 
 
                 if (userData.role !== "student") {
 
-                    alert("ليس لديك صلاحية لدخول لوحة الطالب ❌");
+                    alert(
+                        "ليس لديك صلاحية لدخول لوحة الطالب ❌"
+                    );
 
 
                     if (userData.role === "admin") {
 
-                        window.location.href = "admin.html";
+                        window.location.href =
+                            "admin.html";
 
                     } else if (userData.role === "teacher") {
 
-                        window.location.href = "teacher.html";
+                        window.location.href =
+                            "teacher.html";
 
                     } else {
 
-                        window.location.href = "login.html";
+                        window.location.href =
+                            "login.html";
                     }
 
+                    return;
                 }
+
+
+                // بعد التأكد أن الحساب طالب
+                // نحمل الدورات
+                loadCourses();
+
 
             } catch (error) {
 
-                console.error(error);
+                console.error("Student error:", error);
 
-                alert("حدث خطأ أثناء التحقق من الصلاحيات ❌");
+                alert(
+                    "حدث خطأ أثناء التحقق من الصلاحيات ❌"
+                );
 
-                window.location.href = "login.html";
+                window.location.href =
+                    "login.html";
             }
 
         });
@@ -125,16 +247,24 @@
         </section>
 
 
+        <!-- الدورات -->
+
         <section>
 
             <h2>الدورات 📚</h2>
 
             <p>
-                هنا ستظهر الدورات المتاحة لك.
+                الدورات المتاحة لك:
             </p>
+
+            <div id="coursesList">
+                جاري تحميل الدورات...
+            </div>
 
         </section>
 
+
+        <!-- الامتحانات -->
 
         <section>
 
@@ -146,6 +276,8 @@
 
         </section>
 
+
+        <!-- النتائج -->
 
         <section>
 
