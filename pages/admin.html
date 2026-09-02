@@ -10,7 +10,7 @@
 
     <script type="module">
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-        import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
         import { auth, db } from "../js/firebase-config.js";
 
         onAuthStateChanged(auth, async (user) => {
@@ -36,11 +36,13 @@
                 if (userData.role !== "admin") {
                     alert("ليس لديك صلاحية لدخول لوحة الإدارة ❌");
                     window.location.href = "student.html";
+                    return;
                 }
 
             } catch (error) {
                 alert("حدث خطأ أثناء التحقق من الصلاحيات ❌");
                 window.location.href = "login.html";
+                return;
             }
         });
     </script>
@@ -61,12 +63,12 @@
         </section>
 
         <section>
-    <h2>إدارة المستخدمين 👥</h2>
-    <p>عرض المستخدمين المسجلين في المنصة.</p>
+            <h2>إدارة المستخدمين 👥</h2>
+            <p>عرض المستخدمين المسجلين في المنصة.</p>
 
-    <div id="usersList">
-        جاري تحميل المستخدمين...
-    </div>
+            <div id="usersList">
+                جاري تحميل المستخدمين...
+            </div>
         </section>
 
         <section>
