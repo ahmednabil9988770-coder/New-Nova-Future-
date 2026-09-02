@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
 
     <script type="module">
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         import {
             doc,
@@ -20,6 +20,24 @@
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         import { auth, db } from "../js/firebase-config.js";
+
+
+        // تسجيل الخروج
+        window.logoutAdmin = async function () {
+
+            try {
+
+                await signOut(auth);
+
+                window.location.href = "login.html";
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("حدث خطأ أثناء تسجيل الخروج ❌");
+            }
+        };
 
 
         onAuthStateChanged(auth, async (user) => {
@@ -37,16 +55,22 @@
                 );
 
                 if (!adminDoc.exists()) {
+
                     alert("بيانات المستخدم غير موجودة ❌");
+
                     window.location.href = "login.html";
+
                     return;
                 }
 
                 const adminData = adminDoc.data();
 
                 if (adminData.role !== "admin") {
+
                     alert("ليس لديك صلاحية لدخول لوحة الإدارة ❌");
+
                     window.location.href = "student.html";
+
                     return;
                 }
 
@@ -74,18 +98,21 @@
 
 
                     const name = document.createElement("p");
+
                     name.innerHTML =
                         "<strong>الاسم:</strong> " +
                         (userData.name || "بدون اسم");
 
 
                     const email = document.createElement("p");
+
                     email.innerHTML =
                         "<strong>البريد:</strong> " +
                         (userData.email || "بدون بريد");
 
 
                     const role = document.createElement("p");
+
                     role.innerHTML =
                         "<strong>الصلاحية:</strong> " +
                         (userData.role || "غير محددة");
@@ -93,11 +120,14 @@
 
                     const changeButton = document.createElement("button");
 
+
                     if (userData.role === "student") {
 
-                        changeButton.textContent = "تحويل إلى مدرس 👨‍🏫";
+                        changeButton.textContent =
+                            "تحويل إلى مدرس 👨‍🏫";
 
-                        changeButton.onclick = async function() {
+
+                        changeButton.onclick = async function () {
 
                             try {
 
@@ -108,7 +138,9 @@
                                     }
                                 );
 
-                                alert("تم تحويل المستخدم إلى مدرس ✅");
+                                alert(
+                                    "تم تحويل المستخدم إلى مدرس ✅"
+                                );
 
                                 location.reload();
 
@@ -120,13 +152,17 @@
                                     "حدث خطأ أثناء تغيير الصلاحية ❌"
                                 );
                             }
+
                         };
+
 
                     } else if (userData.role === "teacher") {
 
-                        changeButton.textContent = "تحويل إلى طالب 👨‍🎓";
+                        changeButton.textContent =
+                            "تحويل إلى طالب 👨‍🎓";
 
-                        changeButton.onclick = async function() {
+
+                        changeButton.onclick = async function () {
 
                             try {
 
@@ -137,7 +173,9 @@
                                     }
                                 );
 
-                                alert("تم تحويل المستخدم إلى طالب ✅");
+                                alert(
+                                    "تم تحويل المستخدم إلى طالب ✅"
+                                );
 
                                 location.reload();
 
@@ -149,21 +187,28 @@
                                     "حدث خطأ أثناء تغيير الصلاحية ❌"
                                 );
                             }
+
                         };
+
 
                     } else {
 
                         changeButton.textContent = "Admin 🔐";
+
                         changeButton.disabled = true;
                     }
 
 
                     userCard.appendChild(name);
+
                     userCard.appendChild(email);
+
                     userCard.appendChild(role);
+
                     userCard.appendChild(changeButton);
 
                     usersList.appendChild(userCard);
+
                 });
 
 
@@ -185,16 +230,28 @@
 <body>
 
     <header>
+
         <h1>Nova Future</h1>
+
         <p>لوحة الإدارة</p>
+
     </header>
 
 
     <main>
 
         <section>
+
             <h2>لوحة تحكم المدير ⚙️</h2>
-            <p>من هنا تتم إدارة المنصة بالكامل.</p>
+
+            <p>
+                من هنا تتم إدارة المنصة بالكامل.
+            </p>
+
+            <button onclick="logoutAdmin()">
+                تسجيل الخروج 🚪
+            </button>
+
         </section>
 
 
