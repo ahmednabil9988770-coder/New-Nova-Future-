@@ -15,7 +15,9 @@
             doc,
             getDoc,
             collection,
-            getDocs
+            getDocs,
+            addDoc,
+            serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         import { auth, db } from "../js/firebase-config.js";
@@ -133,6 +135,183 @@
 
 
         // ================================
+        // تحميل قائمة الدروس
+        // ================================
+
+        async function loadLessons() {
+
+            const lessonsList =
+                document.getElementById("lessonsList");
+
+            lessonsList.innerHTML =
+                "جاري تحميل الدروس...";
+
+
+            try {
+
+                const lessonsSnapshot =
+                    await getDocs(
+                        collection(db, "lessons")
+                    );
+
+
+                lessonsList.innerHTML = "";
+
+
+                if (lessonsSnapshot.empty) {
+
+                    lessonsList.innerHTML =
+                        "<p>لا توجد دروس حتى الآن.</p>";
+
+                    return;
+                }
+
+
+                lessonsSnapshot.forEach((lessonDoc) => {
+
+                    const lessonData =
+                        lessonDoc.data();
+
+
+                    const lessonCard =
+                        document.createElement("div");
+
+
+                    lessonCard.style.border =
+                        "1px solid #ddd";
+
+                    lessonCard.style.padding =
+                        "15px";
+
+                    lessonCard.style.marginBottom =
+                        "10px";
+
+                    lessonCard.style.borderRadius =
+                        "10px";
+
+
+                    const title =
+                        document.createElement("h3");
+
+                    title.textContent =
+                        lessonData.title || "بدون عنوان";
+
+
+                    const course =
+                        document.createElement("p");
+
+                    course.textContent =
+                        "الدورة: " +
+                        (lessonData.courseName || "غير محددة");
+
+
+                    const content =
+                        document.createElement("p");
+
+                    content.textContent =
+                        lessonData.content || "بدون محتوى";
+
+
+                    lessonCard.appendChild(title);
+
+                    lessonCard.appendChild(course);
+
+                    lessonCard.appendChild(content);
+
+                    lessonsList.appendChild(lessonCard);
+
+                });
+
+
+            } catch (error) {
+
+                console.error("Lessons error:", error);
+
+                lessonsList.innerHTML =
+                    "<p>حدث خطأ أثناء تحميل الدروس ❌</p>";
+            }
+
+        }
+
+
+        // ================================
+        // إضافة درس
+        // ================================
+
+        window.addLesson = async function () {
+
+            const courseName =
+                document.getElementById("lessonCourse").value;
+
+            const title =
+                document.getElementById("lessonTitle").value.trim();
+
+            const content =
+                document.getElementById("lessonContent").value.trim();
+
+
+            if (!courseName) {
+
+                alert("اختر الدورة أولًا ❌");
+
+                return;
+            }
+
+
+            if (!title) {
+
+                alert("اكتب عنوان الدرس أولًا ❌");
+
+                return;
+            }
+
+
+            if (!content) {
+
+                alert("اكتب محتوى الدرس أولًا ❌");
+
+                return;
+            }
+
+
+            try {
+
+                await addDoc(
+                    collection(db, "lessons"),
+                    {
+                        courseName: courseName,
+                        title: title,
+                        content: content,
+                        teacherId: auth.currentUser.uid,
+                        createdAt: serverTimestamp()
+                    }
+                );
+
+
+                alert("تمت إضافة الدرس بنجاح ✅");
+
+
+                document.getElementById("lessonTitle").value = "";
+
+                document.getElementById("lessonContent").value = "";
+
+
+                loadLessons();
+
+
+            } catch (error) {
+
+                console.error("Add lesson error:", error);
+
+                alert(
+                    "حدث خطأ أثناء إضافة الدرس ❌"
+                );
+            }
+
+        };
+
+
+        // ================================
         // التحقق من صلاحية المدرس
         // ================================
 
@@ -196,9 +375,45 @@
                 }
 
 
-                // بعد التأكد أن الحساب مدرس
-                // نحمل الدورات
-                loadCourses();
+                // بعد التأكد من صلاحية المدرس
+                await loadCourses();
+
+                // تحميل الدروس
+                await loadLessons();
+
+
+                // وضع أسماء الدورات داخل القائمة
+                const courseSelect =
+                    document.getElementById("lessonCourse");
+
+
+                const coursesSnapshot =
+                    await getDocs(
+                        collection(db, "courses")
+                    );
+
+
+                coursesSnapshot.forEach((courseDoc) => {
+
+                    const courseData =
+                        courseDoc.data();
+
+
+                    const option =
+                        document.createElement("option");
+
+
+                    option.value =
+                        courseData.name;
+
+
+                    option.textContent =
+                        courseData.name;
+
+
+                    courseSelect.appendChild(option);
+
+                });
 
 
             } catch (error) {
@@ -206,7 +421,7 @@
                 console.error("Teacher error:", error);
 
                 alert(
-                    "حدث خطأ أثناء التحقق من الصلاحيات ❌"
+                    "حدث خطأ أثناء تحميل لوحة المدرّس ❌"
                 );
 
                 window.location.href =
@@ -259,6 +474,59 @@
 
             <div id="coursesList">
                 جاري تحميل الدورات...
+            </div>
+
+        </section>
+
+
+        <!-- إضافة درس -->
+
+        <section>
+
+            <h2>إضافة درس جديد 📖</h2>
+
+
+            <select id="lessonCourse">
+
+                <option value="">
+                    اختر الدورة
+                </option>
+
+            </select>
+
+
+            <input
+                type="text"
+                id="lessonTitle"
+                placeholder="عنوان الدرس"
+            >
+
+
+            <textarea
+                id="lessonContent"
+                placeholder="محتوى الدرس"
+                rows="7"
+            ></textarea>
+
+
+            <br><br>
+
+
+            <button onclick="addLesson()">
+                إضافة الدرس ➕
+            </button>
+
+        </section>
+
+
+        <!-- الدروس -->
+
+        <section>
+
+            <h2>الدروس الموجودة 📖</h2>
+
+            <div id="lessonsList">
+                جاري تحميل الدروس...
             </div>
 
         </section>
