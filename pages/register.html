@@ -3,7 +3,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب - Nova Future</title><link rel="stylesheet" href="../css/style.css">
+<script type="module">
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import { auth } from "../js/firebase-config.js";
 
+    window.createAccount = async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            alert("تم إنشاء الحساب بنجاح ✅");
+            window.location.href = "login.html";
+        } catch (error) {
+            alert("حدث خطأ: " + error.message);
+        }
+    };
+</script>
 </head><body><header>
     <h1>Nova Future</h1>
     <p>إنشاء حساب جديد</p>
@@ -13,14 +31,14 @@
     <section>
         <h2>إنشاء حساب 🚀</h2>
 
-        <form>
-            <input type="text" placeholder="الاسم بالكامل" required>
-            <input type="email" placeholder="البريد الإلكتروني" required>
-            <input type="password" placeholder="كلمة المرور" required>
-            <input type="password" placeholder="تأكيد كلمة المرور" required>
+        <form onsubmit="createAccount(event)">
+    <input type="text" placeholder="الاسم بالكامل" required>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+    <input type="password" id="password" placeholder="كلمة المرور" required>
+    <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور" required>
 
-            <button type="submit">إنشاء الحساب</button>
-        </form>
+    <button type="submit">إنشاء الحساب</button>
+</form>
 
         <p>
             لديك حساب بالفعل؟
