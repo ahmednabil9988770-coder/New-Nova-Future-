@@ -11,8 +11,13 @@
         event.preventDefault();
 
         const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+const password = document.getElementById("password").value;
+const confirmPassword = document.getElementById("confirmPassword").value;
 
+if (password !== confirmPassword) {
+    alert("كلمتا المرور غير متطابقتين ❌");
+    return;
+}
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             alert("تم إنشاء الحساب بنجاح ✅");
