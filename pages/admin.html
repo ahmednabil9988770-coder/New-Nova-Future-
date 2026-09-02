@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -184,6 +185,57 @@
 
 
         // ================================
+        // إضافة امتحان
+        // ================================
+
+        window.addExam = async function () {
+
+            const examTitle =
+                document.getElementById("examTitle").value.trim();
+
+            const examDescription =
+                document.getElementById("examDescription").value.trim();
+
+
+            if (!examTitle) {
+
+                alert("اكتب اسم الامتحان أولًا ❌");
+
+                return;
+            }
+
+
+            try {
+
+                await addDoc(
+                    collection(db, "exams"),
+                    {
+                        title: examTitle,
+                        description: examDescription,
+                        createdAt: serverTimestamp()
+                    }
+                );
+
+
+                alert("تم إنشاء الامتحان بنجاح ✅");
+
+
+                document.getElementById("examTitle").value = "";
+
+                document.getElementById("examDescription").value = "";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("حدث خطأ أثناء إنشاء الامتحان ❌");
+            }
+
+        };
+
+
+        // ================================
         // التحقق من صلاحية الأدمن
         // ================================
 
@@ -233,7 +285,10 @@
                 }
 
 
+                // ================================
                 // تحميل المستخدمين
+                // ================================
+
                 const usersSnapshot =
                     await getDocs(
                         collection(db, "users")
@@ -513,15 +568,29 @@
         </section>
 
 
-        <!-- الامتحانات -->
+        <!-- إضافة امتحان -->
 
         <section>
 
-            <h2>إدارة الامتحانات 📝</h2>
+            <h2>إنشاء امتحان جديد 📝</h2>
 
-            <p>
-                متابعة وإدارة جميع الامتحانات.
-            </p>
+            <input
+                type="text"
+                id="examTitle"
+                placeholder="اسم الامتحان"
+            >
+
+            <textarea
+                id="examDescription"
+                placeholder="وصف الامتحان"
+                rows="5"
+            ></textarea>
+
+            <br><br>
+
+            <button onclick="addExam()">
+                إنشاء الامتحان ➕
+            </button>
 
         </section>
 
