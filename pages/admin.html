@@ -10,14 +10,17 @@
 
     <script type="module">
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
         import {
             doc,
             getDoc,
             collection,
-            getDocs
+            getDocs,
+            updateDoc
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         import { auth, db } from "../js/firebase-config.js";
+
 
         onAuthStateChanged(auth, async (user) => {
 
@@ -28,6 +31,7 @@
 
             try {
 
+                // التحقق من أن المستخدم Admin
                 const adminDoc = await getDoc(
                     doc(db, "users", user.uid)
                 );
@@ -46,7 +50,8 @@
                     return;
                 }
 
-                // تحميل المستخدمين بعد التأكد أن الحساب Admin
+
+                // تحميل المستخدمين
                 const usersSnapshot = await getDocs(
                     collection(db, "users")
                 );
@@ -55,43 +60,127 @@
 
                 usersList.innerHTML = "";
 
+
                 usersSnapshot.forEach((userDoc) => {
 
                     const userData = userDoc.data();
 
                     const userCard = document.createElement("div");
 
-                    userCard.innerHTML = `
-                        <p>
-                            <strong>الاسم:</strong>
-                            ${userData.name || "بدون اسم"}
-                        </p>
+                    userCard.style.border = "1px solid #ddd";
+                    userCard.style.padding = "15px";
+                    userCard.style.marginBottom = "10px";
+                    userCard.style.borderRadius = "10px";
 
-                        <p>
-                            <strong>البريد:</strong>
-                            ${userData.email || "بدون بريد"}
-                        </p>
 
-                        <p>
-                            <strong>الصلاحية:</strong>
-                            ${userData.role || "غير محددة"}
-                        </p>
+                    const name = document.createElement("p");
+                    name.innerHTML =
+                        "<strong>الاسم:</strong> " +
+                        (userData.name || "بدون اسم");
 
-                        <hr>
-                    `;
+
+                    const email = document.createElement("p");
+                    email.innerHTML =
+                        "<strong>البريد:</strong> " +
+                        (userData.email || "بدون بريد");
+
+
+                    const role = document.createElement("p");
+                    role.innerHTML =
+                        "<strong>الصلاحية:</strong> " +
+                        (userData.role || "غير محددة");
+
+
+                    const changeButton = document.createElement("button");
+
+                    if (userData.role === "student") {
+
+                        changeButton.textContent = "تحويل إلى مدرس 👨‍🏫";
+
+                        changeButton.onclick = async function() {
+
+                            try {
+
+                                await updateDoc(
+                                    doc(db, "users", userDoc.id),
+                                    {
+                                        role: "teacher"
+                                    }
+                                );
+
+                                alert("تم تحويل المستخدم إلى مدرس ✅");
+
+                                location.reload();
+
+                            } catch (error) {
+
+                                console.error(error);
+
+                                alert(
+                                    "حدث خطأ أثناء تغيير الصلاحية ❌"
+                                );
+                            }
+                        };
+
+                    } else if (userData.role === "teacher") {
+
+                        changeButton.textContent = "تحويل إلى طالب 👨‍🎓";
+
+                        changeButton.onclick = async function() {
+
+                            try {
+
+                                await updateDoc(
+                                    doc(db, "users", userDoc.id),
+                                    {
+                                        role: "student"
+                                    }
+                                );
+
+                                alert("تم تحويل المستخدم إلى طالب ✅");
+
+                                location.reload();
+
+                            } catch (error) {
+
+                                console.error(error);
+
+                                alert(
+                                    "حدث خطأ أثناء تغيير الصلاحية ❌"
+                                );
+                            }
+                        };
+
+                    } else {
+
+                        changeButton.textContent = "Admin 🔐";
+                        changeButton.disabled = true;
+                    }
+
+
+                    userCard.appendChild(name);
+                    userCard.appendChild(email);
+                    userCard.appendChild(role);
+                    userCard.appendChild(changeButton);
 
                     usersList.appendChild(userCard);
                 });
+
 
             } catch (error) {
 
                 console.error("Admin error:", error);
 
-                alert("حدث خطأ أثناء تحميل لوحة الإدارة ❌");
+                alert(
+                    "حدث خطأ أثناء تحميل لوحة الإدارة ❌"
+                );
             }
+
         });
+
     </script>
 </head>
+
 
 <body>
 
@@ -100,6 +189,7 @@
         <p>لوحة الإدارة</p>
     </header>
 
+
     <main>
 
         <section>
@@ -107,35 +197,65 @@
             <p>من هنا تتم إدارة المنصة بالكامل.</p>
         </section>
 
+
         <section>
+
             <h2>إدارة المستخدمين 👥</h2>
-            <p>المستخدمون المسجلون في المنصة:</p>
+
+            <p>
+                المستخدمون المسجلون في المنصة:
+            </p>
 
             <div id="usersList">
                 جاري تحميل المستخدمين...
             </div>
+
         </section>
 
+
         <section>
+
             <h2>إدارة الدورات 📚</h2>
-            <p>إضافة وتعديل وحذف الدورات.</p>
+
+            <p>
+                إضافة وتعديل وحذف الدورات.
+            </p>
+
         </section>
 
+
         <section>
+
             <h2>إدارة الامتحانات 📝</h2>
-            <p>متابعة وإدارة جميع الامتحانات.</p>
+
+            <p>
+                متابعة وإدارة جميع الامتحانات.
+            </p>
+
         </section>
 
+
         <section>
+
             <h2>الإحصائيات 📊</h2>
-            <p>هنا ستظهر إحصائيات المنصة.</p>
+
+            <p>
+                هنا ستظهر إحصائيات المنصة.
+            </p>
+
         </section>
 
+
         <section>
-            <a href="../index.html">العودة للرئيسية</a>
+
+            <a href="../index.html">
+                العودة للرئيسية
+            </a>
+
         </section>
 
     </main>
+
 
     <script src="../js/app.js"></script>
 
