@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/style.css">
 
     <script type="module">
+
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         import {
@@ -42,6 +43,7 @@
 
                 alert("حدث خطأ أثناء تسجيل الخروج ❌");
             }
+
         };
 
 
@@ -211,6 +213,7 @@
                     {
                         title: examTitle,
                         description: examDescription,
+                        questions: [],
                         createdAt: serverTimestamp()
                     }
                 );
@@ -286,24 +289,61 @@
                         "15px";
 
                     examCard.style.marginBottom =
-                        "10px";
+                        "15px";
 
                     examCard.style.borderRadius =
                         "10px";
 
 
-                    examCard.innerHTML = `
+                    const title =
+                        document.createElement("h3");
 
-                        <h3>
-                            ${examData.title || "بدون عنوان"}
-                        </h3>
+                    title.textContent =
+                        examData.title || "بدون عنوان";
 
-                        <p>
-                            ${examData.description || "بدون وصف"}
-                        </p>
 
-                    `;
+                    const description =
+                        document.createElement("p");
 
+                    description.textContent =
+                        examData.description || "بدون وصف";
+
+
+                    const questionCount =
+                        document.createElement("p");
+
+                    questionCount.textContent =
+                        "عدد الأسئلة: " +
+                        (examData.questions
+                            ? examData.questions.length
+                            : 0);
+
+
+                    const questionButton =
+                        document.createElement("button");
+
+                    questionButton.textContent =
+                        "إضافة سؤال ➕";
+
+
+                    questionButton.onclick =
+                        function () {
+
+                            openQuestionForm(
+                                examDoc.id,
+                                examData.title
+                            );
+
+                        };
+
+
+                    examCard.appendChild(title);
+
+                    examCard.appendChild(description);
+
+                    examCard.appendChild(questionCount);
+
+                    examCard.appendChild(questionButton);
 
                     examsList.appendChild(examCard);
 
@@ -319,6 +359,172 @@
             }
 
         }
+
+
+        // ================================
+        // فتح نموذج السؤال
+        // ================================
+
+        function openQuestionForm(examId, examTitle) {
+
+            document.getElementById("questionForm").style.display =
+                "block";
+
+
+            document.getElementById("selectedExamId").value =
+                examId;
+
+
+            document.getElementById("selectedExamName").textContent =
+                examTitle;
+
+
+            document.getElementById("questionText").value = "";
+
+            document.getElementById("option1").value = "";
+
+            document.getElementById("option2").value = "";
+
+            document.getElementById("option3").value = "";
+
+            document.getElementById("option4").value = "";
+
+            document.getElementById("correctAnswer").value = "0";
+
+
+            window.scrollTo({
+                top: document.getElementById("questionForm").offsetTop,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        // ================================
+        // إغلاق نموذج السؤال
+        // ================================
+
+        window.closeQuestionForm = function () {
+
+            document.getElementById("questionForm").style.display =
+                "none";
+
+        };
+
+
+        // ================================
+        // إضافة سؤال
+        // ================================
+
+        window.addQuestion = async function () {
+
+            const examId =
+                document.getElementById("selectedExamId").value;
+
+            const questionText =
+                document.getElementById("questionText").value.trim();
+
+            const option1 =
+                document.getElementById("option1").value.trim();
+
+            const option2 =
+                document.getElementById("option2").value.trim();
+
+            const option3 =
+                document.getElementById("option3").value.trim();
+
+            const option4 =
+                document.getElementById("option4").value.trim();
+
+            const correctAnswer =
+                Number(
+                    document.getElementById("correctAnswer").value
+                );
+
+
+            if (
+                !examId ||
+                !questionText ||
+                !option1 ||
+                !option2 ||
+                !option3 ||
+                !option4
+            ) {
+
+                alert("اكمل بيانات السؤال بالكامل ❌");
+
+                return;
+            }
+
+
+            try {
+
+                const examRef =
+                    doc(db, "exams", examId);
+
+
+                const examSnapshot =
+                    await getDoc(examRef);
+
+
+                if (!examSnapshot.exists()) {
+
+                    alert("الامتحان غير موجود ❌");
+
+                    return;
+                }
+
+
+                const examData =
+                    examSnapshot.data();
+
+
+                const questions =
+                    examData.questions || [];
+
+
+                questions.push({
+
+                    question:
+                        questionText,
+
+                    options: [
+                        option1,
+                        option2,
+                        option3,
+                        option4
+                    ],
+
+                    correctAnswer:
+                        correctAnswer
+
+                });
+
+
+                await updateDoc(
+                    examRef,
+                    {
+                        questions: questions
+                    }
+                );
+
+
+                alert("تمت إضافة السؤال بنجاح ✅");
+
+
+                closeQuestionForm();
+
+                loadExams();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("حدث خطأ أثناء إضافة السؤال ❌");
+            }
+
+        };
 
 
         // ================================
@@ -371,9 +577,7 @@
                 }
 
 
-                // ================================
                 // تحميل المستخدمين
-                // ================================
 
                 const usersSnapshot =
                     await getDocs(
@@ -548,10 +752,8 @@
                 });
 
 
-                // تحميل الدورات
                 loadCourses();
 
-                // تحميل الامتحانات
                 loadExams();
 
 
@@ -672,7 +874,7 @@
             <textarea
                 id="examDescription"
                 placeholder="وصف الامتحان"
-                rows="5"
+                rows="4"
             ></textarea>
 
             <br><br>
@@ -688,6 +890,98 @@
             <div id="examsList">
                 جاري تحميل الامتحانات...
             </div>
+
+        </section>
+
+
+        <!-- نموذج إضافة سؤال -->
+
+        <section
+            id="questionForm"
+            style="display: none;"
+        >
+
+            <h2>إضافة سؤال 📝</h2>
+
+            <p>
+                الامتحان:
+                <strong id="selectedExamName"></strong>
+            </p>
+
+
+            <input
+                type="hidden"
+                id="selectedExamId"
+            >
+
+
+            <input
+                type="text"
+                id="questionText"
+                placeholder="اكتب السؤال"
+            >
+
+
+            <input
+                type="text"
+                id="option1"
+                placeholder="الاختيار الأول"
+            >
+
+
+            <input
+                type="text"
+                id="option2"
+                placeholder="الاختيار الثاني"
+            >
+
+
+            <input
+                type="text"
+                id="option3"
+                placeholder="الاختيار الثالث"
+            >
+
+
+            <input
+                type="text"
+                id="option4"
+                placeholder="الاختيار الرابع"
+            >
+
+
+            <select id="correctAnswer">
+
+                <option value="0">
+                    الإجابة الصحيحة: الاختيار الأول
+                </option>
+
+                <option value="1">
+                    الإجابة الصحيحة: الاختيار الثاني
+                </option>
+
+                <option value="2">
+                    الإجابة الصحيحة: الاختيار الثالث
+                </option>
+
+                <option value="3">
+                    الإجابة الصحيحة: الاختيار الرابع
+                </option>
+
+            </select>
+
+
+            <br><br>
+
+
+            <button onclick="addQuestion()">
+                حفظ السؤال ✅
+            </button>
+
+
+            <button onclick="closeQuestionForm()">
+                إلغاء
+            </button>
 
         </section>
 
