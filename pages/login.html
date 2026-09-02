@@ -3,26 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>تسجيل الدخول - Nova Future</title>
 
     <link rel="stylesheet" href="../css/style.css">
 
     <script type="module">
         import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-        import { auth } from "../js/firebase-config.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+        import { auth, db } from "../js/firebase-config.js";
 
         window.loginUser = async function(event) {
             event.preventDefault();
 
-            const email = document.getElementById("email").value;
+            const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                const userCredential = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
 
-                alert("تم تسجيل الدخول بنجاح ✅");
+                const user = userCredential.user;
 
-                window.location.href = "student.html";
+                const userDoc = await getDoc(
+                    doc(db, "users", user.uid)
+                );
+
+                if (!userDoc.exists()) {
+                    alert("بيانات المستخدم غير موجودة ❌");
+                    return;
+                }
+
+                const userData = userDoc.data();
+
+                if (userData.role === "student") {
+                    window.location.href = "student.html";
+
+                } else if (userData.role === "teacher") {
+                    window.location.href = "teacher.html";
+
+                } else if (userData.role === "admin") {
+                    window.location.href = "admin.html";
+
+                } else {
+                    alert("نوع الحساب غير معروف ❌");
+                }
 
             } catch (error) {
                 alert("بيانات تسجيل الدخول غير صحيحة ❌");
@@ -40,9 +68,11 @@
 
     <main>
         <section>
+
             <h2>مرحبًا بعودتك 👋</h2>
 
             <form onsubmit="loginUser(event)">
+
                 <input
                     type="email"
                     id="email"
@@ -58,6 +88,7 @@
                 >
 
                 <button type="submit">تسجيل الدخول</button>
+
             </form>
 
             <p>
@@ -66,6 +97,7 @@
             </p>
 
             <a href="../index.html">العودة للرئيسية</a>
+
         </section>
     </main>
 
