@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -225,6 +224,8 @@
                 document.getElementById("examDescription").value = "";
 
 
+                loadExams();
+
             } catch (error) {
 
                 console.error(error);
@@ -233,6 +234,91 @@
             }
 
         };
+
+
+        // ================================
+        // عرض الامتحانات
+        // ================================
+
+        async function loadExams() {
+
+            const examsList =
+                document.getElementById("examsList");
+
+            examsList.innerHTML =
+                "جاري تحميل الامتحانات...";
+
+
+            try {
+
+                const examsSnapshot =
+                    await getDocs(
+                        collection(db, "exams")
+                    );
+
+
+                examsList.innerHTML = "";
+
+
+                if (examsSnapshot.empty) {
+
+                    examsList.innerHTML =
+                        "<p>لا توجد امتحانات حتى الآن.</p>";
+
+                    return;
+                }
+
+
+                examsSnapshot.forEach((examDoc) => {
+
+                    const examData =
+                        examDoc.data();
+
+
+                    const examCard =
+                        document.createElement("div");
+
+
+                    examCard.style.border =
+                        "1px solid #ddd";
+
+                    examCard.style.padding =
+                        "15px";
+
+                    examCard.style.marginBottom =
+                        "10px";
+
+                    examCard.style.borderRadius =
+                        "10px";
+
+
+                    examCard.innerHTML = `
+
+                        <h3>
+                            ${examData.title || "بدون عنوان"}
+                        </h3>
+
+                        <p>
+                            ${examData.description || "بدون وصف"}
+                        </p>
+
+                    `;
+
+
+                    examsList.appendChild(examCard);
+
+                });
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                examsList.innerHTML =
+                    "<p>حدث خطأ أثناء تحميل الامتحانات ❌</p>";
+            }
+
+        }
 
 
         // ================================
@@ -465,6 +551,9 @@
                 // تحميل الدورات
                 loadCourses();
 
+                // تحميل الامتحانات
+                loadExams();
+
 
             } catch (error) {
 
@@ -568,11 +657,11 @@
         </section>
 
 
-        <!-- إضافة امتحان -->
+        <!-- إدارة الامتحانات -->
 
         <section>
 
-            <h2>إنشاء امتحان جديد 📝</h2>
+            <h2>إدارة الامتحانات 📝</h2>
 
             <input
                 type="text"
@@ -591,6 +680,14 @@
             <button onclick="addExam()">
                 إنشاء الامتحان ➕
             </button>
+
+            <hr>
+
+            <h3>الامتحانات الموجودة</h3>
+
+            <div id="examsList">
+                جاري تحميل الامتحانات...
+            </div>
 
         </section>
 
