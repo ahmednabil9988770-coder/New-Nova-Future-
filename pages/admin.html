@@ -16,13 +16,18 @@
             getDoc,
             collection,
             getDocs,
-            updateDoc
+            updateDoc,
+            addDoc,
+            serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         import { auth, db } from "../js/firebase-config.js";
 
 
+        // ================================
         // تسجيل الخروج
+        // ================================
+
         window.logoutAdmin = async function () {
 
             try {
@@ -40,85 +45,260 @@
         };
 
 
-        onAuthStateChanged(auth, async (user) => {
+        // ================================
+        // إضافة دورة
+        // ================================
 
-            if (!user) {
-                window.location.href = "login.html";
+        window.addCourse = async function () {
+
+            const courseName =
+                document.getElementById("courseName").value.trim();
+
+            const courseDescription =
+                document.getElementById("courseDescription").value.trim();
+
+
+            if (!courseName) {
+
+                alert("اكتب اسم الدورة أولًا ❌");
+
                 return;
             }
 
+
             try {
 
-                // التحقق من أن المستخدم Admin
-                const adminDoc = await getDoc(
-                    doc(db, "users", user.uid)
+                await addDoc(
+                    collection(db, "courses"),
+                    {
+                        name: courseName,
+                        description: courseDescription,
+                        createdAt: serverTimestamp()
+                    }
                 );
+
+
+                alert("تمت إضافة الدورة بنجاح ✅");
+
+
+                document.getElementById("courseName").value = "";
+
+                document.getElementById("courseDescription").value = "";
+
+
+                loadCourses();
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("حدث خطأ أثناء إضافة الدورة ❌");
+            }
+
+        };
+
+
+        // ================================
+        // عرض الدورات
+        // ================================
+
+        async function loadCourses() {
+
+            const coursesList =
+                document.getElementById("coursesList");
+
+            coursesList.innerHTML =
+                "جاري تحميل الدورات...";
+
+
+            try {
+
+                const coursesSnapshot =
+                    await getDocs(
+                        collection(db, "courses")
+                    );
+
+
+                coursesList.innerHTML = "";
+
+
+                if (coursesSnapshot.empty) {
+
+                    coursesList.innerHTML =
+                        "<p>لا توجد دورات حتى الآن.</p>";
+
+                    return;
+                }
+
+
+                coursesSnapshot.forEach((courseDoc) => {
+
+                    const courseData =
+                        courseDoc.data();
+
+
+                    const courseCard =
+                        document.createElement("div");
+
+
+                    courseCard.style.border =
+                        "1px solid #ddd";
+
+                    courseCard.style.padding =
+                        "15px";
+
+                    courseCard.style.marginBottom =
+                        "10px";
+
+                    courseCard.style.borderRadius =
+                        "10px";
+
+
+                    courseCard.innerHTML = `
+
+                        <h3>
+                            ${courseData.name || "بدون اسم"}
+                        </h3>
+
+                        <p>
+                            ${courseData.description || "بدون وصف"}
+                        </p>
+
+                    `;
+
+
+                    coursesList.appendChild(courseCard);
+
+                });
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                coursesList.innerHTML =
+                    "<p>حدث خطأ أثناء تحميل الدورات ❌</p>";
+            }
+
+        }
+
+
+        // ================================
+        // التحقق من صلاحية الأدمن
+        // ================================
+
+        onAuthStateChanged(auth, async (user) => {
+
+            if (!user) {
+
+                window.location.href = "login.html";
+
+                return;
+            }
+
+
+            try {
+
+                const adminDoc =
+                    await getDoc(
+                        doc(db, "users", user.uid)
+                    );
+
 
                 if (!adminDoc.exists()) {
 
                     alert("بيانات المستخدم غير موجودة ❌");
 
-                    window.location.href = "login.html";
+                    window.location.href =
+                        "login.html";
 
                     return;
                 }
 
-                const adminData = adminDoc.data();
+
+                const adminData =
+                    adminDoc.data();
+
 
                 if (adminData.role !== "admin") {
 
-                    alert("ليس لديك صلاحية لدخول لوحة الإدارة ❌");
+                    alert(
+                        "ليس لديك صلاحية لدخول لوحة الإدارة ❌"
+                    );
 
-                    window.location.href = "student.html";
+                    window.location.href =
+                        "student.html";
 
                     return;
                 }
 
 
                 // تحميل المستخدمين
-                const usersSnapshot = await getDocs(
-                    collection(db, "users")
-                );
+                const usersSnapshot =
+                    await getDocs(
+                        collection(db, "users")
+                    );
 
-                const usersList = document.getElementById("usersList");
+
+                const usersList =
+                    document.getElementById("usersList");
+
 
                 usersList.innerHTML = "";
 
 
                 usersSnapshot.forEach((userDoc) => {
 
-                    const userData = userDoc.data();
-
-                    const userCard = document.createElement("div");
-
-                    userCard.style.border = "1px solid #ddd";
-                    userCard.style.padding = "15px";
-                    userCard.style.marginBottom = "10px";
-                    userCard.style.borderRadius = "10px";
+                    const userData =
+                        userDoc.data();
 
 
-                    const name = document.createElement("p");
+                    const userCard =
+                        document.createElement("div");
+
+
+                    userCard.style.border =
+                        "1px solid #ddd";
+
+                    userCard.style.padding =
+                        "15px";
+
+                    userCard.style.marginBottom =
+                        "10px";
+
+                    userCard.style.borderRadius =
+                        "10px";
+
+
+                    const name =
+                        document.createElement("p");
+
 
                     name.innerHTML =
                         "<strong>الاسم:</strong> " +
                         (userData.name || "بدون اسم");
 
 
-                    const email = document.createElement("p");
+                    const email =
+                        document.createElement("p");
+
 
                     email.innerHTML =
                         "<strong>البريد:</strong> " +
                         (userData.email || "بدون بريد");
 
 
-                    const role = document.createElement("p");
+                    const role =
+                        document.createElement("p");
+
 
                     role.innerHTML =
                         "<strong>الصلاحية:</strong> " +
                         (userData.role || "غير محددة");
 
 
-                    const changeButton = document.createElement("button");
+                    const changeButton =
+                        document.createElement("button");
 
 
                     if (userData.role === "student") {
@@ -127,33 +307,40 @@
                             "تحويل إلى مدرس 👨‍🏫";
 
 
-                        changeButton.onclick = async function () {
+                        changeButton.onclick =
+                            async function () {
 
-                            try {
+                                try {
 
-                                await updateDoc(
-                                    doc(db, "users", userDoc.id),
-                                    {
-                                        role: "teacher"
-                                    }
-                                );
+                                    await updateDoc(
+                                        doc(
+                                            db,
+                                            "users",
+                                            userDoc.id
+                                        ),
+                                        {
+                                            role: "teacher"
+                                        }
+                                    );
 
-                                alert(
-                                    "تم تحويل المستخدم إلى مدرس ✅"
-                                );
 
-                                location.reload();
+                                    alert(
+                                        "تم تحويل المستخدم إلى مدرس ✅"
+                                    );
 
-                            } catch (error) {
 
-                                console.error(error);
+                                    location.reload();
 
-                                alert(
-                                    "حدث خطأ أثناء تغيير الصلاحية ❌"
-                                );
-                            }
+                                } catch (error) {
 
-                        };
+                                    console.error(error);
+
+                                    alert(
+                                        "حدث خطأ أثناء تغيير الصلاحية ❌"
+                                    );
+                                }
+
+                            };
 
 
                     } else if (userData.role === "teacher") {
@@ -162,38 +349,46 @@
                             "تحويل إلى طالب 👨‍🎓";
 
 
-                        changeButton.onclick = async function () {
+                        changeButton.onclick =
+                            async function () {
 
-                            try {
+                                try {
 
-                                await updateDoc(
-                                    doc(db, "users", userDoc.id),
-                                    {
-                                        role: "student"
-                                    }
-                                );
+                                    await updateDoc(
+                                        doc(
+                                            db,
+                                            "users",
+                                            userDoc.id
+                                        ),
+                                        {
+                                            role: "student"
+                                        }
+                                    );
 
-                                alert(
-                                    "تم تحويل المستخدم إلى طالب ✅"
-                                );
 
-                                location.reload();
+                                    alert(
+                                        "تم تحويل المستخدم إلى طالب ✅"
+                                    );
 
-                            } catch (error) {
 
-                                console.error(error);
+                                    location.reload();
 
-                                alert(
-                                    "حدث خطأ أثناء تغيير الصلاحية ❌"
-                                );
-                            }
+                                } catch (error) {
 
-                        };
+                                    console.error(error);
+
+                                    alert(
+                                        "حدث خطأ أثناء تغيير الصلاحية ❌"
+                                    );
+                                }
+
+                            };
 
 
                     } else {
 
-                        changeButton.textContent = "Admin 🔐";
+                        changeButton.textContent =
+                            "Admin 🔐";
 
                         changeButton.disabled = true;
                     }
@@ -210,6 +405,10 @@
                     usersList.appendChild(userCard);
 
                 });
+
+
+                // تحميل الدورات
+                loadCourses();
 
 
             } catch (error) {
@@ -240,6 +439,8 @@
 
     <main>
 
+        <!-- لوحة الأدمن -->
+
         <section>
 
             <h2>لوحة تحكم المدير ⚙️</h2>
@@ -254,6 +455,8 @@
 
         </section>
 
+
+        <!-- إدارة المستخدمين -->
 
         <section>
 
@@ -270,16 +473,47 @@
         </section>
 
 
+        <!-- إضافة دورة -->
+
         <section>
 
-            <h2>إدارة الدورات 📚</h2>
+            <h2>إضافة دورة جديدة 📚</h2>
 
-            <p>
-                إضافة وتعديل وحذف الدورات.
-            </p>
+            <input
+                type="text"
+                id="courseName"
+                placeholder="اسم الدورة"
+            >
+
+            <textarea
+                id="courseDescription"
+                placeholder="وصف الدورة"
+                rows="5"
+            ></textarea>
+
+            <br><br>
+
+            <button onclick="addCourse()">
+                إضافة الدورة ➕
+            </button>
 
         </section>
 
+
+        <!-- الدورات -->
+
+        <section>
+
+            <h2>الدورات الموجودة 📚</h2>
+
+            <div id="coursesList">
+                جاري تحميل الدورات...
+            </div>
+
+        </section>
+
+
+        <!-- الامتحانات -->
 
         <section>
 
@@ -291,6 +525,8 @@
 
         </section>
 
+
+        <!-- الإحصائيات -->
 
         <section>
 
