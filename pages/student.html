@@ -9,13 +9,19 @@
     <link rel="stylesheet" href="../css/style.css">
 
     <script type="module">
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+        import {
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         import {
             doc,
             getDoc,
             collection,
-            getDocs
+            getDocs,
+            addDoc,
+            serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         import { auth, db } from "../js/firebase-config.js";
@@ -123,7 +129,7 @@
 
             } catch (error) {
 
-                console.error("Courses error:", error);
+                console.error(error);
 
                 coursesList.innerHTML =
                     "<p>حدث خطأ أثناء تحميل الدورات ❌</p>";
@@ -223,7 +229,7 @@
 
             } catch (error) {
 
-                console.error("Lessons error:", error);
+                console.error(error);
 
                 lessonsList.innerHTML =
                     "<p>حدث خطأ أثناء تحميل الدروس ❌</p>";
@@ -233,14 +239,391 @@
 
 
         // ================================
-        // التحقق من صلاحية الطالب
+        // تحميل الامتحانات
+        // ================================
+
+        async function loadExams() {
+
+            const examsList =
+                document.getElementById("examsList");
+
+            examsList.innerHTML =
+                "جاري تحميل الامتحانات...";
+
+
+            try {
+
+                const examsSnapshot =
+                    await getDocs(
+                        collection(db, "exams")
+                    );
+
+
+                examsList.innerHTML = "";
+
+
+                if (examsSnapshot.empty) {
+
+                    examsList.innerHTML =
+                        "<p>لا توجد امتحانات متاحة حاليًا.</p>";
+
+                    return;
+                }
+
+
+                examsSnapshot.forEach((examDoc) => {
+
+                    const examData =
+                        examDoc.data();
+
+
+                    const examCard =
+                        document.createElement("div");
+
+
+                    examCard.style.border =
+                        "1px solid #ddd";
+
+                    examCard.style.padding =
+                        "15px";
+
+                    examCard.style.marginBottom =
+                        "15px";
+
+                    examCard.style.borderRadius =
+                        "10px";
+
+
+                    const title =
+                        document.createElement("h3");
+
+                    title.textContent =
+                        examData.title || "بدون عنوان";
+
+
+                    const description =
+                        document.createElement("p");
+
+                    description.textContent =
+                        examData.description || "بدون وصف";
+
+
+                    const questionsCount =
+                        document.createElement("p");
+
+                    questionsCount.textContent =
+                        "عدد الأسئلة: " +
+                        (examData.questions
+                            ? examData.questions.length
+                            : 0);
+
+
+                    const startButton =
+                        document.createElement("button");
+
+                    startButton.textContent =
+                        "بدء الامتحان 📝";
+
+
+                    startButton.onclick =
+                        function () {
+
+                            startExam(
+                                examDoc.id,
+                                examData
+                            );
+
+                        };
+
+
+                    examCard.appendChild(title);
+
+                    examCard.appendChild(description);
+
+                    examCard.appendChild(questionsCount);
+
+                    examCard.appendChild(startButton);
+
+                    examsList.appendChild(examCard);
+
+                });
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                examsList.innerHTML =
+                    "<p>حدث خطأ أثناء تحميل الامتحانات ❌</p>";
+            }
+
+        }
+
+
+        // ================================
+        // بدء الامتحان
+        // ================================
+
+        function startExam(examId, examData) {
+
+            const questions =
+                examData.questions || [];
+
+
+            if (questions.length === 0) {
+
+                alert("هذا الامتحان لا يحتوي على أسئلة حتى الآن ❌");
+
+                return;
+            }
+
+
+            document.getElementById("examsList").style.display =
+                "none";
+
+
+            const examArea =
+                document.getElementById("examArea");
+
+
+            examArea.style.display =
+                "block";
+
+
+            document.getElementById("examTitle").textContent =
+                examData.title || "الامتحان";
+
+
+            const questionsContainer =
+                document.getElementById("questionsContainer");
+
+
+            questionsContainer.innerHTML = "";
+
+
+            questions.forEach((question, index) => {
+
+                const questionBox =
+                    document.createElement("div");
+
+
+                questionBox.style.border =
+                    "1px solid #ddd";
+
+                questionBox.style.padding =
+                    "15px";
+
+                questionBox.style.marginBottom =
+                    "15px";
+
+                questionBox.style.borderRadius =
+                    "10px";
+
+
+                const questionTitle =
+                    document.createElement("h3");
+
+
+                questionTitle.textContent =
+                    (index + 1) +
+                    ". " +
+                    question.question;
+
+
+                questionBox.appendChild(
+                    questionTitle
+                );
+
+
+                question.options.forEach(
+                    (option, optionIndex) => {
+
+                        const label =
+                            document.createElement("label");
+
+
+                        label.style.display =
+                            "block";
+
+                        label.style.margin =
+                            "10px 0";
+
+
+                        const radio =
+                            document.createElement("input");
+
+
+                        radio.type =
+                            "radio";
+
+                        radio.name =
+                            "question_" + index;
+
+                        radio.value =
+                            optionIndex;
+
+
+                        label.appendChild(radio);
+
+                        label.appendChild(
+                            document.createTextNode(
+                                " " + option
+                            )
+                        );
+
+
+                        questionBox.appendChild(
+                            label
+                        );
+
+                    }
+                );
+
+
+                questionsContainer.appendChild(
+                    questionBox
+                );
+
+            });
+
+
+            document.getElementById("submitExamButton").onclick =
+                function () {
+
+                    submitExam(
+                        examId,
+                        questions
+                    );
+
+                };
+
+        }
+
+
+        // ================================
+        // تسليم الامتحان
+        // ================================
+
+        async function submitExam(examId, questions) {
+
+            let score = 0;
+
+            let answered = 0;
+
+
+            questions.forEach((question, index) => {
+
+                const selected =
+                    document.querySelector(
+                        'input[name="question_' +
+                        index +
+                        '"]:checked'
+                    );
+
+
+                if (selected) {
+
+                    answered++;
+
+
+                    if (
+                        Number(selected.value) ===
+                        Number(question.correctAnswer)
+                    ) {
+
+                        score++;
+                    }
+
+                }
+
+            });
+
+
+            if (answered < questions.length) {
+
+                const confirmSubmit =
+                    confirm(
+                        "لم تجب على كل الأسئلة. هل تريد تسليم الامتحان؟"
+                    );
+
+
+                if (!confirmSubmit) {
+
+                    return;
+                }
+
+            }
+
+
+            const total =
+                questions.length;
+
+
+            const percentage =
+                Math.round(
+                    (score / total) * 100
+                );
+
+
+            try {
+
+                await addDoc(
+                    collection(db, "results"),
+                    {
+                        studentId: auth.currentUser.uid,
+                        examId: examId,
+                        score: score,
+                        total: total,
+                        percentage: percentage,
+                        createdAt: serverTimestamp()
+                    }
+                );
+
+
+                document.getElementById("examArea").style.display =
+                    "none";
+
+
+                const resultArea =
+                    document.getElementById("resultArea");
+
+
+                resultArea.style.display =
+                    "block";
+
+
+                document.getElementById("resultText").textContent =
+                    "حصلت على " +
+                    score +
+                    " من " +
+                    total +
+                    " (" +
+                    percentage +
+                    "%)";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "حدث خطأ أثناء حفظ النتيجة ❌"
+                );
+            }
+
+        }
+
+
+        // ================================
+        // التحقق من الطالب
         // ================================
 
         onAuthStateChanged(auth, async (user) => {
 
             if (!user) {
 
-                window.location.href = "login.html";
+                window.location.href =
+                    "login.html";
 
                 return;
             }
@@ -256,7 +639,9 @@
 
                 if (!userDoc.exists()) {
 
-                    alert("بيانات المستخدم غير موجودة ❌");
+                    alert(
+                        "بيانات المستخدم غير موجودة ❌"
+                    );
 
                     window.location.href =
                         "login.html";
@@ -281,7 +666,9 @@
                         window.location.href =
                             "admin.html";
 
-                    } else if (userData.role === "teacher") {
+                    } else if (
+                        userData.role === "teacher"
+                    ) {
 
                         window.location.href =
                             "teacher.html";
@@ -292,27 +679,25 @@
                             "login.html";
                     }
 
+
                     return;
                 }
 
 
-                // تحميل الدورات
                 await loadCourses();
 
-                // تحميل الدروس
                 await loadLessons();
+
+                await loadExams();
 
 
             } catch (error) {
 
-                console.error("Student error:", error);
+                console.error(error);
 
                 alert(
                     "حدث خطأ أثناء تحميل لوحة الطالب ❌"
                 );
-
-                window.location.href =
-                    "login.html";
             }
 
         });
@@ -357,10 +742,6 @@
 
             <h2>الدورات 📚</h2>
 
-            <p>
-                الدورات المتاحة لك:
-            </p>
-
             <div id="coursesList">
                 جاري تحميل الدورات...
             </div>
@@ -373,10 +754,6 @@
         <section>
 
             <h2>الدروس 📖</h2>
-
-            <p>
-                الدروس المتاحة لك:
-            </p>
 
             <div id="lessonsList">
                 جاري تحميل الدروس...
@@ -391,22 +768,51 @@
 
             <h2>الامتحانات 📝</h2>
 
-            <p>
-                هنا ستظهر الامتحانات الخاصة بك.
-            </p>
+            <div id="examsList">
+                جاري تحميل الامتحانات...
+            </div>
 
         </section>
 
 
-        <!-- النتائج -->
+        <!-- منطقة الامتحان -->
 
-        <section>
+        <section
+            id="examArea"
+            style="display: none;"
+        >
 
-            <h2>النتائج 📊</h2>
+            <h2 id="examTitle">
+                الامتحان
+            </h2>
 
-            <p>
-                هنا ستظهر درجاتك ونتائج الامتحانات.
-            </p>
+
+            <div id="questionsContainer"></div>
+
+
+            <button id="submitExamButton">
+                تسليم الامتحان ✅
+            </button>
+
+        </section>
+
+
+        <!-- النتيجة -->
+
+        <section
+            id="resultArea"
+            style="display: none;"
+        >
+
+            <h2>نتيجة الامتحان 🎉</h2>
+
+            <p id="resultText"></p>
+
+            <button
+                onclick="location.reload()"
+            >
+                العودة للامتحانات
+            </button>
 
         </section>
 
