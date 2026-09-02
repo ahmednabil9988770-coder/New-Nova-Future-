@@ -10,7 +10,13 @@
 
     <script type="module">
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-        import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+        import {
+            doc,
+            getDoc,
+            collection,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
         import { auth, db } from "../js/firebase-config.js";
 
         onAuthStateChanged(auth, async (user) => {
@@ -21,28 +27,67 @@
             }
 
             try {
-                const userDoc = await getDoc(
+
+                const adminDoc = await getDoc(
                     doc(db, "users", user.uid)
                 );
 
-                if (!userDoc.exists()) {
+                if (!adminDoc.exists()) {
                     alert("بيانات المستخدم غير موجودة ❌");
                     window.location.href = "login.html";
                     return;
                 }
 
-                const userData = userDoc.data();
+                const adminData = adminDoc.data();
 
-                if (userData.role !== "admin") {
+                if (adminData.role !== "admin") {
                     alert("ليس لديك صلاحية لدخول لوحة الإدارة ❌");
                     window.location.href = "student.html";
                     return;
                 }
 
+                // تحميل المستخدمين بعد التأكد أن الحساب Admin
+                const usersSnapshot = await getDocs(
+                    collection(db, "users")
+                );
+
+                const usersList = document.getElementById("usersList");
+
+                usersList.innerHTML = "";
+
+                usersSnapshot.forEach((userDoc) => {
+
+                    const userData = userDoc.data();
+
+                    const userCard = document.createElement("div");
+
+                    userCard.innerHTML = `
+                        <p>
+                            <strong>الاسم:</strong>
+                            ${userData.name || "بدون اسم"}
+                        </p>
+
+                        <p>
+                            <strong>البريد:</strong>
+                            ${userData.email || "بدون بريد"}
+                        </p>
+
+                        <p>
+                            <strong>الصلاحية:</strong>
+                            ${userData.role || "غير محددة"}
+                        </p>
+
+                        <hr>
+                    `;
+
+                    usersList.appendChild(userCard);
+                });
+
             } catch (error) {
-                alert("حدث خطأ أثناء التحقق من الصلاحيات ❌");
-                window.location.href = "login.html";
-                return;
+
+                console.error("Admin error:", error);
+
+                alert("حدث خطأ أثناء تحميل لوحة الإدارة ❌");
             }
         });
     </script>
@@ -64,7 +109,7 @@
 
         <section>
             <h2>إدارة المستخدمين 👥</h2>
-            <p>عرض المستخدمين المسجلين في المنصة.</p>
+            <p>المستخدمون المسجلون في المنصة:</p>
 
             <div id="usersList">
                 جاري تحميل المستخدمين...
