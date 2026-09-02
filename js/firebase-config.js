@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 const firebaseConfig = {
 apiKey: "AIzaSyAMFwMsOfykKRek82HQsdae9czwIxtEZWg",
 authDomain: "new-nova-future.firebaseapp.com",
@@ -10,5 +10,6 @@ appId: "1:101150557975:web:ac0786d4238bb30ab11952"
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-export { app };
+export { app, auth };
