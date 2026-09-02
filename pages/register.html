@@ -1,60 +1,115 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب - Nova Future</title><link rel="stylesheet" href="../css/style.css">
-<script type="module">
-    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-    import { auth } from "../js/firebase-config.js";
 
-    window.createAccount = async function(event) {
-        event.preventDefault();
+    <title>إنشاء حساب - Nova Future</title>
 
-        const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-const confirmPassword = document.getElementById("confirmPassword").value;
+    <link rel="stylesheet" href="../css/style.css">
 
-if (password !== confirmPassword) {
-    alert("كلمتا المرور غير متطابقتين ❌");
-    return;
-}
-        try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            alert("تم إنشاء الحساب بنجاح ✅");
-            window.location.href = "login.html";
-        } catch (error) {
-            alert("حدث خطأ: " + error.message);
-        }
-    };
-</script>
-</head><body><header>
-    <h1>Nova Future</h1>
-    <p>إنشاء حساب جديد</p>
-</header>
+    <script type="module">
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+        import { auth, db } from "../js/firebase-config.js";
 
-<main>
-    <section>
-        <h2>إنشاء حساب 🚀</h2>
+        window.createAccount = async function(event) {
+            event.preventDefault();
 
-        <form onsubmit="createAccount(event)">
-    <input type="text" placeholder="الاسم بالكامل" required>
-    <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-    <input type="password" id="password" placeholder="كلمة المرور" required>
-    <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور" required>
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
 
-    <button type="submit">إنشاء الحساب</button>
-</form>
+            if (password !== confirmPassword) {
+                alert("كلمتا المرور غير متطابقتين ❌");
+                return;
+            }
 
-        <p>
-            لديك حساب بالفعل؟
-            <a href="login.html">تسجيل الدخول</a>
-        </p>
+            try {
+                const userCredential = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
 
-        <a href="../index.html">العودة للرئيسية</a>
-    </section>
-</main>
+                const user = userCredential.user;
 
-<script src="../js/app.js"></script>
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    role: "student",
+                    createdAt: new Date()
+                });
+
+                alert("تم إنشاء الحساب بنجاح ✅");
+
+                window.location.href = "login.html";
+
+            } catch (error) {
+                alert("حدث خطأ: " + error.message);
+            }
+        };
+    </script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Nova Future</h1>
+        <p>إنشاء حساب جديد</p>
+    </header>
+
+    <main>
+        <section>
+
+            <h2>إنشاء حساب 🚀</h2>
+
+            <form onsubmit="createAccount(event)">
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="الاسم بالكامل"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="البريد الإلكتروني"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="كلمة المرور"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="تأكيد كلمة المرور"
+                    required
+                >
+
+                <button type="submit">إنشاء الحساب</button>
+
+            </form>
+
+            <p>
+                لديك حساب بالفعل؟
+                <a href="login.html">تسجيل الدخول</a>
+            </p>
+
+            <a href="../index.html">العودة للرئيسية</a>
+
+        </section>
+    </main>
+
+    <script src="../js/app.js"></script>
 
 </body>
 </html>
