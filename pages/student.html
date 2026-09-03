@@ -662,13 +662,16 @@
 
             } catch (error) {
 
-                console.error(error);
+    console.error("Student Page Error:", error);
 
-                alert(
-                    "حدث خطأ أثناء تحميل الحساب."
-                );
+    alert(
+        "خطأ Firebase:\n\n" +
+        error.code +
+        "\n\n" +
+        error.message
+    );
 
-            }
+}
 
         });
 
