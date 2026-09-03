@@ -231,6 +231,67 @@
         }
 
         /* =========================
+           STUDY DUA
+        ========================= */
+
+        .study-dua {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-right: 5px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            line-height: 1.9;
+            text-align: center;
+        }
+
+        .study-dua-title {
+            font-weight: bold;
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .study-dua-text {
+            font-size: 16px;
+        }
+
+        body.dark .study-dua {
+            background: #172554;
+            border-color: #1e40af;
+        }
+
+        /* =========================
+           MOTIVATION
+        ========================= */
+
+        .motivation-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-right: 5px solid #16a34a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .motivation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #15803d;
+        }
+
+        .motivation-text {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        body.dark .motivation-box {
+            background: #052e16;
+            border-color: #166534;
+        }
+
+        /* =========================
            WRONG ANSWERS
         ========================= */
 
@@ -530,6 +591,63 @@ let examSubmitted = false;
 
 
 /* =========================
+   MOTIVATIONAL SENTENCES
+========================= */
+
+const motivationalSentences = [
+
+    "💪 كل خطوة بتقربك من هدفك، كمل وما تستسلمش.",
+
+    "🌟 تعبك النهارده هو نجاحك بكرة.",
+
+    "🚀 أنت قادر تحقق أكتر مما تتخيل، ثق بنفسك.",
+
+    "🔥 الغلط مش نهاية الطريق، الغلط فرصة تتعلم وتتحسن.",
+
+    "🎯 ركز على تقدمك، وكل محاولة بتخليك أقوى.",
+
+    "🏆 النجاح مش بييجي مرة واحدة، بييجي من الاستمرار.",
+
+    "✨ افتخر بنفسك لأنك حاولت وبذلت مجهود.",
+
+    "📚 كل سؤال جاوبت عليه هو خطوة جديدة في طريق التعلم.",
+
+    "💡 اتعلم من نتيجتك، وطوّر نفسك في المحاولة الجاية.",
+
+    "🌱 النجاح محتاج صبر واستمرار، وأنت تقدر تكمل."
+
+];
+
+
+/* =========================
+   STUDY DUA
+========================= */
+
+const studyDua =
+    "رَبِّ زِدْنِي عِلْمًا";
+
+
+/* =========================
+   GET RANDOM MOTIVATION
+========================= */
+
+function getRandomMotivation() {
+
+    const randomIndex =
+        Math.floor(
+            Math.random() *
+            motivationalSentences.length
+        );
+
+
+    return motivationalSentences[
+        randomIndex
+    ];
+
+}
+
+
+/* =========================
    AUTH
 ========================= */
 
@@ -788,11 +906,6 @@ async function loadLessons() {
 
 function getExamAvailabilityStatus(exam) {
 
-    /*
-        الامتحانات القديمة التي لا تحتوي
-        على وقت بداية ونهاية تظل تعمل طبيعيًا.
-    */
-
     if (!exam.startAt || !exam.endAt) {
 
         return {
@@ -849,11 +962,6 @@ function getExamAvailabilityStatus(exam) {
             "EXAM TIME ERROR:",
             error
         );
-
-        /*
-            في حالة وجود امتحان قديم أو بيانات وقت
-            غير صالحة، لا نمنع الامتحان من العمل.
-        */
 
         return {
             status: "available"
@@ -982,6 +1090,18 @@ async function loadExams() {
                     ⏳ لم يبدأ الامتحان بعد
                 </div>
 
+                <div class="study-dua">
+
+                    <div class="study-dua-title">
+                        🤲 دعاء قبل المذاكرة
+                    </div>
+
+                    <div class="study-dua-text">
+                        ${escapeHTML(studyDua)}
+                    </div>
+
+                </div>
+
                 <button disabled>
                     الامتحان لم يبدأ
                 </button>
@@ -1010,6 +1130,18 @@ async function loadExams() {
 
                 <div class="exam-status exam-available">
                     ✅ الامتحان متاح الآن
+                </div>
+
+                <div class="study-dua">
+
+                    <div class="study-dua-title">
+                        🤲 دعاء قبل الامتحان
+                    </div>
+
+                    <div class="study-dua-text">
+                        ${escapeHTML(studyDua)}
+                    </div>
+
                 </div>
 
                 <button>
@@ -1104,12 +1236,6 @@ async function loadExams() {
 ========================= */
 
 function startExam(exam) {
-
-    /*
-        فحص الوقت مرة ثانية عند الضغط على الزر.
-        ده يمنع فتح الامتحان لو الوقت انتهى
-        حتى لو الصفحة كانت مفتوحة من فترة.
-    */
 
     const availability =
         getExamAvailabilityStatus(exam);
@@ -1599,15 +1725,55 @@ async function submitExam(
         );
 
 
+        const motivation =
+            getRandomMotivation();
+
+
         if (isAutoSubmit) {
 
-            message.textContent =
-                `⏰ انتهى الوقت وتم تسليم الامتحان تلقائيًا. النتيجة: ${score}/${total} (${percentage}%)`;
+            message.innerHTML = `
+
+                ⏰ انتهى الوقت وتم تسليم الامتحان تلقائيًا.
+                النتيجة: ${score}/${total} (${percentage}%)
+
+                <div class="motivation-box">
+
+                    <div class="motivation-title">
+                        🌟 رسالة تشجيعية
+                    </div>
+
+                    <div class="motivation-text">
+                        ${escapeHTML(
+                            motivation
+                        )}
+                    </div>
+
+                </div>
+
+            `;
 
         } else {
 
-            message.textContent =
-                `تم تسليم الامتحان بنجاح 🎉 النتيجة: ${score}/${total} (${percentage}%)`;
+            message.innerHTML = `
+
+                تم تسليم الامتحان بنجاح 🎉
+                النتيجة: ${score}/${total} (${percentage}%)
+
+                <div class="motivation-box">
+
+                    <div class="motivation-title">
+                        🌟 رسالة تشجيعية
+                    </div>
+
+                    <div class="motivation-text">
+                        ${escapeHTML(
+                            motivation
+                        )}
+                    </div>
+
+                </div>
+
+            `;
 
         }
 
@@ -1857,7 +2023,6 @@ function escapeHTML(value) {
 </script>
 
 
-<!-- Global App -->
 <script src="../js/app.js"></script>
 
 </body>
