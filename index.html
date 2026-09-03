@@ -5,49 +5,274 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Nova Future</title>
+    <title>Nova Future - منصة التعليم</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .hero {
+            min-height: 72vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 850px;
+            background: white;
+            padding: 50px 30px;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2563eb;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin: 10px 0 15px;
+        }
+
+        .hero p {
+            font-size: 19px;
+            color: #64748b;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 13px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .features {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 18px rgba(0,0,0,.06);
+        }
+
+        .feature-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .feature h3 {
+            margin: 10px 0;
+        }
+
+        .feature p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            color: #64748b;
+        }
+
+        @media (max-width: 700px) {
+
+            .hero {
+                min-height: auto;
+                padding: 30px 15px;
+            }
+
+            .hero-content {
+                padding: 35px 20px;
+            }
+
+            .logo {
+                font-size: 34px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 17px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+        }
+    </style>
+
 </head>
 
 <body>
 
     <header>
-        <h1>Nova Future</h1>
-        <p>منصتك التعليمية للمستقبل 🚀</p>
+        <h1>🚀 Nova Future</h1>
+        <p>منصتك التعليمية للمستقبل</p>
     </header>
 
+
     <main>
-        <section>
 
-            <h2>مرحبًا بك في Nova Future</h2>
+        <section class="hero">
 
-            <p>
-                منصة تعليمية حديثة ومنظمة.
-            </p>
+            <div class="hero-content">
 
-            <div>
-                <a href="pages/login.html">
-                    تسجيل الدخول
-                </a>
+                <div class="logo">
+                    🚀 Nova Future
+                </div>
 
-                <a href="pages/register.html">
-                    إنشاء حساب
-                </a>
+                <h1>
+                    أهلاً بك في مستقبلك التعليمي
+                </h1>
+
+                <p>
+                    منصة تعليمية حديثة تساعد الطلاب على التعلم،
+                    متابعة الدروس، أداء الامتحانات،
+                    ومعرفة النتائج بسهولة.
+                </p>
+
+                <div class="buttons">
+
+                    <a
+                        href="pages/login.html"
+                        class="btn btn-primary"
+                    >
+                        🔐 تسجيل الدخول
+                    </a>
+
+                    <a
+                        href="pages/register.html"
+                        class="btn btn-secondary"
+                    >
+                        📝 إنشاء حساب
+                    </a>
+
+                </div>
+
             </div>
 
         </section>
+
+
+        <section class="features">
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    📚
+                </div>
+
+                <h3>
+                    الدورات والدروس
+                </h3>
+
+                <p>
+                    الوصول إلى الدورات والدروس
+                    التعليمية بطريقة منظمة وسهلة.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    📝
+                </div>
+
+                <h3>
+                    الامتحانات
+                </h3>
+
+                <p>
+                    أداء الامتحانات مع مؤقت
+                    وحساب النتيجة تلقائيًا.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🏆
+                </div>
+
+                <h3>
+                    متابعة النتائج
+                </h3>
+
+                <p>
+                    مشاهدة نتائج الامتحانات
+                    ومعرفة مستوى التقدم.
+                </p>
+
+            </div>
+
+        </section>
+
     </main>
 
+
     <footer>
-        <p>© 2026 Nova Future</p>
+        © 2026 Nova Future — جميع الحقوق محفوظة
     </footer>
 
 
-    <!-- Firebase -->
-    <script type="module" src="js/firebase-config.js"></script>
-
-    <!-- Global App -->
     <script src="js/app.js"></script>
 
 </body>
