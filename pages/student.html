@@ -559,10 +559,11 @@
              */
 
             try {
-                await loadCourses();
-            } catch (error) {
-                console.error("Courses Error:", error);
-            }
+    await loadCourses();
+} catch (error) {
+    console.error("Courses Error:", error);
+    alert("خطأ الكورسات: " + error.message);
+}
 
             try {
                 await loadLessonsCount();
