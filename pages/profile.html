@@ -1,1 +1,626 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>الملف الشخصي - Nova Future</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        .topbar {
+            background: #111827;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background: #374151;
+            color: white;
+            text-decoration: none;
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 35px auto;
+            padding: 0 15px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 45px;
+            font-weight: bold;
+        }
+
+        .profile-header h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        .profile-header p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #f9fafb;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .role-box {
+            padding: 12px;
+            background: #eff6ff;
+            border-radius: 8px;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
+
+        .save-btn {
+            width: 100%;
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 700px) {
+            .topbar {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .profile-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+
+        <div class="logo">
+            🚀 Nova Future
+        </div>
+
+        <a
+            href="../index.html"
+            class="back-btn"
+            id="backBtn"
+        >
+            ← العودة
+        </a>
+
+    </div>
+
+
+    <div class="container">
+
+        <div
+            class="loading"
+            id="loading"
+        >
+            جاري تحميل الملف الشخصي...
+        </div>
+
+
+        <div
+            class="profile-card"
+            id="profileCard"
+            style="display: none;"
+        >
+
+            <div class="profile-header">
+
+                <div
+                    class="avatar"
+                    id="avatar"
+                >
+                    👤
+                </div>
+
+                <h1 id="profileName">
+                    -
+                </h1>
+
+                <p id="profileEmail">
+                    -
+                </p>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="name">
+                    الاسم
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="اكتب اسمك"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    البريد الإلكتروني
+                </label>
+
+                <input
+                    type="text"
+                    id="email"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    نوع الحساب
+                </label>
+
+                <div
+                    class="role-box"
+                    id="role"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <button
+                class="save-btn"
+                id="saveBtn"
+            >
+                💾 حفظ التغييرات
+            </button>
+
+
+            <div
+                class="message"
+                id="message"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <script type="module">
+
+        import {
+            auth,
+            db
+        } from "../js/firebase-config.js";
+
+        import {
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+        import {
+            doc,
+            getDoc,
+            updateDoc
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+        const loading =
+            document.getElementById("loading");
+
+        const profileCard =
+            document.getElementById("profileCard");
+
+        const profileName =
+            document.getElementById("profileName");
+
+        const profileEmail =
+            document.getElementById("profileEmail");
+
+        const nameInput =
+            document.getElementById("name");
+
+        const emailInput =
+            document.getElementById("email");
+
+        const roleBox =
+            document.getElementById("role");
+
+        const avatar =
+            document.getElementById("avatar");
+
+        const saveBtn =
+            document.getElementById("saveBtn");
+
+        const message =
+            document.getElementById("message");
+
+
+        let currentUser = null;
+
+
+        function showMessage(text, type) {
+
+            message.textContent = text;
+
+            message.className =
+                "message " + type;
+
+        }
+
+
+        function getRoleName(role) {
+
+            if (role === "student") {
+                return "طالب";
+            }
+
+            if (role === "teacher") {
+                return "مدرس";
+            }
+
+            if (role === "admin") {
+                return "مدير";
+            }
+
+            return "مستخدم";
+
+        }
+
+
+        function updateAvatar(name) {
+
+            if (!name) {
+                avatar.textContent = "👤";
+                return;
+            }
+
+            const firstLetter =
+                name.trim().charAt(0);
+
+            avatar.textContent =
+                firstLetter || "👤";
+
+        }
+
+
+        onAuthStateChanged(
+            auth,
+            async (user) => {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
+
+
+                currentUser = user;
+
+
+                try {
+
+                    const userRef =
+                        doc(
+                            db,
+                            "users",
+                            user.uid
+                        );
+
+
+                    const userSnap =
+                        await getDoc(userRef);
+
+
+                    if (!userSnap.exists()) {
+
+                        showMessage(
+                            "لم يتم العثور على بيانات الحساب.",
+                            "error"
+                        );
+
+                        loading.style.display =
+                            "none";
+
+                        profileCard.style.display =
+                            "block";
+
+                        return;
+                    }
+
+
+                    const userData =
+                        userSnap.data();
+
+
+                    const name =
+                        userData.name ||
+                        "مستخدم";
+
+
+                    const email =
+                        userData.email ||
+                        user.email ||
+                        "";
+
+
+                    const role =
+                        userData.role ||
+                        "student";
+
+
+                    profileName.textContent =
+                        name;
+
+                    profileEmail.textContent =
+                        email;
+
+                    nameInput.value =
+                        name;
+
+                    emailInput.value =
+                        email;
+
+                    roleBox.textContent =
+                        getRoleName(role);
+
+
+                    updateAvatar(name);
+
+
+                    loading.style.display =
+                        "none";
+
+                    profileCard.style.display =
+                        "block";
+
+
+                    if (role === "student") {
+
+                        document.getElementById(
+                            "backBtn"
+                        ).href =
+                            "student.html";
+
+                    } else if (role === "teacher") {
+
+                        document.getElementById(
+                            "backBtn"
+                        ).href =
+                            "teacher.html";
+
+                    } else if (role === "admin") {
+
+                        document.getElementById(
+                            "backBtn"
+                        ).href =
+                            "admin.html";
+
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    loading.style.display =
+                        "none";
+
+                    profileCard.style.display =
+                        "block";
+
+                    showMessage(
+                        "حدث خطأ أثناء تحميل الملف الشخصي.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+
+        nameInput.addEventListener(
+            "input",
+            () => {
+
+                profileName.textContent =
+                    nameInput.value ||
+                    "مستخدم";
+
+                updateAvatar(
+                    nameInput.value
+                );
+
+            }
+        );
+
+
+        saveBtn.addEventListener(
+            "click",
+            async () => {
+
+                if (!currentUser) {
+                    return;
+                }
+
+
+                const newName =
+                    nameInput.value.trim();
+
+
+                if (!newName) {
+
+                    showMessage(
+                        "من فضلك اكتب اسمك.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                saveBtn.disabled = true;
+
+                saveBtn.textContent =
+                    "جاري الحفظ...";
+
+
+                try {
+
+                    const userRef =
+                        doc(
+                            db,
+                            "users",
+                            currentUser.uid
+                        );
+
+
+                    await updateDoc(
+                        userRef,
+                        {
+                            name: newName
+                        }
+                    );
+
+
+                    profileName.textContent =
+                        newName;
+
+                    updateAvatar(newName);
+
+
+                    showMessage(
+                        "تم حفظ التغييرات بنجاح ✅",
+                        "success"
+                    );
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showMessage(
+                        "حدث خطأ أثناء حفظ التغييرات.",
+                        "error"
+                    );
+
+                }
+
+
+                saveBtn.disabled = false;
+
+                saveBtn.textContent =
+                    "💾 حفظ التغييرات";
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
