@@ -201,6 +201,36 @@
         }
 
         /* =========================
+           EXAM AVAILABILITY
+        ========================= */
+
+        .exam-time {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        .exam-status {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .exam-not-started {
+            color: #d97706;
+        }
+
+        .exam-ended {
+            color: #dc2626;
+        }
+
+        .exam-available {
+            color: #15803d;
+        }
+
+        /* =========================
            WRONG ANSWERS
         ========================= */
 
@@ -273,6 +303,10 @@
         body.dark .no-wrong-answers {
             background: #052e16;
             border-color: #166534;
+        }
+
+        body.dark .exam-time {
+            background: #111827;
         }
 
         @media (max-width: 700px) {
@@ -749,6 +783,120 @@ async function loadLessons() {
 
 
 /* =========================
+   EXAM AVAILABILITY
+========================= */
+
+function getExamAvailabilityStatus(exam) {
+
+    /*
+        الامتحانات القديمة التي لا تحتوي
+        على وقت بداية ونهاية تظل تعمل طبيعيًا.
+    */
+
+    if (!exam.startAt || !exam.endAt) {
+
+        return {
+            status: "available"
+        };
+
+    }
+
+
+    try {
+
+        const start =
+            exam.startAt.toDate();
+
+        const end =
+            exam.endAt.toDate();
+
+        const now =
+            new Date();
+
+
+        if (now < start) {
+
+            return {
+                status: "not-started",
+                start: start,
+                end: end
+            };
+
+        }
+
+
+        if (now > end) {
+
+            return {
+                status: "ended",
+                start: start,
+                end: end
+            };
+
+        }
+
+
+        return {
+            status: "available",
+            start: start,
+            end: end
+        };
+
+
+    } catch (error) {
+
+        console.error(
+            "EXAM TIME ERROR:",
+            error
+        );
+
+        /*
+            في حالة وجود امتحان قديم أو بيانات وقت
+            غير صالحة، لا نمنع الامتحان من العمل.
+        */
+
+        return {
+            status: "available"
+        };
+
+    }
+
+}
+
+
+/* =========================
+   FORMAT DATE
+========================= */
+
+function formatExamDate(date) {
+
+    if (!date) {
+
+        return "غير محدد";
+
+    }
+
+
+    try {
+
+        return date.toLocaleString(
+            "ar-EG",
+            {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }
+        );
+
+    } catch (error) {
+
+        return "غير محدد";
+
+    }
+
+}
+
+
+/* =========================
    EXAMS
 ========================= */
 
@@ -779,12 +927,98 @@ async function loadExams() {
         count++;
 
 
+        const availability =
+            getExamAvailabilityStatus(exam);
+
+
         const div =
             document.createElement("div");
 
 
         div.className =
             "card exam-card";
+
+
+        let availabilityHTML = "";
+
+        let buttonHTML = "";
+
+
+        if (
+            availability.start &&
+            availability.end
+        ) {
+
+            availabilityHTML = `
+
+                <div class="exam-time">
+
+                    <div>
+                        📅 <strong>يبدأ:</strong>
+                        ${formatExamDate(
+                            availability.start
+                        )}
+                    </div>
+
+                    <div>
+                        ⏰ <strong>ينتهي:</strong>
+                        ${formatExamDate(
+                            availability.end
+                        )}
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        if (availability.status === "not-started") {
+
+            buttonHTML = `
+
+                <div class="exam-status exam-not-started">
+                    ⏳ لم يبدأ الامتحان بعد
+                </div>
+
+                <button disabled>
+                    الامتحان لم يبدأ
+                </button>
+
+            `;
+
+        } else if (
+            availability.status === "ended"
+        ) {
+
+            buttonHTML = `
+
+                <div class="exam-status exam-ended">
+                    ❌ انتهى وقت الامتحان
+                </div>
+
+                <button disabled>
+                    انتهى الامتحان
+                </button>
+
+            `;
+
+        } else {
+
+            buttonHTML = `
+
+                <div class="exam-status exam-available">
+                    ✅ الامتحان متاح الآن
+                </div>
+
+                <button>
+                    ابدأ الامتحان
+                </button>
+
+            `;
+
+        }
 
 
         div.innerHTML = `
@@ -807,31 +1041,43 @@ async function loadExams() {
             </p>
 
             <p>
-                مدة الامتحان:
+                مدة الحل:
                 ${Number(exam.duration || 0)}
                 دقيقة
             </p>
 
-            <button>
-                ابدأ الامتحان
-            </button>
+            ${availabilityHTML}
+
+            ${buttonHTML}
 
         `;
 
 
-        div
-            .querySelector("button")
-            .addEventListener("click", () => {
+        const button =
+            div.querySelector("button");
 
-                startExam({
 
-                    id: docSnap.id,
+        if (
+            availability.status === "available" &&
+            button
+        ) {
 
-                    ...exam
+            button.addEventListener(
+                "click",
+                () => {
 
-                });
+                    startExam({
 
-            });
+                        id: docSnap.id,
+
+                        ...exam
+
+                    });
+
+                }
+            );
+
+        }
 
 
         container.appendChild(div);
@@ -859,6 +1105,44 @@ async function loadExams() {
 
 function startExam(exam) {
 
+    /*
+        فحص الوقت مرة ثانية عند الضغط على الزر.
+        ده يمنع فتح الامتحان لو الوقت انتهى
+        حتى لو الصفحة كانت مفتوحة من فترة.
+    */
+
+    const availability =
+        getExamAvailabilityStatus(exam);
+
+
+    if (
+        availability.status ===
+        "not-started"
+    ) {
+
+        alert(
+            "لم يبدأ وقت هذا الامتحان بعد ⏳"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        availability.status ===
+        "ended"
+    ) {
+
+        alert(
+            "انتهى وقت هذا الامتحان ❌"
+        );
+
+        return;
+
+    }
+
+
     stopExamTimer();
 
     currentExam = exam;
@@ -880,7 +1164,9 @@ function startExam(exam) {
 
 
     const container =
-        document.getElementById("questionsContainer");
+        document.getElementById(
+            "questionsContainer"
+        );
 
 
     container.innerHTML = "";
@@ -945,7 +1231,9 @@ function startExam(exam) {
 
 
     const submitButton =
-        document.getElementById("submitExamBtn");
+        document.getElementById(
+            "submitExamBtn"
+        );
 
 
     submitButton.disabled = false;
@@ -979,7 +1267,9 @@ function startExam(exam) {
                 updateTimerDisplay();
 
 
-                if (examTimeRemaining <= 0) {
+                if (
+                    examTimeRemaining <= 0
+                ) {
 
                     stopExamTimer();
 
@@ -991,8 +1281,10 @@ function startExam(exam) {
 
     } else {
 
-        document.getElementById("examTimer").textContent =
-            "بدون وقت محدد";
+        document
+            .getElementById("examTimer")
+            .textContent =
+                "بدون وقت محدد";
 
     }
 
@@ -1013,11 +1305,15 @@ function startExam(exam) {
 function updateTimerDisplay() {
 
     const timer =
-        document.getElementById("examTimer");
+        document.getElementById(
+            "examTimer"
+        );
 
 
     const minutes =
-        Math.floor(examTimeRemaining / 60);
+        Math.floor(
+            examTimeRemaining / 60
+        );
 
 
     const seconds =
@@ -1030,13 +1326,19 @@ function updateTimerDisplay() {
         String(seconds).padStart(2, "0");
 
 
-    if (examTimeRemaining <= 60) {
+    if (
+        examTimeRemaining <= 60
+    ) {
 
-        timer.classList.add("timer-warning");
+        timer.classList.add(
+            "timer-warning"
+        );
 
     } else {
 
-        timer.classList.remove("timer-warning");
+        timer.classList.remove(
+            "timer-warning"
+        );
 
     }
 
@@ -1049,9 +1351,13 @@ function updateTimerDisplay() {
 
 function stopExamTimer() {
 
-    if (examTimerInterval !== null) {
+    if (
+        examTimerInterval !== null
+    ) {
 
-        clearInterval(examTimerInterval);
+        clearInterval(
+            examTimerInterval
+        );
 
         examTimerInterval = null;
 
@@ -1074,10 +1380,14 @@ async function autoSubmitExam() {
 
 
     const message =
-        document.getElementById("examMessage");
+        document.getElementById(
+            "examMessage"
+        );
 
 
-    message.classList.remove("hidden");
+    message.classList.remove(
+        "hidden"
+    );
 
 
     message.textContent =
@@ -1095,18 +1405,25 @@ async function autoSubmitExam() {
 
 document
     .getElementById("submitExamBtn")
-    .addEventListener("click", () => {
+    .addEventListener(
+        "click",
+        () => {
 
-        submitExam(false);
+            submitExam(false);
 
-    });
+        }
+    );
 
 
-async function submitExam(isAutoSubmit = false) {
+async function submitExam(
+    isAutoSubmit = false
+) {
 
     if (!currentExam) {
 
-        alert("اختر امتحان أولاً.");
+        alert(
+            "اختر امتحان أولاً."
+        );
 
         return;
 
@@ -1126,7 +1443,9 @@ async function submitExam(isAutoSubmit = false) {
 
 
     const submitButton =
-        document.getElementById("submitExamBtn");
+        document.getElementById(
+            "submitExamBtn"
+        );
 
 
     submitButton.disabled = true;
@@ -1141,59 +1460,75 @@ async function submitExam(isAutoSubmit = false) {
     const wrongAnswers = [];
 
 
-    questions.forEach((question, index) => {
+    questions.forEach(
+        (question, index) => {
 
-        const selected =
-            document.querySelector(
-                `input[name="question_${index}"]:checked`
-            );
-
-
-        const selectedIndex =
-            selected
-                ? Number(selected.value)
-                : null;
+            const selected =
+                document.querySelector(
+                    `input[name="question_${index}"]:checked`
+                );
 
 
-        const correctIndex =
-            Number(question.correctAnswer);
+            const selectedIndex =
+                selected
+                    ? Number(
+                        selected.value
+                    )
+                    : null;
 
 
-        if (
-            selectedIndex ===
-            correctIndex
-        ) {
+            const correctIndex =
+                Number(
+                    question.correctAnswer
+                );
 
-            score++;
 
-        } else {
+            if (
+                selectedIndex ===
+                correctIndex
+            ) {
 
-            wrongAnswers.push({
+                score++;
 
-                question:
-                    question.question || "",
+            } else {
 
-                studentAnswer:
-                    selectedIndex !== null
-                        ? (
-                            question.options &&
-                            question.options[selectedIndex]
-                                ? question.options[selectedIndex]
-                                : "إجابة غير معروفة"
-                        )
-                        : "لم يتم اختيار إجابة",
+                wrongAnswers.push({
 
-                correctAnswer:
-                    question.options &&
-                    question.options[correctIndex]
-                        ? question.options[correctIndex]
-                        : "إجابة غير معروفة"
+                    question:
+                        question.question ||
+                        "",
 
-            });
+                    studentAnswer:
+                        selectedIndex !==
+                        null
+                            ? (
+                                question.options &&
+                                question.options[
+                                    selectedIndex
+                                ]
+                                    ? question.options[
+                                        selectedIndex
+                                    ]
+                                    : "إجابة غير معروفة"
+                            )
+                            : "لم يتم اختيار إجابة",
+
+                    correctAnswer:
+                        question.options &&
+                        question.options[
+                            correctIndex
+                        ]
+                            ? question.options[
+                                correctIndex
+                            ]
+                            : "إجابة غير معروفة"
+
+                });
+
+            }
 
         }
-
-    });
+    );
 
 
     const total =
@@ -1245,7 +1580,10 @@ async function submitExam(isAutoSubmit = false) {
     try {
 
         await addDoc(
-            collection(db, "results"),
+            collection(
+                db,
+                "results"
+            ),
             resultData
         );
 
@@ -1256,7 +1594,9 @@ async function submitExam(isAutoSubmit = false) {
             );
 
 
-        message.classList.remove("hidden");
+        message.classList.remove(
+            "hidden"
+        );
 
 
         if (isAutoSubmit) {
@@ -1318,7 +1658,10 @@ async function loadResults() {
 
     const resultsQuery =
         query(
-            collection(db, "results"),
+            collection(
+                db,
+                "results"
+            ),
             where(
                 "studentId",
                 "==",
@@ -1328,7 +1671,9 @@ async function loadResults() {
 
 
     const snapshot =
-        await getDocs(resultsQuery);
+        await getDocs(
+            resultsQuery
+        );
 
 
     container.innerHTML = "";
@@ -1337,121 +1682,138 @@ async function loadResults() {
     let count = 0;
 
 
-    snapshot.forEach((docSnap) => {
+    snapshot.forEach(
+        (docSnap) => {
 
-        const result =
-            docSnap.data();
-
-
-        count++;
+            const result =
+                docSnap.data();
 
 
-        const div =
-            document.createElement("div");
+            count++;
 
 
-        div.className =
-            "card result-card";
+            const div =
+                document.createElement(
+                    "div"
+                );
 
 
-        let wrongAnswersHTML = "";
+            div.className =
+                "card result-card";
 
 
-        if (
-            Array.isArray(result.wrongAnswers) &&
-            result.wrongAnswers.length > 0
-        ) {
+            let wrongAnswersHTML =
+                "";
 
-            wrongAnswersHTML = `
 
-                <div class="wrong-answers">
+            if (
+                Array.isArray(
+                    result.wrongAnswers
+                ) &&
+                result.wrongAnswers.length >
+                    0
+            ) {
 
-                    <div class="wrong-title">
-                        ❌ الأسئلة التي أخطأت فيها
+                wrongAnswersHTML = `
+
+                    <div class="wrong-answers">
+
+                        <div class="wrong-title">
+                            ❌ الأسئلة التي أخطأت فيها
+                        </div>
+
+                        ${result.wrongAnswers
+                            .map(
+                                (
+                                    wrong,
+                                    index
+                                ) => `
+
+                                    <div class="wrong-question">
+
+                                        <p>
+                                            <strong>
+                                                ${index + 1}.
+                                                ${escapeHTML(
+                                                    wrong.question ||
+                                                    ""
+                                                )}
+                                            </strong>
+                                        </p>
+
+                                        <p>
+                                            إجابتك:
+                                            <span class="student-answer">
+                                                ${escapeHTML(
+                                                    wrong.studentAnswer ||
+                                                    "لم يتم اختيار إجابة"
+                                                )}
+                                            </span>
+                                        </p>
+
+                                        <p>
+                                            الإجابة الصحيحة:
+                                            <span class="correct-answer">
+                                                ${escapeHTML(
+                                                    wrong.correctAnswer ||
+                                                    "غير معروفة"
+                                                )}
+                                            </span>
+                                        </p>
+
+                                    </div>
+
+                                `
+                            )
+                            .join("")}
+
                     </div>
 
-                    ${result.wrongAnswers.map(
-                        (wrong, index) => `
+                `;
 
-                            <div class="wrong-question">
+            } else {
 
-                                <p>
-                                    <strong>
-                                        ${index + 1}.
-                                        ${escapeHTML(
-                                            wrong.question || ""
-                                        )}
-                                    </strong>
-                                </p>
+                wrongAnswersHTML = `
 
-                                <p>
-                                    إجابتك:
-                                    <span class="student-answer">
-                                        ${escapeHTML(
-                                            wrong.studentAnswer ||
-                                            "لم يتم اختيار إجابة"
-                                        )}
-                                    </span>
-                                </p>
+                    <div class="no-wrong-answers">
+                        🎉 ممتاز! لم تخطئ في أي سؤال في هذا الامتحان.
+                    </div>
 
-                                <p>
-                                    الإجابة الصحيحة:
-                                    <span class="correct-answer">
-                                        ${escapeHTML(
-                                            wrong.correctAnswer ||
-                                            "غير معروفة"
-                                        )}
-                                    </span>
-                                </p>
+                `;
 
-                            </div>
+            }
 
-                        `
-                    ).join("")}
 
-                </div>
+            div.innerHTML = `
+
+                <h3>
+                    ${escapeHTML(
+                        result.examTitle ||
+                        "امتحان"
+                    )}
+                </h3>
+
+                <p>
+                    النتيجة:
+                    ${result.score || 0}/${result.total || 0}
+                </p>
+
+                <p>
+                    النسبة:
+                    ${result.percentage || 0}%
+                </p>
+
+                ${wrongAnswersHTML}
 
             `;
 
-        } else {
 
-            wrongAnswersHTML = `
-
-                <div class="no-wrong-answers">
-                    🎉 ممتاز! لم تخطئ في أي سؤال في هذا الامتحان.
-                </div>
-
-            `;
+            container.appendChild(
+                div
+            );
 
         }
-
-
-        div.innerHTML = `
-
-            <h3>
-                ${escapeHTML(
-                    result.examTitle || "امتحان"
-                )}
-            </h3>
-
-            <p>
-                النتيجة:
-                ${result.score || 0}/${result.total || 0}
-            </p>
-
-            <p>
-                النسبة:
-                ${result.percentage || 0}%
-            </p>
-
-            ${wrongAnswersHTML}
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
+    );
 
 
     if (count === 0) {
@@ -1464,7 +1826,8 @@ async function loadResults() {
 
     document.getElementById(
         "resultsCount"
-    ).textContent = count;
+    ).textContent =
+        count;
 
 }
 
@@ -1476,7 +1839,9 @@ async function loadResults() {
 function escapeHTML(value) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     div.textContent =
