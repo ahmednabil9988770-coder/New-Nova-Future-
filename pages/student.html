@@ -199,22 +199,31 @@
     </div>
 
     <div class="section hidden" id="examSection">
+
         <h2 id="examTitle"></h2>
+
         <p id="examDescription"></p>
 
         <div id="questionsContainer"></div>
 
-        <button id="submitExamBtn">تسليم الامتحان</button>
+        <button id="submitExamBtn">
+            تسليم الامتحان
+        </button>
 
         <div id="examMessage" class="message hidden"></div>
+
     </div>
 
     <div class="section">
         <h2>🏆 النتائج</h2>
-        <div id="resultsList">جاري التحميل...</div>
+
+        <div id="resultsList">
+            جاري التحميل...
+        </div>
     </div>
 
 </div>
+
 
 <script type="module">
 
@@ -223,14 +232,18 @@ import {
     signOut
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
+
 import {
     doc,
     getDoc,
     collection,
     getDocs,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
 
 import {
     auth,
@@ -249,48 +262,76 @@ let currentExam = null;
 onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
+
         window.location.href = "login.html";
+
         return;
     }
 
+
     currentUser = user;
+
 
     try {
 
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+        const userRef =
+            doc(db, "users", user.uid);
+
+
+        const userSnap =
+            await getDoc(userRef);
+
 
         if (!userSnap.exists()) {
+
             alert("لم يتم العثور على بيانات الطالب.");
+
             await signOut(auth);
+
             window.location.href = "login.html";
+
             return;
         }
 
-        const userData = userSnap.data();
+
+        const userData =
+            userSnap.data();
+
 
         if (userData.role !== "student") {
+
             alert("هذا الحساب ليس حساب طالب.");
+
             await signOut(auth);
+
             window.location.href = "login.html";
+
             return;
         }
+
 
         document.getElementById("studentName").textContent =
             userData.name || "الطالب";
 
+
         await loadCourses();
+
         await loadLessons();
+
         await loadExams();
+
         await loadResults();
+
 
     } catch (error) {
 
         console.error(error);
 
+
         alert(
-            "حدث خطأ أثناء تحميل بيانات الطالب:\n" +
-            error.code + "\n" +
+            "حدث خطأ أثناء تحميل بيانات الطالب:\n\n" +
+            error.code +
+            "\n\n" +
             error.message
         );
     }
@@ -301,12 +342,15 @@ onAuthStateChanged(auth, async (user) => {
    LOGOUT
 ========================= */
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", async () => {
 
-    await signOut(auth);
+        await signOut(auth);
 
-    window.location.href = "login.html";
-});
+        window.location.href = "login.html";
+
+    });
 
 
 /* =========================
@@ -315,39 +359,70 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 
 async function loadCourses() {
 
-    const container = document.getElementById("coursesList");
+    const container =
+        document.getElementById("coursesList");
 
-    const snapshot = await getDocs(
-        collection(db, "courses")
-    );
+
+    const snapshot =
+        await getDocs(
+            collection(db, "courses")
+        );
+
 
     container.innerHTML = "";
 
+
     let count = 0;
+
 
     snapshot.forEach((docSnap) => {
 
-        const course = docSnap.data();
+        const course =
+            docSnap.data();
+
 
         count++;
 
-        const div = document.createElement("div");
+
+        const div =
+            document.createElement("div");
+
 
         div.className = "card";
 
+
         div.innerHTML = `
-            <h3>${escapeHTML(course.title || "بدون عنوان")}</h3>
-            <p>${escapeHTML(course.description || "")}</p>
+
+            <h3>
+                ${escapeHTML(
+                    course.title || "بدون عنوان"
+                )}
+            </h3>
+
+            <p>
+                ${escapeHTML(
+                    course.description || ""
+                )}
+            </p>
+
         `;
 
+
         container.appendChild(div);
+
     });
 
+
     if (count === 0) {
-        container.innerHTML = "<p>لا توجد دورات حالياً.</p>";
+
+        container.innerHTML =
+            "<p>لا توجد دورات حالياً.</p>";
+
     }
 
-    document.getElementById("coursesCount").textContent = count;
+
+    document.getElementById("coursesCount").textContent =
+        count;
 }
 
 
@@ -357,40 +432,77 @@ async function loadCourses() {
 
 async function loadLessons() {
 
-    const container = document.getElementById("lessonsList");
+    const container =
+        document.getElementById("lessonsList");
 
-    const snapshot = await getDocs(
-        collection(db, "lessons")
-    );
+
+    const snapshot =
+        await getDocs(
+            collection(db, "lessons")
+        );
+
 
     container.innerHTML = "";
 
+
     let count = 0;
+
 
     snapshot.forEach((docSnap) => {
 
-        const lesson = docSnap.data();
+        const lesson =
+            docSnap.data();
+
 
         count++;
 
-        const div = document.createElement("div");
+
+        const div =
+            document.createElement("div");
+
 
         div.className = "card";
 
+
         div.innerHTML = `
-            <h3>${escapeHTML(lesson.title || "درس بدون عنوان")}</h3>
-            <p><strong>الدورة:</strong> ${escapeHTML(lesson.courseName || "")}</p>
-            <p>${escapeHTML(lesson.content || "")}</p>
+
+            <h3>
+                ${escapeHTML(
+                    lesson.title || "درس بدون عنوان"
+                )}
+            </h3>
+
+            <p>
+                <strong>الدورة:</strong>
+                ${escapeHTML(
+                    lesson.courseName || ""
+                )}
+            </p>
+
+            <p>
+                ${escapeHTML(
+                    lesson.content || ""
+                )}
+            </p>
+
         `;
 
+
         container.appendChild(div);
+
     });
 
+
     if (count === 0) {
-        container.innerHTML = "<p>لا توجد دروس حالياً.</p>";
+
+        container.innerHTML =
+            "<p>لا توجد دروس حالياً.</p>";
+
     }
 
-    document.getElementById("lessonsCount").textContent = count;
+
+    document.getElementById("lessonsCount").textContent =
+        count;
 }
 
 
@@ -400,50 +512,95 @@ async function loadLessons() {
 
 async function loadExams() {
 
-    const container = document.getElementById("examsList");
+    const container =
+        document.getElementById("examsList");
 
-    const snapshot = await getDocs(
-        collection(db, "exams")
-    );
+
+    const snapshot =
+        await getDocs(
+            collection(db, "exams")
+        );
+
 
     container.innerHTML = "";
 
+
     let count = 0;
+
 
     snapshot.forEach((docSnap) => {
 
-        const exam = docSnap.data();
+        const exam =
+            docSnap.data();
+
 
         count++;
 
-        const div = document.createElement("div");
 
-        div.className = "card exam-card";
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "card exam-card";
+
 
         div.innerHTML = `
-            <h3>${escapeHTML(exam.title || "امتحان")}</h3>
-            <p>${escapeHTML(exam.description || "")}</p>
-            <p>عدد الأسئلة: ${(exam.questions || []).length}</p>
-            <button>ابدأ الامتحان</button>
+
+            <h3>
+                ${escapeHTML(
+                    exam.title || "امتحان"
+                )}
+            </h3>
+
+            <p>
+                ${escapeHTML(
+                    exam.description || ""
+                )}
+            </p>
+
+            <p>
+                عدد الأسئلة:
+                ${(exam.questions || []).length}
+            </p>
+
+            <button>
+                ابدأ الامتحان
+            </button>
+
         `;
 
-        div.querySelector("button").addEventListener("click", () => {
 
-            startExam({
-                id: docSnap.id,
-                ...exam
+        div
+            .querySelector("button")
+            .addEventListener("click", () => {
+
+                startExam({
+
+                    id: docSnap.id,
+
+                    ...exam
+
+                });
+
             });
 
-        });
 
         container.appendChild(div);
+
     });
 
+
     if (count === 0) {
-        container.innerHTML = "<p>لا توجد امتحانات حالياً.</p>";
+
+        container.innerHTML =
+            "<p>لا توجد امتحانات حالياً.</p>";
+
     }
 
-    document.getElementById("examsCount").textContent = count;
+
+    document.getElementById("examsCount").textContent =
+        count;
 }
 
 
@@ -455,61 +612,94 @@ function startExam(exam) {
 
     currentExam = exam;
 
-    document.getElementById("examSection")
+
+    document
+        .getElementById("examSection")
         .classList.remove("hidden");
+
 
     document.getElementById("examTitle").textContent =
         exam.title || "الامتحان";
 
+
     document.getElementById("examDescription").textContent =
         exam.description || "";
+
 
     const container =
         document.getElementById("questionsContainer");
 
+
     container.innerHTML = "";
 
-    const questions = exam.questions || [];
+
+    const questions =
+        exam.questions || [];
+
 
     questions.forEach((question, index) => {
 
-        const div = document.createElement("div");
+        const div =
+            document.createElement("div");
 
-        div.className = "question";
+
+        div.className =
+            "question";
+
 
         let optionsHTML = "";
 
-        (question.options || []).forEach((option, optionIndex) => {
 
-            optionsHTML += `
-                <label class="option">
-                    <input
-                        type="radio"
-                        name="question_${index}"
-                        value="${optionIndex}"
-                    >
-                    ${escapeHTML(option)}
-                </label>
-            `;
-        });
+        (question.options || [])
+            .forEach((option, optionIndex) => {
+
+                optionsHTML += `
+
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="question_${index}"
+                            value="${optionIndex}"
+                        >
+
+                        ${escapeHTML(option)}
+
+                    </label>
+
+                `;
+
+            });
+
 
         div.innerHTML = `
+
             <strong>
-                ${index + 1}. ${escapeHTML(question.question || "")}
+                ${index + 1}.
+                ${escapeHTML(
+                    question.question || ""
+                )}
             </strong>
 
             ${optionsHTML}
+
         `;
 
+
         container.appendChild(div);
+
     });
 
-    document.getElementById("examSection")
+
+    document
+        .getElementById("examSection")
         .scrollIntoView({
             behavior: "smooth"
         });
 
-    document.getElementById("examMessage")
+
+    document
+        .getElementById("examMessage")
         .classList.add("hidden");
 }
 
@@ -518,20 +708,27 @@ function startExam(exam) {
    SUBMIT EXAM
 ========================= */
 
-document.getElementById("submitExamBtn")
+document
+    .getElementById("submitExamBtn")
     .addEventListener("click", submitExam);
 
 
 async function submitExam() {
 
     if (!currentExam) {
+
         alert("اختر امتحان أولاً.");
+
         return;
     }
 
-    const questions = currentExam.questions || [];
+
+    const questions =
+        currentExam.questions || [];
+
 
     let score = 0;
+
 
     questions.forEach((question, index) => {
 
@@ -540,76 +737,86 @@ async function submitExam() {
                 `input[name="question_${index}"]:checked`
             );
 
+
         if (
             selected &&
             Number(selected.value) ===
             Number(question.correctAnswer)
         ) {
+
             score++;
+
         }
+
     });
 
-    const total = questions.length;
+
+    const total =
+        questions.length;
+
 
     const percentage =
         total > 0
-            ? Math.round((score / total) * 100)
+            ? Math.round(
+                (score / total) * 100
+            )
             : 0;
-
-
-    /* تشخيص المشكلة */
-
-    alert(
-        "UID: " + currentUser.uid +
-        "\nProject: " + db.app.options.projectId +
-        "\nExam: " + currentExam.id
-    );
 
 
     const resultData = {
 
-        studentId: currentUser.uid,
+        studentId:
+            currentUser.uid,
 
         studentName:
-            document.getElementById("studentName").textContent,
+            document.getElementById(
+                "studentName"
+            ).textContent,
 
-        examId: currentExam.id,
+        examId:
+            currentExam.id,
 
-        examTitle: currentExam.title,
+        examTitle:
+            currentExam.title,
 
-        score: score,
+        score:
+            score,
 
-        total: total,
+        total:
+            total,
 
-        percentage: percentage,
+        percentage:
+            percentage,
 
-        createdAt: serverTimestamp()
+        createdAt:
+            serverTimestamp()
+
     };
 
 
     try {
 
-        const resultRef = await addDoc(
+        await addDoc(
             collection(db, "results"),
             resultData
         );
 
-        console.log(
-            "Result created successfully:",
-            resultRef.id
-        );
-
 
         const message =
-            document.getElementById("examMessage");
+            document.getElementById(
+                "examMessage"
+            );
+
 
         message.classList.remove("hidden");
+
 
         message.textContent =
             `تم تسليم الامتحان بنجاح 🎉 النتيجة: ${score}/${total} (${percentage}%)`;
 
 
         await loadResults();
+
 
     } catch (error) {
 
@@ -618,12 +825,14 @@ async function submitExam() {
             error
         );
 
+
         alert(
             "خطأ أثناء حفظ النتيجة:\n\n" +
             error.code +
             "\n\n" +
             error.message
         );
+
     }
 }
 
@@ -635,56 +844,92 @@ async function submitExam() {
 async function loadResults() {
 
     const container =
-        document.getElementById("resultsList");
+        document.getElementById(
+            "resultsList"
+        );
 
-    const snapshot = await getDocs(
-        collection(db, "results")
-    );
+
+    /*
+       مهم:
+       لا نطلب كل النتائج.
+       نطلب نتائج الطالب الحالي فقط.
+    */
+
+    const resultsQuery =
+        query(
+            collection(db, "results"),
+            where(
+                "studentId",
+                "==",
+                currentUser.uid
+            )
+        );
+
+
+    const snapshot =
+        await getDocs(resultsQuery);
+
 
     container.innerHTML = "";
 
+
     let count = 0;
+
 
     snapshot.forEach((docSnap) => {
 
-        const result = docSnap.data();
+        const result =
+            docSnap.data();
 
-        if (
-            currentUser &&
-            result.studentId === currentUser.uid
-        ) {
 
-            count++;
+        count++;
 
-            const div =
-                document.createElement("div");
 
-            div.className =
-                "card result-card";
+        const div =
+            document.createElement("div");
 
-            div.innerHTML = `
-                <h3>${escapeHTML(result.examTitle || "امتحان")}</h3>
-                <p>
-                    النتيجة:
-                    ${result.score || 0}/${result.total || 0}
-                </p>
-                <p>
-                    النسبة:
-                    ${result.percentage || 0}%
-                </p>
-            `;
 
-            container.appendChild(div);
-        }
+        div.className =
+            "card result-card";
+
+
+        div.innerHTML = `
+
+            <h3>
+                ${escapeHTML(
+                    result.examTitle || "امتحان"
+                )}
+            </h3>
+
+            <p>
+                النتيجة:
+                ${result.score || 0}/${result.total || 0}
+            </p>
+
+            <p>
+                النسبة:
+                ${result.percentage || 0}%
+            </p>
+
+        `;
+
+
+        container.appendChild(div);
+
     });
 
+
     if (count === 0) {
+
         container.innerHTML =
             "<p>لا توجد نتائج حتى الآن.</p>";
+
     }
 
-    document.getElementById("resultsCount").textContent =
-        count;
+
+    document.getElementById(
+        "resultsCount"
+    ).textContent = count;
 }
 
 
@@ -697,8 +942,12 @@ function escapeHTML(value) {
     const div =
         document.createElement("div");
 
+
     div.textContent =
-        value == null ? "" : String(value);
+        value == null
+            ? ""
+            : String(value);
+
 
     return div.innerHTML;
 }
