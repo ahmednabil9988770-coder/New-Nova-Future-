@@ -1,231 +1,264 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Future - الطالب</title>
+    <title>Nova Future - الطالب</title><style>
+    * {
+        box-sizing: border-box;
+    }
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        color: #222;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #222;
+    .topbar {
+        background: #111827;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    button {
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        cursor: pointer;
+        background: #2563eb;
+        color: white;
+        font-size: 15px;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .logout {
+        background: #dc2626;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 25px auto;
+        padding: 0 15px;
+    }
+
+    .welcome {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    }
+
+    .welcome h1 {
+        margin-top: 0;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .stat {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    }
+
+    .stat strong {
+        display: block;
+        font-size: 28px;
+        margin-bottom: 8px;
+        color: #2563eb;
+    }
+
+    .section {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    }
+
+    .card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+
+    .exam-card {
+        border-right: 5px solid #2563eb;
+    }
+
+    .result-card {
+        border-right: 5px solid #16a34a;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .question {
+        margin: 20px 0;
+        padding: 15px;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+
+    .option {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .message {
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        background: #eef2ff;
+    }
+
+    /* =========================
+       TIMER
+    ========================= */
+
+    .timer-box {
+        background: #fff7ed;
+        border: 2px solid #f97316;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 15px 0 20px;
+        text-align: center;
+    }
+
+    .timer-label {
+        font-size: 16px;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    #examTimer {
+        font-size: 32px;
+        font-weight: bold;
+        color: #ea580c;
+        direction: ltr;
+    }
+
+    .timer-warning {
+        color: #dc2626 !important;
+    }
+
+    @media (max-width: 700px) {
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .topbar {
-            background: #111827;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 10px;
         }
+    }
+</style>
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        button {
-            border: none;
-            border-radius: 8px;
-            padding: 10px 16px;
-            cursor: pointer;
-            background: #2563eb;
-            color: white;
-            font-size: 15px;
-        }
-
-        .logout {
-            background: #dc2626;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 25px auto;
-            padding: 0 15px;
-        }
-
-        .welcome {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.08);
-        }
-
-        .welcome h1 {
-            margin-top: 0;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 3px 12px rgba(0,0,0,.07);
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: #2563eb;
-        }
-
-        .section {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.07);
-        }
-
-        .card {
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-        }
-
-        .exam-card {
-            border-right: 5px solid #2563eb;
-        }
-
-        .result-card {
-            border-right: 5px solid #16a34a;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .question {
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: 10px;
-        }
-
-        .option {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            background: #eef2ff;
-        }
-
-        @media (max-width: 700px) {
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .topbar {
-                gap: 10px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="topbar">
+</head><body><div class="topbar">
     <div class="logo">🚀 Nova Future</div>
     <button class="logout" id="logoutBtn">تسجيل الخروج</button>
+</div><div class="container"><div class="welcome">
+    <h1>أهلاً بك يا <span id="studentName">...</span> 👋</h1>
+    <p>مرحباً بك في منصة Nova Future التعليمية.</p>
 </div>
 
-<div class="container">
-
-    <div class="welcome">
-        <h1>أهلاً بك يا <span id="studentName">...</span> 👋</h1>
-        <p>مرحباً بك في منصة Nova Future التعليمية.</p>
+<div class="stats">
+    <div class="stat">
+        <strong id="coursesCount">0</strong>
+        الدورات
     </div>
 
-    <div class="stats">
-        <div class="stat">
-            <strong id="coursesCount">0</strong>
-            الدورات
+    <div class="stat">
+        <strong id="lessonsCount">0</strong>
+        الدروس
+    </div>
+
+    <div class="stat">
+        <strong id="examsCount">0</strong>
+        الامتحانات
+    </div>
+
+    <div class="stat">
+        <strong id="resultsCount">0</strong>
+        النتائج
+    </div>
+</div>
+
+<div class="section">
+    <h2>📚 الدورات</h2>
+    <div id="coursesList">جاري التحميل...</div>
+</div>
+
+<div class="section">
+    <h2>📖 الدروس</h2>
+    <div id="lessonsList">جاري التحميل...</div>
+</div>
+
+<div class="section">
+    <h2>📝 الامتحانات</h2>
+    <div id="examsList">جاري التحميل...</div>
+</div>
+
+<div class="section hidden" id="examSection">
+
+    <h2 id="examTitle"></h2>
+
+    <p id="examDescription"></p>
+
+    <!-- TIMER -->
+    <div class="timer-box">
+        <div class="timer-label">
+            ⏱️ الوقت المتبقي
         </div>
 
-        <div class="stat">
-            <strong id="lessonsCount">0</strong>
-            الدروس
-        </div>
-
-        <div class="stat">
-            <strong id="examsCount">0</strong>
-            الامتحانات
-        </div>
-
-        <div class="stat">
-            <strong id="resultsCount">0</strong>
-            النتائج
+        <div id="examTimer">
+            00:00
         </div>
     </div>
 
-    <div class="section">
-        <h2>📚 الدورات</h2>
-        <div id="coursesList">جاري التحميل...</div>
-    </div>
+    <div id="questionsContainer"></div>
 
-    <div class="section">
-        <h2>📖 الدروس</h2>
-        <div id="lessonsList">جاري التحميل...</div>
-    </div>
+    <button id="submitExamBtn">
+        تسليم الامتحان
+    </button>
 
-    <div class="section">
-        <h2>📝 الامتحانات</h2>
-        <div id="examsList">جاري التحميل...</div>
-    </div>
-
-    <div class="section hidden" id="examSection">
-
-        <h2 id="examTitle"></h2>
-
-        <p id="examDescription"></p>
-
-        <div id="questionsContainer"></div>
-
-        <button id="submitExamBtn">
-            تسليم الامتحان
-        </button>
-
-        <div id="examMessage" class="message hidden"></div>
-
-    </div>
-
-    <div class="section">
-        <h2>🏆 النتائج</h2>
-
-        <div id="resultsList">
-            جاري التحميل...
-        </div>
-    </div>
+    <div id="examMessage" class="message hidden"></div>
 
 </div>
 
+<div class="section">
+    <h2>🏆 النتائج</h2>
 
-<script type="module">
+    <div id="resultsList">
+        جاري التحميل...
+    </div>
+</div>
+
+</div><script type="module">
 
 import {
     onAuthStateChanged,
@@ -253,6 +286,15 @@ import {
 
 let currentUser = null;
 let currentExam = null;
+
+
+/* =========================
+   TIMER VARIABLES
+========================= */
+
+let examTimerInterval = null;
+let examTimeRemaining = 0;
+let examSubmitted = false;
 
 
 /* =========================
@@ -345,6 +387,8 @@ onAuthStateChanged(auth, async (user) => {
 document
     .getElementById("logoutBtn")
     .addEventListener("click", async () => {
+
+        stopExamTimer();
 
         await signOut(auth);
 
@@ -564,6 +608,12 @@ async function loadExams() {
                 ${(exam.questions || []).length}
             </p>
 
+            <p>
+                مدة الامتحان:
+                ${Number(exam.duration || 0)}
+                دقيقة
+            </p>
+
             <button>
                 ابدأ الامتحان
             </button>
@@ -610,7 +660,13 @@ async function loadExams() {
 
 function startExam(exam) {
 
+    /* إيقاف أي عداد قديم */
+    stopExamTimer();
+
+
     currentExam = exam;
+
+    examSubmitted = false;
 
 
     document
@@ -691,16 +747,146 @@ function startExam(exam) {
     });
 
 
-    document
-        .getElementById("examSection")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+    const submitButton =
+        document.getElementById("submitExamBtn");
+
+    submitButton.disabled = false;
+
+    submitButton.textContent =
+        "تسليم الامتحان";
 
 
     document
         .getElementById("examMessage")
         .classList.add("hidden");
+
+
+    /* =========================
+       START TIMER
+    ========================= */
+
+    const duration =
+        Number(exam.duration || 0);
+
+
+    if (duration > 0) {
+
+        examTimeRemaining =
+            duration * 60;
+
+        updateTimerDisplay();
+
+        examTimerInterval =
+            setInterval(() => {
+
+                examTimeRemaining--;
+
+                updateTimerDisplay();
+
+
+                if (examTimeRemaining <= 0) {
+
+                    stopExamTimer();
+
+                    autoSubmitExam();
+
+                }
+
+            }, 1000);
+
+    } else {
+
+        document.getElementById("examTimer").textContent =
+            "بدون وقت محدد";
+
+    }
+
+
+    document
+        .getElementById("examSection")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+
+/* =========================
+   TIMER DISPLAY
+========================= */
+
+function updateTimerDisplay() {
+
+    const timer =
+        document.getElementById("examTimer");
+
+
+    const minutes =
+        Math.floor(examTimeRemaining / 60);
+
+
+    const seconds =
+        examTimeRemaining % 60;
+
+
+    timer.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+
+    if (examTimeRemaining <= 60) {
+
+        timer.classList.add("timer-warning");
+
+    } else {
+
+        timer.classList.remove("timer-warning");
+
+    }
+}
+
+
+/* =========================
+   STOP TIMER
+========================= */
+
+function stopExamTimer() {
+
+    if (examTimerInterval !== null) {
+
+        clearInterval(examTimerInterval);
+
+        examTimerInterval = null;
+
+    }
+}
+
+
+/* =========================
+   AUTO SUBMIT
+========================= */
+
+async function autoSubmitExam() {
+
+    if (examSubmitted) {
+
+        return;
+
+    }
+
+
+    const message =
+        document.getElementById("examMessage");
+
+
+    message.classList.remove("hidden");
+
+
+    message.textContent =
+        "⏰ انتهى وقت الامتحان، جاري تسليم الإجابات تلقائيًا...";
+
+
+    await submitExam(true);
 }
 
 
@@ -710,10 +896,14 @@ function startExam(exam) {
 
 document
     .getElementById("submitExamBtn")
-    .addEventListener("click", submitExam);
+    .addEventListener("click", () => {
+
+        submitExam(false);
+
+    });
 
 
-async function submitExam() {
+async function submitExam(isAutoSubmit = false) {
 
     if (!currentExam) {
 
@@ -721,6 +911,25 @@ async function submitExam() {
 
         return;
     }
+
+
+    if (examSubmitted) {
+
+        return;
+
+    }
+
+
+    examSubmitted = true;
+
+    stopExamTimer();
+
+
+    const submitButton =
+        document.getElementById("submitExamBtn");
+
+
+    submitButton.disabled = true;
 
 
     const questions =
@@ -811,8 +1020,21 @@ async function submitExam() {
         message.classList.remove("hidden");
 
 
-        message.textContent =
-            `تم تسليم الامتحان بنجاح 🎉 النتيجة: ${score}/${total} (${percentage}%)`;
+        if (isAutoSubmit) {
+
+            message.textContent =
+                `⏰ انتهى الوقت وتم تسليم الامتحان تلقائيًا. النتيجة: ${score}/${total} (${percentage}%)`;
+
+        } else {
+
+            message.textContent =
+                `تم تسليم الامتحان بنجاح 🎉 النتيجة: ${score}/${total} (${percentage}%)`;
+
+        }
+
+
+        submitButton.textContent =
+            "تم تسليم الامتحان ✅";
 
 
         await loadResults();
@@ -824,6 +1046,16 @@ async function submitExam() {
             "RESULT ERROR:",
             error
         );
+
+
+        /*
+           لو حصل خطأ في الحفظ،
+           نسمح بمحاولة التسليم مرة أخرى.
+        */
+
+        examSubmitted = false;
+
+        submitButton.disabled = false;
 
 
         alert(
@@ -952,7 +1184,5 @@ function escapeHTML(value) {
     return div.innerHTML;
 }
 
-</script>
-
-</body>
+</script></body>
 </html>
