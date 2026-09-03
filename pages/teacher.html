@@ -1,467 +1,640 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>لوحة المدرس - Nova Future</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/style.css">
 
-    <title>لوحة المدرس - Nova Future</title>
+<style>
 
-    <link rel="stylesheet" href="../css/style.css">
+    :root {
+        --primary-color: #2563eb;
+        --primary-dark: #1d4ed8;
+        --page-background: #f5f7fb;
+        --surface-color: #ffffff;
+        --text-color: #222222;
+        --border-color: #e5e7eb;
+        --muted-color: #555555;
+    }
 
-    <style>
+    * {
+        box-sizing: border-box;
+    }
 
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --page-background: #f5f7fb;
-            --surface-color: #ffffff;
-            --text-color: #222222;
-            --border-color: #e5e7eb;
-            --muted-color: #555555;
-        }
+    body {
+        margin: 0;
+        background: var(--page-background);
+        color: var(--text-color);
+        font-family: Arial, sans-serif;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    .dashboard {
+        max-width: 1150px;
+        margin: 30px auto;
+        padding: 20px;
+    }
 
-        body {
-            margin: 0;
-            background: var(--page-background);
-            color: var(--text-color);
-            font-family: Arial, sans-serif;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
+    .top-bar,
+    .card {
+        background: var(--surface-color);
+        color: var(--text-color);
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    }
+
+    .top-bar {
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+
+    .card h3 {
+        margin-bottom: 20px;
+    }
+
+    .logout-btn {
+        background: #dc2626;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+    }
+
+    .stat {
+        background: var(--page-background);
+        color: var(--text-color);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .stat strong {
+        display: block;
+        font-size: 30px;
+        margin-bottom: 8px;
+        color: var(--primary-color);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 15px;
+        font-family: inherit;
+        background: var(--surface-color);
+        color: var(--text-color);
+    }
+
+    textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .primary-btn {
+        border: none;
+        background: var(--primary-color);
+        color: #fff;
+        padding: 13px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .primary-btn:hover,
+    .secondary-btn:hover {
+        background: var(--primary-dark);
+    }
+
+    .secondary-btn {
+        border: none;
+        background: var(--primary-color);
+        color: #fff;
+        padding: 11px 15px;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    .danger-btn {
+        border: none;
+        background: #dc2626;
+        color: #fff;
+        padding: 9px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .item {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 12px;
+        background: var(--surface-color);
+    }
+
+    .item h4 {
+        margin-bottom: 8px;
+    }
+
+    .item p {
+        margin-bottom: 8px;
+        color: var(--muted-color);
+        line-height: 1.7;
+    }
+
+    .empty {
+        color: var(--muted-color);
+        text-align: center;
+        padding: 20px;
+    }
+
+    .success {
+        color: #15803d;
+        margin-top: 8px;
+    }
+
+    .error {
+        color: #dc2626;
+        margin-top: 8px;
+    }
+
+    .question-box {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 18px;
+        margin-top: 10px;
+        background: var(--page-background);
+    }
+
+    .question-box h4 {
+        margin-bottom: 15px;
+    }
+
+    .option-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .option-row input[type="radio"] {
+        width: auto;
+    }
+
+    .questions-title {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .exam-info {
+        background: var(--page-background);
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 10px;
+    }
+
+    .exam-time-box {
+        background: var(--page-background);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 10px;
+        border-right: 4px solid var(--primary-color);
+    }
+
+    .exam-time-box p {
+        margin: 7px 0;
+    }
+
+    .time-label {
+        font-weight: bold;
+        color: var(--text-color);
+    }
+
+    body.dark {
+        --page-background: #111827;
+        --surface-color: #1f2937;
+        --text-color: #f9fafb;
+        --border-color: #374151;
+        --muted-color: #d1d5db;
+    }
+
+    @media (max-width: 700px) {
 
         .dashboard {
-            max-width: 1150px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        .top-bar,
-        .card {
-            background: var(--surface-color);
-            color: var(--text-color);
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            margin: 20px auto;
+            padding: 15px;
         }
 
         .top-bar {
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            margin-bottom: 20px;
-        }
-
-        .logout-btn {
-            background: #dc2626;
-            color: #fff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-        }
-
-        .stat {
-            background: var(--page-background);
-            color: var(--text-color);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 30px;
-            margin-bottom: 8px;
-            color: var(--primary-color);
-        }
-
-        form {
-            display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: stretch;
         }
 
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: inherit;
-            background: var(--surface-color);
-            color: var(--text-color);
+        .top-actions {
+            justify-content: stretch !important;
         }
 
-        textarea {
-            min-height: 130px;
-            resize: vertical;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .primary-btn {
-            border: none;
-            background: var(--primary-color);
-            color: #fff;
-            padding: 13px;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        .primary-btn:hover,
-        .secondary-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .secondary-btn {
-            border: none;
-            background: var(--primary-color);
-            color: #fff;
-            padding: 11px 15px;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-
-        .danger-btn {
-            border: none;
-            background: #dc2626;
-            color: #fff;
-            padding: 9px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .item {
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 12px;
-            background: var(--surface-color);
-        }
-
-        .item h4 {
-            margin-bottom: 8px;
-        }
-
-        .item p {
-            margin-bottom: 8px;
-            color: var(--muted-color);
-            line-height: 1.7;
-        }
-
-        .empty {
-            color: var(--muted-color);
+        .top-actions a,
+        .top-actions button {
+            flex: 1;
             text-align: center;
-            padding: 20px;
         }
 
-        .success {
-            color: #15803d;
-            margin-top: 8px;
-        }
+    }
 
-        .error {
-            color: #dc2626;
-            margin-top: 8px;
-        }
+</style>
 
-        .question-box {
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 18px;
-            margin-top: 10px;
-            background: var(--page-background);
-        }
+<script type="module">
 
-        .question-box h4 {
-            margin-bottom: 15px;
-        }
+    import {
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-        .option-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
+    import {
+        doc,
+        getDoc,
+        collection,
+        getDocs,
+        addDoc,
+        serverTimestamp,
+        Timestamp
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-        .option-row input[type="radio"] {
-            width: auto;
-        }
+    import {
+        auth,
+        db
+    } from "../js/firebase-config.js";
 
-        .questions-title {
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
 
-        .exam-info {
-            background: var(--page-background);
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 10px;
-        }
+    let examQuestions = [];
 
-        body.dark {
-            --page-background: #111827;
-            --surface-color: #1f2937;
-            --text-color: #f9fafb;
-            --border-color: #374151;
-            --muted-color: #d1d5db;
-        }
 
-        @media (max-width: 700px) {
+    // =====================================
+    // تسجيل الخروج
+    // =====================================
 
-            .dashboard {
-                margin: 20px auto;
-                padding: 15px;
-            }
+    window.logoutTeacher = async function () {
 
-            .top-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
+        try {
 
-            .top-actions {
-                justify-content: stretch !important;
-            }
+            await signOut(auth);
 
-            .top-actions a,
-            .top-actions button {
-                flex: 1;
-                text-align: center;
-            }
+            window.location.href = "login.html";
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("حدث خطأ أثناء تسجيل الخروج ❌");
 
         }
 
-    </style>
-
-    <script type="module">
-
-        import {
-            onAuthStateChanged,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-        import {
-            doc,
-            getDoc,
-            collection,
-            getDocs,
-            addDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
-        import {
-            auth,
-            db
-        } from "../js/firebase-config.js";
+    };
 
 
-        let examQuestions = [];
+    // =====================================
+    // تحميل الكورسات
+    // =====================================
+
+    async function loadCourses() {
+
+        const coursesList =
+            document.getElementById("coursesList");
+
+        const lessonCourse =
+            document.getElementById("lessonCourse");
+
+        const examCourse =
+            document.getElementById("examCourse");
 
 
-        // =====================================
-        // تسجيل الخروج
-        // =====================================
+        coursesList.innerHTML = "";
 
-        window.logoutTeacher = async function () {
+        lessonCourse.innerHTML =
+            '<option value="">اختر الكورس</option>';
 
-            try {
-
-                await signOut(auth);
-
-                window.location.href = "login.html";
-
-            } catch (error) {
-
-                console.error(error);
-
-                alert("حدث خطأ أثناء تسجيل الخروج ❌");
-
-            }
-
-        };
+        examCourse.innerHTML =
+            '<option value="">اختر الكورس</option>';
 
 
-        // =====================================
-        // تحميل الكورسات
-        // =====================================
+        try {
 
-        async function loadCourses() {
-
-            const coursesList =
-                document.getElementById("coursesList");
-
-            const lessonCourse =
-                document.getElementById("lessonCourse");
-
-            const examCourse =
-                document.getElementById("examCourse");
+            const snapshot =
+                await getDocs(
+                    collection(db, "courses")
+                );
 
 
-            coursesList.innerHTML = "";
-
-            lessonCourse.innerHTML =
-                '<option value="">اختر الكورس</option>';
-
-            examCourse.innerHTML =
-                '<option value="">اختر الكورس</option>';
-
-
-            try {
-
-                const snapshot =
-                    await getDocs(
-                        collection(db, "courses")
-                    );
-
-
-                if (snapshot.empty) {
-
-                    coursesList.innerHTML =
-                        '<p class="empty">لا توجد كورسات حتى الآن.</p>';
-
-                    return;
-
-                }
-
-
-                snapshot.forEach((courseDoc) => {
-
-                    const course =
-                        courseDoc.data();
-
-                    const courseName =
-                        course.name ||
-                        course.title ||
-                        "بدون اسم";
-
-
-                    const div =
-                        document.createElement("div");
-
-                    div.className = "item";
-
-
-                    div.innerHTML = `
-
-                        <h4>
-                            📚 ${escapeHTML(courseName)}
-                        </h4>
-
-                        <p>
-                            ${escapeHTML(
-                                course.description ||
-                                "لا يوجد وصف للكورس."
-                            )}
-                        </p>
-
-                    `;
-
-
-                    coursesList.appendChild(div);
-
-
-                    const lessonOption =
-                        document.createElement("option");
-
-                    lessonOption.value =
-                        courseDoc.id;
-
-                    lessonOption.textContent =
-                        courseName;
-
-                    lessonCourse.appendChild(
-                        lessonOption
-                    );
-
-
-                    const examOption =
-                        document.createElement("option");
-
-                    examOption.value =
-                        courseDoc.id;
-
-                    examOption.textContent =
-                        courseName;
-
-                    examCourse.appendChild(
-                        examOption
-                    );
-
-                });
-
-
-            } catch (error) {
-
-                console.error(error);
+            if (snapshot.empty) {
 
                 coursesList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل الكورسات.</p>';
+                    '<p class="empty">لا توجد كورسات حتى الآن.</p>';
+
+                return;
 
             }
+
+
+            snapshot.forEach((courseDoc) => {
+
+                const course =
+                    courseDoc.data();
+
+                const courseName =
+                    course.name ||
+                    course.title ||
+                    "بدون اسم";
+
+
+                const div =
+                    document.createElement("div");
+
+                div.className = "item";
+
+
+                div.innerHTML = `
+
+                    <h4>
+                        📚 ${escapeHTML(courseName)}
+                    </h4>
+
+                    <p>
+                        ${escapeHTML(
+                            course.description ||
+                            "لا يوجد وصف للكورس."
+                        )}
+                    </p>
+
+                `;
+
+
+                coursesList.appendChild(div);
+
+
+                const lessonOption =
+                    document.createElement("option");
+
+                lessonOption.value =
+                    courseDoc.id;
+
+                lessonOption.textContent =
+                    courseName;
+
+                lessonCourse.appendChild(
+                    lessonOption
+                );
+
+
+                const examOption =
+                    document.createElement("option");
+
+                examOption.value =
+                    courseDoc.id;
+
+                examOption.textContent =
+                    courseName;
+
+                examCourse.appendChild(
+                    examOption
+                );
+
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            coursesList.innerHTML =
+                '<p class="error">حدث خطأ أثناء تحميل الكورسات.</p>';
+
+        }
+
+    }
+
+
+    // =====================================
+    // إنشاء كورس
+    // =====================================
+
+    window.createCourse = async function (event) {
+
+        event.preventDefault();
+
+
+        const title =
+            document.getElementById(
+                "courseTitle"
+            ).value.trim();
+
+
+        const description =
+            document.getElementById(
+                "courseDescription"
+            ).value.trim();
+
+
+        const message =
+            document.getElementById(
+                "courseMessage"
+            );
+
+
+        if (!title) {
+
+            message.textContent =
+                "اكتب اسم الكورس.";
+
+            message.className =
+                "error";
+
+            return;
 
         }
 
 
-        // =====================================
-        // إنشاء كورس
-        // =====================================
-
-        window.createCourse = async function (event) {
-
-            event.preventDefault();
+        const button =
+            document.getElementById(
+                "createCourseBtn"
+            );
 
 
-            const title =
-                document.getElementById(
-                    "courseTitle"
-                ).value.trim();
+        button.disabled = true;
+
+        button.textContent =
+            "جاري إنشاء الكورس...";
 
 
-            const description =
-                document.getElementById(
-                    "courseDescription"
-                ).value.trim();
+        try {
+
+            await addDoc(
+                collection(db, "courses"),
+                {
+
+                    title: title,
+
+                    description: description,
+
+                    teacherId:
+                        auth.currentUser.uid,
+
+                    teacherName:
+                        document.getElementById(
+                            "teacherName"
+                        ).textContent,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+            );
 
 
-            const message =
-                document.getElementById(
-                    "courseMessage"
+            message.textContent =
+                "تم إنشاء الكورس بنجاح 🎉";
+
+            message.className =
+                "success";
+
+
+            document
+                .getElementById("courseForm")
+                .reset();
+
+
+            await loadCourses();
+
+
+        } catch (error) {
+
+            console.error(
+                "COURSE ERROR:",
+                error.code,
+                error.message
+            );
+
+
+            message.textContent =
+                "حدث خطأ أثناء إنشاء الكورس ❌";
+
+            message.className =
+                "error";
+
+        }
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "إنشاء الكورس 📚";
+
+    };
+
+
+    // =====================================
+    // إضافة درس
+    // =====================================
+
+    window.addLesson = async function (event) {
+
+        event.preventDefault();
+
+
+        const courseId =
+            document.getElementById("lessonCourse").value;
+
+        const title =
+            document.getElementById("lessonTitle").value.trim();
+
+        const content =
+            document.getElementById("lessonContent").value.trim();
+
+        const message =
+            document.getElementById("lessonMessage");
+
+
+        if (!courseId) {
+
+            message.textContent =
+                "اختار الكورس أولاً.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (!title) {
+
+            message.textContent =
+                "اكتب اسم الدرس.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (!content) {
+
+            message.textContent =
+                "اكتب محتوى الدرس.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        try {
+
+            const courseSnapshot =
+                await getDoc(
+                    doc(db, "courses", courseId)
                 );
 
 
-            if (!title) {
+            if (!courseSnapshot.exists()) {
 
                 message.textContent =
-                    "اكتب اسم الكورس.";
+                    "الكورس غير موجود.";
 
                 message.className =
                     "error";
@@ -471,948 +644,1112 @@
             }
 
 
-            const button =
+            const courseData =
+                courseSnapshot.data();
+
+
+            await addDoc(
+                collection(db, "lessons"),
+                {
+
+                    title: title,
+
+                    content: content,
+
+                    courseId: courseId,
+
+                    courseName:
+                        courseData.name ||
+                        courseData.title ||
+                        "بدون اسم",
+
+                    teacherId:
+                        auth.currentUser.uid,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+            );
+
+
+            message.textContent =
+                "تم إضافة الدرس بنجاح ✅";
+
+            message.className =
+                "success";
+
+
+            document
+                .getElementById("lessonForm")
+                .reset();
+
+
+            await loadLessons();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            message.textContent =
+                "حدث خطأ أثناء إضافة الدرس ❌";
+
+            message.className =
+                "error";
+
+        }
+
+    };
+
+
+    // =====================================
+    // تحميل الدروس
+    // =====================================
+
+    async function loadLessons() {
+
+        const lessonsList =
+            document.getElementById("lessonsList");
+
+        lessonsList.innerHTML = "";
+
+
+        try {
+
+            const snapshot =
+                await getDocs(
+                    collection(db, "lessons")
+                );
+
+
+            if (snapshot.empty) {
+
+                lessonsList.innerHTML =
+                    '<p class="empty">لا توجد دروس حتى الآن.</p>';
+
                 document.getElementById(
-                    "createCourseBtn"
-                );
-
-
-            button.disabled = true;
-
-            button.textContent =
-                "جاري إنشاء الكورس...";
-
-
-            try {
-
-                await addDoc(
-                    collection(db, "courses"),
-                    {
-
-                        title: title,
-
-                        description: description,
-
-                        teacherId:
-                            auth.currentUser.uid,
-
-                        teacherName:
-                            document.getElementById(
-                                "teacherName"
-                            ).textContent,
-
-                        createdAt:
-                            serverTimestamp()
-
-                    }
-                );
-
-
-                message.textContent =
-                    "تم إنشاء الكورس بنجاح 🎉";
-
-                message.className =
-                    "success";
-
-
-                document
-                    .getElementById("courseForm")
-                    .reset();
-
-
-                await loadCourses();
-
-
-            } catch (error) {
-
-                console.error(
-                    "COURSE ERROR:",
-                    error.code,
-                    error.message
-                );
-
-
-                message.textContent =
-                    "حدث خطأ أثناء إنشاء الكورس ❌";
-
-                message.className =
-                    "error";
-
-            }
-
-
-            button.disabled = false;
-
-            button.textContent =
-                "إنشاء الكورس 📚";
-
-        };
-
-
-        // =====================================
-        // إضافة درس
-        // =====================================
-
-        window.addLesson = async function (event) {
-
-            event.preventDefault();
-
-
-            const courseId =
-                document.getElementById("lessonCourse").value;
-
-            const title =
-                document.getElementById("lessonTitle").value.trim();
-
-            const content =
-                document.getElementById("lessonContent").value.trim();
-
-            const message =
-                document.getElementById("lessonMessage");
-
-
-            if (!courseId) {
-
-                message.textContent =
-                    "اختار الكورس أولاً.";
-
-                message.className =
-                    "error";
+                    "lessonsCount"
+                ).textContent = "0";
 
                 return;
 
             }
 
 
-            if (!title) {
-
-                message.textContent =
-                    "اكتب اسم الدرس.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
+            let count = 0;
 
 
-            if (!content) {
+            snapshot.forEach((lessonDoc) => {
 
-                message.textContent =
-                    "اكتب محتوى الدرس.";
+                const lesson =
+                    lessonDoc.data();
 
-                message.className =
-                    "error";
-
-                return;
-
-            }
+                count++;
 
 
-            try {
+                const div =
+                    document.createElement("div");
 
-                const courseSnapshot =
-                    await getDoc(
-                        doc(db, "courses", courseId)
-                    );
+                div.className = "item";
 
 
-                if (!courseSnapshot.exists()) {
+                div.innerHTML = `
 
-                    message.textContent =
-                        "الكورس غير موجود.";
+                    <h4>
+                        📖 ${escapeHTML(
+                            lesson.title ||
+                            "درس بدون عنوان"
+                        )}
+                    </h4>
 
-                    message.className =
-                        "error";
+                    <p>
+                        <strong>الكورس:</strong>
+                        ${escapeHTML(
+                            lesson.courseName ||
+                            "غير محدد"
+                        )}
+                    </p>
 
+                    <p>
+                        ${escapeHTML(
+                            lesson.content ||
+                            "لا يوجد محتوى."
+                        )}
+                    </p>
+
+                `;
+
+
+                lessonsList.appendChild(div);
+
+            });
+
+
+            document.getElementById(
+                "lessonsCount"
+            ).textContent = count;
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            lessonsList.innerHTML =
+                '<p class="error">حدث خطأ أثناء تحميل الدروس.</p>';
+
+        }
+
+    }
+
+
+    // =====================================
+    // الطلاب
+    // =====================================
+
+    async function loadStudents() {
+
+        const studentsList =
+            document.getElementById("studentsList");
+
+        studentsList.innerHTML = "";
+
+
+        try {
+
+            const snapshot =
+                await getDocs(
+                    collection(db, "users")
+                );
+
+
+            let count = 0;
+
+
+            snapshot.forEach((userDoc) => {
+
+                const user =
+                    userDoc.data();
+
+
+                if (user.role !== "student") {
                     return;
-
                 }
 
 
-                const courseData =
-                    courseSnapshot.data();
+                count++;
 
 
-                await addDoc(
-                    collection(db, "lessons"),
-                    {
+                const div =
+                    document.createElement("div");
 
-                        title: title,
+                div.className = "item";
 
-                        content: content,
 
-                        courseId: courseId,
+                div.innerHTML = `
 
-                        courseName:
-                            courseData.name ||
-                            courseData.title ||
-                            "بدون اسم",
+                    <h4>
+                        👨‍🎓 ${escapeHTML(
+                            user.name ||
+                            "بدون اسم"
+                        )}
+                    </h4>
 
-                        teacherId:
-                            auth.currentUser.uid,
+                    <p>
+                        البريد:
+                        ${escapeHTML(
+                            user.email ||
+                            "غير موجود"
+                        )}
+                    </p>
 
-                        createdAt:
-                            serverTimestamp()
+                `;
 
-                    }
+
+                studentsList.appendChild(div);
+
+            });
+
+
+            document.getElementById(
+                "studentsCount"
+            ).textContent = count;
+
+
+            if (count === 0) {
+
+                studentsList.innerHTML =
+                    '<p class="empty">لا يوجد طلاب حتى الآن.</p>';
+
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            studentsList.innerHTML =
+                '<p class="error">حدث خطأ أثناء تحميل الطلاب.</p>';
+
+        }
+
+    }
+
+
+    // =====================================
+    // إضافة سؤال
+    // =====================================
+
+    window.addQuestion = function () {
+
+        const questionText =
+            document.getElementById(
+                "questionText"
+            ).value.trim();
+
+        const option1 =
+            document.getElementById(
+                "option1"
+            ).value.trim();
+
+        const option2 =
+            document.getElementById(
+                "option2"
+            ).value.trim();
+
+        const option3 =
+            document.getElementById(
+                "option3"
+            ).value.trim();
+
+        const option4 =
+            document.getElementById(
+                "option4"
+            ).value.trim();
+
+        const correctAnswer =
+            document.querySelector(
+                'input[name="correctAnswer"]:checked'
+            );
+
+        const message =
+            document.getElementById(
+                "questionMessage"
+            );
+
+
+        if (!questionText) {
+
+            message.textContent =
+                "اكتب السؤال أولاً.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (
+            !option1 ||
+            !option2 ||
+            !option3 ||
+            !option4
+        ) {
+
+            message.textContent =
+                "اكتب الاختيارات الأربعة.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (!correctAnswer) {
+
+            message.textContent =
+                "حدد الإجابة الصحيحة.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        examQuestions.push({
+
+            question:
+                questionText,
+
+            options: [
+                option1,
+                option2,
+                option3,
+                option4
+            ],
+
+            correctAnswer:
+                Number(correctAnswer.value)
+
+        });
+
+
+        renderQuestions();
+
+
+        document.getElementById(
+            "questionText"
+        ).value = "";
+
+        document.getElementById(
+            "option1"
+        ).value = "";
+
+        document.getElementById(
+            "option2"
+        ).value = "";
+
+        document.getElementById(
+            "option3"
+        ).value = "";
+
+        document.getElementById(
+            "option4"
+        ).value = "";
+
+
+        document.querySelectorAll(
+            'input[name="correctAnswer"]'
+        ).forEach((radio) => {
+
+            radio.checked = false;
+
+        });
+
+
+        message.textContent =
+            "تمت إضافة السؤال إلى الامتحان ✅";
+
+        message.className =
+            "success";
+
+    };
+
+
+    // =====================================
+    // عرض الأسئلة
+    // =====================================
+
+    function renderQuestions() {
+
+        const container =
+            document.getElementById(
+                "questionsList"
+            );
+
+
+        container.innerHTML = "";
+
+
+        document.getElementById(
+            "questionsCount"
+        ).textContent =
+            examQuestions.length;
+
+
+        if (examQuestions.length === 0) {
+
+            container.innerHTML =
+                '<p class="empty">لم تتم إضافة أسئلة بعد.</p>';
+
+            return;
+
+        }
+
+
+        examQuestions.forEach(
+            (question, index) => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "question-box";
+
+
+                div.innerHTML = `
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:10px;
+                        margin-bottom:10px;
+                    ">
+
+                        <strong>
+                            السؤال ${index + 1}
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="danger-btn"
+                            onclick="removeQuestion(${index})"
+                        >
+                            حذف
+                        </button>
+
+                    </div>
+
+                    <p>
+                        <strong>
+                            ${escapeHTML(question.question)}
+                        </strong>
+                    </p>
+
+                    <p>
+                        1️⃣ ${escapeHTML(question.options[0])}
+                        ${question.correctAnswer === 0 ? " ✅" : ""}
+                    </p>
+
+                    <p>
+                        2️⃣ ${escapeHTML(question.options[1])}
+                        ${question.correctAnswer === 1 ? " ✅" : ""}
+                    </p>
+
+                    <p>
+                        3️⃣ ${escapeHTML(question.options[2])}
+                        ${question.correctAnswer === 2 ? " ✅" : ""}
+                    </p>
+
+                    <p>
+                        4️⃣ ${escapeHTML(question.options[3])}
+                        ${question.correctAnswer === 3 ? " ✅" : ""}
+                    </p>
+
+                `;
+
+
+                container.appendChild(div);
+
+            }
+        );
+
+    }
+
+
+    // =====================================
+    // حذف سؤال
+    // =====================================
+
+    window.removeQuestion = function (index) {
+
+        examQuestions.splice(
+            index,
+            1
+        );
+
+        renderQuestions();
+
+    };
+
+
+    // =====================================
+    // إنشاء الامتحان
+    // =====================================
+
+    window.createExam = async function (event) {
+
+        event.preventDefault();
+
+
+        const title =
+            document.getElementById(
+                "examTitle"
+            ).value.trim();
+
+        const description =
+            document.getElementById(
+                "examDescription"
+            ).value.trim();
+
+        const courseId =
+            document.getElementById(
+                "examCourse"
+            ).value;
+
+        const duration =
+            Number(
+                document.getElementById(
+                    "examDuration"
+                ).value
+            );
+
+        const startAtValue =
+            document.getElementById(
+                "examStartAt"
+            ).value;
+
+        const endAtValue =
+            document.getElementById(
+                "examEndAt"
+            ).value;
+
+        const message =
+            document.getElementById(
+                "examMessage"
+            );
+
+
+        if (!title) {
+
+            message.textContent =
+                "اكتب اسم الامتحان.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (!courseId) {
+
+            message.textContent =
+                "اختار الكورس.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (
+            !duration ||
+            duration < 1
+        ) {
+
+            message.textContent =
+                "حدد مدة صحيحة للامتحان بالدقائق.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (!startAtValue || !endAtValue) {
+
+            message.textContent =
+                "حدد وقت بداية ونهاية الامتحان.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        const startAt =
+            new Date(startAtValue);
+
+        const endAt =
+            new Date(endAtValue);
+
+
+        if (
+            Number.isNaN(startAt.getTime()) ||
+            Number.isNaN(endAt.getTime())
+        ) {
+
+            message.textContent =
+                "وقت البداية أو النهاية غير صحيح.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (endAt <= startAt) {
+
+            message.textContent =
+                "وقت النهاية يجب أن يكون بعد وقت البداية.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        if (
+            examQuestions.length === 0
+        ) {
+
+            message.textContent =
+                "أضف سؤالًا واحدًا على الأقل.";
+
+            message.className =
+                "error";
+
+            return;
+
+        }
+
+
+        try {
+
+            const courseSnapshot =
+                await getDoc(
+                    doc(
+                        db,
+                        "courses",
+                        courseId
+                    )
                 );
 
 
-                message.textContent =
-                    "تم إضافة الدرس بنجاح ✅";
-
-                message.className =
-                    "success";
-
-
-                document
-                    .getElementById("lessonForm")
-                    .reset();
-
-
-                await loadLessons();
-
-
-            } catch (error) {
-
-                console.error(error);
+            if (!courseSnapshot.exists()) {
 
                 message.textContent =
-                    "حدث خطأ أثناء إضافة الدرس ❌";
+                    "الكورس غير موجود.";
 
                 message.className =
                     "error";
 
+                return;
+
             }
 
-        };
+
+            const courseData =
+                courseSnapshot.data();
 
 
-        // =====================================
-        // تحميل الدروس
-        // =====================================
+            await addDoc(
+                collection(
+                    db,
+                    "exams"
+                ),
+                {
 
-        async function loadLessons() {
+                    title:
+                        title,
 
-            const lessonsList =
-                document.getElementById("lessonsList");
+                    description:
+                        description,
 
-            lessonsList.innerHTML = "";
+                    courseId:
+                        courseId,
+
+                    courseName:
+                        courseData.name ||
+                        courseData.title ||
+                        "بدون اسم",
+
+                    teacherId:
+                        auth.currentUser.uid,
+
+                    teacherName:
+                        document.getElementById(
+                            "teacherName"
+                        ).textContent,
+
+                    duration:
+                        duration,
+
+                    startAt:
+                        Timestamp.fromDate(
+                            startAt
+                        ),
+
+                    endAt:
+                        Timestamp.fromDate(
+                            endAt
+                        ),
+
+                    questions:
+                        examQuestions,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+            );
 
 
-            try {
+            message.textContent =
+                "تم إنشاء الامتحان بنجاح 🎉";
 
-                const snapshot =
-                    await getDocs(
-                        collection(db, "lessons")
+            message.className =
+                "success";
+
+
+            document.getElementById(
+                "examForm"
+            ).reset();
+
+
+            examQuestions = [];
+
+
+            renderQuestions();
+
+
+            await loadExams();
+
+
+        } catch (error) {
+
+            console.error(
+                "EXAM ERROR:",
+                error.code,
+                error.message
+            );
+
+
+            message.textContent =
+                "حدث خطأ أثناء إنشاء الامتحان ❌";
+
+            message.className =
+                "error";
+
+        }
+
+    };
+
+
+    // =====================================
+    // تنسيق وقت الامتحان
+    // =====================================
+
+    function formatExamDate(timestamp) {
+
+        if (!timestamp) {
+            return "غير محدد";
+        }
+
+        try {
+
+            return timestamp
+                .toDate()
+                .toLocaleString("ar-EG");
+
+        } catch (error) {
+
+            return "غير محدد";
+
+        }
+
+    }
+
+
+    // =====================================
+    // تحميل الامتحانات
+    // =====================================
+
+    async function loadExams() {
+
+        const examsList =
+            document.getElementById(
+                "examsList"
+            );
+
+
+        examsList.innerHTML = "";
+
+
+        try {
+
+            const snapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "exams"
+                    )
+                );
+
+
+            let count = 0;
+
+
+            if (snapshot.empty) {
+
+                examsList.innerHTML =
+                    '<p class="empty">لا توجد امتحانات.</p>';
+
+                document.getElementById(
+                    "examsCount"
+                ).textContent = "0";
+
+                return;
+
+            }
+
+
+            snapshot.forEach((examDoc) => {
+
+                const exam =
+                    examDoc.data();
+
+                count++;
+
+
+                const questionsCount =
+                    Array.isArray(
+                        exam.questions
+                    )
+                        ? exam.questions.length
+                        : 0;
+
+
+                const div =
+                    document.createElement(
+                        "div"
                     );
 
 
-                if (snapshot.empty) {
-
-                    lessonsList.innerHTML =
-                        '<p class="empty">لا توجد دروس حتى الآن.</p>';
-
-                    document.getElementById(
-                        "lessonsCount"
-                    ).textContent = "0";
-
-                    return;
-
-                }
+                div.className =
+                    "item";
 
 
-                let count = 0;
+                div.innerHTML = `
 
+                    <h4>
+                        📝 ${escapeHTML(
+                            exam.title ||
+                            "امتحان بدون عنوان"
+                        )}
+                    </h4>
 
-                snapshot.forEach((lessonDoc) => {
+                    <p>
+                        ${escapeHTML(
+                            exam.description ||
+                            "لا يوجد وصف."
+                        )}
+                    </p>
 
-                    const lesson =
-                        lessonDoc.data();
-
-                    count++;
-
-
-                    const div =
-                        document.createElement("div");
-
-                    div.className = "item";
-
-
-                    div.innerHTML = `
-
-                        <h4>
-                            📖 ${escapeHTML(
-                                lesson.title ||
-                                "درس بدون عنوان"
-                            )}
-                        </h4>
+                    <div class="exam-info">
 
                         <p>
+                            📚
                             <strong>الكورس:</strong>
                             ${escapeHTML(
-                                lesson.courseName ||
+                                exam.courseName ||
                                 "غير محدد"
                             )}
                         </p>
 
                         <p>
-                            ${escapeHTML(
-                                lesson.content ||
-                                "لا يوجد محتوى."
-                            )}
+                            ⏱️
+                            <strong>مدة الحل:</strong>
+                            ${exam.duration || 0}
+                            دقيقة
                         </p>
-
-                    `;
-
-
-                    lessonsList.appendChild(div);
-
-                });
-
-
-                document.getElementById(
-                    "lessonsCount"
-                ).textContent = count;
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                lessonsList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل الدروس.</p>';
-
-            }
-
-        }
-
-
-        // =====================================
-        // الطلاب
-        // =====================================
-
-        async function loadStudents() {
-
-            const studentsList =
-                document.getElementById("studentsList");
-
-            studentsList.innerHTML = "";
-
-
-            try {
-
-                const snapshot =
-                    await getDocs(
-                        collection(db, "users")
-                    );
-
-
-                let count = 0;
-
-
-                snapshot.forEach((userDoc) => {
-
-                    const user =
-                        userDoc.data();
-
-
-                    if (user.role !== "student") {
-                        return;
-                    }
-
-
-                    count++;
-
-
-                    const div =
-                        document.createElement("div");
-
-                    div.className = "item";
-
-
-                    div.innerHTML = `
-
-                        <h4>
-                            👨‍🎓 ${escapeHTML(
-                                user.name ||
-                                "بدون اسم"
-                            )}
-                        </h4>
 
                         <p>
-                            البريد:
-                            ${escapeHTML(
-                                user.email ||
-                                "غير موجود"
-                            )}
+                            📝
+                            <strong>عدد الأسئلة:</strong>
+                            ${questionsCount}
                         </p>
 
-                    `;
+                    </div>
+
+                    <div class="exam-time-box">
+
+                        <p>
+                            📅
+                            <span class="time-label">
+                                يبدأ:
+                            </span>
+                            ${formatExamDate(exam.startAt)}
+                        </p>
+
+                        <p>
+                            ⏰
+                            <span class="time-label">
+                                ينتهي:
+                            </span>
+                            ${formatExamDate(exam.endAt)}
+                        </p>
+
+                    </div>
+
+                `;
 
 
-                    studentsList.appendChild(div);
-
-                });
-
-
-                document.getElementById(
-                    "studentsCount"
-                ).textContent = count;
-
-
-                if (count === 0) {
-
-                    studentsList.innerHTML =
-                        '<p class="empty">لا يوجد طلاب حتى الآن.</p>';
-
-                }
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                studentsList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل الطلاب.</p>';
-
-            }
-
-        }
-
-
-        // =====================================
-        // إضافة سؤال
-        // =====================================
-
-        window.addQuestion = function () {
-
-            const questionText =
-                document.getElementById(
-                    "questionText"
-                ).value.trim();
-
-            const option1 =
-                document.getElementById(
-                    "option1"
-                ).value.trim();
-
-            const option2 =
-                document.getElementById(
-                    "option2"
-                ).value.trim();
-
-            const option3 =
-                document.getElementById(
-                    "option3"
-                ).value.trim();
-
-            const option4 =
-                document.getElementById(
-                    "option4"
-                ).value.trim();
-
-            const correctAnswer =
-                document.querySelector(
-                    'input[name="correctAnswer"]:checked'
-                );
-
-            const message =
-                document.getElementById(
-                    "questionMessage"
-                );
-
-
-            if (!questionText) {
-
-                message.textContent =
-                    "اكتب السؤال أولاً.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
-
-
-            if (
-                !option1 ||
-                !option2 ||
-                !option3 ||
-                !option4
-            ) {
-
-                message.textContent =
-                    "اكتب الاختيارات الأربعة.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
-
-
-            if (!correctAnswer) {
-
-                message.textContent =
-                    "حدد الإجابة الصحيحة.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
-
-
-            examQuestions.push({
-
-                question:
-                    questionText,
-
-                options: [
-                    option1,
-                    option2,
-                    option3,
-                    option4
-                ],
-
-                correctAnswer:
-                    Number(correctAnswer.value)
+                examsList.appendChild(div);
 
             });
 
 
-            renderQuestions();
-
-
             document.getElementById(
-                "questionText"
-            ).value = "";
-
-            document.getElementById(
-                "option1"
-            ).value = "";
-
-            document.getElementById(
-                "option2"
-            ).value = "";
-
-            document.getElementById(
-                "option3"
-            ).value = "";
-
-            document.getElementById(
-                "option4"
-            ).value = "";
-
-
-            document.querySelectorAll(
-                'input[name="correctAnswer"]'
-            ).forEach((radio) => {
-
-                radio.checked = false;
-
-            });
-
-
-            message.textContent =
-                "تمت إضافة السؤال إلى الامتحان ✅";
-
-            message.className =
-                "success";
-
-        };
-
-
-        // =====================================
-        // عرض الأسئلة
-        // =====================================
-
-        function renderQuestions() {
-
-            const container =
-                document.getElementById(
-                    "questionsList"
-                );
-
-
-            container.innerHTML = "";
-
-
-            document.getElementById(
-                "questionsCount"
+                "examsCount"
             ).textContent =
-                examQuestions.length;
+                count;
 
 
-            if (examQuestions.length === 0) {
+        } catch (error) {
 
-                container.innerHTML =
-                    '<p class="empty">لم تتم إضافة أسئلة بعد.</p>';
+            console.error(error);
 
-                return;
-
-            }
-
-
-            examQuestions.forEach(
-                (question, index) => {
-
-                    const div =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    div.className =
-                        "question-box";
-
-
-                    div.innerHTML = `
-
-                        <div style="
-                            display:flex;
-                            justify-content:space-between;
-                            align-items:center;
-                            gap:10px;
-                            margin-bottom:10px;
-                        ">
-
-                            <strong>
-                                السؤال ${index + 1}
-                            </strong>
-
-                            <button
-                                type="button"
-                                class="danger-btn"
-                                onclick="removeQuestion(${index})"
-                            >
-                                حذف
-                            </button>
-
-                        </div>
-
-                        <p>
-                            <strong>
-                                ${escapeHTML(question.question)}
-                            </strong>
-                        </p>
-
-                        <p>
-                            1️⃣ ${escapeHTML(question.options[0])}
-                            ${question.correctAnswer === 0 ? " ✅" : ""}
-                        </p>
-
-                        <p>
-                            2️⃣ ${escapeHTML(question.options[1])}
-                            ${question.correctAnswer === 1 ? " ✅" : ""}
-                        </p>
-
-                        <p>
-                            3️⃣ ${escapeHTML(question.options[2])}
-                            ${question.correctAnswer === 2 ? " ✅" : ""}
-                        </p>
-
-                        <p>
-                            4️⃣ ${escapeHTML(question.options[3])}
-                            ${question.correctAnswer === 3 ? " ✅" : ""}
-                        </p>
-
-                    `;
-
-
-                    container.appendChild(div);
-
-                }
-            );
+            examsList.innerHTML =
+                '<p class="error">حدث خطأ أثناء تحميل الامتحانات.</p>';
 
         }
 
+    }
 
-        // =====================================
-        // حذف سؤال
-        // =====================================
 
-        window.removeQuestion = function (index) {
+    // =====================================
+    // النتائج
+    // =====================================
 
-            examQuestions.splice(
-                index,
-                1
+    async function loadResults() {
+
+        const resultsList =
+            document.getElementById(
+                "resultsList"
             );
 
-            renderQuestions();
 
-        };
-
-
-        // =====================================
-        // إنشاء الامتحان
-        // =====================================
-
-        window.createExam = async function (event) {
-
-            event.preventDefault();
+        resultsList.innerHTML = "";
 
 
-            const title =
-                document.getElementById(
-                    "examTitle"
-                ).value.trim();
+        try {
 
-            const description =
-                document.getElementById(
-                    "examDescription"
-                ).value.trim();
-
-            const courseId =
-                document.getElementById(
-                    "examCourse"
-                ).value;
-
-            const duration =
-                Number(
-                    document.getElementById(
-                        "examDuration"
-                    ).value
-                );
-
-            const message =
-                document.getElementById(
-                    "examMessage"
+            const resultsSnapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "results"
+                    )
                 );
 
 
-            if (!title) {
-
-                message.textContent =
-                    "اكتب اسم الامتحان.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
+            const usersSnapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "users"
+                    )
+                );
 
 
-            if (!courseId) {
-
-                message.textContent =
-                    "اختار الكورس.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
-
-
-            if (
-                !duration ||
-                duration < 1
-            ) {
-
-                message.textContent =
-                    "حدد مدة صحيحة للامتحان بالدقائق.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
-
-
-            if (
-                examQuestions.length === 0
-            ) {
-
-                message.textContent =
-                    "أضف سؤالًا واحدًا على الأقل.";
-
-                message.className =
-                    "error";
-
-                return;
-
-            }
-
-
-            try {
-
-                const courseSnapshot =
-                    await getDoc(
-                        doc(
-                            db,
-                            "courses",
-                            courseId
-                        )
-                    );
-
-
-                if (!courseSnapshot.exists()) {
-
-                    message.textContent =
-                        "الكورس غير موجود.";
-
-                    message.className =
-                        "error";
-
-                    return;
-
-                }
-
-
-                const courseData =
-                    courseSnapshot.data();
-
-
-                await addDoc(
+            const examsSnapshot =
+                await getDocs(
                     collection(
                         db,
                         "exams"
-                    ),
-                    {
-
-                        title:
-                            title,
-
-                        description:
-                            description,
-
-                        courseId:
-                            courseId,
-
-                        courseName:
-                            courseData.name ||
-                            courseData.title ||
-                            "بدون اسم",
-
-                        teacherId:
-                            auth.currentUser.uid,
-
-                        teacherName:
-                            document.getElementById(
-                                "teacherName"
-                            ).textContent,
-
-                        duration:
-                            duration,
-
-                        questions:
-                            examQuestions,
-
-                        createdAt:
-                            serverTimestamp()
-
-                    }
+                    )
                 );
 
 
-                message.textContent =
-                    "تم إنشاء الامتحان بنجاح 🎉";
-
-                message.className =
-                    "success";
+            const users = {};
+            const exams = {};
 
 
-                document.getElementById(
-                    "examForm"
-                ).reset();
+            usersSnapshot.forEach(
+                (userDoc) => {
+
+                    users[userDoc.id] =
+                        userDoc.data();
+
+                }
+            );
 
 
-                examQuestions = [];
+            examsSnapshot.forEach(
+                (examDoc) => {
+
+                    exams[examDoc.id] =
+                        examDoc.data();
+
+                }
+            );
 
 
-                renderQuestions();
+            document.getElementById(
+                "resultsCount"
+            ).textContent =
+                resultsSnapshot.size;
 
 
-                await loadExams();
+            if (
+                resultsSnapshot.empty
+            ) {
 
+                resultsList.innerHTML =
+                    '<p class="empty">لا توجد نتائج حتى الآن.</p>';
 
-            } catch (error) {
-
-                console.error(
-                    "EXAM ERROR:",
-                    error.code,
-                    error.message
-                );
-
-
-                message.textContent =
-                    "حدث خطأ أثناء إنشاء الامتحان ❌";
-
-                message.className =
-                    "error";
+                return;
 
             }
 
-        };
+
+            resultsSnapshot.forEach(
+                (resultDoc) => {
+
+                    const result =
+                        resultDoc.data();
 
 
-        // =====================================
-        // تحميل الامتحانات
-        // =====================================
+                    const student =
+                        users[
+                            result.studentId
+                        ] || {};
 
-        async function loadExams() {
-
-            const examsList =
-                document.getElementById(
-                    "examsList"
-                );
-
-
-            examsList.innerHTML = "";
-
-
-            try {
-
-                const snapshot =
-                    await getDocs(
-                        collection(
-                            db,
-                            "exams"
-                        )
-                    );
-
-
-                let count = 0;
-
-
-                if (snapshot.empty) {
-
-                    examsList.innerHTML =
-                        '<p class="empty">لا توجد امتحانات.</p>';
-
-                    document.getElementById(
-                        "examsCount"
-                    ).textContent = "0";
-
-                    return;
-
-                }
-
-
-                snapshot.forEach((examDoc) => {
 
                     const exam =
-                        examDoc.data();
+                        exams[
+                            result.examId
+                        ] || {};
 
-                    count++;
+
+                    let dateText =
+                        "غير محدد";
 
 
-                    const questionsCount =
-                        Array.isArray(
-                            exam.questions
-                        )
-                            ? exam.questions.length
-                            : 0;
+                    if (
+                        result.createdAt
+                    ) {
+
+                        try {
+
+                            dateText =
+                                result.createdAt
+                                    .toDate()
+                                    .toLocaleString(
+                                        "ar-EG"
+                                    );
+
+                        } catch (error) {
+
+                            dateText =
+                                "غير محدد";
+
+                        }
+
+                    }
 
 
                     const div =
@@ -1428,282 +1765,98 @@
                     div.innerHTML = `
 
                         <h4>
-                            📝 ${escapeHTML(
-                                exam.title ||
-                                "امتحان بدون عنوان"
+                            👨‍🎓
+                            ${escapeHTML(
+                                student.name ||
+                                result.studentName ||
+                                "طالب غير معروف"
                             )}
                         </h4>
 
                         <p>
+                            <strong>الامتحان:</strong>
                             ${escapeHTML(
-                                exam.description ||
-                                "لا يوجد وصف."
+                                exam.title ||
+                                result.examTitle ||
+                                "امتحان غير معروف"
                             )}
                         </p>
 
-                        <div class="exam-info">
+                        <p>
+                            <strong>الدرجة:</strong>
+                            ${result.score || 0}
+                            من
+                            ${result.total || 0}
+                        </p>
 
-                            <p>
-                                📚
-                                <strong>الكورس:</strong>
-                                ${escapeHTML(
-                                    exam.courseName ||
-                                    "غير محدد"
-                                )}
-                            </p>
+                        <p>
+                            <strong>النسبة:</strong>
+                            ${result.percentage || 0}%
+                        </p>
 
-                            <p>
-                                ⏱️
-                                <strong>المدة:</strong>
-                                ${exam.duration || 0}
-                                دقيقة
-                            </p>
-
-                            <p>
-                                📝
-                                <strong>عدد الأسئلة:</strong>
-                                ${questionsCount}
-                            </p>
-
-                        </div>
+                        <p>
+                            <strong>التاريخ:</strong>
+                            ${dateText}
+                        </p>
 
                     `;
 
 
-                    examsList.appendChild(div);
+                    resultsList.appendChild(
+                        div
+                    );
 
-                });
-
-
-                document.getElementById(
-                    "examsCount"
-                ).textContent =
-                    count;
+                }
+            );
 
 
-            } catch (error) {
+        } catch (error) {
 
-                console.error(error);
+            console.error(error);
 
-                examsList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل الامتحانات.</p>';
-
-            }
+            resultsList.innerHTML =
+                '<p class="error">حدث خطأ أثناء تحميل النتائج.</p>';
 
         }
 
-
-        // =====================================
-        // النتائج
-        // =====================================
-
-        async function loadResults() {
-
-            const resultsList =
-                document.getElementById(
-                    "resultsList"
-                );
+    }
 
 
-            resultsList.innerHTML = "";
+    // =====================================
+    // حماية الصفحة
+    // =====================================
+
+    onAuthStateChanged(
+        auth,
+        async (user) => {
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
 
 
             try {
 
-                const resultsSnapshot =
-                    await getDocs(
-                        collection(
+                const userSnapshot =
+                    await getDoc(
+                        doc(
                             db,
-                            "results"
+                            "users",
+                            user.uid
                         )
                     );
-
-
-                const usersSnapshot =
-                    await getDocs(
-                        collection(
-                            db,
-                            "users"
-                        )
-                    );
-
-
-                const examsSnapshot =
-                    await getDocs(
-                        collection(
-                            db,
-                            "exams"
-                        )
-                    );
-
-
-                const users = {};
-                const exams = {};
-
-
-                usersSnapshot.forEach(
-                    (userDoc) => {
-
-                        users[userDoc.id] =
-                            userDoc.data();
-
-                    }
-                );
-
-
-                examsSnapshot.forEach(
-                    (examDoc) => {
-
-                        exams[examDoc.id] =
-                            examDoc.data();
-
-                    }
-                );
-
-
-                document.getElementById(
-                    "resultsCount"
-                ).textContent =
-                    resultsSnapshot.size;
 
 
                 if (
-                    resultsSnapshot.empty
+                    !userSnapshot.exists()
                 ) {
 
-                    resultsList.innerHTML =
-                        '<p class="empty">لا توجد نتائج حتى الآن.</p>';
-
-                    return;
-
-                }
-
-
-                resultsSnapshot.forEach(
-                    (resultDoc) => {
-
-                        const result =
-                            resultDoc.data();
-
-
-                        const student =
-                            users[
-                                result.studentId
-                            ] || {};
-
-
-                        const exam =
-                            exams[
-                                result.examId
-                            ] || {};
-
-
-                        let dateText =
-                            "غير محدد";
-
-
-                        if (
-                            result.createdAt
-                        ) {
-
-                            try {
-
-                                dateText =
-                                    result.createdAt
-                                        .toDate()
-                                        .toLocaleString(
-                                            "ar-EG"
-                                        );
-
-                            } catch (error) {
-
-                                dateText =
-                                    "غير محدد";
-
-                            }
-
-                        }
-
-
-                        const div =
-                            document.createElement(
-                                "div"
-                            );
-
-
-                        div.className =
-                            "item";
-
-
-                        div.innerHTML = `
-
-                            <h4>
-                                👨‍🎓
-                                ${escapeHTML(
-                                    student.name ||
-                                    result.studentName ||
-                                    "طالب غير معروف"
-                                )}
-                            </h4>
-
-                            <p>
-                                <strong>الامتحان:</strong>
-                                ${escapeHTML(
-                                    exam.title ||
-                                    result.examTitle ||
-                                    "امتحان غير معروف"
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>الدرجة:</strong>
-                                ${result.score || 0}
-                                من
-                                ${result.total || 0}
-                            </p>
-
-                            <p>
-                                <strong>النسبة:</strong>
-                                ${result.percentage || 0}%
-                            </p>
-
-                            <p>
-                                <strong>التاريخ:</strong>
-                                ${dateText}
-                            </p>
-
-                        `;
-
-
-                        resultsList.appendChild(
-                            div
-                        );
-
-                    }
-                );
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                resultsList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل النتائج.</p>';
-
-            }
-
-        }
-
-
-        // =====================================
-        // حماية الصفحة
-        // =====================================
-
-        onAuthStateChanged(
-            auth,
-            async (user) => {
-
-                if (!user) {
+                    await signOut(auth);
 
                     window.location.href =
                         "login.html";
@@ -1713,644 +1866,639 @@
                 }
 
 
-                try {
+                const userData =
+                    userSnapshot.data();
 
-                    const userSnapshot =
-                        await getDoc(
-                            doc(
-                                db,
-                                "users",
-                                user.uid
-                            )
-                        );
 
+                if (
+                    userData.role !==
+                    "teacher"
+                ) {
 
                     if (
-                        !userSnapshot.exists()
+                        userData.role ===
+                        "admin"
                     ) {
+
+                        window.location.href =
+                            "admin.html";
+
+                    }
+                    else if (
+                        userData.role ===
+                        "student"
+                    ) {
+
+                        window.location.href =
+                            "student.html";
+
+                    }
+                    else {
 
                         await signOut(auth);
 
                         window.location.href =
                             "login.html";
 
-                        return;
-
                     }
 
-
-                    const userData =
-                        userSnapshot.data();
-
-
-                    if (
-                        userData.role !==
-                        "teacher"
-                    ) {
-
-                        if (
-                            userData.role ===
-                            "admin"
-                        ) {
-
-                            window.location.href =
-                                "admin.html";
-
-                        }
-                        else if (
-                            userData.role ===
-                            "student"
-                        ) {
-
-                            window.location.href =
-                                "student.html";
-
-                        }
-                        else {
-
-                            await signOut(auth);
-
-                            window.location.href =
-                                "login.html";
-
-                        }
-
-                        return;
-
-                    }
-
-
-                    document.getElementById(
-                        "teacherName"
-                    ).textContent =
-                        userData.name ||
-                        "المدرس";
-
-
-                    await loadCourses();
-                    await loadLessons();
-                    await loadStudents();
-                    await loadExams();
-                    await loadResults();
-
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    alert(
-                        "حدث خطأ أثناء تحميل لوحة المدرس."
-                    );
+                    return;
 
                 }
 
+
+                document.getElementById(
+                    "teacherName"
+                ).textContent =
+                    userData.name ||
+                    "المدرس";
+
+
+                await loadCourses();
+                await loadLessons();
+                await loadStudents();
+                await loadExams();
+                await loadResults();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "حدث خطأ أثناء تحميل لوحة المدرس."
+                );
+
             }
-        );
-
-
-        // =====================================
-        // حماية النصوص
-        // =====================================
-
-        function escapeHTML(value) {
-
-            const div =
-                document.createElement("div");
-
-            div.textContent =
-                value == null
-                    ? ""
-                    : String(value);
-
-            return div.innerHTML;
 
         }
-
-    </script>
-
-</head>
+    );
 
 
-<body>
+    // =====================================
+    // حماية النصوص
+    // =====================================
 
-    <header>
+    function escapeHTML(value) {
 
-        <h1>
-            Nova Future 🚀
-        </h1>
+        const div =
+            document.createElement("div");
 
-        <p>
-            لوحة المدرس
-        </p>
+        div.textContent =
+            value == null
+                ? ""
+                : String(value);
 
-    </header>
+        return div.innerHTML;
 
+    }
 
-    <main class="dashboard">
+</script>
 
+</head><body><header>
 
-        <!-- الترحيب -->
+    <h1>
+        Nova Future 🚀
+    </h1>
 
-        <div class="top-bar">
+    <p>
+        لوحة المدرس
+    </p>
 
-            <div>
-
-                <h2>
-                    أهلاً بك يا
-                    <span id="teacherName">...</span>
-                    👨‍🏫
-                </h2>
-
-                <p>
-                    إدارة الكورسات والدروس والامتحانات
-                    ومتابعة الطلاب والنتائج.
-                </p>
-
-            </div>
+</header>
 
 
-            <div
-                class="top-actions"
+<main class="dashboard">
+
+
+    <!-- الترحيب -->
+
+    <div class="top-bar">
+
+        <div>
+
+            <h2>
+                أهلاً بك يا
+                <span id="teacherName">...</span>
+                👨‍🏫
+            </h2>
+
+            <p>
+                إدارة الكورسات والدروس والامتحانات
+                ومتابعة الطلاب والنتائج.
+            </p>
+
+        </div>
+
+
+        <div
+            class="top-actions"
+            style="
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+            "
+        >
+
+            <a
+                href="profile.html"
+                class="secondary-btn"
                 style="
-                    display: flex;
-                    gap: 10px;
-                    align-items: center;
-                    flex-wrap: wrap;
+                    text-decoration: none;
+                    display: inline-block;
                 "
             >
-
-                <!-- الملف الشخصي -->
-
-                <a
-                    href="profile.html"
-                    class="secondary-btn"
-                    style="
-                        text-decoration: none;
-                        display: inline-block;
-                    "
-                >
-                    👤 الملف الشخصي
-                </a>
+                👤 الملف الشخصي
+            </a>
 
 
-                <!-- الإعدادات -->
-
-                <a
-                    href="settings.html"
-                    class="secondary-btn"
-                    style="
-                        text-decoration: none;
-                        display: inline-block;
-                    "
-                >
-                    ⚙️ الإعدادات
-                </a>
+            <a
+                href="settings.html"
+                class="secondary-btn"
+                style="
+                    text-decoration: none;
+                    display: inline-block;
+                "
+            >
+                ⚙️ الإعدادات
+            </a>
 
 
-                <!-- تسجيل الخروج -->
+            <button
+                class="logout-btn"
+                onclick="logoutTeacher()"
+            >
+                تسجيل الخروج
+            </button>
 
-                <button
-                    class="logout-btn"
-                    onclick="logoutTeacher()"
-                >
-                    تسجيل الخروج
-                </button>
+        </div>
+
+    </div>
+
+
+    <!-- الإحصائيات -->
+
+    <div class="card">
+
+        <h3>
+            📊 إحصائيات سريعة
+        </h3>
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <strong id="studentsCount">
+                    0
+                </strong>
+
+                الطلاب
+
+            </div>
+
+            <div class="stat">
+
+                <strong id="lessonsCount">
+                    0
+                </strong>
+
+                الدروس
+
+            </div>
+
+            <div class="stat">
+
+                <strong id="examsCount">
+                    0
+                </strong>
+
+                الامتحانات
+
+            </div>
+
+            <div class="stat">
+
+                <strong id="resultsCount">
+                    0
+                </strong>
+
+                النتائج
 
             </div>
 
         </div>
 
+    </div>
 
-        <!-- الإحصائيات -->
 
-        <div class="card">
+    <!-- الكورسات الموجودة -->
 
-            <h3>
-                📊 إحصائيات سريعة
-            </h3>
+    <div class="card">
 
-            <div class="stats">
+        <h3>
+            📚 الكورسات
+        </h3>
 
-                <div class="stat">
+        <div id="coursesList">
 
-                    <strong id="studentsCount">
-                        0
-                    </strong>
-
-                    الطلاب
-
-                </div>
-
-                <div class="stat">
-
-                    <strong id="lessonsCount">
-                        0
-                    </strong>
-
-                    الدروس
-
-                </div>
-
-                <div class="stat">
-
-                    <strong id="examsCount">
-                        0
-                    </strong>
-
-                    الامتحانات
-
-                </div>
-
-                <div class="stat">
-
-                    <strong id="resultsCount">
-                        0
-                    </strong>
-
-                    النتائج
-
-                </div>
-
-            </div>
+            <p class="empty">
+                جاري تحميل الكورسات...
+            </p>
 
         </div>
 
+    </div>
 
-        <!-- الكورسات الموجودة -->
 
-        <div class="card">
+    <!-- إنشاء كورس -->
 
-            <h3>
-                📚 الكورسات
-            </h3>
+    <div class="card">
 
-            <div id="coursesList">
+        <h3>
+            ➕ إنشاء كورس جديد
+        </h3>
 
-                <p class="empty">
+        <form
+            id="courseForm"
+            onsubmit="createCourse(event)"
+        >
+
+            <input
+                type="text"
+                id="courseTitle"
+                placeholder="اسم الكورس"
+                required
+            >
+
+            <textarea
+                id="courseDescription"
+                placeholder="وصف الكورس"
+            ></textarea>
+
+            <button
+                type="submit"
+                class="primary-btn"
+                id="createCourseBtn"
+            >
+                إنشاء الكورس 📚
+            </button>
+
+            <p id="courseMessage"></p>
+
+        </form>
+
+    </div>
+
+
+    <!-- إضافة درس -->
+
+    <div class="card">
+
+        <h3>
+            ➕ إضافة درس جديد
+        </h3>
+
+        <form
+            id="lessonForm"
+            onsubmit="addLesson(event)"
+        >
+
+            <select
+                id="lessonCourse"
+                required
+            >
+
+                <option value="">
                     جاري تحميل الكورسات...
+                </option>
+
+            </select>
+
+            <input
+                type="text"
+                id="lessonTitle"
+                placeholder="اسم الدرس"
+                required
+            >
+
+            <textarea
+                id="lessonContent"
+                placeholder="اكتب محتوى الدرس هنا..."
+                required
+            ></textarea>
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                إضافة الدرس 📖
+            </button>
+
+            <p id="lessonMessage"></p>
+
+        </form>
+
+    </div>
+
+
+    <!-- الدروس -->
+
+    <div class="card">
+
+        <h3>
+            📖 الدروس الموجودة
+        </h3>
+
+        <div id="lessonsList">
+
+            <p class="empty">
+                جاري تحميل الدروس...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- الطلاب -->
+
+    <div class="card">
+
+        <h3>
+            👨‍🎓 الطلاب
+        </h3>
+
+        <div id="studentsList">
+
+            <p class="empty">
+                جاري تحميل الطلاب...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- إنشاء امتحان -->
+
+    <div class="card">
+
+        <h3>
+            ➕ إنشاء امتحان جديد
+        </h3>
+
+        <form
+            id="examForm"
+            onsubmit="createExam(event)"
+        >
+
+            <input
+                type="text"
+                id="examTitle"
+                placeholder="اسم الامتحان"
+                required
+            >
+
+            <textarea
+                id="examDescription"
+                placeholder="وصف الامتحان"
+            ></textarea>
+
+            <select
+                id="examCourse"
+                required
+            >
+
+                <option value="">
+                    جاري تحميل الكورسات...
+                </option>
+
+            </select>
+
+            <input
+                type="number"
+                id="examDuration"
+                placeholder="مدة الحل بالدقائق"
+                min="1"
+                max="300"
+                required
+            >
+
+            <!-- وقت إتاحة الامتحان -->
+
+            <div class="exam-time-box">
+
+                <h4>
+                    🕐 تحديد وقت إتاحة الامتحان
+                </h4>
+
+                <p>
+                    الطالب يستطيع دخول الامتحان فقط خلال الفترة المحددة هنا.
                 </p>
+
+                <label for="examStartAt">
+                    📅 تاريخ ووقت البداية
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="examStartAt"
+                    required
+                >
+
+                <label for="examEndAt">
+                    ⏰ تاريخ ووقت النهاية
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="examEndAt"
+                    required
+                >
 
             </div>
 
-        </div>
 
+            <!-- إضافة سؤال -->
 
-        <!-- إنشاء كورس -->
+            <div class="question-box">
 
-        <div class="card">
+                <h4>
+                    ➕ إضافة سؤال
+                </h4>
 
-            <h3>
-                ➕ إنشاء كورس جديد
-            </h3>
+                <div id="questionForm">
 
-            <form
-                id="courseForm"
-                onsubmit="createCourse(event)"
-            >
+                    <input
+                        type="text"
+                        id="questionText"
+                        placeholder="اكتب السؤال"
+                    >
 
-                <input
-                    type="text"
-                    id="courseTitle"
-                    placeholder="اسم الكورس"
-                    required
-                >
+                    <div class="option-row">
 
-                <textarea
-                    id="courseDescription"
-                    placeholder="وصف الكورس"
-                ></textarea>
-
-                <button
-                    type="submit"
-                    class="primary-btn"
-                    id="createCourseBtn"
-                >
-                    إنشاء الكورس 📚
-                </button>
-
-                <p id="courseMessage"></p>
-
-            </form>
-
-        </div>
-
-
-        <!-- إضافة درس -->
-
-        <div class="card">
-
-            <h3>
-                ➕ إضافة درس جديد
-            </h3>
-
-            <form
-                id="lessonForm"
-                onsubmit="addLesson(event)"
-            >
-
-                <select
-                    id="lessonCourse"
-                    required
-                >
-
-                    <option value="">
-                        جاري تحميل الكورسات...
-                    </option>
-
-                </select>
-
-                <input
-                    type="text"
-                    id="lessonTitle"
-                    placeholder="اسم الدرس"
-                    required
-                >
-
-                <textarea
-                    id="lessonContent"
-                    placeholder="اكتب محتوى الدرس هنا..."
-                    required
-                ></textarea>
-
-                <button
-                    type="submit"
-                    class="primary-btn"
-                >
-                    إضافة الدرس 📖
-                </button>
-
-                <p id="lessonMessage"></p>
-
-            </form>
-
-        </div>
-
-
-        <!-- الدروس -->
-
-        <div class="card">
-
-            <h3>
-                📖 الدروس الموجودة
-            </h3>
-
-            <div id="lessonsList">
-
-                <p class="empty">
-                    جاري تحميل الدروس...
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- الطلاب -->
-
-        <div class="card">
-
-            <h3>
-                👨‍🎓 الطلاب
-            </h3>
-
-            <div id="studentsList">
-
-                <p class="empty">
-                    جاري تحميل الطلاب...
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- إنشاء امتحان -->
-
-        <div class="card">
-
-            <h3>
-                ➕ إنشاء امتحان جديد
-            </h3>
-
-            <form
-                id="examForm"
-                onsubmit="createExam(event)"
-            >
-
-                <input
-                    type="text"
-                    id="examTitle"
-                    placeholder="اسم الامتحان"
-                    required
-                >
-
-                <textarea
-                    id="examDescription"
-                    placeholder="وصف الامتحان"
-                ></textarea>
-
-                <select
-                    id="examCourse"
-                    required
-                >
-
-                    <option value="">
-                        جاري تحميل الكورسات...
-                    </option>
-
-                </select>
-
-                <input
-                    type="number"
-                    id="examDuration"
-                    placeholder="مدة الامتحان بالدقائق"
-                    min="1"
-                    max="300"
-                    required
-                >
-
-
-                <!-- إضافة سؤال -->
-
-                <div class="question-box">
-
-                    <h4>
-                        ➕ إضافة سؤال
-                    </h4>
-
-                    <div id="questionForm">
+                        <input
+                            type="radio"
+                            name="correctAnswer"
+                            value="0"
+                        >
 
                         <input
                             type="text"
-                            id="questionText"
-                            placeholder="اكتب السؤال"
+                            id="option1"
+                            placeholder="الاختيار الأول"
                         >
-
-                        <div class="option-row">
-
-                            <input
-                                type="radio"
-                                name="correctAnswer"
-                                value="0"
-                            >
-
-                            <input
-                                type="text"
-                                id="option1"
-                                placeholder="الاختيار الأول"
-                            >
-
-                        </div>
-
-                        <div class="option-row">
-
-                            <input
-                                type="radio"
-                                name="correctAnswer"
-                                value="1"
-                            >
-
-                            <input
-                                type="text"
-                                id="option2"
-                                placeholder="الاختيار الثاني"
-                            >
-
-                        </div>
-
-                        <div class="option-row">
-
-                            <input
-                                type="radio"
-                                name="correctAnswer"
-                                value="2"
-                            >
-
-                            <input
-                                type="text"
-                                id="option3"
-                                placeholder="الاختيار الثالث"
-                            >
-
-                        </div>
-
-                        <div class="option-row">
-
-                            <input
-                                type="radio"
-                                name="correctAnswer"
-                                value="3"
-                            >
-
-                            <input
-                                type="text"
-                                id="option4"
-                                placeholder="الاختيار الرابع"
-                            >
-
-                        </div>
-
-                        <button
-                            type="button"
-                            class="secondary-btn"
-                            onclick="addQuestion()"
-                        >
-                            إضافة السؤال ➕
-                        </button>
-
-                        <p id="questionMessage"></p>
 
                     </div>
 
+                    <div class="option-row">
+
+                        <input
+                            type="radio"
+                            name="correctAnswer"
+                            value="1"
+                        >
+
+                        <input
+                            type="text"
+                            id="option2"
+                            placeholder="الاختيار الثاني"
+                        >
+
+                    </div>
+
+                    <div class="option-row">
+
+                        <input
+                            type="radio"
+                            name="correctAnswer"
+                            value="2"
+                        >
+
+                        <input
+                            type="text"
+                            id="option3"
+                            placeholder="الاختيار الثالث"
+                        >
+
+                    </div>
+
+                    <div class="option-row">
+
+                        <input
+                            type="radio"
+                            name="correctAnswer"
+                            value="3"
+                        >
+
+                        <input
+                            type="text"
+                            id="option4"
+                            placeholder="الاختيار الرابع"
+                        >
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="addQuestion()"
+                    >
+                        إضافة السؤال ➕
+                    </button>
+
+                    <p id="questionMessage"></p>
+
                 </div>
 
-
-                <!-- الأسئلة -->
-
-                <h4 class="questions-title">
-
-                    الأسئلة المضافة:
-
-                    <span id="questionsCount">
-                        0
-                    </span>
-
-                </h4>
-
-                <div id="questionsList">
-
-                    <p class="empty">
-                        لم تتم إضافة أسئلة بعد.
-                    </p>
-
-                </div>
+            </div>
 
 
-                <button
-                    type="submit"
-                    class="primary-btn"
-                >
-                    إنشاء الامتحان 🎉
-                </button>
+            <!-- الأسئلة -->
 
-                <p id="examMessage"></p>
+            <h4 class="questions-title">
 
-            </form>
+                الأسئلة المضافة:
 
-        </div>
+                <span id="questionsCount">
+                    0
+                </span>
 
+            </h4>
 
-        <!-- الامتحانات -->
-
-        <div class="card">
-
-            <h3>
-                📝 الامتحانات
-            </h3>
-
-            <div id="examsList">
+            <div id="questionsList">
 
                 <p class="empty">
-                    جاري تحميل الامتحانات...
+                    لم تتم إضافة أسئلة بعد.
                 </p>
 
             </div>
 
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                إنشاء الامتحان 🎉
+            </button>
+
+            <p id="examMessage"></p>
+
+        </form>
+
+    </div>
+
+
+    <!-- الامتحانات -->
+
+    <div class="card">
+
+        <h3>
+            📝 الامتحانات
+        </h3>
+
+        <div id="examsList">
+
+            <p class="empty">
+                جاري تحميل الامتحانات...
+            </p>
+
         </div>
 
+    </div>
 
-        <!-- النتائج -->
 
-        <div class="card">
+    <!-- النتائج -->
 
-            <h3>
-                📊 نتائج الطلاب
-            </h3>
+    <div class="card">
 
-            <div id="resultsList">
+        <h3>
+            📊 نتائج الطلاب
+        </h3>
 
-                <p class="empty">
-                    جاري تحميل النتائج...
-                </p>
+        <div id="resultsList">
 
-            </div>
+            <p class="empty">
+                جاري تحميل النتائج...
+            </p>
 
         </div>
 
-    </main>
+    </div>
+
+</main>
 
 
-    <footer>
+<footer>
 
-        <p>
-            © 2026 Nova Future
-        </p>
+    <p>
+        © 2026 Nova Future
+    </p>
 
-    </footer>
+</footer>
 
 
-    <script src="../js/app.js"></script>
+<script src="../js/app.js"></script>
 
-</body>
-
-</html>
+</body></html>
