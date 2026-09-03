@@ -1,1 +1,733 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>الإعدادات - Nova Future</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+            transition: 0.3s;
+        }
+
+        body.dark {
+            background: #111827;
+            color: #f9fafb;
+        }
+
+        .topbar {
+            background: #111827;
+            color: white;
+            padding: 15px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background: #374151;
+            color: white;
+            text-decoration: none;
+
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 35px auto;
+            padding: 0 15px;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 20px;
+        }
+
+        body.dark .settings-card {
+            background: #1f2937;
+        }
+
+        .page-title {
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .setting {
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        body.dark .setting {
+            border-bottom-color: #374151;
+        }
+
+        .setting:last-child {
+            border-bottom: none;
+        }
+
+        .setting-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .setting-description {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        body.dark .setting-description {
+            color: #9ca3af;
+        }
+
+        .colors {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+            border: 3px solid transparent;
+
+            cursor: pointer;
+        }
+
+        .color-btn.active {
+            border-color: #111827;
+            transform: scale(1.1);
+        }
+
+        body.dark .color-btn.active {
+            border-color: white;
+        }
+
+        .blue {
+            background: #2563eb;
+        }
+
+        .purple {
+            background: #7c3aed;
+        }
+
+        .green {
+            background: #16a34a;
+        }
+
+        .red {
+            background: #dc2626;
+        }
+
+        .orange {
+            background: #ea580c;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            border: none;
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            background: #e5e7eb;
+            color: #111827;
+
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        body.dark .theme-btn {
+            background: #374151;
+            color: white;
+        }
+
+        .theme-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .reset-btn {
+            width: 100%;
+
+            border: none;
+            border-radius: 8px;
+
+            padding: 13px;
+
+            background: #6b7280;
+            color: white;
+
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background: #4b5563;
+        }
+
+        .message {
+            display: none;
+
+            padding: 12px;
+
+            margin-top: 15px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            margin: 25px 0;
+        }
+
+        body.dark .footer {
+            color: #9ca3af;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="topbar">
+
+        <div class="logo">
+            🚀 Nova Future
+        </div>
+
+        <a
+            href="../index.html"
+            class="back-btn"
+            id="backBtn"
+        >
+            ← العودة
+        </a>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="settings-card">
+
+            <h1 class="page-title">
+                ⚙️ إعدادات المنصة
+            </h1>
+
+
+            <div class="setting">
+
+                <div class="setting-title">
+                    🎨 لون المنصة
+                </div>
+
+                <div class="setting-description">
+                    اختر اللون الرئيسي الذي تفضله للمنصة.
+                </div>
+
+
+                <div class="colors">
+
+                    <button
+                        class="color-btn blue"
+                        data-color="#2563eb"
+                        data-dark="#1d4ed8"
+                        title="أزرق"
+                    ></button>
+
+                    <button
+                        class="color-btn purple"
+                        data-color="#7c3aed"
+                        data-dark="#6d28d9"
+                        title="بنفسجي"
+                    ></button>
+
+                    <button
+                        class="color-btn green"
+                        data-color="#16a34a"
+                        data-dark="#15803d"
+                        title="أخضر"
+                    ></button>
+
+                    <button
+                        class="color-btn red"
+                        data-color="#dc2626"
+                        data-dark="#b91c1c"
+                        title="أحمر"
+                    ></button>
+
+                    <button
+                        class="color-btn orange"
+                        data-color="#ea580c"
+                        data-dark="#c2410c"
+                        title="برتقالي"
+                    ></button>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting">
+
+                <div class="setting-title">
+                    🌙 مظهر المنصة
+                </div>
+
+                <div class="setting-description">
+                    اختر طريقة ظهور المنصة.
+                </div>
+
+
+                <div class="theme-buttons">
+
+                    <button
+                        class="theme-btn"
+                        data-theme="light"
+                    >
+                        ☀️ نهاري
+                    </button>
+
+                    <button
+                        class="theme-btn"
+                        data-theme="dark"
+                    >
+                        🌙 ليلي
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting">
+
+                <div class="setting-title">
+                    🔄 إعادة الإعدادات
+                </div>
+
+                <div class="setting-description">
+                    إعادة الألوان والمظهر إلى الإعدادات الافتراضية.
+                </div>
+
+
+                <button
+                    class="reset-btn"
+                    id="resetBtn"
+                >
+                    إعادة الإعدادات الافتراضية
+                </button>
+
+            </div>
+
+
+            <div
+                class="message"
+                id="message"
+            >
+                تم حفظ الإعدادات بنجاح ✅
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+            Nova Future — An educational platform developed by Ahmed Nabil
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const defaultColor =
+            "#2563eb";
+
+        const defaultDarkColor =
+            "#1d4ed8";
+
+        const defaultTheme =
+            "light";
+
+
+        function applyColor(
+            color,
+            darkColor
+        ) {
+
+            document.documentElement.style.setProperty(
+                "--primary-color",
+                color
+            );
+
+            document.documentElement.style.setProperty(
+                "--primary-dark",
+                darkColor
+            );
+
+            localStorage.setItem(
+                "novaPrimaryColor",
+                color
+            );
+
+            localStorage.setItem(
+                "novaPrimaryDarkColor",
+                darkColor
+            );
+
+
+            document.querySelectorAll(
+                ".color-btn"
+            ).forEach(
+                button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                    if (
+                        button.dataset.color === color
+                    ) {
+
+                        button.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            showMessage();
+
+        }
+
+
+        function applyTheme(theme) {
+
+            if (theme === "dark") {
+
+                document.body.classList.add(
+                    "dark"
+                );
+
+            } else {
+
+                document.body.classList.remove(
+                    "dark"
+                );
+
+            }
+
+
+            localStorage.setItem(
+                "novaTheme",
+                theme
+            );
+
+
+            document.querySelectorAll(
+                ".theme-btn"
+            ).forEach(
+                button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                    if (
+                        button.dataset.theme === theme
+                    ) {
+
+                        button.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            showMessage();
+
+        }
+
+
+        function showMessage() {
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            message.classList.add(
+                "show"
+            );
+
+
+            clearTimeout(
+                window.novaMessageTimer
+            );
+
+
+            window.novaMessageTimer =
+                setTimeout(
+                    () => {
+
+                        message.classList.remove(
+                            "show"
+                        );
+
+                    },
+                    2000
+                );
+
+        }
+
+
+        function loadSettings() {
+
+            const savedColor =
+                localStorage.getItem(
+                    "novaPrimaryColor"
+                ) ||
+                defaultColor;
+
+
+            const savedDarkColor =
+                localStorage.getItem(
+                    "novaPrimaryDarkColor"
+                ) ||
+                defaultDarkColor;
+
+
+            const savedTheme =
+                localStorage.getItem(
+                    "novaTheme"
+                ) ||
+                defaultTheme;
+
+
+            document.documentElement.style.setProperty(
+                "--primary-color",
+                savedColor
+            );
+
+            document.documentElement.style.setProperty(
+                "--primary-dark",
+                savedDarkColor
+            );
+
+
+            document.querySelectorAll(
+                ".color-btn"
+            ).forEach(
+                button => {
+
+                    if (
+                        button.dataset.color === savedColor
+                    ) {
+
+                        button.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            if (savedTheme === "dark") {
+
+                document.body.classList.add(
+                    "dark"
+                );
+
+            }
+
+
+            document.querySelectorAll(
+                ".theme-btn"
+            ).forEach(
+                button => {
+
+                    if (
+                        button.dataset.theme === savedTheme
+                    ) {
+
+                        button.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        document.querySelectorAll(
+            ".color-btn"
+        ).forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        applyColor(
+                            button.dataset.color,
+                            button.dataset.dark
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        document.querySelectorAll(
+            ".theme-btn"
+        ).forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        applyTheme(
+                            button.dataset.theme
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "resetBtn"
+        ).addEventListener(
+            "click",
+            () => {
+
+                localStorage.removeItem(
+                    "novaPrimaryColor"
+                );
+
+                localStorage.removeItem(
+                    "novaPrimaryDarkColor"
+                );
+
+                localStorage.removeItem(
+                    "novaTheme"
+                );
+
+
+                applyColor(
+                    defaultColor,
+                    defaultDarkColor
+                );
+
+                applyTheme(
+                    defaultTheme
+                );
+
+            }
+        );
+
+
+        const path =
+            window.location.pathname;
+
+
+        if (
+            path.includes(
+                "/student.html"
+            )
+        ) {
+
+            document.getElementById(
+                "backBtn"
+            ).href =
+                "student.html";
+
+        }
+
+
+        loadSettings();
+
+    </script>
+
+</body>
+
+</html>
