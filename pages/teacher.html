@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>لوحة المدرس - Nova Future</title>
@@ -9,6 +12,7 @@
     <link rel="stylesheet" href="../css/style.css">
 
     <style>
+
         .dashboard {
             max-width: 1150px;
             margin: 30px auto;
@@ -84,6 +88,7 @@
             border-radius: 8px;
             font-size: 15px;
             font-family: inherit;
+            box-sizing: border-box;
         }
 
         textarea {
@@ -102,6 +107,24 @@
             padding: 13px;
             border-radius: 8px;
             font-size: 16px;
+        }
+
+        .secondary-btn {
+            border: none;
+            background: #2563eb;
+            color: #fff;
+            padding: 11px 15px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .danger-btn {
+            border: none;
+            background: #dc2626;
+            color: #fff;
+            padding: 11px 15px;
+            border-radius: 8px;
+            font-size: 15px;
         }
 
         .item {
@@ -135,7 +158,54 @@
             color: #dc2626;
             margin-top: 8px;
         }
+
+        .question-box {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 15px;
+            background: #fafafa;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .question-header h4 {
+            margin: 0;
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .option-row input[type="radio"] {
+            width: auto;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .exam-info {
+            background: #f5f7fb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
     </style>
+
 
     <script type="module">
 
@@ -143,6 +213,7 @@
             onAuthStateChanged,
             signOut
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
 
         import {
             doc,
@@ -153,7 +224,11 @@
             serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-        import { auth, db } from "../js/firebase-config.js";
+
+        import {
+            auth,
+            db
+        } from "../js/firebase-config.js";
 
 
         // =====================================
@@ -189,9 +264,16 @@
             const lessonCourse =
                 document.getElementById("lessonCourse");
 
+            const examCourse =
+                document.getElementById("examCourse");
+
+
             coursesList.innerHTML = "";
 
             lessonCourse.innerHTML =
+                '<option value="">اختر الكورس</option>';
+
+            examCourse.innerHTML =
                 '<option value="">اختر الكورس</option>';
 
 
@@ -219,10 +301,13 @@
 
 
                     const courseName =
-                        course.name || "بدون اسم";
+                        course.name ||
+                        course.title ||
+                        "بدون اسم";
 
 
-                    // قائمة الكورسات
+                    // عرض الكورس
+
                     const div =
                         document.createElement("div");
 
@@ -241,17 +326,37 @@
                     coursesList.appendChild(div);
 
 
-                    // قائمة اختيار الكورس
-                    const option =
+                    // اختيار الكورس للدرس
+
+                    const lessonOption =
                         document.createElement("option");
 
-                    option.value =
+                    lessonOption.value =
                         courseDoc.id;
 
-                    option.textContent =
+                    lessonOption.textContent =
                         courseName;
 
-                    lessonCourse.appendChild(option);
+                    lessonCourse.appendChild(
+                        lessonOption
+                    );
+
+
+                    // اختيار الكورس للامتحان
+
+                    const examOption =
+                        document.createElement("option");
+
+                    examOption.value =
+                        courseDoc.id;
+
+                    examOption.textContent =
+                        courseName;
+
+                    examCourse.appendChild(
+                        examOption
+                    );
+
                 });
 
 
@@ -363,7 +468,9 @@
                         courseId: courseId,
 
                         courseName:
-                            courseData.name || "بدون اسم",
+                            courseData.name ||
+                            courseData.title ||
+                            "بدون اسم",
 
                         teacherId:
                             auth.currentUser.uid,
@@ -566,7 +673,430 @@
 
 
         // =====================================
-        // الامتحانات
+        // إنشاء امتحان
+        // =====================================
+
+        let examQuestions = [];
+
+
+        window.addQuestion = function () {
+
+            const questionText =
+                document.getElementById("questionText")
+                    .value.trim();
+
+
+            const option1 =
+                document.getElementById("option1")
+                    .value.trim();
+
+
+            const option2 =
+                document.getElementById("option2")
+                    .value.trim();
+
+
+            const option3 =
+                document.getElementById("option3")
+                    .value.trim();
+
+
+            const option4 =
+                document.getElementById("option4")
+                    .value.trim();
+
+
+            const correctAnswer =
+                document.querySelector(
+                    'input[name="correctAnswer"]:checked'
+                );
+
+
+            const message =
+                document.getElementById("questionMessage");
+
+
+            if (!questionText) {
+
+                message.textContent =
+                    "اكتب السؤال أولاً.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            if (
+                !option1 ||
+                !option2 ||
+                !option3 ||
+                !option4
+            ) {
+
+                message.textContent =
+                    "اكتب الاختيارات الأربعة.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            if (!correctAnswer) {
+
+                message.textContent =
+                    "حدد الإجابة الصحيحة.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            const question = {
+
+                question: questionText,
+
+                options: [
+                    option1,
+                    option2,
+                    option3,
+                    option4
+                ],
+
+                correctAnswer:
+                    Number(correctAnswer.value)
+            };
+
+
+            examQuestions.push(question);
+
+
+            renderQuestions();
+
+
+            document
+                .getElementById("questionForm")
+                .reset();
+
+
+            message.textContent =
+                "تمت إضافة السؤال إلى الامتحان ✅";
+
+            message.className =
+                "success";
+        };
+
+
+        // =====================================
+        // عرض الأسئلة المضافة
+        // =====================================
+
+        function renderQuestions() {
+
+            const container =
+                document.getElementById("questionsList");
+
+
+            container.innerHTML = "";
+
+
+            if (examQuestions.length === 0) {
+
+                container.innerHTML =
+                    '<p class="empty">لم تتم إضافة أسئلة بعد.</p>';
+
+                document.getElementById("questionsCount")
+                    .textContent = "0";
+
+                return;
+            }
+
+
+            examQuestions.forEach(
+                (question, index) => {
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className =
+                        "question-box";
+
+
+                    div.innerHTML = `
+
+                        <div class="question-header">
+
+                            <h4>
+                                السؤال ${index + 1}
+                            </h4>
+
+                            <button
+                                type="button"
+                                class="danger-btn"
+                                onclick="removeQuestion(${index})"
+                            >
+                                حذف
+                            </button>
+
+                        </div>
+
+                        <p>
+                            <strong>
+                                ${question.question}
+                            </strong>
+                        </p>
+
+                        <p>
+                            1️⃣ ${question.options[0]}
+                            ${
+                                question.correctAnswer === 0
+                                    ? " ✅"
+                                    : ""
+                            }
+                        </p>
+
+                        <p>
+                            2️⃣ ${question.options[1]}
+                            ${
+                                question.correctAnswer === 1
+                                    ? " ✅"
+                                    : ""
+                            }
+                        </p>
+
+                        <p>
+                            3️⃣ ${question.options[2]}
+                            ${
+                                question.correctAnswer === 2
+                                    ? " ✅"
+                                    : ""
+                            }
+                        </p>
+
+                        <p>
+                            4️⃣ ${question.options[3]}
+                            ${
+                                question.correctAnswer === 3
+                                    ? " ✅"
+                                    : ""
+                            }
+                        </p>
+                    `;
+
+
+                    container.appendChild(div);
+
+                }
+            );
+
+
+            document.getElementById("questionsCount")
+                .textContent =
+                examQuestions.length;
+        }
+
+
+        // =====================================
+        // حذف سؤال
+        // =====================================
+
+        window.removeQuestion = function (index) {
+
+            examQuestions.splice(index, 1);
+
+            renderQuestions();
+        };
+
+
+        // =====================================
+        // إنشاء الامتحان وحفظه
+        // =====================================
+
+        window.createExam = async function (event) {
+
+            event.preventDefault();
+
+
+            const title =
+                document.getElementById("examTitle")
+                    .value.trim();
+
+
+            const description =
+                document.getElementById("examDescription")
+                    .value.trim();
+
+
+            const courseId =
+                document.getElementById("examCourse")
+                    .value;
+
+
+            const duration =
+                Number(
+                    document.getElementById("examDuration")
+                        .value
+                );
+
+
+            const message =
+                document.getElementById("examMessage");
+
+
+            if (!title) {
+
+                message.textContent =
+                    "اكتب اسم الامتحان.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            if (!courseId) {
+
+                message.textContent =
+                    "اختار الكورس.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            if (!duration || duration < 1) {
+
+                message.textContent =
+                    "حدد مدة صحيحة للامتحان بالدقائق.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            if (examQuestions.length === 0) {
+
+                message.textContent =
+                    "أضف سؤالًا واحدًا على الأقل.";
+
+                message.className =
+                    "error";
+
+                return;
+            }
+
+
+            try {
+
+                const courseSnapshot =
+                    await getDoc(
+                        doc(db, "courses", courseId)
+                    );
+
+
+                if (!courseSnapshot.exists()) {
+
+                    message.textContent =
+                        "الكورس غير موجود.";
+
+                    message.className =
+                        "error";
+
+                    return;
+                }
+
+
+                const courseData =
+                    courseSnapshot.data();
+
+
+                await addDoc(
+                    collection(db, "exams"),
+                    {
+
+                        title: title,
+
+                        description:
+                            description,
+
+                        courseId:
+                            courseId,
+
+                        courseName:
+                            courseData.name ||
+                            courseData.title ||
+                            "بدون اسم",
+
+                        teacherId:
+                            auth.currentUser.uid,
+
+                        teacherName:
+                            document.getElementById(
+                                "teacherName"
+                            ).textContent,
+
+                        duration:
+                            duration,
+
+                        questions:
+                            examQuestions,
+
+                        createdAt:
+                            serverTimestamp()
+                    }
+                );
+
+
+                message.textContent =
+                    "تم إنشاء الامتحان بنجاح 🎉";
+
+                message.className =
+                    "success";
+
+
+                document
+                    .getElementById("examForm")
+                    .reset();
+
+
+                examQuestions = [];
+
+                renderQuestions();
+
+                await loadExams();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "حدث خطأ أثناء إنشاء الامتحان ❌";
+
+                message.className =
+                    "error";
+
+                console.error(
+                    "EXAM ERROR:",
+                    error.code,
+                    error.message
+                );
+            }
+        };
+
+
+        // =====================================
+        // تحميل الامتحانات
         // =====================================
 
         async function loadExams() {
@@ -622,22 +1152,49 @@
 
 
                     div.innerHTML = `
+
                         <h4>
-                            📝 ${exam.title || "امتحان بدون عنوان"}
+                            📝
+                            ${exam.title || "امتحان بدون عنوان"}
                         </h4>
 
                         <p>
-                            ${exam.description || ""}
+                            ${
+                                exam.description ||
+                                "لا يوجد وصف."
+                            }
                         </p>
 
-                        <p>
-                            عدد الأسئلة:
-                            ${questionsCount}
-                        </p>
+                        <div class="exam-info">
+
+                            <p>
+                                📚 <strong>الكورس:</strong>
+                                ${
+                                    exam.courseName ||
+                                    "غير محدد"
+                                }
+                            </p>
+
+                            <p>
+                                ⏱️ <strong>المدة:</strong>
+                                ${
+                                    exam.duration ||
+                                    0
+                                }
+                                دقيقة
+                            </p>
+
+                            <p>
+                                📝 <strong>عدد الأسئلة:</strong>
+                                ${questionsCount}
+                            </p>
+
+                        </div>
                     `;
 
 
                     examsList.appendChild(div);
+
                 });
 
 
@@ -674,10 +1231,12 @@
                         collection(db, "results")
                     );
 
+
                 const usersSnapshot =
                     await getDocs(
                         collection(db, "users")
                     );
+
 
                 const examsSnapshot =
                     await getDocs(
@@ -686,6 +1245,7 @@
 
 
                 const users = {};
+
                 const exams = {};
 
 
@@ -693,6 +1253,7 @@
 
                     users[userDoc.id] =
                         userDoc.data();
+
                 });
 
 
@@ -700,6 +1261,7 @@
 
                     exams[examDoc.id] =
                         examDoc.data();
+
                 });
 
 
@@ -726,6 +1288,7 @@
                     const student =
                         users[result.studentId] || {};
 
+
                     const exam =
                         exams[result.examId] || {};
 
@@ -741,7 +1304,9 @@
                             dateText =
                                 result.createdAt
                                     .toDate()
-                                    .toLocaleString("ar-EG");
+                                    .toLocaleString(
+                                        "ar-EG"
+                                    );
 
                         } catch (error) {
 
@@ -758,13 +1323,23 @@
 
 
                     div.innerHTML = `
+
                         <h4>
-                            👨‍🎓 ${student.name || "طالب غير معروف"}
+                            👨‍🎓
+                            ${
+                                student.name ||
+                                result.studentName ||
+                                "طالب غير معروف"
+                            }
                         </h4>
 
                         <p>
                             <strong>الامتحان:</strong>
-                            ${exam.title || "امتحان غير معروف"}
+                            ${
+                                exam.title ||
+                                result.examTitle ||
+                                "امتحان غير معروف"
+                            }
                         </p>
 
                         <p>
@@ -787,6 +1362,7 @@
 
 
                     resultsList.appendChild(div);
+
                 });
 
 
@@ -804,28 +1380,11 @@
         // التحقق من الحساب
         // =====================================
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(
+            auth,
+            async (user) => {
 
-            if (!user) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-            }
-
-
-            try {
-
-                const userSnapshot =
-                    await getDoc(
-                        doc(db, "users", user.uid)
-                    );
-
-
-                if (!userSnapshot.exists()) {
-
-                    await signOut(auth);
+                if (!user) {
 
                     window.location.href =
                         "login.html";
@@ -834,65 +1393,93 @@
                 }
 
 
-                const userData =
-                    userSnapshot.data();
+                try {
+
+                    const userSnapshot =
+                        await getDoc(
+                            doc(db, "users", user.uid)
+                        );
 
 
-                if (userData.role !== "teacher") {
-
-                    if (userData.role === "admin") {
-
-                        window.location.href =
-                            "admin.html";
-
-                    } else if (userData.role === "student") {
-
-                        window.location.href =
-                            "student.html";
-
-                    } else {
+                    if (!userSnapshot.exists()) {
 
                         await signOut(auth);
 
                         window.location.href =
                             "login.html";
+
+                        return;
                     }
 
-                    return;
+
+                    const userData =
+                        userSnapshot.data();
+
+
+                    if (userData.role !== "teacher") {
+
+                        if (
+                            userData.role === "admin"
+                        ) {
+
+                            window.location.href =
+                                "admin.html";
+
+                        } else if (
+                            userData.role === "student"
+                        ) {
+
+                            window.location.href =
+                                "student.html";
+
+                        } else {
+
+                            await signOut(auth);
+
+                            window.location.href =
+                                "login.html";
+                        }
+
+                        return;
+                    }
+
+
+                    document.getElementById(
+                        "teacherName"
+                    ).textContent =
+                        userData.name || "المدرس";
+
+
+                    await loadCourses();
+
+                    await loadLessons();
+
+                    await loadStudents();
+
+                    await loadExams();
+
+                    await loadResults();
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "حدث خطأ أثناء تحميل لوحة المدرس."
+                    );
                 }
 
-
-                document.getElementById("teacherName")
-                    .textContent =
-                    userData.name || "المدرس";
-
-
-                await loadCourses();
-
-                await loadLessons();
-
-                await loadStudents();
-
-                await loadExams();
-
-                await loadResults();
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                alert(
-                    "حدث خطأ أثناء تحميل لوحة المدرس."
-                );
             }
-        });
+        );
 
     </script>
+
 </head>
 
 
 <body>
+
 
     <header>
 
@@ -917,13 +1504,21 @@
             <div>
 
                 <h2>
+
                     أهلاً بك يا
-                    <span id="teacherName">...</span>
+
+                    <span id="teacherName">
+                        ...
+                    </span>
+
                     👨‍🏫
+
                 </h2>
 
+
                 <p>
-                    إدارة الكورسات والدروس ومتابعة الطلاب والنتائج.
+                    إدارة الكورسات والدروس والامتحانات
+                    ومتابعة الطلاب والنتائج.
                 </p>
 
             </div>
@@ -949,6 +1544,7 @@
 
 
             <div class="stats">
+
 
                 <div class="stat">
 
@@ -993,6 +1589,7 @@
 
                 </div>
 
+
             </div>
 
         </div>
@@ -1032,6 +1629,7 @@
                 onsubmit="addLesson(event)"
             >
 
+
                 <select
                     id="lessonCourse"
                     required
@@ -1068,6 +1666,7 @@
 
 
                 <p id="lessonMessage"></p>
+
 
             </form>
 
@@ -1114,6 +1713,196 @@
         </div>
 
 
+        <!-- إنشاء امتحان -->
+
+        <div class="card">
+
+            <h3>
+                ➕ إنشاء امتحان جديد
+            </h3>
+
+
+            <form
+                id="examForm"
+                onsubmit="createExam(event)"
+            >
+
+
+                <input
+                    type="text"
+                    id="examTitle"
+                    placeholder="اسم الامتحان"
+                    required
+                >
+
+
+                <textarea
+                    id="examDescription"
+                    placeholder="وصف الامتحان"
+                ></textarea>
+
+
+                <select
+                    id="examCourse"
+                    required
+                >
+
+                    <option value="">
+                        جاري تحميل الكورسات...
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="number"
+                    id="examDuration"
+                    placeholder="مدة الامتحان بالدقائق"
+                    min="1"
+                    max="300"
+                    required
+                >
+
+
+                <div class="question-box">
+
+                    <h4>
+                        ➕ إضافة سؤال
+                    </h4>
+
+
+                    <form
+                        id="questionForm"
+                        onsubmit="event.preventDefault(); addQuestion();"
+                    >
+
+                        <input
+                            type="text"
+                            id="questionText"
+                            placeholder="اكتب السؤال"
+                        >
+
+
+                        <div class="option-row">
+
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="0"
+                            >
+
+                            <input
+                                type="text"
+                                id="option1"
+                                placeholder="الاختيار الأول"
+                            >
+
+                        </div>
+
+
+                        <div class="option-row">
+
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="1"
+                            >
+
+                            <input
+                                type="text"
+                                id="option2"
+                                placeholder="الاختيار الثاني"
+                            >
+
+                        </div>
+
+
+                        <div class="option-row">
+
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="2"
+                            >
+
+                            <input
+                                type="text"
+                                id="option3"
+                                placeholder="الاختيار الثالث"
+                            >
+
+                        </div>
+
+
+                        <div class="option-row">
+
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="3"
+                            >
+
+                            <input
+                                type="text"
+                                id="option4"
+                                placeholder="الاختيار الرابع"
+                            >
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="secondary-btn"
+                        >
+                            إضافة السؤال ➕
+                        </button>
+
+
+                        <p id="questionMessage"></p>
+
+                    </form>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        الأسئلة المضافة:
+                        <span id="questionsCount">
+                            0
+                        </span>
+                    </h4>
+
+
+                    <div id="questionsList">
+
+                        <p class="empty">
+                            لم تتم إضافة أسئلة بعد.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    إنشاء الامتحان 🎉
+                </button>
+
+
+                <p id="examMessage"></p>
+
+
+            </form>
+
+        </div>
+
+
         <!-- الامتحانات -->
 
         <div class="card">
@@ -1153,6 +1942,7 @@
 
         </div>
 
+
     </main>
 
 
@@ -1168,4 +1958,5 @@
     <script src="../js/app.js"></script>
 
 </body>
+
 </html>
