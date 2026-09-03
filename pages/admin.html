@@ -1,173 +1,771 @@
+:::writing{variant="document" id="58321"}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="لوحة تحكم الأدمن في منصة Nova Future التعليمية."
+    >
 
     <title>لوحة الأدمن - Nova Future</title>
 
     <link rel="stylesheet" href="../css/style.css">
 
     <style>
-        .dashboard {
-            max-width: 1150px;
-            margin: 30px auto;
-            padding: 20px;
+        /* =========================================
+           Nova Future - Admin Dashboard
+           Page-specific styles only
+        ========================================= */
+
+        body {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    var(--primary-light),
+                    transparent 32%
+                ),
+                var(--bg-color);
         }
 
-        .top-bar {
-            background: #fff;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
+        .admin-shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 32px 0 50px;
+        }
+
+        /* Header */
+
+        .admin-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-header-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 74px;
+            margin: 0 auto;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 22px;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .brand-text span {
+            display: block;
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--muted-color);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             flex-wrap: wrap;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .header-link {
+            min-height: 42px;
+            padding: 0 14px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            color: var(--text-color);
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .header-link:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-1px);
         }
 
         .logout-btn {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
+            min-height: 42px;
+            padding: 0 15px;
+            border: 1px solid rgba(220, 38, 38, 0.18);
+            border-radius: 10px;
+            background: var(--danger-bg);
+            color: var(--danger-color);
+            font-size: 14px;
+            font-weight: 800;
+            transition: var(--transition);
         }
 
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        .logout-btn:hover {
+            background: var(--danger-color);
+            color: #fff;
+            transform: translateY(-1px);
         }
 
-        .card h3 {
-            margin-bottom: 20px;
+        /* Welcome */
+
+        .welcome {
+            margin-bottom: 24px;
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-color),
+                    var(--primary-dark)
+                );
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+        .welcome::before,
+        .welcome::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            pointer-events: none;
         }
 
-        .stat {
-            background: #f5f7fb;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
+        .welcome::before {
+            width: 220px;
+            height: 220px;
+            top: -120px;
+            left: -70px;
         }
 
-        .stat strong {
-            display: block;
-            font-size: 30px;
-            margin-bottom: 8px;
+        .welcome::after {
+            width: 180px;
+            height: 180px;
+            bottom: -110px;
+            right: -50px;
         }
 
-        .item {
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 18px;
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.13);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 12px;
+            font-weight: 700;
             margin-bottom: 12px;
         }
 
-        .item h4 {
-            margin-bottom: 8px;
+        .welcome h2 {
+            margin: 0 0 8px;
+            color: #fff;
+            font-size: clamp(22px, 4vw, 30px);
         }
 
-        .item p {
-            margin-bottom: 8px;
+        .welcome p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.86);
+            line-height: 1.8;
         }
 
-        form {
+        /* Page status */
+
+        .page-message {
+            display: none;
+            margin-bottom: 20px;
+            padding: 13px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid transparent;
+        }
+
+        .page-message.show {
+            display: block;
+        }
+
+        .page-message.success {
+            color: var(--success-color);
+            background: var(--success-bg);
+            border-color: rgba(22, 163, 74, 0.16);
+        }
+
+        .page-message.error {
+            color: var(--danger-color);
+            background: var(--danger-bg);
+            border-color: rgba(220, 38, 38, 0.16);
+        }
+
+        /* Section */
+
+        .admin-section {
+            margin-bottom: 24px;
+            padding: 24px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-heading {
             display: flex;
-            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .section-title-wrap {
+            display: flex;
+            align-items: flex-start;
             gap: 12px;
         }
 
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 15px;
+        .section-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            font-size: 19px;
         }
 
-        textarea {
-            min-height: 120px;
-            resize: vertical;
+        .section-heading h3 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 19px;
         }
 
-        button {
-            cursor: pointer;
+        .section-heading p {
+            margin: 4px 0 0;
+            color: var(--muted-color);
+            font-size: 13px;
+            line-height: 1.7;
         }
 
-        .primary-btn {
-            border: none;
-            background: #222;
-            color: white;
-            padding: 13px;
-            border-radius: 8px;
-            font-size: 16px;
+        /* Stats */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
         }
 
-        .secondary-btn {
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 9px 14px;
-            border-radius: 8px;
-        }
-
-        .danger-btn {
-            border: none;
-            background: #dc2626;
-            color: white;
-            padding: 9px 14px;
-            border-radius: 8px;
-        }
-
-        .success {
-            color: #15803d;
-            margin-top: 10px;
-        }
-
-        .error {
-            color: #dc2626;
-            margin-top: 10px;
-        }
-
-        .empty {
-            color: #777;
-            text-align: center;
+        .stat-card {
             padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-color);
+            transition: var(--transition);
         }
 
-        .actions {
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            font-size: 17px;
+        }
+
+        .stat-label {
+            color: var(--muted-color);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .stat-number {
+            display: block;
+            margin-top: 14px;
+            color: var(--text-color);
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        /* Forms */
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .primary-admin-btn {
+            min-height: 46px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 11px;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        .primary-admin-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .primary-admin-btn:disabled,
+        .secondary-admin-btn:disabled,
+        .danger-admin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .secondary-admin-btn {
+            min-height: 40px;
+            padding: 0 13px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--surface-color);
+            color: var(--primary-color);
+            font-size: 13px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        .secondary-admin-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .danger-admin-btn {
+            min-height: 40px;
+            padding: 0 13px;
+            border: 1px solid rgba(220, 38, 38, 0.18);
+            border-radius: 10px;
+            background: var(--danger-bg);
+            color: var(--danger-color);
+            font-size: 13px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        .danger-admin-btn:hover {
+            background: var(--danger-color);
+            color: #fff;
+        }
+
+        /* Lists */
+
+        .items-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .admin-item {
+            padding: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            background: var(--bg-color);
+            transition: var(--transition);
+        }
+
+        .admin-item:hover {
+            border-color: rgba(37, 99, 235, 0.35);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .item-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .item-title {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.6;
+        }
+
+        .item-description {
+            margin: 7px 0 0;
+            color: var(--muted-color);
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .item-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 13px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--muted-color);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .role-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .role-student {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .role-teacher {
+            color: var(--success-color);
+            background: var(--success-bg);
+        }
+
+        .role-admin {
+            color: var(--warning-color);
+            background: var(--warning-bg);
+        }
+
+        .item-actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
-        .question-box {
-            background: #f5f7fb;
-            padding: 18px;
-            border-radius: 12px;
-            margin-top: 15px;
+        /* Question form */
+
+        .question-area {
+            border: 2px solid var(--primary-color);
+            background:
+                linear-gradient(
+                    180deg,
+                    var(--primary-light),
+                    var(--surface-color)
+                );
         }
 
-        .option {
-            margin: 6px 0;
+        .question-intro {
+            margin: -4px 0 18px;
+            color: var(--muted-color);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .answer-select {
+            border-color: var(--primary-color);
+            background: var(--surface-color);
+        }
+
+        /* Empty/loading */
+
+        .empty-state {
+            padding: 32px 18px;
+            text-align: center;
+            color: var(--muted-color);
+            border: 1px dashed var(--border-color);
+            border-radius: 14px;
+            background: var(--bg-color);
+        }
+
+        .empty-icon {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 28px;
+            opacity: 0.7;
+        }
+
+        .loading-state {
+            padding: 25px;
+            text-align: center;
+            color: var(--muted-color);
+        }
+
+        .loading-spinner {
+            width: 25px;
+            height: 25px;
+            margin: 0 auto 10px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: adminSpin 0.8s linear infinite;
+        }
+
+        @keyframes adminSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Results */
+
+        .result-score {
+            font-weight: 900;
+            color: var(--primary-color);
+        }
+
+        .result-percentage {
+            font-weight: 900;
+            color: var(--success-color);
+        }
+
+        /* Footer */
+
+        .admin-footer {
+            padding: 25px 16px 35px;
+            text-align: center;
+            color: var(--muted-color);
+            font-size: 13px;
+        }
+
+        /* Dark mode */
+
+        body.dark {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(37, 99, 235, 0.13),
+                    transparent 32%
+                ),
+                var(--bg-color);
+        }
+
+        body.dark .welcome {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.24);
+        }
+
+        body.dark .stat-card,
+        body.dark .admin-item,
+        body.dark .empty-state {
+            background: var(--bg-color);
+        }
+
+        body.dark .question-area {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(37, 99, 235, 0.11),
+                    var(--surface-color)
+                );
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1050px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .admin-shell {
+                width: min(100% - 22px, 700px);
+                padding-top: 20px;
+            }
+
+            .admin-header-inner {
+                width: min(100% - 22px, 700px);
+                min-height: auto;
+                padding: 12px 0;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                justify-content: flex-end;
+            }
+
+            .header-link,
+            .logout-btn {
+                min-height: 38px;
+                padding: 0 11px;
+                font-size: 12px;
+            }
+
+            .brand-icon {
+                width: 42px;
+                height: 42px;
+            }
+
+            .brand-text h1 {
+                font-size: 16px;
+            }
+
+            .brand-text span {
+                font-size: 11px;
+            }
+
+            .welcome {
+                padding: 22px;
+            }
+
+            .admin-section {
+                padding: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading {
+                flex-direction: column;
+            }
+
+            .item-head {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-header-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-actions {
+                justify-content: stretch;
+            }
+
+            .header-link,
+            .logout-btn {
+                flex: 1;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h2 {
+                font-size: 22px;
+            }
+
+            .form-actions > button {
+                width: 100%;
+            }
+
+            .item-actions > button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .loading-spinner {
+                animation: none;
+            }
+
+            .stat-card,
+            .admin-item,
+            .header-link,
+            .logout-btn,
+            .primary-admin-btn,
+            .secondary-admin-btn,
+            .danger-admin-btn {
+                transition: none;
+            }
         }
     </style>
-
 
     <script type="module">
 
@@ -189,21 +787,167 @@
         import { auth, db } from "../js/firebase-config.js";
 
 
-        // =====================================
-        // تسجيل الخروج
-        // =====================================
+        /* =========================================
+           Helpers
+        ========================================= */
+
+        function escapeHTML(value) {
+
+            const div = document.createElement("div");
+
+            div.textContent =
+                value === undefined || value === null
+                    ? ""
+                    : String(value);
+
+            return div.innerHTML;
+        }
+
+
+        function showPageMessage(message, type = "success") {
+
+            const element =
+                document.getElementById("pageMessage");
+
+            if (!element) {
+                return;
+            }
+
+            element.textContent = message;
+            element.className = `page-message show ${type}`;
+
+            window.setTimeout(() => {
+
+                element.classList.remove("show");
+
+            }, 4500);
+        }
+
+
+        function setMessage(elementId, message, type) {
+
+            const element =
+                document.getElementById(elementId);
+
+            if (!element) {
+                return;
+            }
+
+            element.textContent = message;
+            element.className = type;
+        }
+
+
+        function setButtonLoading(button, loading, loadingText) {
+
+            if (!button) {
+                return;
+            }
+
+            if (loading) {
+
+                button.dataset.originalText =
+                    button.textContent;
+
+                button.textContent =
+                    loadingText || "جاري التنفيذ...";
+
+                button.disabled = true;
+
+            } else {
+
+                button.textContent =
+                    button.dataset.originalText ||
+                    button.textContent;
+
+                button.disabled = false;
+            }
+        }
+
+
+        function loadingHTML(text = "جاري التحميل...") {
+
+            return `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <div>${escapeHTML(text)}</div>
+                </div>
+            `;
+        }
+
+
+        function emptyHTML(icon, text) {
+
+            return `
+                <div class="empty-state">
+                    <span class="empty-icon">${icon}</span>
+                    <div>${escapeHTML(text)}</div>
+                </div>
+            `;
+        }
+
+
+        function formatDate(timestamp) {
+
+            if (!timestamp) {
+                return "غير محدد";
+            }
+
+            try {
+
+                return timestamp
+                    .toDate()
+                    .toLocaleString("ar-EG");
+
+            } catch (error) {
+
+                return "غير محدد";
+            }
+        }
+
+
+        /* =========================================
+           Logout
+        ========================================= */
 
         window.logoutAdmin = async function() {
 
-            await signOut(auth);
+            const button =
+                document.querySelector(".logout-btn");
 
-            window.location.href = "login.html";
+            try {
+
+                setButtonLoading(
+                    button,
+                    true,
+                    "جاري الخروج..."
+                );
+
+                await signOut(auth);
+
+                window.location.href =
+                    "login.html";
+
+            } catch (error) {
+
+                console.error(
+                    "ADMIN LOGOUT ERROR:",
+                    error
+                );
+
+                setButtonLoading(button, false);
+
+                showPageMessage(
+                    "حدث خطأ أثناء تسجيل الخروج.",
+                    "error"
+                );
+            }
         };
 
 
-        // =====================================
-        // إحصائيات
-        // =====================================
+        /* =========================================
+           Statistics
+        ========================================= */
 
         async function loadStatistics() {
 
@@ -249,38 +993,57 @@
                 });
 
 
-                document.getElementById("studentsCount")
-                    .textContent = students;
+                document.getElementById(
+                    "studentsCount"
+                ).textContent = students;
 
-                document.getElementById("teachersCount")
-                    .textContent = teachers;
 
-                document.getElementById("coursesCount")
-                    .textContent = coursesSnapshot.size;
+                document.getElementById(
+                    "teachersCount"
+                ).textContent = teachers;
 
-                document.getElementById("examsCount")
-                    .textContent = examsSnapshot.size;
 
-                document.getElementById("resultsCount")
-                    .textContent = resultsSnapshot.size;
+                document.getElementById(
+                    "coursesCount"
+                ).textContent = coursesSnapshot.size;
+
+
+                document.getElementById(
+                    "examsCount"
+                ).textContent = examsSnapshot.size;
+
+
+                document.getElementById(
+                    "resultsCount"
+                ).textContent = resultsSnapshot.size;
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "STATISTICS ERROR:",
+                    error
+                );
+
+                showPageMessage(
+                    "تعذر تحميل إحصائيات المنصة.",
+                    "error"
+                );
             }
         }
 
 
-        // =====================================
-        // المستخدمين
-        // =====================================
+        /* =========================================
+           Users
+        ========================================= */
 
         async function loadUsers() {
 
             const usersList =
                 document.getElementById("usersList");
 
-            usersList.innerHTML = "";
+            usersList.innerHTML =
+                loadingHTML("جاري تحميل المستخدمين...");
+
 
             try {
 
@@ -293,7 +1056,10 @@
                 if (snapshot.empty) {
 
                     usersList.innerHTML =
-                        '<p class="empty">لا يوجد مستخدمون.</p>';
+                        emptyHTML(
+                            "👥",
+                            "لا يوجد مستخدمون حتى الآن."
+                        );
 
                     return;
                 }
@@ -306,41 +1072,61 @@
 
 
                     const div =
-                        document.createElement("div");
+                        document.createElement("article");
 
-                    div.className = "item";
+                    div.className =
+                        "admin-item";
 
 
                     let roleText =
                         "غير معروف";
 
+                    let roleClass =
+                        "";
+
                     if (user.role === "student") {
+
                         roleText = "طالب";
-                    }
+                        roleClass = "role-student";
 
-                    if (user.role === "teacher") {
+                    } else if (user.role === "teacher") {
+
                         roleText = "مدرس";
-                    }
+                        roleClass = "role-teacher";
 
-                    if (user.role === "admin") {
+                    } else if (user.role === "admin") {
+
                         roleText = "أدمن";
+                        roleClass = "role-admin";
                     }
 
 
                     div.innerHTML = `
-                        <h4>
-                            ${user.name || "بدون اسم"}
-                        </h4>
+                        <div class="item-head">
 
-                        <p>
-                            البريد:
-                            ${user.email || "غير موجود"}
-                        </p>
+                            <div>
 
-                        <p>
-                            الدور الحالي:
-                            <strong>${roleText}</strong>
-                        </p>
+                                <h4 class="item-title">
+                                    ${escapeHTML(
+                                        user.name ||
+                                        "بدون اسم"
+                                    )}
+                                </h4>
+
+                                <p class="item-description">
+                                    ${escapeHTML(
+                                        user.email ||
+                                        "البريد الإلكتروني غير موجود"
+                                    )}
+                                </p>
+
+                            </div>
+
+                            <span class="role-chip ${roleClass}">
+                                ${roleText}
+                            </span>
+
+                        </div>
                     `;
 
 
@@ -352,14 +1138,17 @@
                         const actions =
                             document.createElement("div");
 
-                        actions.className = "actions";
+                        actions.className =
+                            "item-actions";
 
 
                         const changeBtn =
                             document.createElement("button");
 
+                        changeBtn.type = "button";
+
                         changeBtn.className =
-                            "secondary-btn";
+                            "secondary-admin-btn";
 
 
                         changeBtn.textContent =
@@ -373,7 +1162,8 @@
                                 userDoc.id,
                                 user.role === "student"
                                     ? "teacher"
-                                    : "student"
+                                    : "student",
+                                changeBtn
                             );
 
 
@@ -388,32 +1178,40 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "USERS ERROR:",
+                    error
+                );
 
                 usersList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل المستخدمين.</p>';
+                    `
+                    <div class="page-message show error">
+                        حدث خطأ أثناء تحميل المستخدمين.
+                    </div>
+                    `;
             }
         }
 
 
-        // =====================================
-        // تغيير الدور
-        // =====================================
+        /* =========================================
+           Change Role
+        ========================================= */
 
         async function changeUserRole(
             userId,
-            newRole
+            newRole,
+            button
         ) {
 
-            const text =
+            const roleText =
                 newRole === "teacher"
                     ? "مدرس"
                     : "طالب";
 
 
             const confirmed =
-                confirm(
-                    `هل تريد تحويل الحساب إلى ${text}؟`
+                window.confirm(
+                    `هل أنت متأكد من تحويل هذا الحساب إلى ${roleText}؟`
                 );
 
 
@@ -424,6 +1222,13 @@
 
             try {
 
+                setButtonLoading(
+                    button,
+                    true,
+                    "جاري التغيير..."
+                );
+
+
                 await updateDoc(
                     doc(db, "users", userId),
                     {
@@ -432,8 +1237,9 @@
                 );
 
 
-                alert(
-                    "تم تغيير الدور بنجاح ✅"
+                showPageMessage(
+                    `تم تحويل الحساب إلى ${roleText} بنجاح ✅`,
+                    "success"
                 );
 
 
@@ -443,25 +1249,35 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "ROLE CHANGE ERROR:",
+                    error
+                );
 
-                alert(
-                    "حدث خطأ أثناء تغيير الدور ❌"
+                setButtonLoading(
+                    button,
+                    false
+                );
+
+                showPageMessage(
+                    "حدث خطأ أثناء تغيير دور المستخدم.",
+                    "error"
                 );
             }
         }
 
 
-        // =====================================
-        // الكورسات
-        // =====================================
+        /* =========================================
+           Courses
+        ========================================= */
 
         async function loadCourses() {
 
             const coursesList =
                 document.getElementById("coursesList");
 
-            coursesList.innerHTML = "";
+            coursesList.innerHTML =
+                loadingHTML("جاري تحميل الكورسات...");
 
 
             try {
@@ -475,7 +1291,10 @@
                 if (snapshot.empty) {
 
                     coursesList.innerHTML =
-                        '<p class="empty">لا توجد كورسات.</p>';
+                        emptyHTML(
+                            "📚",
+                            "لا توجد كورسات حتى الآن."
+                        );
 
                     return;
                 }
@@ -488,19 +1307,43 @@
 
 
                     const div =
-                        document.createElement("div");
+                        document.createElement("article");
 
-                    div.className = "item";
+                    div.className =
+                        "admin-item";
 
 
                     div.innerHTML = `
-                        <h4>
-                            ${course.name || "بدون اسم"}
-                        </h4>
+                        <div class="item-head">
 
-                        <p>
-                            ${course.description || "لا يوجد وصف."}
-                        </p>
+                            <div>
+
+                                <h4 class="item-title">
+                                    ${escapeHTML(
+                                        course.name ||
+                                        course.title ||
+                                        "بدون اسم"
+                                    )}
+                                </h4>
+
+                                <p class="item-description">
+                                    ${escapeHTML(
+                                        course.description ||
+                                        "لا يوجد وصف لهذا الكورس."
+                                    )}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="item-meta">
+
+                            <span class="meta-chip">
+                                📚 كورس
+                            </span>
+
+                        </div>
                     `;
 
 
@@ -509,49 +1352,78 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "COURSES ERROR:",
+                    error
+                );
 
                 coursesList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل الكورسات.</p>';
+                    `
+                    <div class="page-message show error">
+                        حدث خطأ أثناء تحميل الكورسات.
+                    </div>
+                    `;
             }
         }
 
 
-        // =====================================
-        // إضافة كورس
-        // =====================================
+        /* =========================================
+           Add Course
+        ========================================= */
 
         window.addCourse = async function(event) {
 
             event.preventDefault();
 
 
+            const form =
+                document.getElementById("courseForm");
+
+            const button =
+                form.querySelector(
+                    'button[type="submit"]'
+                );
+
+
             const name =
                 document.getElementById("courseName")
-                    .value.trim();
+                    .value
+                    .trim();
+
 
             const description =
                 document.getElementById("courseDescription")
-                    .value.trim();
-
-
-            const message =
-                document.getElementById("courseMessage");
+                    .value
+                    .trim();
 
 
             if (!name) {
 
-                message.textContent =
-                    "اكتب اسم الكورس.";
-
-                message.className =
-                    "error";
+                setMessage(
+                    "courseMessage",
+                    "اكتب اسم الكورس أولاً.",
+                    "error"
+                );
 
                 return;
             }
 
 
             try {
+
+                setButtonLoading(
+                    button,
+                    true,
+                    "جاري إنشاء الكورس..."
+                );
+
+
+                setMessage(
+                    "courseMessage",
+                    "جاري حفظ الكورس...",
+                    "success"
+                );
+
 
                 await addDoc(
                     collection(db, "courses"),
@@ -563,15 +1435,14 @@
                 );
 
 
-                message.textContent =
-                    "تم إنشاء الكورس بنجاح ✅";
+                setMessage(
+                    "courseMessage",
+                    "تم إنشاء الكورس بنجاح ✅",
+                    "success"
+                );
 
-                message.className =
-                    "success";
 
-
-                document.getElementById("courseForm")
-                    .reset();
+                form.reset();
 
 
                 await loadCourses();
@@ -580,27 +1451,38 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "ADD COURSE ERROR:",
+                    error
+                );
 
-                message.textContent =
-                    "حدث خطأ أثناء إنشاء الكورس ❌";
+                setMessage(
+                    "courseMessage",
+                    "حدث خطأ أثناء إنشاء الكورس. حاول مرة أخرى.",
+                    "error"
+                );
 
-                message.className =
-                    "error";
+            } finally {
+
+                setButtonLoading(
+                    button,
+                    false
+                );
             }
         };
 
 
-        // =====================================
-        // الامتحانات
-        // =====================================
+        /* =========================================
+           Exams
+        ========================================= */
 
         async function loadExams() {
 
             const examsList =
                 document.getElementById("examsList");
 
-            examsList.innerHTML = "";
+            examsList.innerHTML =
+                loadingHTML("جاري تحميل الامتحانات...");
 
 
             try {
@@ -614,7 +1496,10 @@
                 if (snapshot.empty) {
 
                     examsList.innerHTML =
-                        '<p class="empty">لا توجد امتحانات.</p>';
+                        emptyHTML(
+                            "📝",
+                            "لا توجد امتحانات حتى الآن."
+                        );
 
                     return;
                 }
@@ -633,32 +1518,75 @@
 
 
                     const div =
-                        document.createElement("div");
+                        document.createElement("article");
 
-                    div.className = "item";
+                    div.className =
+                        "admin-item";
 
 
                     div.innerHTML = `
-                        <h4>
-                            ${exam.title || "امتحان بدون عنوان"}
-                        </h4>
+                        <div class="item-head">
 
-                        <p>
-                            ${exam.description || ""}
-                        </p>
+                            <div>
 
-                        <p>
-                            عدد الأسئلة:
-                            ${questionsCount}
-                        </p>
+                                <h4 class="item-title">
+                                    ${escapeHTML(
+                                        exam.title ||
+                                        "امتحان بدون عنوان"
+                                    )}
+                                </h4>
 
-                        <div class="actions">
+                                <p class="item-description">
+                                    ${escapeHTML(
+                                        exam.description ||
+                                        "لا يوجد وصف لهذا الامتحان."
+                                    )}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="item-meta">
+
+                            <span class="meta-chip">
+                                📝 ${questionsCount} سؤال
+                            </span>
+
+                            ${
+                                exam.duration
+                                    ? `
+                                    <span class="meta-chip">
+                                        ⏱️ ${escapeHTML(
+                                            exam.duration
+                                        )} دقيقة
+                                    </span>
+                                    `
+                                    : ""
+                            }
+
+                            ${
+                                exam.courseName
+                                    ? `
+                                    <span class="meta-chip">
+                                        📚 ${escapeHTML(
+                                            exam.courseName
+                                        )}
+                                    </span>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+
+                        <div class="item-actions">
 
                             <button
-                                class="secondary-btn"
+                                type="button"
+                                class="secondary-admin-btn"
                                 onclick="openQuestionForm('${examDoc.id}')"
                             >
-                                إضافة سؤال ➕
+                                ➕ إضافة سؤال
                             </button>
 
                         </div>
@@ -670,49 +1598,71 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "EXAMS ERROR:",
+                    error
+                );
 
                 examsList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل الامتحانات.</p>';
+                    `
+                    <div class="page-message show error">
+                        حدث خطأ أثناء تحميل الامتحانات.
+                    </div>
+                    `;
             }
         }
 
 
-        // =====================================
-        // إضافة امتحان
-        // =====================================
+        /* =========================================
+           Add Exam
+        ========================================= */
 
         window.addExam = async function(event) {
 
             event.preventDefault();
 
 
+            const form =
+                document.getElementById("examForm");
+
+            const button =
+                form.querySelector(
+                    'button[type="submit"]'
+                );
+
+
             const title =
                 document.getElementById("examTitle")
-                    .value.trim();
+                    .value
+                    .trim();
+
 
             const description =
                 document.getElementById("examDescription")
-                    .value.trim();
-
-
-            const message =
-                document.getElementById("examMessage");
+                    .value
+                    .trim();
 
 
             if (!title) {
 
-                message.textContent =
-                    "اكتب اسم الامتحان.";
-
-                message.className =
-                    "error";
+                setMessage(
+                    "examMessage",
+                    "اكتب اسم الامتحان أولاً.",
+                    "error"
+                );
 
                 return;
             }
 
 
             try {
+
+                setButtonLoading(
+                    button,
+                    true,
+                    "جاري إنشاء الامتحان..."
+                );
+
 
                 await addDoc(
                     collection(db, "exams"),
@@ -725,15 +1675,14 @@
                 );
 
 
-                message.textContent =
-                    "تم إنشاء الامتحان بنجاح ✅";
+                setMessage(
+                    "examMessage",
+                    "تم إنشاء الامتحان بنجاح ✅",
+                    "success"
+                );
 
-                message.className =
-                    "success";
 
-
-                document.getElementById("examForm")
-                    .reset();
+                form.reset();
 
 
                 await loadExams();
@@ -742,91 +1691,149 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "ADD EXAM ERROR:",
+                    error
+                );
 
-                message.textContent =
-                    "حدث خطأ أثناء إنشاء الامتحان ❌";
+                setMessage(
+                    "examMessage",
+                    "حدث خطأ أثناء إنشاء الامتحان.",
+                    "error"
+                );
 
-                message.className =
-                    "error";
+            } finally {
+
+                setButtonLoading(
+                    button,
+                    false
+                );
             }
         };
 
 
-        // =====================================
-        // نموذج السؤال
-        // =====================================
+        /* =========================================
+           Question Form
+        ========================================= */
 
         window.openQuestionForm = function(examId) {
 
-            document.getElementById("questionExamId")
-                .value = examId;
+            document.getElementById(
+                "questionExamId"
+            ).value = examId;
 
-            document.getElementById("questionArea")
-                .style.display = "block";
 
-            document.getElementById("questionArea")
-                .scrollIntoView({
-                    behavior: "smooth"
-                });
+            document.getElementById(
+                "questionArea"
+            ).style.display = "block";
+
+
+            document.getElementById(
+                "questionArea"
+            ).scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+
+            window.setTimeout(() => {
+
+                document.getElementById(
+                    "questionText"
+                ).focus();
+
+            }, 400);
         };
 
 
         window.closeQuestionForm = function() {
 
-            document.getElementById("questionArea")
-                .style.display = "none";
+            const area =
+                document.getElementById(
+                    "questionArea"
+                );
+
+
+            area.style.display = "none";
+
+
+            document.getElementById(
+                "questionForm"
+            ).reset();
+
+
+            setMessage(
+                "questionMessage",
+                "",
+                ""
+            );
         };
 
 
-        // =====================================
-        // إضافة سؤال
-        // =====================================
+        /* =========================================
+           Add Question
+        ========================================= */
 
         window.addQuestion = async function(event) {
 
             event.preventDefault();
 
 
+            const form =
+                document.getElementById("questionForm");
+
+            const button =
+                form.querySelector(
+                    'button[type="submit"]'
+                );
+
+
             const examId =
-                document.getElementById("questionExamId")
-                    .value;
+                document.getElementById(
+                    "questionExamId"
+                ).value;
 
 
             const question =
-                document.getElementById("questionText")
-                    .value.trim();
+                document.getElementById(
+                    "questionText"
+                ).value.trim();
 
 
             const option1 =
-                document.getElementById("option1")
-                    .value.trim();
+                document.getElementById(
+                    "option1"
+                ).value.trim();
+
 
             const option2 =
-                document.getElementById("option2")
-                    .value.trim();
+                document.getElementById(
+                    "option2"
+                ).value.trim();
+
 
             const option3 =
-                document.getElementById("option3")
-                    .value.trim();
+                document.getElementById(
+                    "option3"
+                ).value.trim();
+
 
             const option4 =
-                document.getElementById("option4")
-                    .value.trim();
+                document.getElementById(
+                    "option4"
+                ).value.trim();
 
 
             const correctAnswer =
                 Number(
-                    document.getElementById("correctAnswer")
-                        .value
+                    document.getElementById(
+                        "correctAnswer"
+                    ).value
                 );
 
 
-            const message =
-                document.getElementById("questionMessage");
-
-
             if (
+                !examId ||
                 !question ||
                 !option1 ||
                 !option2 ||
@@ -834,11 +1841,11 @@
                 !option4
             ) {
 
-                message.textContent =
-                    "أكمل بيانات السؤال.";
-
-                message.className =
-                    "error";
+                setMessage(
+                    "questionMessage",
+                    "أكمل جميع بيانات السؤال قبل الحفظ.",
+                    "error"
+                );
 
                 return;
             }
@@ -846,8 +1853,19 @@
 
             try {
 
+                setButtonLoading(
+                    button,
+                    true,
+                    "جاري إضافة السؤال..."
+                );
+
+
                 const examRef =
-                    doc(db, "exams", examId);
+                    doc(
+                        db,
+                        "exams",
+                        examId
+                    );
 
 
                 const examSnapshot =
@@ -856,11 +1874,11 @@
 
                 if (!examSnapshot.exists()) {
 
-                    message.textContent =
-                        "الامتحان غير موجود.";
-
-                    message.className =
-                        "error";
+                    setMessage(
+                        "questionMessage",
+                        "الامتحان غير موجود.",
+                        "error"
+                    );
 
                     return;
                 }
@@ -871,8 +1889,10 @@
 
 
                 const questions =
-                    Array.isArray(examData.questions)
-                        ? examData.questions
+                    Array.isArray(
+                        examData.questions
+                    )
+                        ? [...examData.questions]
                         : [];
 
 
@@ -887,7 +1907,8 @@
                         option4
                     ],
 
-                    correctAnswer: correctAnswer
+                    correctAnswer:
+                        correctAnswer
                 });
 
 
@@ -899,42 +1920,60 @@
                 );
 
 
-                message.textContent =
-                    "تم إضافة السؤال بنجاح ✅";
+                setMessage(
+                    "questionMessage",
+                    "تم إضافة السؤال بنجاح ✅",
+                    "success"
+                );
 
-                message.className =
-                    "success";
+
+                form.reset();
 
 
-                document.getElementById("questionForm")
-                    .reset();
+                document.getElementById(
+                    "questionExamId"
+                ).value = examId;
 
 
                 await loadExams();
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "ADD QUESTION ERROR:",
+                    error
+                );
 
-                message.textContent =
-                    "حدث خطأ أثناء إضافة السؤال ❌";
+                setMessage(
+                    "questionMessage",
+                    "حدث خطأ أثناء إضافة السؤال.",
+                    "error"
+                );
 
-                message.className =
-                    "error";
+            } finally {
+
+                setButtonLoading(
+                    button,
+                    false
+                );
             }
         };
 
 
-        // =====================================
-        // النتائج
-        // =====================================
+        /* =========================================
+           Results
+        ========================================= */
 
         async function loadResults() {
 
             const resultsList =
-                document.getElementById("resultsList");
+                document.getElementById(
+                    "resultsList"
+                );
 
-            resultsList.innerHTML = "";
+
+            resultsList.innerHTML =
+                loadingHTML("جاري تحميل النتائج...");
 
 
             try {
@@ -944,10 +1983,12 @@
                         collection(db, "results")
                     );
 
+
                 const usersSnapshot =
                     await getDocs(
                         collection(db, "users")
                     );
+
 
                 const examsSnapshot =
                     await getDocs(
@@ -976,80 +2017,132 @@
                 if (resultsSnapshot.empty) {
 
                     resultsList.innerHTML =
-                        '<p class="empty">لا توجد نتائج حتى الآن.</p>';
+                        emptyHTML(
+                            "📊",
+                            "لا توجد نتائج حتى الآن."
+                        );
 
                     return;
                 }
 
 
+                const results = [];
+
+
                 resultsSnapshot.forEach((resultDoc) => {
 
+                    results.push({
+                        id: resultDoc.id,
+                        data: resultDoc.data()
+                    });
+
+                });
+
+
+                results.sort((a, b) => {
+
+                    const aTime =
+                        a.data.createdAt?.toMillis?.() || 0;
+
+                    const bTime =
+                        b.data.createdAt?.toMillis?.() || 0;
+
+                    return bTime - aTime;
+                });
+
+
+                results.forEach((resultItem) => {
+
                     const result =
-                        resultDoc.data();
+                        resultItem.data;
 
 
                     const student =
                         users[result.studentId] || {};
 
+
                     const exam =
                         exams[result.examId] || {};
 
 
-                    let dateText =
-                        "غير محدد";
-
-
-                    if (result.createdAt) {
-
-                        try {
-
-                            dateText =
-                                result.createdAt
-                                    .toDate()
-                                    .toLocaleString("ar-EG");
-
-                        } catch (error) {
-
-                            dateText =
-                                "غير محدد";
-                        }
-                    }
-
-
                     const div =
-                        document.createElement("div");
+                        document.createElement("article");
+
 
                     div.className =
-                        "item";
+                        "admin-item";
+
+
+                    const score =
+                        Number(result.score) || 0;
+
+
+                    const total =
+                        Number(result.total) || 0;
+
+
+                    const percentage =
+                        Number(result.percentage) || 0;
 
 
                     div.innerHTML = `
-                        <h4>
-                            👨‍🎓
-                            ${student.name || "طالب غير معروف"}
-                        </h4>
+                        <div class="item-head">
 
-                        <p>
-                            <strong>الامتحان:</strong>
-                            ${exam.title || "امتحان غير معروف"}
-                        </p>
+                            <div>
 
-                        <p>
-                            <strong>الدرجة:</strong>
-                            ${result.score || 0}
-                            من
-                            ${result.total || 0}
-                        </p>
+                                <h4 class="item-title">
+                                    👨‍🎓
+                                    ${escapeHTML(
+                                        student.name ||
+                                        result.studentName ||
+                                        "طالب غير معروف"
+                                    )}
+                                </h4>
 
-                        <p>
-                            <strong>النسبة:</strong>
-                            ${result.percentage || 0}%
-                        </p>
+                                <p class="item-description">
+                                    📝
+                                    ${escapeHTML(
+                                        exam.title ||
+                                        result.examTitle ||
+                                        "امتحان غير معروف"
+                                    )}
+                                </p>
 
-                        <p>
-                            <strong>التاريخ:</strong>
-                            ${dateText}
-                        </p>
+                            </div>
+
+                            <span class="role-chip role-student">
+                                ${percentage}%
+                            </span>
+
+                        </div>
+
+                        <div class="item-meta">
+
+                            <span class="meta-chip">
+                                🎯
+                                <span class="result-score">
+                                    ${score}
+                                </span>
+                                / ${total}
+                            </span>
+
+                            <span class="meta-chip">
+                                📈
+                                <span class="result-percentage">
+                                    ${percentage}%
+                                </span>
+                            </span>
+
+                            <span class="meta-chip">
+                                🕒
+                                ${escapeHTML(
+                                    formatDate(
+                                        result.createdAt
+                                    )
+                                )}
+                            </span>
+
+                        </div>
                     `;
 
 
@@ -1058,40 +2151,30 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "RESULTS ERROR:",
+                    error
+                );
 
                 resultsList.innerHTML =
-                    '<p class="error">حدث خطأ أثناء تحميل النتائج.</p>';
+                    `
+                    <div class="page-message show error">
+                        حدث خطأ أثناء تحميل النتائج.
+                    </div>
+                    `;
             }
         }
 
 
-        // =====================================
-        // تشغيل لوحة الأدمن
-        // =====================================
+        /* =========================================
+           Auth Guard
+        ========================================= */
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(
+            auth,
+            async (user) => {
 
-            if (!user) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-            }
-
-
-            try {
-
-                const userDoc =
-                    await getDoc(
-                        doc(db, "users", user.uid)
-                    );
-
-
-                if (!userDoc.exists()) {
-
-                    await signOut(auth);
+                if (!user) {
 
                     window.location.href =
                         "login.html";
@@ -1100,58 +2183,92 @@
                 }
 
 
-                const userData =
-                    userDoc.data();
+                try {
+
+                    const userDoc =
+                        await getDoc(
+                            doc(
+                                db,
+                                "users",
+                                user.uid
+                            )
+                        );
 
 
-                if (userData.role !== "admin") {
-
-                    if (userData.role === "student") {
-
-                        window.location.href =
-                            "student.html";
-
-                    } else if (userData.role === "teacher") {
-
-                        window.location.href =
-                            "teacher.html";
-
-                    } else {
+                    if (!userDoc.exists()) {
 
                         await signOut(auth);
 
                         window.location.href =
                             "login.html";
+
+                        return;
                     }
 
-                    return;
+
+                    const userData =
+                        userDoc.data();
+
+
+                    if (
+                        userData.role !== "admin"
+                    ) {
+
+                        if (
+                            userData.role === "student"
+                        ) {
+
+                            window.location.href =
+                                "student.html";
+
+                        } else if (
+                            userData.role === "teacher"
+                        ) {
+
+                            window.location.href =
+                                "teacher.html";
+
+                        } else {
+
+                            await signOut(auth);
+
+                            window.location.href =
+                                "login.html";
+                        }
+
+                        return;
+                    }
+
+
+                    document.getElementById(
+                        "adminName"
+                    ).textContent =
+                        userData.name ||
+                        "الأدمن";
+
+
+                    await Promise.all([
+                        loadStatistics(),
+                        loadUsers(),
+                        loadCourses(),
+                        loadExams(),
+                        loadResults()
+                    ]);
+
+                } catch (error) {
+
+                    console.error(
+                        "ADMIN INIT ERROR:",
+                        error
+                    );
+
+                    showPageMessage(
+                        "حدث خطأ أثناء تحميل لوحة الأدمن.",
+                        "error"
+                    );
                 }
-
-
-                document.getElementById("adminName")
-                    .textContent =
-                    userData.name || "الأدمن";
-
-
-                await loadStatistics();
-
-                await loadUsers();
-
-                await loadCourses();
-
-                await loadExams();
-
-                await loadResults();
-
-            } catch (error) {
-
-                console.error(error);
-
-                alert(
-                    "حدث خطأ أثناء تحميل لوحة الأدمن."
-                );
             }
-        });
+        );
 
     </script>
 </head>
@@ -1159,282 +2276,657 @@
 
 <body>
 
-    <header>
+    <!-- Header -->
 
-        <h1>
-            Nova Future 🚀
-        </h1>
+    <header class="admin-header">
 
-        <p>
-            لوحة الأدمن
-        </p>
+        <div class="admin-header-inner">
+
+            <div class="brand">
+
+                <div
+                    class="brand-icon"
+                    aria-hidden="true"
+                >
+                    🚀
+                </div>
+
+                <div class="brand-text">
+
+                    <h1>
+                        Nova Future
+                    </h1>
+
+                    <span>
+                        لوحة تحكم الأدمن
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav
+                class="header-actions"
+                aria-label="روابط لوحة التحكم"
+            >
+
+                <a
+                    class="header-link"
+                    href="profile.html"
+                >
+                    👤 الملف الشخصي
+                </a>
+
+                <a
+                    class="header-link"
+                    href="settings.html"
+                >
+                    ⚙️ الإعدادات
+                </a>
+
+                <button
+                    type="button"
+                    class="logout-btn"
+                    onclick="logoutAdmin()"
+                >
+                    تسجيل الخروج
+                </button>
+
+            </nav>
+
+        </div>
 
     </header>
 
 
-    <main class="dashboard">
+    <main class="admin-shell">
 
+        <!-- Welcome -->
 
-        <!-- الترحيب -->
+        <section class="welcome">
 
-        <div class="top-bar">
+            <div class="welcome-content">
 
-            <div>
+                <div class="welcome-badge">
+                    👑 حساب الأدمن
+                </div>
 
                 <h2>
                     أهلاً بك يا
                     <span id="adminName">...</span>
-                    👑
                 </h2>
 
                 <p>
-                    مركز التحكم في منصة Nova Future.
+                    من هنا تقدر تدير المستخدمين والكورسات
+                    والامتحانات وتتابع نتائج الطلاب في مكان واحد.
                 </p>
 
             </div>
 
+        </section>
 
-            <button
-                class="logout-btn"
-                onclick="logoutAdmin()"
+
+        <!-- Global message -->
+
+        <div
+            id="pageMessage"
+            class="page-message"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+
+        <!-- Statistics -->
+
+        <section class="admin-section">
+
+            <div class="section-heading">
+
+                <div class="section-title-wrap">
+
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        📊
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            إحصائيات المنصة
+                        </h3>
+
+                        <p>
+                            نظرة سريعة على حالة المنصة الحالية.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            الطلاب
+                        </span>
+
+                        <span
+                            class="stat-icon"
+                            aria-hidden="true"
+                        >
+                            👨‍🎓
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="stat-number"
+                        id="studentsCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            المدرسين
+                        </span>
+
+                        <span
+                            class="stat-icon"
+                            aria-hidden="true"
+                        >
+                            👨‍🏫
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="stat-number"
+                        id="teachersCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            الكورسات
+                        </span>
+
+                        <span
+                            class="stat-icon"
+                            aria-hidden="true"
+                        >
+                            📚
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="stat-number"
+                        id="coursesCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            الامتحانات
+                        </span>
+
+                        <span
+                            class="stat-icon"
+                            aria-hidden="true"
+                        >
+                            📝
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="stat-number"
+                        id="examsCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            النتائج
+                        </span>
+
+                        <span
+                            class="stat-icon"
+                            aria-hidden="true"
+                        >
+                            📈
+                        </span>
+
+                    </div>
+
+                    <strong
+                        class="stat-number"
+                        id="resultsCount"
+                    >
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Users -->
+
+        <section class="admin-section">
+
+            <div class="section-heading">
+
+                <div class="section-title-wrap">
+
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        👥
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            إدارة المستخدمين
+                        </h3>
+
+                        <p>
+                            راجع الحسابات وقم بتغيير دور الطالب أو المدرس.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="usersList"
+                class="items-list"
             >
-                تسجيل الخروج
-            </button>
-
-        </div>
-
-
-        <!-- الإحصائيات -->
-
-        <div class="card">
-
-            <h3>
-                📊 إحصائيات المنصة
-            </h3>
-
-
-            <div class="stats">
-
-                <div class="stat">
-
-                    <strong id="studentsCount">
-                        0
-                    </strong>
-
-                    الطلاب
-
-                </div>
-
-
-                <div class="stat">
-
-                    <strong id="teachersCount">
-                        0
-                    </strong>
-
-                    المدرسين
-
-                </div>
-
-
-                <div class="stat">
-
-                    <strong id="coursesCount">
-                        0
-                    </strong>
-
-                    الكورسات
-
-                </div>
-
-
-                <div class="stat">
-
-                    <strong id="examsCount">
-                        0
-                    </strong>
-
-                    الامتحانات
-
-                </div>
-
-
-                <div class="stat">
-
-                    <strong id="resultsCount">
-                        0
-                    </strong>
-
-                    النتائج
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- المستخدمين -->
-
-        <div class="card">
-
-            <h3>
-                👥 إدارة المستخدمين
-            </h3>
-
-
-            <div id="usersList">
-
-                <p class="empty">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
                     جاري تحميل المستخدمين...
-                </p>
-
+                </div>
             </div>
 
-        </div>
+        </section>
 
 
-        <!-- إضافة كورس -->
+        <!-- Add Course -->
 
-        <div class="card">
+        <section class="admin-section">
 
-            <h3>
-                ➕ إضافة كورس
-            </h3>
+            <div class="section-heading">
+
+                <div class="section-title-wrap">
+
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        ➕
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            إضافة كورس
+                        </h3>
+
+                        <p>
+                            أنشئ كورس جديد ليظهر ضمن محتوى المنصة.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
             <form
                 id="courseForm"
+                class="admin-form"
                 onsubmit="addCourse(event)"
             >
 
-                <input
-                    type="text"
-                    id="courseName"
-                    placeholder="اسم الكورس"
-                    required
-                >
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="courseName">
+                            اسم الكورس
+                        </label>
+
+                        <input
+                            type="text"
+                            id="courseName"
+                            placeholder="مثال: الرياضيات"
+                            maxlength="120"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
 
 
-                <textarea
-                    id="courseDescription"
-                    placeholder="وصف الكورس"
-                ></textarea>
+                    <div class="form-group">
+
+                        <label for="courseDescription">
+                            وصف الكورس
+                        </label>
+
+                        <input
+                            type="text"
+                            id="courseDescription"
+                            placeholder="وصف مختصر للكورس"
+                            maxlength="300"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                </div>
 
 
-                <button
-                    type="submit"
-                    class="primary-btn"
-                >
-                    إنشاء الكورس 📚
-                </button>
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-admin-btn"
+                    >
+                        إنشاء الكورس 📚
+                    </button>
+
+                </div>
 
 
-                <p id="courseMessage"></p>
+                <p
+                    id="courseMessage"
+                    aria-live="polite"
+                ></p>
 
             </form>
 
-        </div>
+        </section>
 
 
-        <!-- الكورسات -->
+        <!-- Courses -->
 
-        <div class="card">
+        <section class="admin-section">
 
-            <h3>
-                📚 الكورسات الموجودة
-            </h3>
+            <div class="section-heading">
 
+                <div class="section-title-wrap">
 
-            <div id="coursesList">
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        📚
+                    </div>
 
-                <p class="empty">
-                    جاري تحميل الكورسات...
-                </p>
+                    <div>
+
+                        <h3>
+                            الكورسات الموجودة
+                        </h3>
+
+                        <p>
+                            جميع الكورسات المسجلة حاليًا على المنصة.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+
+            <div
+                id="coursesList"
+                class="items-list"
+            >
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    جاري تحميل الكورسات...
+                </div>
+            </div>
+
+        </section>
 
 
-        <!-- إنشاء امتحان -->
+        <!-- Add Exam -->
 
-        <div class="card">
+        <section class="admin-section">
 
-            <h3>
-                📝 إنشاء امتحان
-            </h3>
+            <div class="section-heading">
+
+                <div class="section-title-wrap">
+
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        📝
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            إنشاء امتحان
+                        </h3>
+
+                        <p>
+                            أنشئ الامتحان أولاً، وبعد ذلك أضف الأسئلة إليه.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
             <form
                 id="examForm"
+                class="admin-form"
                 onsubmit="addExam(event)"
             >
 
-                <input
-                    type="text"
-                    id="examTitle"
-                    placeholder="اسم الامتحان"
-                    required
-                >
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="examTitle">
+                            اسم الامتحان
+                        </label>
+
+                        <input
+                            type="text"
+                            id="examTitle"
+                            placeholder="مثال: امتحان الوحدة الأولى"
+                            maxlength="150"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
 
 
-                <textarea
-                    id="examDescription"
-                    placeholder="وصف الامتحان"
-                ></textarea>
+                    <div class="form-group">
+
+                        <label for="examDescription">
+                            وصف الامتحان
+                        </label>
+
+                        <input
+                            type="text"
+                            id="examDescription"
+                            placeholder="وصف مختصر للامتحان"
+                            maxlength="300"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                </div>
 
 
-                <button
-                    type="submit"
-                    class="primary-btn"
-                >
-                    إنشاء الامتحان 📝
-                </button>
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-admin-btn"
+                    >
+                        إنشاء الامتحان 📝
+                    </button>
+
+                </div>
 
 
-                <p id="examMessage"></p>
+                <p
+                    id="examMessage"
+                    aria-live="polite"
+                ></p>
 
             </form>
 
-        </div>
+        </section>
 
 
-        <!-- الامتحانات -->
+        <!-- Exams -->
 
-        <div class="card">
+        <section class="admin-section">
 
-            <h3>
-                📝 الامتحانات الموجودة
-            </h3>
+            <div class="section-heading">
 
+                <div class="section-title-wrap">
 
-            <div id="examsList">
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        📝
+                    </div>
 
-                <p class="empty">
-                    جاري تحميل الامتحانات...
-                </p>
+                    <div>
+
+                        <h3>
+                            الامتحانات الموجودة
+                        </h3>
+
+                        <p>
+                            اختر أي امتحان لإضافة أسئلة جديدة إليه.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+
+            <div
+                id="examsList"
+                class="items-list"
+            >
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    جاري تحميل الامتحانات...
+                </div>
+            </div>
+
+        </section>
 
 
-        <!-- إضافة سؤال -->
+        <!-- Add Question -->
 
-        <div
-            class="card"
+        <section
+            class="admin-section question-area"
             id="questionArea"
-            style="display:none;"
+            style="display: none;"
         >
 
-            <h3>
-                ➕ إضافة سؤال للامتحان
-            </h3>
+            <div class="section-heading">
+
+                <div class="section-title-wrap">
+
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        ❓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            إضافة سؤال للامتحان
+                        </h3>
+
+                        <p>
+                            أضف السؤال والاختيارات وحدد الإجابة الصحيحة.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <p class="question-intro">
+                بعد حفظ السؤال سيتم إضافته مباشرة إلى الامتحان المحدد.
+            </p>
 
 
             <form
                 id="questionForm"
+                class="admin-form"
                 onsubmit="addQuestion(event)"
             >
 
@@ -1444,120 +2936,208 @@
                 >
 
 
-                <input
-                    type="text"
-                    id="questionText"
-                    placeholder="اكتب السؤال"
-                    required
-                >
+                <div class="form-group">
+
+                    <label for="questionText">
+                        نص السؤال
+                    </label>
+
+                    <textarea
+                        id="questionText"
+                        placeholder="اكتب السؤال هنا..."
+                        maxlength="1000"
+                        required
+                    ></textarea>
+
+                </div>
 
 
-                <input
-                    type="text"
-                    id="option1"
-                    placeholder="الاختيار الأول"
-                    required
-                >
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="option1">
+                            الاختيار الأول
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option1"
+                            placeholder="الاختيار الأول"
+                            maxlength="500"
+                            required
+                        >
+
+                    </div>
 
 
-                <input
-                    type="text"
-                    id="option2"
-                    placeholder="الاختيار الثاني"
-                    required
-                >
+                    <div class="form-group">
+
+                        <label for="option2">
+                            الاختيار الثاني
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option2"
+                            placeholder="الاختيار الثاني"
+                            maxlength="500"
+                            required
+                        >
+
+                    </div>
 
 
-                <input
-                    type="text"
-                    id="option3"
-                    placeholder="الاختيار الثالث"
-                    required
-                >
+                    <div class="form-group">
+
+                        <label for="option3">
+                            الاختيار الثالث
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option3"
+                            placeholder="الاختيار الثالث"
+                            maxlength="500"
+                            required
+                        >
+
+                    </div>
 
 
-                <input
-                    type="text"
-                    id="option4"
-                    placeholder="الاختيار الرابع"
-                    required
-                >
+                    <div class="form-group">
+
+                        <label for="option4">
+                            الاختيار الرابع
+                        </label>
+
+                        <input
+                            type="text"
+                            id="option4"
+                            placeholder="الاختيار الرابع"
+                            maxlength="500"
+                            required
+                        >
+
+                    </div>
+
+                </div>
 
 
-                <select
-                    id="correctAnswer"
-                    required
-                >
+                <div class="form-group">
 
-                    <option value="0">
-                        الإجابة الصحيحة: الاختيار الأول
-                    </option>
+                    <label for="correctAnswer">
+                        الإجابة الصحيحة
+                    </label>
 
-                    <option value="1">
-                        الإجابة الصحيحة: الاختيار الثاني
-                    </option>
+                    <select
+                        id="correctAnswer"
+                        class="answer-select"
+                        required
+                    >
 
-                    <option value="2">
-                        الإجابة الصحيحة: الاختيار الثالث
-                    </option>
+                        <option value="0">
+                            الاختيار الأول
+                        </option>
 
-                    <option value="3">
-                        الإجابة الصحيحة: الاختيار الرابع
-                    </option>
+                        <option value="1">
+                            الاختيار الثاني
+                        </option>
 
-                </select>
+                        <option value="2">
+                            الاختيار الثالث
+                        </option>
 
+                        <option value="3">
+                            الاختيار الرابع
+                        </option>
 
-                <button
-                    type="submit"
-                    class="primary-btn"
-                >
-                    إضافة السؤال ✅
-                </button>
+                    </select>
 
-
-                <button
-                    type="button"
-                    class="danger-btn"
-                    onclick="closeQuestionForm()"
-                >
-                    إغلاق
-                </button>
+                </div>
 
 
-                <p id="questionMessage"></p>
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-admin-btn"
+                    >
+                        إضافة السؤال ✅
+                    </button>
+
+                    <button
+                        type="button"
+                        class="danger-admin-btn"
+                        onclick="closeQuestionForm()"
+                    >
+                        إغلاق
+                    </button>
+
+                </div>
+
+
+                <p
+                    id="questionMessage"
+                    aria-live="polite"
+                ></p>
 
             </form>
 
-        </div>
+        </section>
 
 
-        <!-- النتائج -->
+        <!-- Results -->
 
-        <div class="card">
+        <section class="admin-section">
 
-            <h3>
-                📊 نتائج الطلاب
-            </h3>
+            <div class="section-heading">
 
+                <div class="section-title-wrap">
 
-            <div id="resultsList">
+                    <div
+                        class="section-icon"
+                        aria-hidden="true"
+                    >
+                        📈
+                    </div>
 
-                <p class="empty">
-                    جاري تحميل النتائج...
-                </p>
+                    <div>
+
+                        <h3>
+                            نتائج الطلاب
+                        </h3>
+
+                        <p>
+                            تابع درجات الطلاب ونتائج الامتحانات.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+
+            <div
+                id="resultsList"
+                class="items-list"
+            >
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    جاري تحميل النتائج...
+                </div>
+            </div>
+
+        </section>
 
     </main>
 
 
-    <footer>
+    <footer class="admin-footer">
 
         <p>
-            © 2026 Nova Future
+            © 2026 Nova Future — لوحة تحكم الأدمن
         </p>
 
     </footer>
@@ -1566,4 +3146,6 @@
     <script src="../js/app.js"></script>
 
 </body>
+
 </html>
+:::
