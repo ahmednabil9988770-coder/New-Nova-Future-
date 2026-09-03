@@ -28,10 +28,6 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.06);
         }
 
-        .top-bar h2 {
-            margin: 0 0 8px;
-        }
-
         .logout-btn {
             background: #dc2626;
             color: white;
@@ -61,7 +57,7 @@
         }
 
         .item h4 {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .item p {
@@ -99,10 +95,9 @@
             font-size: 16px;
         }
 
-        .empty {
-            color: #777;
-            text-align: center;
-            padding: 20px;
+        .result-score {
+            font-size: 22px;
+            font-weight: bold;
         }
 
         .success {
@@ -113,6 +108,31 @@
         .error {
             color: #dc2626;
             margin-top: 10px;
+        }
+
+        .empty {
+            color: #777;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stat {
+            background: #f5f7fb;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 8px;
         }
     </style>
 
@@ -184,27 +204,18 @@
                     const course =
                         courseDoc.data();
 
-                    // عرض الكورس
-
                     const div =
                         document.createElement("div");
 
                     div.className = "item";
 
                     div.innerHTML = `
-                        <h4>
-                            ${course.name || "بدون اسم"}
-                        </h4>
-
-                        <p>
-                            ${course.description || "لا يوجد وصف."}
-                        </p>
+                        <h4>${course.name || "بدون اسم"}</h4>
+                        <p>${course.description || "لا يوجد وصف."}</p>
                     `;
 
                     coursesList.appendChild(div);
 
-
-                    // إضافة الكورس للقائمة
 
                     const option =
                         document.createElement("option");
@@ -277,11 +288,6 @@
                         <p>
                             ${lesson.content || ""}
                         </p>
-
-                        <p>
-                            <strong>المدرس:</strong>
-                            ${lesson.teacherId || "غير معروف"}
-                        </p>
                     `;
 
                     lessonsList.appendChild(div);
@@ -320,21 +326,10 @@
                 document.getElementById("lessonMessage");
 
 
-            if (!courseName) {
+            if (!courseName || !title || !content) {
 
                 message.textContent =
-                    "من فضلك اختر الكورس.";
-
-                message.className = "error";
-
-                return;
-            }
-
-
-            if (!title || !content) {
-
-                message.textContent =
-                    "من فضلك اكتب عنوان الدرس ومحتواه.";
+                    "من فضلك أكمل بيانات الدرس.";
 
                 message.className = "error";
 
@@ -381,7 +376,302 @@
 
 
         // =====================================
-        // التحقق من حساب المدرس
+        // تحميل الطلاب
+        // =====================================
+
+        async function loadStudents() {
+
+            const studentsList =
+                document.getElementById("studentsList");
+
+            studentsList.innerHTML = "";
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(db, "users")
+                    );
+
+                let count = 0;
+
+                snapshot.forEach((studentDoc) => {
+
+                    const student =
+                        studentDoc.data();
+
+                    if (student.role !== "student") {
+                        return;
+                    }
+
+                    count++;
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className = "item";
+
+                    div.innerHTML = `
+                        <h4>
+                            ${student.name || "طالب"}
+                        </h4>
+
+                        <p>
+                            البريد:
+                            ${student.email || "غير موجود"}
+                        </p>
+                    `;
+
+                    studentsList.appendChild(div);
+                });
+
+
+                document.getElementById("studentsCount")
+                    .textContent = count;
+
+
+                if (count === 0) {
+
+                    studentsList.innerHTML =
+                        '<p class="empty">لا يوجد طلاب حاليًا.</p>';
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                studentsList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل الطلاب.</p>';
+            }
+        }
+
+
+        // =====================================
+        // تحميل الامتحانات
+        // =====================================
+
+        async function loadExams() {
+
+            const examsList =
+                document.getElementById("examsList");
+
+            examsList.innerHTML = "";
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(db, "exams")
+                    );
+
+                document.getElementById("examsCount")
+                    .textContent = snapshot.size;
+
+
+                if (snapshot.empty) {
+
+                    examsList.innerHTML =
+                        '<p class="empty">لا توجد امتحانات حاليًا.</p>';
+
+                    return;
+                }
+
+
+                snapshot.forEach((examDoc) => {
+
+                    const exam =
+                        examDoc.data();
+
+                    const questionsCount =
+                        Array.isArray(exam.questions)
+                            ? exam.questions.length
+                            : 0;
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className = "item";
+
+                    div.innerHTML = `
+                        <h4>
+                            ${exam.title || "امتحان"}
+                        </h4>
+
+                        <p>
+                            ${exam.description || ""}
+                        </p>
+
+                        <p>
+                            عدد الأسئلة:
+                            ${questionsCount}
+                        </p>
+                    `;
+
+                    examsList.appendChild(div);
+                });
+
+            } catch (error) {
+
+                console.error(error);
+
+                examsList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل الامتحانات.</p>';
+            }
+        }
+
+
+        // =====================================
+        // تحميل النتائج
+        // =====================================
+
+        async function loadResults() {
+
+            const resultsList =
+                document.getElementById("resultsList");
+
+            resultsList.innerHTML = "";
+
+            try {
+
+                const resultsSnapshot =
+                    await getDocs(
+                        collection(db, "results")
+                    );
+
+                const usersSnapshot =
+                    await getDocs(
+                        collection(db, "users")
+                    );
+
+                const examsSnapshot =
+                    await getDocs(
+                        collection(db, "exams")
+                    );
+
+
+                const students = {};
+                const exams = {};
+
+
+                usersSnapshot.forEach((userDoc) => {
+
+                    const user =
+                        userDoc.data();
+
+                    students[userDoc.id] =
+                        user;
+                });
+
+
+                examsSnapshot.forEach((examDoc) => {
+
+                    const exam =
+                        examDoc.data();
+
+                    exams[examDoc.id] =
+                        exam;
+                });
+
+
+                document.getElementById("resultsCount")
+                    .textContent =
+                    resultsSnapshot.size;
+
+
+                if (resultsSnapshot.empty) {
+
+                    resultsList.innerHTML =
+                        '<p class="empty">لا توجد نتائج حتى الآن.</p>';
+
+                    return;
+                }
+
+
+                resultsSnapshot.forEach((resultDoc) => {
+
+                    const result =
+                        resultDoc.data();
+
+                    const student =
+                        students[result.studentId] || {};
+
+                    const exam =
+                        exams[result.examId] || {};
+
+
+                    let dateText =
+                        "غير محدد";
+
+
+                    if (result.createdAt) {
+
+                        try {
+
+                            dateText =
+                                result.createdAt
+                                    .toDate()
+                                    .toLocaleString("ar-EG");
+
+                        } catch (error) {
+
+                            dateText =
+                                "غير محدد";
+                        }
+                    }
+
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className = "item";
+
+
+                    div.innerHTML = `
+                        <h4>
+                            👨‍🎓
+                            ${student.name || "طالب غير معروف"}
+                        </h4>
+
+                        <p>
+                            <strong>الامتحان:</strong>
+                            ${exam.title || "امتحان غير معروف"}
+                        </p>
+
+                        <p class="result-score">
+                            ${result.score || 0}
+                            من
+                            ${result.total || 0}
+                            —
+                            ${result.percentage || 0}%
+                        </p>
+
+                        <p>
+                            <strong>البريد:</strong>
+                            ${student.email || "غير موجود"}
+                        </p>
+
+                        <p>
+                            <strong>التاريخ:</strong>
+                            ${dateText}
+                        </p>
+                    `;
+
+
+                    resultsList.appendChild(div);
+                });
+
+            } catch (error) {
+
+                console.error(error);
+
+                resultsList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل النتائج.</p>';
+            }
+        }
+
+
+        // =====================================
+        // التحقق من المدرس
         // =====================================
 
         onAuthStateChanged(auth, async (user) => {
@@ -418,8 +708,6 @@
                     userDoc.data();
 
 
-                // منع الدخول لغير المدرس
-
                 if (userData.role !== "teacher") {
 
                     if (userData.role === "admin") {
@@ -444,8 +732,6 @@
                 }
 
 
-                // اسم المدرس
-
                 document.getElementById("teacherName")
                     .textContent =
                     userData.name || "المدرس";
@@ -454,6 +740,12 @@
                 await loadCourses();
 
                 await loadLessons();
+
+                await loadStudents();
+
+                await loadExams();
+
+                await loadResults();
 
             } catch (error) {
 
@@ -485,9 +777,7 @@
     <main class="dashboard">
 
 
-        <!-- ================================= -->
         <!-- الترحيب -->
-        <!-- ================================= -->
 
         <div class="top-bar">
 
@@ -500,7 +790,7 @@
                 </h2>
 
                 <p>
-                    إدارة الدروس والمحتوى التعليمي.
+                    إدارة المحتوى ومتابعة الطلاب والنتائج.
                 </p>
 
             </div>
@@ -516,9 +806,54 @@
         </div>
 
 
-        <!-- ================================= -->
+        <!-- الإحصائيات -->
+
+        <div class="card">
+
+            <h3>
+                📊 إحصائيات سريعة
+            </h3>
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <strong id="studentsCount">
+                        0
+                    </strong>
+
+                    الطلاب
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong id="examsCount">
+                        0
+                    </strong>
+
+                    الامتحانات
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong id="resultsCount">
+                        0
+                    </strong>
+
+                    النتائج
+
+                </div>
+
+            </div>
+
+        </div>
+
+
         <!-- الكورسات -->
-        <!-- ================================= -->
 
         <div class="card">
 
@@ -537,9 +872,7 @@
         </div>
 
 
-        <!-- ================================= -->
         <!-- إضافة درس -->
-        <!-- ================================= -->
 
         <div class="card">
 
@@ -588,25 +921,20 @@
                 </button>
 
 
-                <p
-                    id="lessonMessage"
-                ></p>
+                <p id="lessonMessage"></p>
 
             </form>
 
         </div>
 
 
-        <!-- ================================= -->
         <!-- الدروس -->
-        <!-- ================================= -->
 
         <div class="card">
 
             <h3>
                 📖 الدروس الموجودة
             </h3>
-
 
             <div id="lessonsList">
 
@@ -619,9 +947,7 @@
         </div>
 
 
-        <!-- ================================= -->
         <!-- الطلاب -->
-        <!-- ================================= -->
 
         <div class="card">
 
@@ -629,16 +955,37 @@
                 👨‍🎓 الطلاب
             </h3>
 
-            <p class="empty">
-                قسم الطلاب سيتم تطويره لاحقًا.
-            </p>
+            <div id="studentsList">
+
+                <p class="empty">
+                    جاري تحميل الطلاب...
+                </p>
+
+            </div>
 
         </div>
 
 
-        <!-- ================================= -->
+        <!-- الامتحانات -->
+
+        <div class="card">
+
+            <h3>
+                📝 الامتحانات
+            </h3>
+
+            <div id="examsList">
+
+                <p class="empty">
+                    جاري تحميل الامتحانات...
+                </p>
+
+            </div>
+
+        </div>
+
+
         <!-- النتائج -->
-        <!-- ================================= -->
 
         <div class="card">
 
@@ -646,12 +993,15 @@
                 📊 نتائج الطلاب
             </h3>
 
-            <p class="empty">
-                قسم النتائج سيتم تطويره لاحقًا.
-            </p>
+            <div id="resultsList">
+
+                <p class="empty">
+                    جاري تحميل النتائج...
+                </p>
+
+            </div>
 
         </div>
-
 
     </main>
 
