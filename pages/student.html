@@ -1,347 +1,379 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Future - الطالب</title><style>
-    * {
-        box-sizing: border-box;
-    }
 
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f4f7fb;
-        color: #222;
-    }
+    <title>Nova Future - الطالب</title>
 
-    .topbar {
-        background: #111827;
-        color: white;
-        padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-    }
+    <style>
 
-    .logo {
-        font-size: 22px;
-        font-weight: bold;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    .topbar-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    button,
-    .profile-btn {
-        border: none;
-        border-radius: 8px;
-        padding: 10px 16px;
-        cursor: pointer;
-        background: #2563eb;
-        color: white;
-        font-size: 15px;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    .profile-btn {
-        background: #374151;
-    }
-
-    .logout {
-        background: #dc2626;
-    }
-
-    .container {
-        max-width: 1100px;
-        margin: 25px auto;
-        padding: 0 15px;
-    }
-
-    .welcome {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 3px 12px rgba(0,0,0,.08);
-    }
-
-    .welcome h1 {
-        margin-top: 0;
-    }
-
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-
-    .stat {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 3px 12px rgba(0,0,0,.07);
-    }
-
-    .stat strong {
-        display: block;
-        font-size: 28px;
-        margin-bottom: 8px;
-        color: #2563eb;
-    }
-
-    .section {
-        background: white;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 20px;
-        box-shadow: 0 3px 12px rgba(0,0,0,.07);
-    }
-
-    .card {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 10px 0;
-    }
-
-    .exam-card {
-        border-right: 5px solid #2563eb;
-    }
-
-    .result-card {
-        border-right: 5px solid #16a34a;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    .question {
-        margin: 20px 0;
-        padding: 15px;
-        background: #f8fafc;
-        border-radius: 10px;
-    }
-
-    .option {
-        display: block;
-        margin: 10px 0;
-        padding: 10px;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-
-    .message {
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 10px;
-        background: #eef2ff;
-    }
-
-    /* =========================
-       TIMER
-    ========================= */
-
-    .timer-box {
-        background: #fff7ed;
-        border: 2px solid #f97316;
-        border-radius: 12px;
-        padding: 15px;
-        margin: 15px 0 20px;
-        text-align: center;
-    }
-
-    .timer-label {
-        font-size: 16px;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    #examTimer {
-        font-size: 32px;
-        font-weight: bold;
-        color: #ea580c;
-        direction: ltr;
-    }
-
-    .timer-warning {
-        color: #dc2626 !important;
-    }
-
-    @media (max-width: 700px) {
-        .stats {
-            grid-template-columns: repeat(2, 1fr);
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
         }
 
         .topbar {
-            flex-wrap: wrap;
+            background: #111827;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
         }
 
         .topbar-actions {
-            width: 100%;
-            justify-content: flex-end;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-    }
-</style>
 
-</head><body><div class="topbar"><div class="logo">
-    🚀 Nova Future
-</div>
+        button,
+        .profile-btn,
+        .settings-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            text-decoration: none;
+            display: inline-block;
+        }
 
-<div class="topbar-actions">
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-    <a
-        href="profile.html"
-        class="profile-btn"
-    >
-        👤 الملف الشخصي
-    </a>
+        .profile-btn {
+            background: #374151;
+        }
 
-    <button
-        class="logout"
-        id="logoutBtn"
-    >
-        تسجيل الخروج
-    </button>
+        .settings-btn {
+            background: #7c3aed;
+        }
 
-</div>
+        .logout {
+            background: #dc2626;
+        }
 
-</div><div class="container"><div class="welcome">
+        .container {
+            max-width: 1100px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
 
-    <h1>
-        أهلاً بك يا
-        <span id="studentName">...</span>
-        👋
-    </h1>
+        .welcome {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        }
 
-    <p>
-        مرحباً بك في منصة Nova Future التعليمية.
-    </p>
+        .welcome h1 {
+            margin-top: 0;
+        }
 
-</div>
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
 
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,.07);
+        }
 
-<div class="stats">
+        .stat strong {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #2563eb;
+        }
 
-    <div class="stat">
-        <strong id="coursesCount">0</strong>
-        الدورات
-    </div>
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.07);
+        }
 
-    <div class="stat">
-        <strong id="lessonsCount">0</strong>
-        الدروس
-    </div>
+        .card {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
 
-    <div class="stat">
-        <strong id="examsCount">0</strong>
-        الامتحانات
-    </div>
+        .exam-card {
+            border-right: 5px solid #2563eb;
+        }
 
-    <div class="stat">
-        <strong id="resultsCount">0</strong>
-        النتائج
-    </div>
+        .result-card {
+            border-right: 5px solid #16a34a;
+        }
 
-</div>
+        .hidden {
+            display: none;
+        }
 
+        .question {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
 
-<div class="section">
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
 
-    <h2>📚 الدورات</h2>
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            background: #eef2ff;
+        }
 
-    <div id="coursesList">
-        جاري التحميل...
-    </div>
+        .timer-box {
+            background: #fff7ed;
+            border: 2px solid #f97316;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0 20px;
+            text-align: center;
+        }
 
-</div>
+        .timer-label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
+        #examTimer {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ea580c;
+            direction: ltr;
+        }
 
-<div class="section">
+        .timer-warning {
+            color: #dc2626 !important;
+        }
 
-    <h2>📖 الدروس</h2>
+        @media (max-width: 700px) {
 
-    <div id="lessonsList">
-        جاري التحميل...
-    </div>
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
 
-</div>
+            .topbar {
+                flex-wrap: wrap;
+            }
 
+            .topbar-actions {
+                width: 100%;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
 
-<div class="section">
+        }
 
-    <h2>📝 الامتحانات</h2>
+    </style>
 
-    <div id="examsList">
-        جاري التحميل...
-    </div>
+</head>
 
-</div>
+<body>
 
+    <div class="topbar">
 
-<div
-    class="section hidden"
-    id="examSection"
->
-
-    <h2 id="examTitle"></h2>
-
-    <p id="examDescription"></p>
-
-
-    <div class="timer-box">
-
-        <div class="timer-label">
-            ⏱️ الوقت المتبقي
+        <div class="logo">
+            🚀 Nova Future
         </div>
 
-        <div id="examTimer">
-            00:00
+        <div class="topbar-actions">
+
+            <a
+                href="profile.html"
+                class="profile-btn"
+            >
+                👤 الملف الشخصي
+            </a>
+
+            <a
+                href="settings.html"
+                class="settings-btn"
+            >
+                ⚙️ الإعدادات
+            </a>
+
+            <button
+                class="logout"
+                id="logoutBtn"
+            >
+                تسجيل الخروج
+            </button>
+
         </div>
 
     </div>
 
 
-    <div id="questionsContainer"></div>
+    <div class="container">
+
+        <div class="welcome">
+
+            <h1>
+                أهلاً بك يا
+                <span id="studentName">...</span>
+                👋
+            </h1>
+
+            <p>
+                مرحباً بك في منصة Nova Future التعليمية.
+            </p>
+
+        </div>
 
 
-    <button id="submitExamBtn">
-        تسليم الامتحان
-    </button>
+        <div class="stats">
+
+            <div class="stat">
+                <strong id="coursesCount">0</strong>
+                الدورات
+            </div>
+
+            <div class="stat">
+                <strong id="lessonsCount">0</strong>
+                الدروس
+            </div>
+
+            <div class="stat">
+                <strong id="examsCount">0</strong>
+                الامتحانات
+            </div>
+
+            <div class="stat">
+                <strong id="resultsCount">0</strong>
+                النتائج
+            </div>
+
+        </div>
 
 
-    <div
-        id="examMessage"
-        class="message hidden"
-    ></div>
+        <div class="section">
 
-</div>
+            <h2>📚 الدورات</h2>
+
+            <div id="coursesList">
+                جاري التحميل...
+            </div>
+
+        </div>
 
 
-<div class="section">
+        <div class="section">
 
-    <h2>🏆 النتائج</h2>
+            <h2>📖 الدروس</h2>
 
-    <div id="resultsList">
-        جاري التحميل...
+            <div id="lessonsList">
+                جاري التحميل...
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>📝 الامتحانات</h2>
+
+            <div id="examsList">
+                جاري التحميل...
+            </div>
+
+        </div>
+
+
+        <div
+            class="section hidden"
+            id="examSection"
+        >
+
+            <h2 id="examTitle"></h2>
+
+            <p id="examDescription"></p>
+
+
+            <div class="timer-box">
+
+                <div class="timer-label">
+                    ⏱️ الوقت المتبقي
+                </div>
+
+                <div id="examTimer">
+                    00:00
+                </div>
+
+            </div>
+
+
+            <div id="questionsContainer"></div>
+
+
+            <button id="submitExamBtn">
+                تسليم الامتحان
+            </button>
+
+
+            <div
+                id="examMessage"
+                class="message hidden"
+            ></div>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>🏆 النتائج</h2>
+
+            <div id="resultsList">
+                جاري التحميل...
+            </div>
+
+        </div>
+
     </div>
 
-</div>
 
-</div><script type="module">
+<script type="module">
 
 import {
     onAuthStateChanged,
@@ -369,11 +401,6 @@ import {
 
 let currentUser = null;
 let currentExam = null;
-
-
-/* =========================
-   TIMER VARIABLES
-========================= */
 
 let examTimerInterval = null;
 let examTimeRemaining = 0;
@@ -440,11 +467,8 @@ onAuthStateChanged(auth, async (user) => {
 
 
         await loadCourses();
-
         await loadLessons();
-
         await loadExams();
-
         await loadResults();
 
 
@@ -452,14 +476,15 @@ onAuthStateChanged(auth, async (user) => {
 
         console.error(error);
 
-
         alert(
             "حدث خطأ أثناء تحميل بيانات الطالب:\n\n" +
             error.code +
             "\n\n" +
             error.message
         );
+
     }
+
 });
 
 
@@ -550,6 +575,7 @@ async function loadCourses() {
 
     document.getElementById("coursesCount").textContent =
         count;
+
 }
 
 
@@ -630,6 +656,7 @@ async function loadLessons() {
 
     document.getElementById("lessonsCount").textContent =
         count;
+
 }
 
 
@@ -734,6 +761,7 @@ async function loadExams() {
 
     document.getElementById("examsCount").textContent =
         count;
+
 }
 
 
@@ -744,7 +772,6 @@ async function loadExams() {
 function startExam(exam) {
 
     stopExamTimer();
-
 
     currentExam = exam;
 
@@ -832,6 +859,7 @@ function startExam(exam) {
     const submitButton =
         document.getElementById("submitExamBtn");
 
+
     submitButton.disabled = false;
 
     submitButton.textContent =
@@ -853,6 +881,7 @@ function startExam(exam) {
             duration * 60;
 
         updateTimerDisplay();
+
 
         examTimerInterval =
             setInterval(() => {
@@ -885,6 +914,7 @@ function startExam(exam) {
         .scrollIntoView({
             behavior: "smooth"
         });
+
 }
 
 
@@ -921,6 +951,7 @@ function updateTimerDisplay() {
         timer.classList.remove("timer-warning");
 
     }
+
 }
 
 
@@ -937,6 +968,7 @@ function stopExamTimer() {
         examTimerInterval = null;
 
     }
+
 }
 
 
@@ -965,6 +997,7 @@ async function autoSubmitExam() {
 
 
     await submitExam(true);
+
 }
 
 
@@ -988,6 +1021,7 @@ async function submitExam(isAutoSubmit = false) {
         alert("اختر امتحان أولاً.");
 
         return;
+
     }
 
 
@@ -1139,6 +1173,7 @@ async function submitExam(isAutoSubmit = false) {
         );
 
     }
+
 }
 
 
@@ -1229,6 +1264,7 @@ async function loadResults() {
     document.getElementById(
         "resultsCount"
     ).textContent = count;
+
 }
 
 
@@ -1249,7 +1285,10 @@ function escapeHTML(value) {
 
 
     return div.innerHTML;
+
 }
 
-</script></body>
+</script>
+
+</body>
 </html>
