@@ -1,213 +1,753 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta
+    name="description"
+    content="إنشاء حساب طالب جديد على منصة Nova Future التعليمية"
+>
 
-    <title>إنشاء حساب - Nova Future</title>
+<title>إنشاء حساب - Nova Future</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/style.css">
 
-    <style>
-        body {
-            background: #f4f7fb;
+<style>
+    /* ========================================
+       Register Page
+    ======================================== */
+
+    body {
+        min-height: 100vh;
+        background:
+            radial-gradient(
+                circle at top right,
+                var(--primary-light),
+                transparent 35%
+            ),
+            var(--bg-color);
+    }
+
+    .auth-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 16px 6%;
+        background: var(--surface-color);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: var(--text-color);
+    }
+
+    .brand-icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--primary-color);
+        color: white;
+        font-size: 21px;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+    }
+
+    .brand-text {
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .home-link {
+        color: var(--primary-color);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .home-link:hover {
+        text-decoration: underline;
+    }
+
+    .register-wrapper {
+        width: min(100% - 32px, 520px);
+        margin: 55px auto;
+    }
+
+    .register-card {
+        padding: 34px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 22px;
+        box-shadow: var(--shadow-lg);
+        animation: registerAppear 0.45s ease;
+    }
+
+    @keyframes registerAppear {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
         }
 
-        .register-box {
-            max-width: 500px;
-            margin: 50px auto;
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .register-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 18px;
+        display: grid;
+        place-items: center;
+        border-radius: 18px;
+        background: var(--primary-light);
+        font-size: 30px;
+    }
+
+    .register-heading {
+        text-align: center;
+        margin-bottom: 8px;
+    }
+
+    .register-description {
+        margin-bottom: 28px;
+        text-align: center;
+        color: var(--text-muted);
+        line-height: 1.8;
+    }
+
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 17px;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: 700;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper input {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 11px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-size: 16px;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .input-wrapper input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .password-wrapper input {
+        padding-left: 48px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .toggle-password:hover {
+        background: var(--primary-light);
+        color: var(--primary-color);
+    }
+
+    .password-hint {
+        margin-top: 6px;
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .register-button {
+        width: 100%;
+        min-height: 50px;
+        margin-top: 5px;
+        border: 0;
+        border-radius: 11px;
+        background: var(--primary-color);
+        color: white;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .register-button:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+    }
+
+    .register-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .button-loading {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+    }
+
+    .button-spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .register-message {
+        display: none;
+        margin-top: 18px;
+        padding: 13px 14px;
+        border-radius: 10px;
+        line-height: 1.7;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .register-message.show {
+        display: block;
+    }
+
+    .register-message.error {
+        background: var(--danger-bg);
+        color: var(--danger-color);
+        border: 1px solid var(--danger-color);
+    }
+
+    .register-message.success {
+        background: var(--success-bg);
+        color: var(--success-color);
+        border: 1px solid var(--success-color);
+    }
+
+    .auth-links {
+        margin-top: 24px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border-color);
+        text-align: center;
+        line-height: 2;
+    }
+
+    .auth-links p {
+        margin-bottom: 6px;
+    }
+
+    .auth-links a {
+        font-weight: 700;
+    }
+
+    .login-link {
+        color: var(--primary-color);
+    }
+
+    .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--text-muted);
+        text-decoration: none;
+    }
+
+    .back-home:hover {
+        color: var(--primary-color);
+    }
+
+    @media (max-width: 600px) {
+        .auth-header {
+            padding: 13px 16px;
         }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        .brand-text {
+            font-size: 18px;
         }
 
-        input {
-            width: 100%;
-            padding: 13px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 16px;
+        .home-link {
+            font-size: 14px;
         }
 
-        button {
-            padding: 13px;
-            border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
+        .register-wrapper {
+            width: min(100% - 22px, 520px);
+            margin: 28px auto;
         }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .register-card {
+            padding: 25px 19px;
+            border-radius: 18px;
         }
 
-        .links {
-            margin-top: 20px;
-            line-height: 2;
+        .register-icon {
+            width: 58px;
+            height: 58px;
+            font-size: 27px;
         }
+    }
 
-        .error {
-            color: #dc2626;
-            margin-top: 15px;
-        }
+    body.dark {
+        background:
+            radial-gradient(
+                circle at top right,
+                rgba(37, 99, 235, 0.16),
+                transparent 35%
+            ),
+            var(--bg-color);
+    }
+</style>
 
-        .success {
-            color: #16a34a;
-            margin-top: 15px;
-        }
-    </style>
-</head>
+</head><body><!-- ========================================
+     Header
+======================================== -->
 
-<body>
+<header class="auth-header">
 
-    <header>
-        <h1>🚀 Nova Future</h1>
-        <p>إنشاء حساب جديد</p>
-    </header>
+    <a href="../index.html" class="brand">
+        <span class="brand-icon">🚀</span>
+        <span class="brand-text">Nova Future</span>
+    </a>
 
-    <main>
+    <a href="../index.html" class="home-link">
+        الرئيسية
+    </a>
 
-        <section class="register-box">
+</header>
 
-            <h2>إنشاء حساب 🎓</h2>
 
-            <p>
-                أنشئ حسابك وابدأ رحلتك التعليمية.
+<!-- ========================================
+     Main
+======================================== -->
+
+<main>
+
+    <section class="register-wrapper">
+
+        <div class="register-card">
+
+            <div class="register-icon">
+                🎓
+            </div>
+
+            <h1 class="register-heading">
+                إنشاء حساب جديد
+            </h1>
+
+            <p class="register-description">
+                أنشئ حسابك كطالب وابدأ رحلتك التعليمية مع Nova Future.
             </p>
 
-            <form id="registerForm">
 
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="الاسم بالكامل"
-                    required
-                >
+            <!-- Register Form -->
 
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="البريد الإلكتروني"
-                    required
-                >
+            <form id="registerForm" class="register-form">
 
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="كلمة المرور"
-                    minlength="6"
-                    required
-                >
+                <div class="input-group">
 
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    placeholder="تأكيد كلمة المرور"
-                    minlength="6"
-                    required
-                >
+                    <label for="name">
+                        الاسم بالكامل
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="اكتب اسمك بالكامل"
+                            autocomplete="name"
+                            minlength="2"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="email">
+                        البريد الإلكتروني
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="example@email.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="password">
+                        كلمة المرور
+                    </label>
+
+                    <div class="input-wrapper password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="اكتب كلمة المرور"
+                            autocomplete="new-password"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            data-target="password"
+                            aria-label="إظهار كلمة المرور"
+                            title="إظهار كلمة المرور"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                    <div class="password-hint">
+                        يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل.
+                    </div>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="confirmPassword">
+                        تأكيد كلمة المرور
+                    </label>
+
+                    <div class="input-wrapper password-wrapper">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="أعد كتابة كلمة المرور"
+                            autocomplete="new-password"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            data-target="confirmPassword"
+                            aria-label="إظهار كلمة المرور"
+                            title="إظهار كلمة المرور"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                </div>
+
 
                 <button
                     type="submit"
                     id="registerBtn"
+                    class="register-button"
                 >
                     إنشاء الحساب
                 </button>
 
             </form>
 
-            <div id="message"></div>
 
-            <div class="links">
+            <!-- Message -->
+
+            <div
+                id="message"
+                class="register-message"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+
+            <!-- Links -->
+
+            <div class="auth-links">
 
                 <p>
                     لديك حساب بالفعل؟
-                    <a href="login.html">
+                    <a
+                        href="login.html"
+                        class="login-link"
+                    >
                         تسجيل الدخول
                     </a>
                 </p>
 
-                <a href="../index.html">
+                <a
+                    href="../index.html"
+                    class="back-home"
+                >
                     🏠 العودة للرئيسية
                 </a>
 
             </div>
 
-        </section>
+        </div>
 
-    </main>
+    </section>
 
-    <script type="module">
-
-        import {
-            createUserWithEmailAndPassword
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-        import {
-            doc,
-            setDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
-        import {
-            auth,
-            db
-        } from "../js/firebase-config.js";
+</main>
 
 
-        const form =
-            document.getElementById("registerForm");
+<!-- ========================================
+     Firebase Registration
+======================================== -->
 
-        const button =
-            document.getElementById("registerBtn");
+<script type="module">
 
-        const message =
-            document.getElementById("message");
+    import {
+        createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    import {
+        doc,
+        setDoc,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    import {
+        auth,
+        db
+    } from "../js/firebase-config.js";
 
 
-        form.addEventListener("submit", async (event) => {
+    const form =
+        document.getElementById("registerForm");
+
+    const button =
+        document.getElementById("registerBtn");
+
+    const message =
+        document.getElementById("message");
+
+    const nameInput =
+        document.getElementById("name");
+
+    const emailInput =
+        document.getElementById("email");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const confirmPasswordInput =
+        document.getElementById("confirmPassword");
+
+
+    // ========================================
+    // Message Helper
+    // ========================================
+
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className =
+            "register-message show " + type;
+    }
+
+
+    function clearMessage() {
+
+        message.textContent = "";
+
+        message.className =
+            "register-message";
+    }
+
+
+    // ========================================
+    // Password Visibility
+    // ========================================
+
+    document
+        .querySelectorAll(".toggle-password")
+        .forEach((toggleButton) => {
+
+            toggleButton.addEventListener(
+                "click",
+                () => {
+
+                    const targetId =
+                        toggleButton.dataset.target;
+
+                    const target =
+                        document.getElementById(targetId);
+
+                    if (target.type === "password") {
+
+                        target.type = "text";
+
+                        toggleButton.textContent = "🙈";
+
+                        toggleButton.setAttribute(
+                            "aria-label",
+                            "إخفاء كلمة المرور"
+                        );
+
+                        toggleButton.setAttribute(
+                            "title",
+                            "إخفاء كلمة المرور"
+                        );
+
+                    } else {
+
+                        target.type = "password";
+
+                        toggleButton.textContent = "👁️";
+
+                        toggleButton.setAttribute(
+                            "aria-label",
+                            "إظهار كلمة المرور"
+                        );
+
+                        toggleButton.setAttribute(
+                            "title",
+                            "إظهار كلمة المرور"
+                        );
+                    }
+                }
+            );
+        });
+
+
+    // ========================================
+    // Clear Error While Typing
+    // ========================================
+
+    [
+        nameInput,
+        emailInput,
+        passwordInput,
+        confirmPasswordInput
+    ].forEach((input) => {
+
+        input.addEventListener(
+            "input",
+            () => {
+
+                if (
+                    message.classList.contains("error")
+                ) {
+                    clearMessage();
+                }
+
+            }
+        );
+
+    });
+
+
+    // ========================================
+    // Register
+    // ========================================
+
+    form.addEventListener(
+        "submit",
+        async (event) => {
 
             event.preventDefault();
 
+            clearMessage();
+
+
             const name =
-                document.getElementById("name").value.trim();
+                nameInput.value.trim();
 
             const email =
-                document.getElementById("email").value.trim();
+                emailInput.value.trim();
 
             const password =
-                document.getElementById("password").value;
+                passwordInput.value;
 
             const confirmPassword =
-                document.getElementById("confirmPassword").value;
+                confirmPasswordInput.value;
 
 
-            message.className = "";
-            message.textContent = "";
-
+            // ========================================
+            // Validation
+            // ========================================
 
             if (name.length < 2) {
 
-                message.className = "error";
-                message.textContent =
-                    "من فضلك اكتب اسمًا صحيحًا.";
+                showMessage(
+                    "من فضلك اكتب اسمًا صحيحًا.",
+                    "error"
+                );
+
+                nameInput.focus();
 
                 return;
             }
 
 
-            if (password !== confirmPassword) {
+            if (!email) {
 
-                message.className = "error";
-                message.textContent =
-                    "كلمتا المرور غير متطابقتين ❌";
+                showMessage(
+                    "من فضلك اكتب البريد الإلكتروني.",
+                    "error"
+                );
+
+                emailInput.focus();
 
                 return;
             }
@@ -215,19 +755,49 @@
 
             if (password.length < 6) {
 
-                message.className = "error";
-                message.textContent =
-                    "كلمة المرور يجب أن تكون 6 أحرف على الأقل.";
+                showMessage(
+                    "كلمة المرور يجب أن تكون 6 أحرف على الأقل.",
+                    "error"
+                );
+
+                passwordInput.focus();
 
                 return;
             }
 
 
+            if (password !== confirmPassword) {
+
+                showMessage(
+                    "كلمتا المرور غير متطابقتين ❌",
+                    "error"
+                );
+
+                confirmPasswordInput.focus();
+
+                return;
+            }
+
+
+            // ========================================
+            // Loading
+            // ========================================
+
             button.disabled = true;
-            button.textContent = "جاري إنشاء الحساب...";
+
+            button.innerHTML = `
+                <span class="button-loading">
+                    <span class="button-spinner"></span>
+                    جاري إنشاء الحساب...
+                </span>
+            `;
 
 
             try {
+
+                // ========================================
+                // Create Firebase Account
+                // ========================================
 
                 const userCredential =
                     await createUserWithEmailAndPassword(
@@ -241,6 +811,10 @@
                     userCredential.user;
 
 
+                // ========================================
+                // Create Firestore User
+                // ========================================
+
                 await setDoc(
                     doc(db, "users", user.uid),
                     {
@@ -252,63 +826,107 @@
                 );
 
 
-                message.className = "success";
-                message.textContent =
-                    "تم إنشاء الحساب بنجاح ✅";
+                // ========================================
+                // Success
+                // ========================================
+
+                showMessage(
+                    "تم إنشاء الحساب بنجاح ✅ سيتم تحويلك لتسجيل الدخول...",
+                    "success"
+                );
 
 
-                setTimeout(() => {
+                setTimeout(
+                    () => {
 
-                    window.location.href =
-                        "login.html";
+                        window.location.href =
+                            "login.html";
 
-                }, 1000);
+                    },
+                    1200
+                );
 
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "REGISTER ERROR:",
+                    error
+                );
 
-                message.className = "error";
 
+                // ========================================
+                // Firebase Errors
+                // ========================================
 
-                if (error.code === "auth/email-already-in-use") {
+                if (
+                    error.code ===
+                    "auth/email-already-in-use"
+                ) {
 
-                    message.textContent =
-                        "هذا البريد الإلكتروني مستخدم بالفعل.";
+                    showMessage(
+                        "هذا البريد الإلكتروني مستخدم بالفعل.",
+                        "error"
+                    );
 
                 }
-                else if (error.code === "auth/invalid-email") {
+                else if (
+                    error.code ===
+                    "auth/invalid-email"
+                ) {
 
-                    message.textContent =
-                        "البريد الإلكتروني غير صحيح.";
+                    showMessage(
+                        "البريد الإلكتروني غير صحيح.",
+                        "error"
+                    );
 
                 }
-                else if (error.code === "auth/weak-password") {
+                else if (
+                    error.code ===
+                    "auth/weak-password"
+                ) {
 
-                    message.textContent =
-                        "كلمة المرور ضعيفة. استخدم 6 أحرف على الأقل.";
+                    showMessage(
+                        "كلمة المرور ضعيفة. استخدم 6 أحرف على الأقل.",
+                        "error"
+                    );
+
+                }
+                else if (
+                    error.code ===
+                    "auth/too-many-requests"
+                ) {
+
+                    showMessage(
+                        "تمت محاولات كثيرة. انتظر قليلًا ثم حاول مرة أخرى.",
+                        "error"
+                    );
 
                 }
                 else {
 
-                    message.textContent =
-                        "حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.";
+                    showMessage(
+                        "حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.",
+                        "error"
+                    );
 
                 }
 
 
                 button.disabled = false;
-                button.textContent = "إنشاء الحساب";
 
+                button.textContent =
+                    "إنشاء الحساب";
             }
 
-        });
+        }
+    );
 
-    </script>
+</script>
 
-    <script src="../js/app.js"></script>
 
-</body>
+<!-- Global Settings -->
 
-</html>
+<script src="../js/app.js"></script>
+
+</body></html>
