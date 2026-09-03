@@ -4,13 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>لوحة الإدارة - Nova Future</title>
+    <title>لوحة الأدمن - Nova Future</title>
 
     <link rel="stylesheet" href="../css/style.css">
 
+    <style>
+        .dashboard {
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stat {
+            background: #f5f7fb;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .item {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .item h4 {
+            margin-bottom: 8px;
+        }
+
+        .item p {
+            margin-bottom: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #222;
+            color: white;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .secondary-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .danger-btn {
+            border: none;
+            background: #dc2626;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .success {
+            color: #15803d;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #dc2626;
+            margin-top: 10px;
+        }
+
+        .empty {
+            color: #777;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .question-box {
+            background: #f5f7fb;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .option {
+            margin: 6px 0;
+        }
+    </style>
+
+
     <script type="module">
 
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import {
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         import {
             doc,
@@ -25,44 +189,363 @@
         import { auth, db } from "../js/firebase-config.js";
 
 
-        // ================================
+        // =====================================
         // تسجيل الخروج
-        // ================================
+        // =====================================
 
-        window.logoutAdmin = async function () {
+        window.logoutAdmin = async function() {
+
+            await signOut(auth);
+
+            window.location.href = "login.html";
+        };
+
+
+        // =====================================
+        // إحصائيات
+        // =====================================
+
+        async function loadStatistics() {
 
             try {
 
-                await signOut(auth);
+                const usersSnapshot =
+                    await getDocs(
+                        collection(db, "users")
+                    );
 
-                window.location.href = "login.html";
+                const coursesSnapshot =
+                    await getDocs(
+                        collection(db, "courses")
+                    );
+
+                const examsSnapshot =
+                    await getDocs(
+                        collection(db, "exams")
+                    );
+
+                const resultsSnapshot =
+                    await getDocs(
+                        collection(db, "results")
+                    );
+
+
+                let students = 0;
+                let teachers = 0;
+
+
+                usersSnapshot.forEach((userDoc) => {
+
+                    const user =
+                        userDoc.data();
+
+                    if (user.role === "student") {
+                        students++;
+                    }
+
+                    if (user.role === "teacher") {
+                        teachers++;
+                    }
+                });
+
+
+                document.getElementById("studentsCount")
+                    .textContent = students;
+
+                document.getElementById("teachersCount")
+                    .textContent = teachers;
+
+                document.getElementById("coursesCount")
+                    .textContent = coursesSnapshot.size;
+
+                document.getElementById("examsCount")
+                    .textContent = examsSnapshot.size;
+
+                document.getElementById("resultsCount")
+                    .textContent = resultsSnapshot.size;
+
+            } catch (error) {
+
+                console.error(error);
+            }
+        }
+
+
+        // =====================================
+        // المستخدمين
+        // =====================================
+
+        async function loadUsers() {
+
+            const usersList =
+                document.getElementById("usersList");
+
+            usersList.innerHTML = "";
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(db, "users")
+                    );
+
+
+                if (snapshot.empty) {
+
+                    usersList.innerHTML =
+                        '<p class="empty">لا يوجد مستخدمون.</p>';
+
+                    return;
+                }
+
+
+                snapshot.forEach((userDoc) => {
+
+                    const user =
+                        userDoc.data();
+
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className = "item";
+
+
+                    let roleText =
+                        "غير معروف";
+
+                    if (user.role === "student") {
+                        roleText = "طالب";
+                    }
+
+                    if (user.role === "teacher") {
+                        roleText = "مدرس";
+                    }
+
+                    if (user.role === "admin") {
+                        roleText = "أدمن";
+                    }
+
+
+                    div.innerHTML = `
+                        <h4>
+                            ${user.name || "بدون اسم"}
+                        </h4>
+
+                        <p>
+                            البريد:
+                            ${user.email || "غير موجود"}
+                        </p>
+
+                        <p>
+                            الدور الحالي:
+                            <strong>${roleText}</strong>
+                        </p>
+                    `;
+
+
+                    if (
+                        user.role === "student" ||
+                        user.role === "teacher"
+                    ) {
+
+                        const actions =
+                            document.createElement("div");
+
+                        actions.className = "actions";
+
+
+                        const changeBtn =
+                            document.createElement("button");
+
+                        changeBtn.className =
+                            "secondary-btn";
+
+
+                        changeBtn.textContent =
+                            user.role === "student"
+                                ? "تحويل إلى مدرس 👨‍🏫"
+                                : "تحويل إلى طالب 👨‍🎓";
+
+
+                        changeBtn.onclick =
+                            () => changeUserRole(
+                                userDoc.id,
+                                user.role === "student"
+                                    ? "teacher"
+                                    : "student"
+                            );
+
+
+                        actions.appendChild(changeBtn);
+
+                        div.appendChild(actions);
+                    }
+
+
+                    usersList.appendChild(div);
+                });
 
             } catch (error) {
 
                 console.error(error);
 
-                alert("حدث خطأ أثناء تسجيل الخروج ❌");
+                usersList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل المستخدمين.</p>';
+            }
+        }
+
+
+        // =====================================
+        // تغيير الدور
+        // =====================================
+
+        async function changeUserRole(
+            userId,
+            newRole
+        ) {
+
+            const text =
+                newRole === "teacher"
+                    ? "مدرس"
+                    : "طالب";
+
+
+            const confirmed =
+                confirm(
+                    `هل تريد تحويل الحساب إلى ${text}؟`
+                );
+
+
+            if (!confirmed) {
+                return;
             }
 
-        };
+
+            try {
+
+                await updateDoc(
+                    doc(db, "users", userId),
+                    {
+                        role: newRole
+                    }
+                );
 
 
-        // ================================
-        // إضافة دورة
-        // ================================
-
-        window.addCourse = async function () {
-
-            const courseName =
-                document.getElementById("courseName").value.trim();
-
-            const courseDescription =
-                document.getElementById("courseDescription").value.trim();
+                alert(
+                    "تم تغيير الدور بنجاح ✅"
+                );
 
 
-            if (!courseName) {
+                await loadUsers();
 
-                alert("اكتب اسم الدورة أولًا ❌");
+                await loadStatistics();
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "حدث خطأ أثناء تغيير الدور ❌"
+                );
+            }
+        }
+
+
+        // =====================================
+        // الكورسات
+        // =====================================
+
+        async function loadCourses() {
+
+            const coursesList =
+                document.getElementById("coursesList");
+
+            coursesList.innerHTML = "";
+
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(db, "courses")
+                    );
+
+
+                if (snapshot.empty) {
+
+                    coursesList.innerHTML =
+                        '<p class="empty">لا توجد كورسات.</p>';
+
+                    return;
+                }
+
+
+                snapshot.forEach((courseDoc) => {
+
+                    const course =
+                        courseDoc.data();
+
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className = "item";
+
+
+                    div.innerHTML = `
+                        <h4>
+                            ${course.name || "بدون اسم"}
+                        </h4>
+
+                        <p>
+                            ${course.description || "لا يوجد وصف."}
+                        </p>
+                    `;
+
+
+                    coursesList.appendChild(div);
+                });
+
+            } catch (error) {
+
+                console.error(error);
+
+                coursesList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل الكورسات.</p>';
+            }
+        }
+
+
+        // =====================================
+        // إضافة كورس
+        // =====================================
+
+        window.addCourse = async function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById("courseName")
+                    .value.trim();
+
+            const description =
+                document.getElementById("courseDescription")
+                    .value.trim();
+
+
+            const message =
+                document.getElementById("courseMessage");
+
+
+            if (!name) {
+
+                message.textContent =
+                    "اكتب اسم الكورس.";
+
+                message.className =
+                    "error";
 
                 return;
             }
@@ -73,134 +556,157 @@
                 await addDoc(
                     collection(db, "courses"),
                     {
-                        name: courseName,
-                        description: courseDescription,
+                        name: name,
+                        description: description,
                         createdAt: serverTimestamp()
                     }
                 );
 
 
-                alert("تمت إضافة الدورة بنجاح ✅");
+                message.textContent =
+                    "تم إنشاء الكورس بنجاح ✅";
+
+                message.className =
+                    "success";
 
 
-                document.getElementById("courseName").value = "";
+                document.getElementById("courseForm")
+                    .reset();
 
-                document.getElementById("courseDescription").value = "";
 
+                await loadCourses();
 
-                loadCourses();
+                await loadStatistics();
 
             } catch (error) {
 
                 console.error(error);
 
-                alert("حدث خطأ أثناء إضافة الدورة ❌");
-            }
+                message.textContent =
+                    "حدث خطأ أثناء إنشاء الكورس ❌";
 
+                message.className =
+                    "error";
+            }
         };
 
 
-        // ================================
-        // عرض الدورات
-        // ================================
+        // =====================================
+        // الامتحانات
+        // =====================================
 
-        async function loadCourses() {
+        async function loadExams() {
 
-            const coursesList =
-                document.getElementById("coursesList");
+            const examsList =
+                document.getElementById("examsList");
 
-            coursesList.innerHTML =
-                "جاري تحميل الدورات...";
+            examsList.innerHTML = "";
 
 
             try {
 
-                const coursesSnapshot =
+                const snapshot =
                     await getDocs(
-                        collection(db, "courses")
+                        collection(db, "exams")
                     );
 
 
-                coursesList.innerHTML = "";
+                if (snapshot.empty) {
 
-
-                if (coursesSnapshot.empty) {
-
-                    coursesList.innerHTML =
-                        "<p>لا توجد دورات حتى الآن.</p>";
+                    examsList.innerHTML =
+                        '<p class="empty">لا توجد امتحانات.</p>';
 
                     return;
                 }
 
 
-                coursesSnapshot.forEach((courseDoc) => {
+                snapshot.forEach((examDoc) => {
 
-                    const courseData =
-                        courseDoc.data();
+                    const exam =
+                        examDoc.data();
 
 
-                    const courseCard =
+                    const questionsCount =
+                        Array.isArray(exam.questions)
+                            ? exam.questions.length
+                            : 0;
+
+
+                    const div =
                         document.createElement("div");
 
-
-                    courseCard.style.border =
-                        "1px solid #ddd";
-
-                    courseCard.style.padding =
-                        "15px";
-
-                    courseCard.style.marginBottom =
-                        "10px";
-
-                    courseCard.style.borderRadius =
-                        "10px";
+                    div.className = "item";
 
 
-                    courseCard.innerHTML = `
-
-                        <h3>
-                            ${courseData.name || "بدون اسم"}
-                        </h3>
+                    div.innerHTML = `
+                        <h4>
+                            ${exam.title || "امتحان بدون عنوان"}
+                        </h4>
 
                         <p>
-                            ${courseData.description || "بدون وصف"}
+                            ${exam.description || ""}
                         </p>
 
+                        <p>
+                            عدد الأسئلة:
+                            ${questionsCount}
+                        </p>
+
+                        <div class="actions">
+
+                            <button
+                                class="secondary-btn"
+                                onclick="openQuestionForm('${examDoc.id}')"
+                            >
+                                إضافة سؤال ➕
+                            </button>
+
+                        </div>
                     `;
 
 
-                    coursesList.appendChild(courseCard);
-
+                    examsList.appendChild(div);
                 });
-
 
             } catch (error) {
 
                 console.error(error);
 
-                coursesList.innerHTML =
-                    "<p>حدث خطأ أثناء تحميل الدورات ❌</p>";
+                examsList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل الامتحانات.</p>';
             }
-
         }
 
 
-        // ================================
+        // =====================================
         // إضافة امتحان
-        // ================================
+        // =====================================
 
-        window.addExam = async function () {
+        window.addExam = async function(event) {
 
-            const examTitle =
-                document.getElementById("examTitle").value.trim();
-
-            const examDescription =
-                document.getElementById("examDescription").value.trim();
+            event.preventDefault();
 
 
-            if (!examTitle) {
+            const title =
+                document.getElementById("examTitle")
+                    .value.trim();
 
-                alert("اكتب اسم الامتحان أولًا ❌");
+            const description =
+                document.getElementById("examDescription")
+                    .value.trim();
+
+
+            const message =
+                document.getElementById("examMessage");
+
+
+            if (!title) {
+
+                message.textContent =
+                    "اكتب اسم الامتحان.";
+
+                message.className =
+                    "error";
 
                 return;
             }
@@ -211,247 +717,128 @@
                 await addDoc(
                     collection(db, "exams"),
                     {
-                        title: examTitle,
-                        description: examDescription,
+                        title: title,
+                        description: description,
                         questions: [],
                         createdAt: serverTimestamp()
                     }
                 );
 
 
-                alert("تم إنشاء الامتحان بنجاح ✅");
+                message.textContent =
+                    "تم إنشاء الامتحان بنجاح ✅";
+
+                message.className =
+                    "success";
 
 
-                document.getElementById("examTitle").value = "";
+                document.getElementById("examForm")
+                    .reset();
 
-                document.getElementById("examDescription").value = "";
 
+                await loadExams();
 
-                loadExams();
+                await loadStatistics();
 
             } catch (error) {
 
                 console.error(error);
 
-                alert("حدث خطأ أثناء إنشاء الامتحان ❌");
-            }
+                message.textContent =
+                    "حدث خطأ أثناء إنشاء الامتحان ❌";
 
+                message.className =
+                    "error";
+            }
         };
 
 
-        // ================================
-        // عرض الامتحانات
-        // ================================
+        // =====================================
+        // نموذج السؤال
+        // =====================================
 
-        async function loadExams() {
+        window.openQuestionForm = function(examId) {
 
-            const examsList =
-                document.getElementById("examsList");
+            document.getElementById("questionExamId")
+                .value = examId;
 
-            examsList.innerHTML =
-                "جاري تحميل الامتحانات...";
+            document.getElementById("questionArea")
+                .style.display = "block";
 
-
-            try {
-
-                const examsSnapshot =
-                    await getDocs(
-                        collection(db, "exams")
-                    );
-
-
-                examsList.innerHTML = "";
-
-
-                if (examsSnapshot.empty) {
-
-                    examsList.innerHTML =
-                        "<p>لا توجد امتحانات حتى الآن.</p>";
-
-                    return;
-                }
-
-
-                examsSnapshot.forEach((examDoc) => {
-
-                    const examData =
-                        examDoc.data();
-
-
-                    const examCard =
-                        document.createElement("div");
-
-
-                    examCard.style.border =
-                        "1px solid #ddd";
-
-                    examCard.style.padding =
-                        "15px";
-
-                    examCard.style.marginBottom =
-                        "15px";
-
-                    examCard.style.borderRadius =
-                        "10px";
-
-
-                    const title =
-                        document.createElement("h3");
-
-                    title.textContent =
-                        examData.title || "بدون عنوان";
-
-
-                    const description =
-                        document.createElement("p");
-
-                    description.textContent =
-                        examData.description || "بدون وصف";
-
-
-                    const questionCount =
-                        document.createElement("p");
-
-                    questionCount.textContent =
-                        "عدد الأسئلة: " +
-                        (examData.questions
-                            ? examData.questions.length
-                            : 0);
-
-
-                    const questionButton =
-                        document.createElement("button");
-
-                    questionButton.textContent =
-                        "إضافة سؤال ➕";
-
-
-                    questionButton.onclick =
-                        function () {
-
-                            openQuestionForm(
-                                examDoc.id,
-                                examData.title
-                            );
-
-                        };
-
-
-                    examCard.appendChild(title);
-
-                    examCard.appendChild(description);
-
-                    examCard.appendChild(questionCount);
-
-                    examCard.appendChild(questionButton);
-
-                    examsList.appendChild(examCard);
-
+            document.getElementById("questionArea")
+                .scrollIntoView({
+                    behavior: "smooth"
                 });
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                examsList.innerHTML =
-                    "<p>حدث خطأ أثناء تحميل الامتحانات ❌</p>";
-            }
-
-        }
-
-
-        // ================================
-        // فتح نموذج السؤال
-        // ================================
-
-        function openQuestionForm(examId, examTitle) {
-
-            document.getElementById("questionForm").style.display =
-                "block";
-
-
-            document.getElementById("selectedExamId").value =
-                examId;
-
-
-            document.getElementById("selectedExamName").textContent =
-                examTitle;
-
-
-            document.getElementById("questionText").value = "";
-
-            document.getElementById("option1").value = "";
-
-            document.getElementById("option2").value = "";
-
-            document.getElementById("option3").value = "";
-
-            document.getElementById("option4").value = "";
-
-            document.getElementById("correctAnswer").value = "0";
-
-
-            window.scrollTo({
-                top: document.getElementById("questionForm").offsetTop,
-                behavior: "smooth"
-            });
-
-        }
-
-
-        // ================================
-        // إغلاق نموذج السؤال
-        // ================================
-
-        window.closeQuestionForm = function () {
-
-            document.getElementById("questionForm").style.display =
-                "none";
-
         };
 
 
-        // ================================
-        // إضافة سؤال
-        // ================================
+        window.closeQuestionForm = function() {
 
-        window.addQuestion = async function () {
+            document.getElementById("questionArea")
+                .style.display = "none";
+        };
+
+
+        // =====================================
+        // إضافة سؤال
+        // =====================================
+
+        window.addQuestion = async function(event) {
+
+            event.preventDefault();
+
 
             const examId =
-                document.getElementById("selectedExamId").value;
+                document.getElementById("questionExamId")
+                    .value;
 
-            const questionText =
-                document.getElementById("questionText").value.trim();
+
+            const question =
+                document.getElementById("questionText")
+                    .value.trim();
+
 
             const option1 =
-                document.getElementById("option1").value.trim();
+                document.getElementById("option1")
+                    .value.trim();
 
             const option2 =
-                document.getElementById("option2").value.trim();
+                document.getElementById("option2")
+                    .value.trim();
 
             const option3 =
-                document.getElementById("option3").value.trim();
+                document.getElementById("option3")
+                    .value.trim();
 
             const option4 =
-                document.getElementById("option4").value.trim();
+                document.getElementById("option4")
+                    .value.trim();
+
 
             const correctAnswer =
                 Number(
-                    document.getElementById("correctAnswer").value
+                    document.getElementById("correctAnswer")
+                        .value
                 );
 
 
+            const message =
+                document.getElementById("questionMessage");
+
+
             if (
-                !examId ||
-                !questionText ||
+                !question ||
                 !option1 ||
                 !option2 ||
                 !option3 ||
                 !option4
             ) {
 
-                alert("اكمل بيانات السؤال بالكامل ❌");
+                message.textContent =
+                    "أكمل بيانات السؤال.";
+
+                message.className =
+                    "error";
 
                 return;
             }
@@ -469,7 +856,11 @@
 
                 if (!examSnapshot.exists()) {
 
-                    alert("الامتحان غير موجود ❌");
+                    message.textContent =
+                        "الامتحان غير موجود.";
+
+                    message.className =
+                        "error";
 
                     return;
                 }
@@ -480,13 +871,14 @@
 
 
                 const questions =
-                    examData.questions || [];
+                    Array.isArray(examData.questions)
+                        ? examData.questions
+                        : [];
 
 
                 questions.push({
 
-                    question:
-                        questionText,
+                    question: question,
 
                     options: [
                         option1,
@@ -495,9 +887,7 @@
                         option4
                     ],
 
-                    correctAnswer:
-                        correctAnswer
-
+                    correctAnswer: correctAnswer
                 });
 
 
@@ -509,33 +899,183 @@
                 );
 
 
-                alert("تمت إضافة السؤال بنجاح ✅");
+                message.textContent =
+                    "تم إضافة السؤال بنجاح ✅";
+
+                message.className =
+                    "success";
 
 
-                closeQuestionForm();
+                document.getElementById("questionForm")
+                    .reset();
 
-                loadExams();
 
+                await loadExams();
 
             } catch (error) {
 
                 console.error(error);
 
-                alert("حدث خطأ أثناء إضافة السؤال ❌");
-            }
+                message.textContent =
+                    "حدث خطأ أثناء إضافة السؤال ❌";
 
+                message.className =
+                    "error";
+            }
         };
 
 
-        // ================================
-        // التحقق من صلاحية الأدمن
-        // ================================
+        // =====================================
+        // النتائج
+        // =====================================
+
+        async function loadResults() {
+
+            const resultsList =
+                document.getElementById("resultsList");
+
+            resultsList.innerHTML = "";
+
+
+            try {
+
+                const resultsSnapshot =
+                    await getDocs(
+                        collection(db, "results")
+                    );
+
+                const usersSnapshot =
+                    await getDocs(
+                        collection(db, "users")
+                    );
+
+                const examsSnapshot =
+                    await getDocs(
+                        collection(db, "exams")
+                    );
+
+
+                const users = {};
+                const exams = {};
+
+
+                usersSnapshot.forEach((userDoc) => {
+
+                    users[userDoc.id] =
+                        userDoc.data();
+                });
+
+
+                examsSnapshot.forEach((examDoc) => {
+
+                    exams[examDoc.id] =
+                        examDoc.data();
+                });
+
+
+                if (resultsSnapshot.empty) {
+
+                    resultsList.innerHTML =
+                        '<p class="empty">لا توجد نتائج حتى الآن.</p>';
+
+                    return;
+                }
+
+
+                resultsSnapshot.forEach((resultDoc) => {
+
+                    const result =
+                        resultDoc.data();
+
+
+                    const student =
+                        users[result.studentId] || {};
+
+                    const exam =
+                        exams[result.examId] || {};
+
+
+                    let dateText =
+                        "غير محدد";
+
+
+                    if (result.createdAt) {
+
+                        try {
+
+                            dateText =
+                                result.createdAt
+                                    .toDate()
+                                    .toLocaleString("ar-EG");
+
+                        } catch (error) {
+
+                            dateText =
+                                "غير محدد";
+                        }
+                    }
+
+
+                    const div =
+                        document.createElement("div");
+
+                    div.className =
+                        "item";
+
+
+                    div.innerHTML = `
+                        <h4>
+                            👨‍🎓
+                            ${student.name || "طالب غير معروف"}
+                        </h4>
+
+                        <p>
+                            <strong>الامتحان:</strong>
+                            ${exam.title || "امتحان غير معروف"}
+                        </p>
+
+                        <p>
+                            <strong>الدرجة:</strong>
+                            ${result.score || 0}
+                            من
+                            ${result.total || 0}
+                        </p>
+
+                        <p>
+                            <strong>النسبة:</strong>
+                            ${result.percentage || 0}%
+                        </p>
+
+                        <p>
+                            <strong>التاريخ:</strong>
+                            ${dateText}
+                        </p>
+                    `;
+
+
+                    resultsList.appendChild(div);
+                });
+
+            } catch (error) {
+
+                console.error(error);
+
+                resultsList.innerHTML =
+                    '<p class="error">حدث خطأ أثناء تحميل النتائج.</p>';
+            }
+        }
+
+
+        // =====================================
+        // تشغيل لوحة الأدمن
+        // =====================================
 
         onAuthStateChanged(auth, async (user) => {
 
             if (!user) {
 
-                window.location.href = "login.html";
+                window.location.href =
+                    "login.html";
 
                 return;
             }
@@ -543,15 +1083,15 @@
 
             try {
 
-                const adminDoc =
+                const userDoc =
                     await getDoc(
                         doc(db, "users", user.uid)
                     );
 
 
-                if (!adminDoc.exists()) {
+                if (!userDoc.exists()) {
 
-                    alert("بيانات المستخدم غير موجودة ❌");
+                    await signOut(auth);
 
                     window.location.href =
                         "login.html";
@@ -560,212 +1100,57 @@
                 }
 
 
-                const adminData =
-                    adminDoc.data();
+                const userData =
+                    userDoc.data();
 
 
-                if (adminData.role !== "admin") {
+                if (userData.role !== "admin") {
 
-                    alert(
-                        "ليس لديك صلاحية لدخول لوحة الإدارة ❌"
-                    );
+                    if (userData.role === "student") {
 
-                    window.location.href =
-                        "student.html";
+                        window.location.href =
+                            "student.html";
+
+                    } else if (userData.role === "teacher") {
+
+                        window.location.href =
+                            "teacher.html";
+
+                    } else {
+
+                        await signOut(auth);
+
+                        window.location.href =
+                            "login.html";
+                    }
 
                     return;
                 }
 
 
-                // تحميل المستخدمين
+                document.getElementById("adminName")
+                    .textContent =
+                    userData.name || "الأدمن";
 
-                const usersSnapshot =
-                    await getDocs(
-                        collection(db, "users")
-                    );
 
+                await loadStatistics();
 
-                const usersList =
-                    document.getElementById("usersList");
+                await loadUsers();
 
+                await loadCourses();
 
-                usersList.innerHTML = "";
+                await loadExams();
 
-
-                usersSnapshot.forEach((userDoc) => {
-
-                    const userData =
-                        userDoc.data();
-
-
-                    const userCard =
-                        document.createElement("div");
-
-
-                    userCard.style.border =
-                        "1px solid #ddd";
-
-                    userCard.style.padding =
-                        "15px";
-
-                    userCard.style.marginBottom =
-                        "10px";
-
-                    userCard.style.borderRadius =
-                        "10px";
-
-
-                    const name =
-                        document.createElement("p");
-
-
-                    name.innerHTML =
-                        "<strong>الاسم:</strong> " +
-                        (userData.name || "بدون اسم");
-
-
-                    const email =
-                        document.createElement("p");
-
-
-                    email.innerHTML =
-                        "<strong>البريد:</strong> " +
-                        (userData.email || "بدون بريد");
-
-
-                    const role =
-                        document.createElement("p");
-
-
-                    role.innerHTML =
-                        "<strong>الصلاحية:</strong> " +
-                        (userData.role || "غير محددة");
-
-
-                    const changeButton =
-                        document.createElement("button");
-
-
-                    if (userData.role === "student") {
-
-                        changeButton.textContent =
-                            "تحويل إلى مدرس 👨‍🏫";
-
-
-                        changeButton.onclick =
-                            async function () {
-
-                                try {
-
-                                    await updateDoc(
-                                        doc(
-                                            db,
-                                            "users",
-                                            userDoc.id
-                                        ),
-                                        {
-                                            role: "teacher"
-                                        }
-                                    );
-
-
-                                    alert(
-                                        "تم تحويل المستخدم إلى مدرس ✅"
-                                    );
-
-
-                                    location.reload();
-
-                                } catch (error) {
-
-                                    console.error(error);
-
-                                    alert(
-                                        "حدث خطأ أثناء تغيير الصلاحية ❌"
-                                    );
-                                }
-
-                            };
-
-
-                    } else if (userData.role === "teacher") {
-
-                        changeButton.textContent =
-                            "تحويل إلى طالب 👨‍🎓";
-
-
-                        changeButton.onclick =
-                            async function () {
-
-                                try {
-
-                                    await updateDoc(
-                                        doc(
-                                            db,
-                                            "users",
-                                            userDoc.id
-                                        ),
-                                        {
-                                            role: "student"
-                                        }
-                                    );
-
-
-                                    alert(
-                                        "تم تحويل المستخدم إلى طالب ✅"
-                                    );
-
-
-                                    location.reload();
-
-                                } catch (error) {
-
-                                    console.error(error);
-
-                                    alert(
-                                        "حدث خطأ أثناء تغيير الصلاحية ❌"
-                                    );
-                                }
-
-                            };
-
-
-                    } else {
-
-                        changeButton.textContent =
-                            "Admin 🔐";
-
-                        changeButton.disabled = true;
-                    }
-
-
-                    userCard.appendChild(name);
-
-                    userCard.appendChild(email);
-
-                    userCard.appendChild(role);
-
-                    userCard.appendChild(changeButton);
-
-                    usersList.appendChild(userCard);
-
-                });
-
-
-                loadCourses();
-
-                loadExams();
-
+                await loadResults();
 
             } catch (error) {
 
-                console.error("Admin error:", error);
+                console.error(error);
 
                 alert(
-                    "حدث خطأ أثناء تحميل لوحة الإدارة ❌"
+                    "حدث خطأ أثناء تحميل لوحة الأدمن."
                 );
             }
-
         });
 
     </script>
@@ -776,238 +1161,406 @@
 
     <header>
 
-        <h1>Nova Future</h1>
+        <h1>
+            Nova Future 🚀
+        </h1>
 
-        <p>لوحة الإدارة</p>
+        <p>
+            لوحة الأدمن
+        </p>
 
     </header>
 
 
-    <main>
-
-        <!-- لوحة الأدمن -->
-
-        <section>
-
-            <h2>لوحة تحكم المدير ⚙️</h2>
-
-            <p>
-                من هنا تتم إدارة المنصة بالكامل.
-            </p>
-
-            <button onclick="logoutAdmin()">
-                تسجيل الخروج 🚪
-            </button>
-
-        </section>
+    <main class="dashboard">
 
 
-        <!-- إدارة المستخدمين -->
+        <!-- الترحيب -->
 
-        <section>
+        <div class="top-bar">
 
-            <h2>إدارة المستخدمين 👥</h2>
+            <div>
 
-            <p>
-                المستخدمون المسجلون في المنصة:
-            </p>
+                <h2>
+                    أهلاً بك يا
+                    <span id="adminName">...</span>
+                    👑
+                </h2>
 
-            <div id="usersList">
-                جاري تحميل المستخدمين...
+                <p>
+                    مركز التحكم في منصة Nova Future.
+                </p>
+
             </div>
 
-        </section>
 
-
-        <!-- إضافة دورة -->
-
-        <section>
-
-            <h2>إضافة دورة جديدة 📚</h2>
-
-            <input
-                type="text"
-                id="courseName"
-                placeholder="اسم الدورة"
+            <button
+                class="logout-btn"
+                onclick="logoutAdmin()"
             >
-
-            <textarea
-                id="courseDescription"
-                placeholder="وصف الدورة"
-                rows="5"
-            ></textarea>
-
-            <br><br>
-
-            <button onclick="addCourse()">
-                إضافة الدورة ➕
+                تسجيل الخروج
             </button>
 
-        </section>
-
-
-        <!-- الدورات -->
-
-        <section>
-
-            <h2>الدورات الموجودة 📚</h2>
-
-            <div id="coursesList">
-                جاري تحميل الدورات...
-            </div>
-
-        </section>
-
-
-        <!-- إدارة الامتحانات -->
-
-        <section>
-
-            <h2>إدارة الامتحانات 📝</h2>
-
-            <input
-                type="text"
-                id="examTitle"
-                placeholder="اسم الامتحان"
-            >
-
-            <textarea
-                id="examDescription"
-                placeholder="وصف الامتحان"
-                rows="4"
-            ></textarea>
-
-            <br><br>
-
-            <button onclick="addExam()">
-                إنشاء الامتحان ➕
-            </button>
-
-            <hr>
-
-            <h3>الامتحانات الموجودة</h3>
-
-            <div id="examsList">
-                جاري تحميل الامتحانات...
-            </div>
-
-        </section>
-
-
-        <!-- نموذج إضافة سؤال -->
-
-        <section
-            id="questionForm"
-            style="display: none;"
-        >
-
-            <h2>إضافة سؤال 📝</h2>
-
-            <p>
-                الامتحان:
-                <strong id="selectedExamName"></strong>
-            </p>
-
-
-            <input
-                type="hidden"
-                id="selectedExamId"
-            >
-
-
-            <input
-                type="text"
-                id="questionText"
-                placeholder="اكتب السؤال"
-            >
-
-
-            <input
-                type="text"
-                id="option1"
-                placeholder="الاختيار الأول"
-            >
-
-
-            <input
-                type="text"
-                id="option2"
-                placeholder="الاختيار الثاني"
-            >
-
-
-            <input
-                type="text"
-                id="option3"
-                placeholder="الاختيار الثالث"
-            >
-
-
-            <input
-                type="text"
-                id="option4"
-                placeholder="الاختيار الرابع"
-            >
-
-
-            <select id="correctAnswer">
-
-                <option value="0">
-                    الإجابة الصحيحة: الاختيار الأول
-                </option>
-
-                <option value="1">
-                    الإجابة الصحيحة: الاختيار الثاني
-                </option>
-
-                <option value="2">
-                    الإجابة الصحيحة: الاختيار الثالث
-                </option>
-
-                <option value="3">
-                    الإجابة الصحيحة: الاختيار الرابع
-                </option>
-
-            </select>
-
-
-            <br><br>
-
-
-            <button onclick="addQuestion()">
-                حفظ السؤال ✅
-            </button>
-
-
-            <button onclick="closeQuestionForm()">
-                إلغاء
-            </button>
-
-        </section>
+        </div>
 
 
         <!-- الإحصائيات -->
 
-        <section>
+        <div class="card">
 
-            <h2>الإحصائيات 📊</h2>
-
-            <p>
-                هنا ستظهر إحصائيات المنصة.
-            </p>
-
-        </section>
+            <h3>
+                📊 إحصائيات المنصة
+            </h3>
 
 
-        <section>
+            <div class="stats">
 
-            <a href="../index.html">
-                العودة للرئيسية
-            </a>
+                <div class="stat">
 
-        </section>
+                    <strong id="studentsCount">
+                        0
+                    </strong>
+
+                    الطلاب
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong id="teachersCount">
+                        0
+                    </strong>
+
+                    المدرسين
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong id="coursesCount">
+                        0
+                    </strong>
+
+                    الكورسات
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong id="examsCount">
+                        0
+                    </strong>
+
+                    الامتحانات
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong id="resultsCount">
+                        0
+                    </strong>
+
+                    النتائج
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- المستخدمين -->
+
+        <div class="card">
+
+            <h3>
+                👥 إدارة المستخدمين
+            </h3>
+
+
+            <div id="usersList">
+
+                <p class="empty">
+                    جاري تحميل المستخدمين...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- إضافة كورس -->
+
+        <div class="card">
+
+            <h3>
+                ➕ إضافة كورس
+            </h3>
+
+
+            <form
+                id="courseForm"
+                onsubmit="addCourse(event)"
+            >
+
+                <input
+                    type="text"
+                    id="courseName"
+                    placeholder="اسم الكورس"
+                    required
+                >
+
+
+                <textarea
+                    id="courseDescription"
+                    placeholder="وصف الكورس"
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    إنشاء الكورس 📚
+                </button>
+
+
+                <p id="courseMessage"></p>
+
+            </form>
+
+        </div>
+
+
+        <!-- الكورسات -->
+
+        <div class="card">
+
+            <h3>
+                📚 الكورسات الموجودة
+            </h3>
+
+
+            <div id="coursesList">
+
+                <p class="empty">
+                    جاري تحميل الكورسات...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- إنشاء امتحان -->
+
+        <div class="card">
+
+            <h3>
+                📝 إنشاء امتحان
+            </h3>
+
+
+            <form
+                id="examForm"
+                onsubmit="addExam(event)"
+            >
+
+                <input
+                    type="text"
+                    id="examTitle"
+                    placeholder="اسم الامتحان"
+                    required
+                >
+
+
+                <textarea
+                    id="examDescription"
+                    placeholder="وصف الامتحان"
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    إنشاء الامتحان 📝
+                </button>
+
+
+                <p id="examMessage"></p>
+
+            </form>
+
+        </div>
+
+
+        <!-- الامتحانات -->
+
+        <div class="card">
+
+            <h3>
+                📝 الامتحانات الموجودة
+            </h3>
+
+
+            <div id="examsList">
+
+                <p class="empty">
+                    جاري تحميل الامتحانات...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- إضافة سؤال -->
+
+        <div
+            class="card"
+            id="questionArea"
+            style="display:none;"
+        >
+
+            <h3>
+                ➕ إضافة سؤال للامتحان
+            </h3>
+
+
+            <form
+                id="questionForm"
+                onsubmit="addQuestion(event)"
+            >
+
+                <input
+                    type="hidden"
+                    id="questionExamId"
+                >
+
+
+                <input
+                    type="text"
+                    id="questionText"
+                    placeholder="اكتب السؤال"
+                    required
+                >
+
+
+                <input
+                    type="text"
+                    id="option1"
+                    placeholder="الاختيار الأول"
+                    required
+                >
+
+
+                <input
+                    type="text"
+                    id="option2"
+                    placeholder="الاختيار الثاني"
+                    required
+                >
+
+
+                <input
+                    type="text"
+                    id="option3"
+                    placeholder="الاختيار الثالث"
+                    required
+                >
+
+
+                <input
+                    type="text"
+                    id="option4"
+                    placeholder="الاختيار الرابع"
+                    required
+                >
+
+
+                <select
+                    id="correctAnswer"
+                    required
+                >
+
+                    <option value="0">
+                        الإجابة الصحيحة: الاختيار الأول
+                    </option>
+
+                    <option value="1">
+                        الإجابة الصحيحة: الاختيار الثاني
+                    </option>
+
+                    <option value="2">
+                        الإجابة الصحيحة: الاختيار الثالث
+                    </option>
+
+                    <option value="3">
+                        الإجابة الصحيحة: الاختيار الرابع
+                    </option>
+
+                </select>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    إضافة السؤال ✅
+                </button>
+
+
+                <button
+                    type="button"
+                    class="danger-btn"
+                    onclick="closeQuestionForm()"
+                >
+                    إغلاق
+                </button>
+
+
+                <p id="questionMessage"></p>
+
+            </form>
+
+        </div>
+
+
+        <!-- النتائج -->
+
+        <div class="card">
+
+            <h3>
+                📊 نتائج الطلاب
+            </h3>
+
+
+            <div id="resultsList">
+
+                <p class="empty">
+                    جاري تحميل النتائج...
+                </p>
+
+            </div>
+
+        </div>
 
     </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Nova Future
+        </p>
+
+    </footer>
 
 
     <script src="../js/app.js"></script>
