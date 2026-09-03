@@ -58,18 +58,52 @@
             margin-bottom: 30px;
         }
 
+        .avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+        }
+
         .avatar {
-            width: 110px;
-            height: 110px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background: #2563eb;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
             font-size: 45px;
             font-weight: bold;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-photo-btn {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 7px 13px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .change-photo-btn:hover {
+            background: #1d4ed8;
         }
 
         .profile-header h1 {
@@ -129,6 +163,11 @@
             background: #1d4ed8;
         }
 
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .message {
             display: none;
             margin-top: 15px;
@@ -155,7 +194,19 @@
             color: #6b7280;
         }
 
+        .photo-note {
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 35px;
+        }
+
+        #photoInput {
+            display: none;
+        }
+
         @media (max-width: 700px) {
+
             .topbar {
                 gap: 10px;
                 flex-wrap: wrap;
@@ -168,6 +219,7 @@
             .profile-card {
                 padding: 20px;
             }
+
         }
     </style>
 </head>
@@ -209,12 +261,31 @@
 
             <div class="profile-header">
 
-                <div
-                    class="avatar"
-                    id="avatar"
-                >
-                    👤
+                <div class="avatar-wrapper">
+
+                    <div
+                        class="avatar"
+                        id="avatar"
+                    >
+                        👤
+                    </div>
+
+                    <button
+                        type="button"
+                        class="change-photo-btn"
+                        id="changePhotoBtn"
+                    >
+                        📷 تغيير الصورة
+                    </button>
+
+                    <input
+                        type="file"
+                        id="photoInput"
+                        accept="image/*"
+                    >
+
                 </div>
+
 
                 <h1 id="profileName">
                     -
@@ -286,6 +357,11 @@
                 id="message"
             ></div>
 
+
+            <div class="photo-note">
+                يمكنك اختيار صورة شخصية من جهازك.
+            </div>
+
         </div>
 
     </div>
@@ -298,15 +374,28 @@
             db
         } from "../js/firebase-config.js";
 
+
         import {
             onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
 
         import {
             doc,
             getDoc,
             updateDoc
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+        import {
+            getStorage,
+            ref,
+            uploadBytes,
+            getDownloadURL
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
+
+
+        const storage = getStorage();
 
 
         const loading =
@@ -332,6 +421,12 @@
 
         const avatar =
             document.getElementById("avatar");
+
+        const changePhotoBtn =
+            document.getElementById("changePhotoBtn");
+
+        const photoInput =
+            document.getElementById("photoInput");
 
         const saveBtn =
             document.getElementById("saveBtn");
@@ -375,15 +470,43 @@
         function updateAvatar(name) {
 
             if (!name) {
-                avatar.textContent = "👤";
+
+                avatar.innerHTML = "👤";
+
                 return;
             }
+
 
             const firstLetter =
                 name.trim().charAt(0);
 
-            avatar.textContent =
+
+            avatar.innerHTML =
                 firstLetter || "👤";
+
+        }
+
+
+        function showProfileImage(url) {
+
+            if (!url) {
+                return;
+            }
+
+
+            avatar.innerHTML = "";
+
+
+            const image =
+                document.createElement("img");
+
+
+            image.src = url;
+
+            image.alt = "الصورة الشخصية";
+
+
+            avatar.appendChild(image);
 
         }
 
@@ -420,16 +543,16 @@
 
                     if (!userSnap.exists()) {
 
-                        showMessage(
-                            "لم يتم العثور على بيانات الحساب.",
-                            "error"
-                        );
-
                         loading.style.display =
                             "none";
 
                         profileCard.style.display =
                             "block";
+
+                        showMessage(
+                            "لم يتم العثور على بيانات الحساب.",
+                            "error"
+                        );
 
                         return;
                     }
@@ -472,6 +595,15 @@
 
 
                     updateAvatar(name);
+
+
+                    if (userData.photoURL) {
+
+                        showProfileImage(
+                            userData.photoURL
+                        );
+
+                    }
 
 
                     loading.style.display =
@@ -533,8 +665,91 @@
                     nameInput.value ||
                     "مستخدم";
 
-                updateAvatar(
-                    nameInput.value
+
+                if (!photoInput.files.length) {
+
+                    updateAvatar(
+                        nameInput.value
+                    );
+
+                }
+
+            }
+        );
+
+
+        changePhotoBtn.addEventListener(
+            "click",
+            () => {
+
+                photoInput.click();
+
+            }
+        );
+
+
+        photoInput.addEventListener(
+            "change",
+            () => {
+
+                const file =
+                    photoInput.files[0];
+
+
+                if (!file) {
+                    return;
+                }
+
+
+                if (!file.type.startsWith("image/")) {
+
+                    showMessage(
+                        "من فضلك اختر ملف صورة فقط.",
+                        "error"
+                    );
+
+                    photoInput.value = "";
+
+                    return;
+                }
+
+
+                if (file.size > 5 * 1024 * 1024) {
+
+                    showMessage(
+                        "حجم الصورة يجب ألا يتجاوز 5 ميجابايت.",
+                        "error"
+                    );
+
+                    photoInput.value = "";
+
+                    return;
+                }
+
+
+                const previewURL =
+                    URL.createObjectURL(file);
+
+
+                avatar.innerHTML = "";
+
+
+                const image =
+                    document.createElement("img");
+
+
+                image.src = previewURL;
+
+                image.alt =
+                    "معاينة الصورة";
+
+
+                avatar.appendChild(image);
+
+
+                showMessage(
+                    "تم اختيار الصورة. اضغط حفظ التغييرات لرفعها.",
+                    "success"
                 );
 
             }
@@ -581,18 +796,79 @@
                         );
 
 
+                    const selectedPhoto =
+                        photoInput.files[0];
+
+
+                    let photoURL = null;
+
+
+                    if (selectedPhoto) {
+
+                        const photoRef =
+                            ref(
+                                storage,
+                                "users/" +
+                                currentUser.uid +
+                                "/profile.jpg"
+                            );
+
+
+                        await uploadBytes(
+                            photoRef,
+                            selectedPhoto
+                        );
+
+
+                        photoURL =
+                            await getDownloadURL(
+                                photoRef
+                            );
+
+                    }
+
+
+                    const updateData = {
+                        name: newName
+                    };
+
+
+                    if (photoURL) {
+
+                        updateData.photoURL =
+                            photoURL;
+
+                    }
+
+
                     await updateDoc(
                         userRef,
-                        {
-                            name: newName
-                        }
+                        updateData
                     );
 
 
                     profileName.textContent =
                         newName;
 
-                    updateAvatar(newName);
+
+                    if (photoURL) {
+
+                        showProfileImage(
+                            photoURL
+                        );
+
+                    } else if (
+                        !photoInput.files.length
+                    ) {
+
+                        updateAvatar(
+                            newName
+                        );
+
+                    }
+
+
+                    photoInput.value = "";
 
 
                     showMessage(
@@ -605,7 +881,7 @@
                     console.error(error);
 
                     showMessage(
-                        "حدث خطأ أثناء حفظ التغييرات.",
+                        "حدث خطأ أثناء رفع الصورة أو حفظ البيانات.",
                         "error"
                     );
 
