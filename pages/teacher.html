@@ -4,12 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>لوحة المدرّس - Nova Future</title>
+    <title>لوحة المدرس - Nova Future</title>
 
     <link rel="stylesheet" href="../css/style.css">
 
+    <style>
+        .dashboard {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .top-bar h2 {
+            margin: 0 0 8px;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+        }
+
+        .item {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .item h4 {
+            margin-bottom: 8px;
+        }
+
+        .item p {
+            margin-bottom: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #222;
+            color: white;
+            padding: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .empty {
+            color: #777;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success {
+            color: #15803d;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #dc2626;
+            margin-top: 10px;
+        }
+    </style>
+
     <script type="module">
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+        import {
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         import {
             doc,
@@ -23,252 +135,208 @@
         import { auth, db } from "../js/firebase-config.js";
 
 
-        // ================================
+        // =====================================
         // تسجيل الخروج
-        // ================================
+        // =====================================
 
-        window.logoutTeacher = async function () {
+        window.logoutTeacher = async function() {
 
-            try {
+            await signOut(auth);
 
-                await signOut(auth);
-
-                window.location.href = "login.html";
-
-            } catch (error) {
-
-                console.error(error);
-
-                alert("حدث خطأ أثناء تسجيل الخروج ❌");
-            }
+            window.location.href = "login.html";
         };
 
 
-        // ================================
-        // تحميل الدورات
-        // ================================
+        // =====================================
+        // تحميل الكورسات
+        // =====================================
 
         async function loadCourses() {
 
             const coursesList =
                 document.getElementById("coursesList");
 
-            coursesList.innerHTML =
-                "جاري تحميل الدورات...";
+            const lessonCourse =
+                document.getElementById("lessonCourse");
 
+            coursesList.innerHTML = "";
+
+            lessonCourse.innerHTML =
+                '<option value="">اختر الكورس</option>';
 
             try {
 
-                const coursesSnapshot =
+                const snapshot =
                     await getDocs(
                         collection(db, "courses")
                     );
 
-
-                coursesList.innerHTML = "";
-
-
-                if (coursesSnapshot.empty) {
+                if (snapshot.empty) {
 
                     coursesList.innerHTML =
-                        "<p>لا توجد دورات حتى الآن.</p>";
+                        '<p class="empty">لا توجد كورسات حاليًا.</p>';
 
                     return;
                 }
 
+                snapshot.forEach((courseDoc) => {
 
-                coursesSnapshot.forEach((courseDoc) => {
-
-                    const courseData =
+                    const course =
                         courseDoc.data();
 
+                    // عرض الكورس
 
-                    const courseCard =
+                    const div =
                         document.createElement("div");
 
+                    div.className = "item";
 
-                    courseCard.style.border =
-                        "1px solid #ddd";
+                    div.innerHTML = `
+                        <h4>
+                            ${course.name || "بدون اسم"}
+                        </h4>
 
-                    courseCard.style.padding =
-                        "15px";
+                        <p>
+                            ${course.description || "لا يوجد وصف."}
+                        </p>
+                    `;
 
-                    courseCard.style.marginBottom =
-                        "10px";
-
-                    courseCard.style.borderRadius =
-                        "10px";
-
-
-                    const title =
-                        document.createElement("h3");
-
-                    title.textContent =
-                        courseData.name || "بدون اسم";
+                    coursesList.appendChild(div);
 
 
-                    const description =
-                        document.createElement("p");
+                    // إضافة الكورس للقائمة
 
-                    description.textContent =
-                        courseData.description || "بدون وصف";
+                    const option =
+                        document.createElement("option");
 
+                    option.value =
+                        course.name || "";
 
-                    courseCard.appendChild(title);
+                    option.textContent =
+                        course.name || "بدون اسم";
 
-                    courseCard.appendChild(description);
-
-                    coursesList.appendChild(courseCard);
-
+                    lessonCourse.appendChild(option);
                 });
-
 
             } catch (error) {
 
-                console.error("Courses error:", error);
+                console.error(error);
 
                 coursesList.innerHTML =
-                    "<p>حدث خطأ أثناء تحميل الدورات ❌</p>";
+                    '<p class="error">حدث خطأ أثناء تحميل الكورسات.</p>';
             }
-
         }
 
 
-        // ================================
-        // تحميل قائمة الدروس
-        // ================================
+        // =====================================
+        // تحميل الدروس
+        // =====================================
 
         async function loadLessons() {
 
             const lessonsList =
                 document.getElementById("lessonsList");
 
-            lessonsList.innerHTML =
-                "جاري تحميل الدروس...";
-
+            lessonsList.innerHTML = "";
 
             try {
 
-                const lessonsSnapshot =
+                const snapshot =
                     await getDocs(
                         collection(db, "lessons")
                     );
 
-
-                lessonsList.innerHTML = "";
-
-
-                if (lessonsSnapshot.empty) {
+                if (snapshot.empty) {
 
                     lessonsList.innerHTML =
-                        "<p>لا توجد دروس حتى الآن.</p>";
+                        '<p class="empty">لا توجد دروس حاليًا.</p>';
 
                     return;
                 }
 
+                snapshot.forEach((lessonDoc) => {
 
-                lessonsSnapshot.forEach((lessonDoc) => {
-
-                    const lessonData =
+                    const lesson =
                         lessonDoc.data();
 
-
-                    const lessonCard =
+                    const div =
                         document.createElement("div");
 
+                    div.className = "item";
 
-                    lessonCard.style.border =
-                        "1px solid #ddd";
+                    div.innerHTML = `
+                        <h4>
+                            ${lesson.title || "درس بدون عنوان"}
+                        </h4>
 
-                    lessonCard.style.padding =
-                        "15px";
+                        <p>
+                            <strong>الكورس:</strong>
+                            ${lesson.courseName || "غير محدد"}
+                        </p>
 
-                    lessonCard.style.marginBottom =
-                        "10px";
+                        <p>
+                            ${lesson.content || ""}
+                        </p>
 
-                    lessonCard.style.borderRadius =
-                        "10px";
+                        <p>
+                            <strong>المدرس:</strong>
+                            ${lesson.teacherId || "غير معروف"}
+                        </p>
+                    `;
 
-
-                    const title =
-                        document.createElement("h3");
-
-                    title.textContent =
-                        lessonData.title || "بدون عنوان";
-
-
-                    const course =
-                        document.createElement("p");
-
-                    course.textContent =
-                        "الدورة: " +
-                        (lessonData.courseName || "غير محددة");
-
-
-                    const content =
-                        document.createElement("p");
-
-                    content.textContent =
-                        lessonData.content || "بدون محتوى";
-
-
-                    lessonCard.appendChild(title);
-
-                    lessonCard.appendChild(course);
-
-                    lessonCard.appendChild(content);
-
-                    lessonsList.appendChild(lessonCard);
-
+                    lessonsList.appendChild(div);
                 });
-
 
             } catch (error) {
 
-                console.error("Lessons error:", error);
+                console.error(error);
 
                 lessonsList.innerHTML =
-                    "<p>حدث خطأ أثناء تحميل الدروس ❌</p>";
+                    '<p class="error">حدث خطأ أثناء تحميل الدروس.</p>';
             }
-
         }
 
 
-        // ================================
+        // =====================================
         // إضافة درس
-        // ================================
+        // =====================================
 
-        window.addLesson = async function () {
+        window.addLesson = async function(event) {
+
+            event.preventDefault();
 
             const courseName =
                 document.getElementById("lessonCourse").value;
 
             const title =
-                document.getElementById("lessonTitle").value.trim();
+                document.getElementById("lessonTitle")
+                    .value.trim();
 
             const content =
-                document.getElementById("lessonContent").value.trim();
+                document.getElementById("lessonContent")
+                    .value.trim();
+
+            const message =
+                document.getElementById("lessonMessage");
 
 
             if (!courseName) {
 
-                alert("اختر الدورة أولًا ❌");
+                message.textContent =
+                    "من فضلك اختر الكورس.";
+
+                message.className = "error";
 
                 return;
             }
 
 
-            if (!title) {
+            if (!title || !content) {
 
-                alert("اكتب عنوان الدرس أولًا ❌");
+                message.textContent =
+                    "من فضلك اكتب عنوان الدرس ومحتواه.";
 
-                return;
-            }
-
-
-            if (!content) {
-
-                alert("اكتب محتوى الدرس أولًا ❌");
+                message.className = "error";
 
                 return;
             }
@@ -288,38 +356,40 @@
                 );
 
 
-                alert("تمت إضافة الدرس بنجاح ✅");
+                message.textContent =
+                    "تم إضافة الدرس بنجاح ✅";
+
+                message.className = "success";
 
 
-                document.getElementById("lessonTitle").value = "";
+                document.getElementById("lessonForm")
+                    .reset();
 
-                document.getElementById("lessonContent").value = "";
 
-
-                loadLessons();
-
+                await loadLessons();
 
             } catch (error) {
 
-                console.error("Add lesson error:", error);
+                console.error(error);
 
-                alert(
-                    "حدث خطأ أثناء إضافة الدرس ❌"
-                );
+                message.textContent =
+                    "حدث خطأ أثناء إضافة الدرس ❌";
+
+                message.className = "error";
             }
-
         };
 
 
-        // ================================
-        // التحقق من صلاحية المدرس
-        // ================================
+        // =====================================
+        // التحقق من حساب المدرس
+        // =====================================
 
         onAuthStateChanged(auth, async (user) => {
 
             if (!user) {
 
-                window.location.href = "login.html";
+                window.location.href =
+                    "login.html";
 
                 return;
             }
@@ -335,7 +405,7 @@
 
                 if (!userDoc.exists()) {
 
-                    alert("بيانات المستخدم غير موجودة ❌");
+                    await signOut(auth);
 
                     window.location.href =
                         "login.html";
@@ -348,12 +418,9 @@
                     userDoc.data();
 
 
+                // منع الدخول لغير المدرس
+
                 if (userData.role !== "teacher") {
-
-                    alert(
-                        "ليس لديك صلاحية لدخول لوحة المدرّس ❌"
-                    );
-
 
                     if (userData.role === "admin") {
 
@@ -367,6 +434,8 @@
 
                     } else {
 
+                        await signOut(auth);
+
                         window.location.href =
                             "login.html";
                     }
@@ -375,59 +444,25 @@
                 }
 
 
-                // بعد التأكد من صلاحية المدرس
+                // اسم المدرس
+
+                document.getElementById("teacherName")
+                    .textContent =
+                    userData.name || "المدرس";
+
+
                 await loadCourses();
 
-                // تحميل الدروس
                 await loadLessons();
-
-
-                // وضع أسماء الدورات داخل القائمة
-                const courseSelect =
-                    document.getElementById("lessonCourse");
-
-
-                const coursesSnapshot =
-                    await getDocs(
-                        collection(db, "courses")
-                    );
-
-
-                coursesSnapshot.forEach((courseDoc) => {
-
-                    const courseData =
-                        courseDoc.data();
-
-
-                    const option =
-                        document.createElement("option");
-
-
-                    option.value =
-                        courseData.name;
-
-
-                    option.textContent =
-                        courseData.name;
-
-
-                    courseSelect.appendChild(option);
-
-                });
-
 
             } catch (error) {
 
-                console.error("Teacher error:", error);
+                console.error(error);
 
                 alert(
-                    "حدث خطأ أثناء تحميل لوحة المدرّس ❌"
+                    "حدث خطأ أثناء تحميل بيانات المدرس."
                 );
-
-                window.location.href =
-                    "login.html";
             }
-
         });
 
     </script>
@@ -438,148 +473,196 @@
 
     <header>
 
-        <h1>Nova Future</h1>
+        <h1>Nova Future 🚀</h1>
 
-        <p>لوحة المدرّس</p>
+        <p>
+            لوحة المدرس
+        </p>
 
     </header>
 
 
-    <main>
+    <main class="dashboard">
 
-        <section>
 
-            <h2>مرحبًا بك أيها المدرّس 👋</h2>
+        <!-- ================================= -->
+        <!-- الترحيب -->
+        <!-- ================================= -->
 
-            <p>
-                من هنا تقدر تدير المحتوى والطلاب والامتحانات.
-            </p>
+        <div class="top-bar">
 
-            <button onclick="logoutTeacher()">
-                تسجيل الخروج 🚪
+            <div>
+
+                <h2>
+                    أهلاً بك يا
+                    <span id="teacherName">...</span>
+                    👨‍🏫
+                </h2>
+
+                <p>
+                    إدارة الدروس والمحتوى التعليمي.
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                onclick="logoutTeacher()"
+            >
+                تسجيل الخروج
             </button>
 
-        </section>
+        </div>
 
 
-        <!-- الدورات -->
+        <!-- ================================= -->
+        <!-- الكورسات -->
+        <!-- ================================= -->
 
-        <section>
+        <div class="card">
 
-            <h2>الدورات 📚</h2>
-
-            <p>
-                الدورات الموجودة على المنصة:
-            </p>
+            <h3>
+                📚 الكورسات
+            </h3>
 
             <div id="coursesList">
-                جاري تحميل الدورات...
+
+                <p class="empty">
+                    جاري تحميل الكورسات...
+                </p>
+
             </div>
 
-        </section>
+        </div>
 
 
+        <!-- ================================= -->
         <!-- إضافة درس -->
+        <!-- ================================= -->
 
-        <section>
+        <div class="card">
 
-            <h2>إضافة درس جديد 📖</h2>
-
-
-            <select id="lessonCourse">
-
-                <option value="">
-                    اختر الدورة
-                </option>
-
-            </select>
+            <h3>
+                ➕ إضافة درس جديد
+            </h3>
 
 
-            <input
-                type="text"
-                id="lessonTitle"
-                placeholder="عنوان الدرس"
+            <form
+                id="lessonForm"
+                onsubmit="addLesson(event)"
             >
 
+                <select
+                    id="lessonCourse"
+                    required
+                >
 
-            <textarea
-                id="lessonContent"
-                placeholder="محتوى الدرس"
-                rows="7"
-            ></textarea>
+                    <option value="">
+                        جاري تحميل الكورسات...
+                    </option>
 
-
-            <br><br>
-
-
-            <button onclick="addLesson()">
-                إضافة الدرس ➕
-            </button>
-
-        </section>
+                </select>
 
 
+                <input
+                    type="text"
+                    id="lessonTitle"
+                    placeholder="عنوان الدرس"
+                    required
+                >
+
+
+                <textarea
+                    id="lessonContent"
+                    placeholder="اكتب محتوى الدرس هنا..."
+                    required
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    إضافة الدرس 📖
+                </button>
+
+
+                <p
+                    id="lessonMessage"
+                ></p>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================================= -->
         <!-- الدروس -->
+        <!-- ================================= -->
 
-        <section>
+        <div class="card">
 
-            <h2>الدروس الموجودة 📖</h2>
+            <h3>
+                📖 الدروس الموجودة
+            </h3>
+
 
             <div id="lessonsList">
-                جاري تحميل الدروس...
+
+                <p class="empty">
+                    جاري تحميل الدروس...
+                </p>
+
             </div>
 
-        </section>
+        </div>
 
 
+        <!-- ================================= -->
         <!-- الطلاب -->
+        <!-- ================================= -->
 
-        <section>
+        <div class="card">
 
-            <h2>الطلاب 👨‍🎓</h2>
+            <h3>
+                👨‍🎓 الطلاب
+            </h3>
 
-            <p>
-                عرض ومتابعة الطلاب المسجلين.
+            <p class="empty">
+                قسم الطلاب سيتم تطويره لاحقًا.
             </p>
 
-        </section>
+        </div>
 
 
-        <!-- الامتحانات -->
-
-        <section>
-
-            <h2>الامتحانات 📝</h2>
-
-            <p>
-                إنشاء وتعديل وإدارة الامتحانات.
-            </p>
-
-        </section>
-
-
+        <!-- ================================= -->
         <!-- النتائج -->
+        <!-- ================================= -->
 
-        <section>
+        <div class="card">
 
-            <h2>النتائج 📊</h2>
+            <h3>
+                📊 نتائج الطلاب
+            </h3>
 
-            <p>
-                متابعة نتائج الطلاب ودرجاتهم.
+            <p class="empty">
+                قسم النتائج سيتم تطويره لاحقًا.
             </p>
 
-        </section>
+        </div>
 
-
-        <section>
-
-            <a href="../index.html">
-                العودة للرئيسية
-            </a>
-
-        </section>
 
     </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Nova Future
+        </p>
+
+    </footer>
 
 
     <script src="../js/app.js"></script>
