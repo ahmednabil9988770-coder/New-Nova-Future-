@@ -28,11 +28,11 @@
         }
 
         body {
+            margin: 0;
             background: var(--page-background);
             color: var(--text-color);
-            transition:
-                background-color 0.2s ease,
-                color 0.2s ease;
+            font-family: Arial, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .dashboard {
@@ -75,6 +75,7 @@
             padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
+            font-size: 15px;
         }
 
         .stats {
@@ -113,13 +114,12 @@
             border-radius: 8px;
             font-size: 15px;
             font-family: inherit;
-            box-sizing: border-box;
             background: var(--surface-color);
             color: var(--text-color);
         }
 
         textarea {
-            min-height: 150px;
+            min-height: 130px;
             resize: vertical;
         }
 
@@ -174,6 +174,7 @@
         .item p {
             margin-bottom: 8px;
             color: var(--muted-color);
+            line-height: 1.7;
         }
 
         .empty {
@@ -235,12 +236,6 @@
             --muted-color: #d1d5db;
         }
 
-        body.dark input,
-        body.dark textarea,
-        body.dark select {
-            color: var(--text-color);
-        }
-
         @media (max-width: 700px) {
 
             .dashboard {
@@ -248,10 +243,24 @@
                 padding: 15px;
             }
 
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .top-actions {
+                justify-content: stretch !important;
+            }
+
+            .top-actions a,
+            .top-actions button {
+                flex: 1;
+                text-align: center;
+            }
+
         }
 
     </style>
-
 
     <script type="module">
 
@@ -259,7 +268,6 @@
             onAuthStateChanged,
             signOut
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
 
         import {
             doc,
@@ -270,16 +278,11 @@
             serverTimestamp
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-
         import {
             auth,
             db
         } from "../js/firebase-config.js";
 
-
-        // =====================================
-        // المتغيرات
-        // =====================================
 
         let examQuestions = [];
 
@@ -355,7 +358,6 @@
                     const course =
                         courseDoc.data();
 
-
                     const courseName =
                         course.name ||
                         course.title ||
@@ -371,14 +373,14 @@
                     div.innerHTML = `
 
                         <h4>
-                            📚 ${courseName}
+                            📚 ${escapeHTML(courseName)}
                         </h4>
 
                         <p>
-                            ${
+                            ${escapeHTML(
                                 course.description ||
                                 "لا يوجد وصف للكورس."
-                            }
+                            )}
                         </p>
 
                     `;
@@ -430,6 +432,124 @@
 
 
         // =====================================
+        // إنشاء كورس
+        // =====================================
+
+        window.createCourse = async function (event) {
+
+            event.preventDefault();
+
+
+            const title =
+                document.getElementById(
+                    "courseTitle"
+                ).value.trim();
+
+
+            const description =
+                document.getElementById(
+                    "courseDescription"
+                ).value.trim();
+
+
+            const message =
+                document.getElementById(
+                    "courseMessage"
+                );
+
+
+            if (!title) {
+
+                message.textContent =
+                    "اكتب اسم الكورس.";
+
+                message.className =
+                    "error";
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "createCourseBtn"
+                );
+
+
+            button.disabled = true;
+
+            button.textContent =
+                "جاري إنشاء الكورس...";
+
+
+            try {
+
+                await addDoc(
+                    collection(db, "courses"),
+                    {
+
+                        title: title,
+
+                        description: description,
+
+                        teacherId:
+                            auth.currentUser.uid,
+
+                        teacherName:
+                            document.getElementById(
+                                "teacherName"
+                            ).textContent,
+
+                        createdAt:
+                            serverTimestamp()
+
+                    }
+                );
+
+
+                message.textContent =
+                    "تم إنشاء الكورس بنجاح 🎉";
+
+                message.className =
+                    "success";
+
+
+                document
+                    .getElementById("courseForm")
+                    .reset();
+
+
+                await loadCourses();
+
+
+            } catch (error) {
+
+                console.error(
+                    "COURSE ERROR:",
+                    error.code,
+                    error.message
+                );
+
+
+                message.textContent =
+                    "حدث خطأ أثناء إنشاء الكورس ❌";
+
+                message.className =
+                    "error";
+
+            }
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "إنشاء الكورس 📚";
+
+        };
+
+
+        // =====================================
         // إضافة درس
         // =====================================
 
@@ -439,19 +559,13 @@
 
 
             const courseId =
-                document.getElementById("lessonCourse")
-                    .value;
-
+                document.getElementById("lessonCourse").value;
 
             const title =
-                document.getElementById("lessonTitle")
-                    .value.trim();
-
+                document.getElementById("lessonTitle").value.trim();
 
             const content =
-                document.getElementById("lessonContent")
-                    .value.trim();
-
+                document.getElementById("lessonContent").value.trim();
 
             const message =
                 document.getElementById("lessonMessage");
@@ -618,7 +732,6 @@
                     const lesson =
                         lessonDoc.data();
 
-
                     count++;
 
 
@@ -631,26 +744,25 @@
                     div.innerHTML = `
 
                         <h4>
-                            📖
-                            ${
+                            📖 ${escapeHTML(
                                 lesson.title ||
                                 "درس بدون عنوان"
-                            }
+                            )}
                         </h4>
 
                         <p>
                             <strong>الكورس:</strong>
-                            ${
+                            ${escapeHTML(
                                 lesson.courseName ||
                                 "غير محدد"
-                            }
+                            )}
                         </p>
 
                         <p>
-                            ${
+                            ${escapeHTML(
                                 lesson.content ||
                                 "لا يوجد محتوى."
-                            }
+                            )}
                         </p>
 
                     `;
@@ -708,9 +820,7 @@
 
 
                     if (user.role !== "student") {
-
                         return;
-
                     }
 
 
@@ -726,19 +836,18 @@
                     div.innerHTML = `
 
                         <h4>
-                            👨‍🎓
-                            ${
+                            👨‍🎓 ${escapeHTML(
                                 user.name ||
                                 "بدون اسم"
-                            }
+                            )}
                         </h4>
 
                         <p>
                             البريد:
-                            ${
+                            ${escapeHTML(
                                 user.email ||
                                 "غير موجود"
-                            }
+                            )}
                         </p>
 
                     `;
@@ -785,36 +894,30 @@
                     "questionText"
                 ).value.trim();
 
-
             const option1 =
                 document.getElementById(
                     "option1"
                 ).value.trim();
-
 
             const option2 =
                 document.getElementById(
                     "option2"
                 ).value.trim();
 
-
             const option3 =
                 document.getElementById(
                     "option3"
                 ).value.trim();
-
 
             const option4 =
                 document.getElementById(
                     "option4"
                 ).value.trim();
 
-
             const correctAnswer =
                 document.querySelector(
                     'input[name="correctAnswer"]:checked'
                 );
-
 
             const message =
                 document.getElementById(
@@ -879,9 +982,7 @@
                 ],
 
                 correctAnswer:
-                    Number(
-                        correctAnswer.value
-                    )
+                    Number(correctAnswer.value)
 
             });
 
@@ -893,21 +994,17 @@
                 "questionText"
             ).value = "";
 
-
             document.getElementById(
                 "option1"
             ).value = "";
-
 
             document.getElementById(
                 "option2"
             ).value = "";
 
-
             document.getElementById(
                 "option3"
             ).value = "";
-
 
             document.getElementById(
                 "option4"
@@ -1000,55 +1097,30 @@
 
                         </div>
 
-
                         <p>
                             <strong>
-                                ${question.question}
+                                ${escapeHTML(question.question)}
                             </strong>
                         </p>
 
-
                         <p>
-                            1️⃣
-                            ${question.options[0]}
-                            ${
-                                question.correctAnswer === 0
-                                    ? " ✅"
-                                    : ""
-                            }
+                            1️⃣ ${escapeHTML(question.options[0])}
+                            ${question.correctAnswer === 0 ? " ✅" : ""}
                         </p>
 
-
                         <p>
-                            2️⃣
-                            ${question.options[1]}
-                            ${
-                                question.correctAnswer === 1
-                                    ? " ✅"
-                                    : ""
-                            }
+                            2️⃣ ${escapeHTML(question.options[1])}
+                            ${question.correctAnswer === 1 ? " ✅" : ""}
                         </p>
 
-
                         <p>
-                            3️⃣
-                            ${question.options[2]}
-                            ${
-                                question.correctAnswer === 2
-                                    ? " ✅"
-                                    : ""
-                            }
+                            3️⃣ ${escapeHTML(question.options[2])}
+                            ${question.correctAnswer === 2 ? " ✅" : ""}
                         </p>
 
-
                         <p>
-                            4️⃣
-                            ${question.options[3]}
-                            ${
-                                question.correctAnswer === 3
-                                    ? " ✅"
-                                    : ""
-                            }
+                            4️⃣ ${escapeHTML(question.options[3])}
+                            ${question.correctAnswer === 3 ? " ✅" : ""}
                         </p>
 
                     `;
@@ -1092,18 +1164,15 @@
                     "examTitle"
                 ).value.trim();
 
-
             const description =
                 document.getElementById(
                     "examDescription"
                 ).value.trim();
 
-
             const courseId =
                 document.getElementById(
                     "examCourse"
                 ).value;
-
 
             const duration =
                 Number(
@@ -1111,7 +1180,6 @@
                         "examDuration"
                     ).value
                 );
-
 
             const message =
                 document.getElementById(
@@ -1336,7 +1404,6 @@
                     const exam =
                         examDoc.data();
 
-
                     count++;
 
 
@@ -1361,58 +1428,40 @@
                     div.innerHTML = `
 
                         <h4>
-                            📝
-                            ${
+                            📝 ${escapeHTML(
                                 exam.title ||
                                 "امتحان بدون عنوان"
-                            }
+                            )}
                         </h4>
 
-
                         <p>
-                            ${
+                            ${escapeHTML(
                                 exam.description ||
                                 "لا يوجد وصف."
-                            }
+                            )}
                         </p>
-
 
                         <div class="exam-info">
 
                             <p>
                                 📚
-                                <strong>
-                                    الكورس:
-                                </strong>
-
-                                ${
+                                <strong>الكورس:</strong>
+                                ${escapeHTML(
                                     exam.courseName ||
                                     "غير محدد"
-                                }
+                                )}
                             </p>
-
 
                             <p>
                                 ⏱️
-                                <strong>
-                                    المدة:
-                                </strong>
-
-                                ${
-                                    exam.duration ||
-                                    0
-                                }
-
+                                <strong>المدة:</strong>
+                                ${exam.duration || 0}
                                 دقيقة
                             </p>
 
-
                             <p>
                                 📝
-                                <strong>
-                                    عدد الأسئلة:
-                                </strong>
-
+                                <strong>عدد الأسئلة:</strong>
                                 ${questionsCount}
                             </p>
 
@@ -1489,7 +1538,6 @@
 
 
                 const users = {};
-
                 const exams = {};
 
 
@@ -1591,60 +1639,36 @@
 
                             <h4>
                                 👨‍🎓
-                                ${
+                                ${escapeHTML(
                                     student.name ||
                                     result.studentName ||
                                     "طالب غير معروف"
-                                }
+                                )}
                             </h4>
 
-
                             <p>
-                                <strong>
-                                    الامتحان:
-                                </strong>
-
-                                ${
+                                <strong>الامتحان:</strong>
+                                ${escapeHTML(
                                     exam.title ||
                                     result.examTitle ||
                                     "امتحان غير معروف"
-                                }
+                                )}
                             </p>
 
-
                             <p>
-                                <strong>
-                                    الدرجة:
-                                </strong>
-
-                                ${
-                                    result.score || 0
-                                }
-
+                                <strong>الدرجة:</strong>
+                                ${result.score || 0}
                                 من
-
-                                ${
-                                    result.total || 0
-                                }
+                                ${result.total || 0}
                             </p>
 
-
                             <p>
-                                <strong>
-                                    النسبة:
-                                </strong>
-
-                                ${
-                                    result.percentage || 0
-                                }%
+                                <strong>النسبة:</strong>
+                                ${result.percentage || 0}%
                             </p>
 
-
                             <p>
-                                <strong>
-                                    التاريخ:
-                                </strong>
-
+                                <strong>التاريخ:</strong>
                                 ${dateText}
                             </p>
 
@@ -1672,7 +1696,7 @@
 
 
         // =====================================
-        // التحقق من الحساب
+        // حماية الصفحة
         // =====================================
 
         onAuthStateChanged(
@@ -1732,7 +1756,8 @@
                             window.location.href =
                                 "admin.html";
 
-                        } else if (
+                        }
+                        else if (
                             userData.role ===
                             "student"
                         ) {
@@ -1740,7 +1765,8 @@
                             window.location.href =
                                 "student.html";
 
-                        } else {
+                        }
+                        else {
 
                             await signOut(auth);
 
@@ -1762,14 +1788,11 @@
 
 
                     await loadCourses();
-
                     await loadLessons();
-
                     await loadStudents();
-
                     await loadExams();
-
                     await loadResults();
+
 
                 } catch (error) {
 
@@ -1784,13 +1807,31 @@
             }
         );
 
+
+        // =====================================
+        // حماية النصوص
+        // =====================================
+
+        function escapeHTML(value) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                value == null
+                    ? ""
+                    : String(value);
+
+            return div.innerHTML;
+
+        }
+
     </script>
 
 </head>
 
 
 <body>
-
 
     <header>
 
@@ -1815,17 +1856,10 @@
             <div>
 
                 <h2>
-
                     أهلاً بك يا
-
-                    <span id="teacherName">
-                        ...
-                    </span>
-
+                    <span id="teacherName">...</span>
                     👨‍🏫
-
                 </h2>
-
 
                 <p>
                     إدارة الكورسات والدروس والامتحانات
@@ -1835,32 +1869,36 @@
             </div>
 
 
-            <div style="
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-">
+            <div
+                class="top-actions"
+                style="
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    flex-wrap: wrap;
+                "
+            >
 
-    <a
-        href="settings.html"
-        class="secondary-btn"
-        style="
-            text-decoration: none;
-            display: inline-block;
-        "
-    >
-        ⚙️ الإعدادات
-    </a>
+                <a
+                    href="settings.html"
+                    class="secondary-btn"
+                    style="
+                        text-decoration: none;
+                        display: inline-block;
+                    "
+                >
+                    ⚙️ الإعدادات
+                </a>
 
-    <button
-        class="logout-btn"
-        onclick="logoutTeacher()"
-    >
-        تسجيل الخروج
-    </button>
+                <button
+                    class="logout-btn"
+                    onclick="logoutTeacher()"
+                >
+                    تسجيل الخروج
+                </button>
 
-</div>
+            </div>
+
         </div>
 
 
@@ -1872,9 +1910,7 @@
                 📊 إحصائيات سريعة
             </h3>
 
-
             <div class="stats">
-
 
                 <div class="stat">
 
@@ -1886,7 +1922,6 @@
 
                 </div>
 
-
                 <div class="stat">
 
                     <strong id="lessonsCount">
@@ -1896,7 +1931,6 @@
                     الدروس
 
                 </div>
-
 
                 <div class="stat">
 
@@ -1908,7 +1942,6 @@
 
                 </div>
 
-
                 <div class="stat">
 
                     <strong id="resultsCount">
@@ -1919,20 +1952,18 @@
 
                 </div>
 
-
             </div>
 
         </div>
 
 
-        <!-- الكورسات -->
+        <!-- الكورسات الموجودة -->
 
         <div class="card">
 
             <h3>
                 📚 الكورسات
             </h3>
-
 
             <div id="coursesList">
 
@@ -1945,6 +1976,46 @@
         </div>
 
 
+        <!-- إنشاء كورس -->
+
+        <div class="card">
+
+            <h3>
+                ➕ إنشاء كورس جديد
+            </h3>
+
+            <form
+                id="courseForm"
+                onsubmit="createCourse(event)"
+            >
+
+                <input
+                    type="text"
+                    id="courseTitle"
+                    placeholder="اسم الكورس"
+                    required
+                >
+
+                <textarea
+                    id="courseDescription"
+                    placeholder="وصف الكورس"
+                ></textarea>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                    id="createCourseBtn"
+                >
+                    إنشاء الكورس 📚
+                </button>
+
+                <p id="courseMessage"></p>
+
+            </form>
+
+        </div>
+
+
         <!-- إضافة درس -->
 
         <div class="card">
@@ -1953,12 +2024,10 @@
                 ➕ إضافة درس جديد
             </h3>
 
-
             <form
                 id="lessonForm"
                 onsubmit="addLesson(event)"
             >
-
 
                 <select
                     id="lessonCourse"
@@ -1971,7 +2040,6 @@
 
                 </select>
 
-
                 <input
                     type="text"
                     id="lessonTitle"
@@ -1979,13 +2047,11 @@
                     required
                 >
 
-
                 <textarea
                     id="lessonContent"
                     placeholder="اكتب محتوى الدرس هنا..."
                     required
                 ></textarea>
-
 
                 <button
                     type="submit"
@@ -1994,9 +2060,7 @@
                     إضافة الدرس 📖
                 </button>
 
-
                 <p id="lessonMessage"></p>
-
 
             </form>
 
@@ -2010,7 +2074,6 @@
             <h3>
                 📖 الدروس الموجودة
             </h3>
-
 
             <div id="lessonsList">
 
@@ -2031,7 +2094,6 @@
                 👨‍🎓 الطلاب
             </h3>
 
-
             <div id="studentsList">
 
                 <p class="empty">
@@ -2051,12 +2113,10 @@
                 ➕ إنشاء امتحان جديد
             </h3>
 
-
             <form
                 id="examForm"
                 onsubmit="createExam(event)"
             >
-
 
                 <input
                     type="text"
@@ -2065,12 +2125,10 @@
                     required
                 >
 
-
                 <textarea
                     id="examDescription"
                     placeholder="وصف الامتحان"
                 ></textarea>
-
 
                 <select
                     id="examCourse"
@@ -2082,7 +2140,6 @@
                     </option>
 
                 </select>
-
 
                 <input
                     type="number"
@@ -2102,16 +2159,13 @@
                         ➕ إضافة سؤال
                     </h4>
 
-
                     <div id="questionForm">
-
 
                         <input
                             type="text"
                             id="questionText"
                             placeholder="اكتب السؤال"
                         >
-
 
                         <div class="option-row">
 
@@ -2129,7 +2183,6 @@
 
                         </div>
 
-
                         <div class="option-row">
 
                             <input
@@ -2145,7 +2198,6 @@
                             >
 
                         </div>
-
 
                         <div class="option-row">
 
@@ -2163,7 +2215,6 @@
 
                         </div>
 
-
                         <div class="option-row">
 
                             <input
@@ -2180,7 +2231,6 @@
 
                         </div>
 
-
                         <button
                             type="button"
                             class="secondary-btn"
@@ -2189,16 +2239,14 @@
                             إضافة السؤال ➕
                         </button>
 
-
                         <p id="questionMessage"></p>
-
 
                     </div>
 
                 </div>
 
 
-                <!-- الأسئلة المضافة -->
+                <!-- الأسئلة -->
 
                 <h4 class="questions-title">
 
@@ -2209,7 +2257,6 @@
                     </span>
 
                 </h4>
-
 
                 <div id="questionsList">
 
@@ -2227,9 +2274,7 @@
                     إنشاء الامتحان 🎉
                 </button>
 
-
                 <p id="examMessage"></p>
-
 
             </form>
 
@@ -2243,7 +2288,6 @@
             <h3>
                 📝 الامتحانات
             </h3>
-
 
             <div id="examsList">
 
@@ -2264,7 +2308,6 @@
                 📊 نتائج الطلاب
             </h3>
 
-
             <div id="resultsList">
 
                 <p class="empty">
@@ -2274,7 +2317,6 @@
             </div>
 
         </div>
-
 
     </main>
 
@@ -2288,7 +2330,6 @@
     </footer>
 
 
-    <!-- Global App -->
     <script src="../js/app.js"></script>
 
 </body>
