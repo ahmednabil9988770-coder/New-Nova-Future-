@@ -1,426 +1,1058 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta
+    name="description"
+    content="إعدادات منصة Nova Future وتخصيص المظهر والألوان."
+>
 
-    <title>Nova Future - الإعدادات</title>
+<title>الإعدادات - Nova Future</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+    /* ========================================
+       Nova Future - Settings Page
+    ======================================== */
+
+    .settings-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(
+                circle at top right,
+                var(--primary-light),
+                transparent 32%
+            ),
+            var(--bg-color);
+    }
+
+    .settings-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--surface-color);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .settings-header-inner {
+        width: min(1100px, calc(100% - 32px));
+        min-height: 72px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-color);
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .brand-icon {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+    }
+
+    .settings-main {
+        width: min(820px, calc(100% - 32px));
+        margin: auto;
+        padding: 48px 0 70px;
+    }
+
+    .page-heading {
+        margin-bottom: 24px;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 9px;
+        color: var(--primary-color);
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .page-heading h1 {
+        margin: 0 0 8px;
+        color: var(--text-color);
+        font-size: clamp(27px, 4vw, 35px);
+        line-height: 1.3;
+    }
+
+    .page-heading p {
+        margin: 0;
+        color: var(--muted-text);
+        line-height: 1.8;
+    }
+
+    .settings-card {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 18px;
+        padding: 28px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-md);
+    }
+
+    .settings-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .settings-card-title {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-bottom: 20px;
+    }
+
+    .settings-icon {
+        flex: 0 0 auto;
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--primary-light);
+        font-size: 20px;
+    }
+
+    .settings-card-title h2 {
+        margin: 0 0 5px;
+        color: var(--text-color);
+        font-size: 19px;
+    }
+
+    .settings-card-title p {
+        margin: 0;
+        color: var(--muted-text);
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    /* Colors */
+
+    .colors-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+    }
+
+    .color-option {
+        position: relative;
+        min-height: 76px;
+        border: 2px solid transparent;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition:
+            transform var(--transition),
+            border-color var(--transition),
+            box-shadow var(--transition);
+    }
+
+    .color-option:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .color-option:focus-visible {
+        outline: 3px solid var(--primary-light);
+        outline-offset: 2px;
+    }
+
+    .color-option.active {
+        border-color: var(--text-color);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .color-option.active::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        color: #111827;
+        font-size: 17px;
+        font-weight: 900;
+    }
+
+    .color-blue {
+        background: #2563eb;
+    }
+
+    .color-purple {
+        background: #7c3aed;
+    }
+
+    .color-green {
+        background: #16a34a;
+    }
+
+    .color-red {
+        background: #dc2626;
+    }
+
+    .color-orange {
+        background: #ea580c;
+    }
+
+    .selection-label {
+        margin-top: 13px;
+        color: var(--muted-text);
+        font-size: 13px;
+    }
+
+    /* Theme */
+
+    .theme-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .theme-btn {
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        background: var(--surface-color);
+        color: var(--text-color);
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+            border-color var(--transition),
+            background var(--transition),
+            color var(--transition),
+            transform var(--transition);
+    }
+
+    .theme-btn:hover {
+        border-color: var(--primary-color);
+        background: var(--primary-light);
+        color: var(--primary-color);
+        transform: translateY(-1px);
+    }
+
+    .theme-btn.active {
+        border-color: var(--primary-color);
+        background: var(--primary-light);
+        color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    /* Bottom actions */
+
+    .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .action-btn {
+        min-height: 50px;
+        border: 0;
+        border-radius: var(--radius-md);
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+            background var(--transition),
+            transform var(--transition),
+            box-shadow var(--transition);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .back-btn {
+        background: var(--text-color);
+        color: var(--surface-color);
+    }
+
+    .back-btn:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .reset-btn {
+        background: var(--danger-color);
+        color: #fff;
+    }
+
+    .reset-btn:hover {
+        box-shadow: 0 8px 20px rgba(220, 38, 38, 0.18);
+    }
+
+    .settings-message {
+        display: none;
+        margin-bottom: 18px;
+        padding: 13px 15px;
+        border-radius: var(--radius-md);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.7;
+    }
+
+    .settings-message.show {
+        display: block;
+    }
+
+    .settings-message.success {
+        background: var(--success-bg);
+        color: var(--success-color);
+    }
+
+    .settings-message.info {
+        background: var(--primary-light);
+        color: var(--primary-color);
+    }
+
+    @media (max-width: 700px) {
+
+        .settings-header-inner {
+            width: min(100% - 24px, 1100px);
+            min-height: 64px;
         }
 
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --background-color: #f4f7fb;
-            --surface-color: #ffffff;
-            --text-color: #222222;
-            --border-color: #e5e7eb;
+        .brand {
+            font-size: 17px;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: var(--background-color);
-            color: var(--text-color);
-            transition: 0.2s ease;
+        .brand-icon {
+            width: 36px;
+            height: 36px;
         }
 
-        .topbar {
-            background: var(--primary-dark);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
+        .settings-main {
+            width: min(100% - 24px, 820px);
+            padding: 30px 0 45px;
         }
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
+        .settings-card {
+            padding: 21px 18px;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 15px;
+        .colors-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .theme-options,
+        .actions {
+            grid-template-columns: 1fr;
         }
 
-        .card {
-            background: var(--surface-color);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        .colors-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        h2 {
-            margin-top: 0;
+        .color-option {
+            min-height: 64px;
         }
+    }
 
-        .colors {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-top: 15px;
+    @media (prefers-reduced-motion: reduce) {
+
+        .color-option,
+        .theme-btn,
+        .action-btn {
+            transition: none;
         }
+    }
+</style>
 
-        .color {
-            height: 55px;
-            border-radius: 10px;
-            border: 3px solid transparent;
-            cursor: pointer;
-        }
+</head><body><div class="settings-page">
 
-        .color.active {
-            border-color: var(--text-color);
-        }
+    <header class="settings-header">
 
-        .blue { background: #2563eb; }
-        .purple { background: #7c3aed; }
-        .green { background: #16a34a; }
-        .red { background: #dc2626; }
-        .orange { background: #ea580c; }
+        <div class="settings-header-inner">
 
-        button,
-        a {
-            border: none;
-            border-radius: 8px;
-            padding: 11px 18px;
-            cursor: pointer;
-            font-size: 15px;
-            text-decoration: none;
-        }
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="Nova Future - الصفحة الرئيسية"
+            >
+                <span
+                    class="brand-icon"
+                    aria-hidden="true"
+                >
+                    🚀
+                </span>
 
-        .primary {
-            background: var(--primary-color);
-            color: white;
-        }
+                <span>
+                    Nova Future
+                </span>
+            </a>
 
-        .back {
-            background: #374151;
-            color: white;
-        }
-
-        .danger {
-            background: #dc2626;
-            color: white;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        body.dark {
-            --background-color: #111827;
-            --surface-color: #1f2937;
-            --text-color: #f9fafb;
-            --border-color: #374151;
-        }
-
-        @media (max-width: 600px) {
-            .colors {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="topbar">
-        <div class="logo">🚀 Nova Future</div>
-    </div>
-
-    <div class="container">
-
-        <div class="card">
-            <h2>⚙️ الإعدادات</h2>
-            <p>تحكم في شكل المنصة والإعدادات العامة.</p>
         </div>
 
-        <div class="card">
+    </header>
 
-            <h2>🎨 لون المنصة</h2>
 
-            <div class="colors">
+    <main class="settings-main">
 
-                <button class="color blue"
+        <div class="page-heading">
+
+            <div class="eyebrow">
+                <span aria-hidden="true">⚙️</span>
+                تخصيص المنصة
+            </div>
+
+            <h1>
+                الإعدادات
+            </h1>
+
+            <p>
+                اختار الشكل والألوان المناسبة ليك، والإعدادات هتفضل محفوظة على جهازك.
+            </p>
+
+        </div>
+
+
+        <div
+            class="settings-message"
+            id="settingsMessage"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+
+        <!-- Platform Color -->
+
+        <section
+            class="settings-card"
+            aria-labelledby="colorTitle"
+        >
+
+            <div class="settings-card-title">
+
+                <div
+                    class="settings-icon"
+                    aria-hidden="true"
+                >
+                    🎨
+                </div>
+
+                <div>
+
+                    <h2 id="colorTitle">
+                        لون المنصة
+                    </h2>
+
+                    <p>
+                        اختار اللون الأساسي اللي هيظهر في أزرار وعناصر المنصة.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="colors-grid"
+                role="group"
+                aria-label="ألوان المنصة"
+            >
+
+                <button
+                    type="button"
+                    class="color-option color-blue"
                     data-color="#2563eb"
-                    data-dark="#1d4ed8"></button>
+                    data-dark="#1d4ed8"
+                    aria-label="اللون الأزرق"
+                    title="أزرق"
+                ></button>
 
-                <button class="color purple"
+                <button
+                    type="button"
+                    class="color-option color-purple"
                     data-color="#7c3aed"
-                    data-dark="#6d28d9"></button>
+                    data-dark="#6d28d9"
+                    aria-label="اللون البنفسجي"
+                    title="بنفسجي"
+                ></button>
 
-                <button class="color green"
+                <button
+                    type="button"
+                    class="color-option color-green"
                     data-color="#16a34a"
-                    data-dark="#15803d"></button>
+                    data-dark="#15803d"
+                    aria-label="اللون الأخضر"
+                    title="أخضر"
+                ></button>
 
-                <button class="color red"
+                <button
+                    type="button"
+                    class="color-option color-red"
                     data-color="#dc2626"
-                    data-dark="#b91c1c"></button>
+                    data-dark="#b91c1c"
+                    aria-label="اللون الأحمر"
+                    title="أحمر"
+                ></button>
 
-                <button class="color orange"
+                <button
+                    type="button"
+                    class="color-option color-orange"
                     data-color="#ea580c"
-                    data-dark="#c2410c"></button>
+                    data-dark="#c2410c"
+                    aria-label="اللون البرتقالي"
+                    title="برتقالي"
+                ></button>
 
             </div>
 
-        </div>
 
-        <div class="card">
+            <p
+                class="selection-label"
+                id="colorSelectionLabel"
+            >
+                اللون الحالي: الأزرق
+            </p>
 
-            <h2>🌙 المظهر</h2>
+        </section>
 
-            <div class="buttons">
 
-                <button class="primary" id="lightBtn">
-                    ☀️ الوضع الفاتح
+        <!-- Theme -->
+
+        <section
+            class="settings-card"
+            aria-labelledby="themeTitle"
+        >
+
+            <div class="settings-card-title">
+
+                <div
+                    class="settings-icon"
+                    aria-hidden="true"
+                >
+                    🌙
+                </div>
+
+                <div>
+
+                    <h2 id="themeTitle">
+                        المظهر
+                    </h2>
+
+                    <p>
+                        اختار بين الوضع الفاتح والوضع الداكن.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="theme-options">
+
+                <button
+                    type="button"
+                    class="theme-btn"
+                    id="lightBtn"
+                >
+                    <span aria-hidden="true">☀️</span>
+                    <span>الوضع الفاتح</span>
                 </button>
 
-                <button class="primary" id="darkBtn">
-                    🌙 الوضع الداكن
+                <button
+                    type="button"
+                    class="theme-btn"
+                    id="darkBtn"
+                >
+                    <span aria-hidden="true">🌙</span>
+                    <span>الوضع الداكن</span>
                 </button>
 
             </div>
 
-        </div>
+        </section>
 
-        <div class="card">
 
-            <div class="buttons">
+        <!-- Actions -->
 
-                <button class="back" id="backBtn">
-                    ↩️ رجوع
+        <section
+            class="settings-card"
+            aria-label="إجراءات الإعدادات"
+        >
+
+            <div class="settings-card-title">
+
+                <div
+                    class="settings-icon"
+                    aria-hidden="true"
+                >
+                    🔧
+                </div>
+
+                <div>
+
+                    <h2>
+                        إدارة الإعدادات
+                    </h2>
+
+                    <p>
+                        ارجع للوحة حسابك أو أعد الإعدادات للوضع الافتراضي.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    type="button"
+                    class="action-btn back-btn"
+                    id="backBtn"
+                >
+                    ↩️ الرجوع
                 </button>
 
-                <button class="danger" id="resetBtn">
+                <button
+                    type="button"
+                    class="action-btn reset-btn"
+                    id="resetBtn"
+                >
                     🔄 إعادة الإعدادات
                 </button>
 
             </div>
 
-        </div>
+        </section>
 
-    </div>
+    </main>
+
+</div>
+
 
 <script type="module">
 
-import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import {
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-import {
-    doc,
-    getDoc
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import {
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-import {
-    auth,
-    db
-} from "../js/firebase-config.js";
+    import {
+        auth,
+        db
+    } from "../js/firebase-config.js";
 
 
-/* =========================
-   APPLY SETTINGS
-========================= */
-
-function applySettings() {
-
-    const color =
-        localStorage.getItem("novaPrimaryColor") ||
+    const DEFAULT_COLOR =
         "#2563eb";
 
-    const darkColor =
-        localStorage.getItem("novaPrimaryDarkColor") ||
+    const DEFAULT_DARK_COLOR =
         "#1d4ed8";
 
-    const theme =
-        localStorage.getItem("novaTheme") ||
+    const DEFAULT_THEME =
         "light";
 
-    document.documentElement.style.setProperty(
-        "--primary-color",
-        color
-    );
 
-    document.documentElement.style.setProperty(
-        "--primary-dark",
-        darkColor
-    );
+    const settingsMessage =
+        document.getElementById(
+            "settingsMessage"
+        );
 
-    if (theme === "dark") {
-        document.body.classList.add("dark");
-    } else {
-        document.body.classList.remove("dark");
+    const colorSelectionLabel =
+        document.getElementById(
+            "colorSelectionLabel"
+        );
+
+    const lightBtn =
+        document.getElementById(
+            "lightBtn"
+        );
+
+    const darkBtn =
+        document.getElementById(
+            "darkBtn"
+        );
+
+    const backBtn =
+        document.getElementById(
+            "backBtn"
+        );
+
+    const resetBtn =
+        document.getElementById(
+            "resetBtn"
+        );
+
+
+    const colorNames = {
+        "#2563eb": "الأزرق",
+        "#7c3aed": "البنفسجي",
+        "#16a34a": "الأخضر",
+        "#dc2626": "الأحمر",
+        "#ea580c": "البرتقالي"
+    };
+
+
+    function showMessage(
+        text,
+        type = "info"
+    ) {
+
+        settingsMessage.textContent =
+            text;
+
+        settingsMessage.className =
+            "settings-message show " +
+            type;
+
     }
 
-    document.querySelectorAll(".color").forEach(button => {
 
-        button.classList.toggle(
-            "active",
-            button.dataset.color === color
+    function applySettings() {
+
+        const color =
+            localStorage.getItem(
+                "novaPrimaryColor"
+            ) ||
+            DEFAULT_COLOR;
+
+
+        const darkColor =
+            localStorage.getItem(
+                "novaPrimaryDarkColor"
+            ) ||
+            DEFAULT_DARK_COLOR;
+
+
+        const theme =
+            localStorage.getItem(
+                "novaTheme"
+            ) ||
+            DEFAULT_THEME;
+
+
+        document.documentElement.style.setProperty(
+            "--primary-color",
+            color
         );
 
-    });
-}
 
-
-/* =========================
-   COLOR
-========================= */
-
-document.querySelectorAll(".color").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        localStorage.setItem(
-            "novaPrimaryColor",
-            button.dataset.color
+        document.documentElement.style.setProperty(
+            "--primary-dark",
+            darkColor
         );
 
-        localStorage.setItem(
-            "novaPrimaryDarkColor",
-            button.dataset.dark
+
+        document.body.classList.toggle(
+            "dark",
+            theme === "dark"
         );
 
-        applySettings();
 
-    });
+        document
+            .querySelectorAll(".color-option")
+            .forEach(button => {
 
-});
+                const isActive =
+                    button.dataset.color ===
+                    color;
 
-
-/* =========================
-   THEME
-========================= */
-
-document
-    .getElementById("lightBtn")
-    .addEventListener("click", () => {
-
-        localStorage.setItem(
-            "novaTheme",
-            "light"
-        );
-
-        applySettings();
-
-    });
-
-
-document
-    .getElementById("darkBtn")
-    .addEventListener("click", () => {
-
-        localStorage.setItem(
-            "novaTheme",
-            "dark"
-        );
-
-        applySettings();
-
-    });
-
-
-/* =========================
-   RESET
-========================= */
-
-document
-    .getElementById("resetBtn")
-    .addEventListener("click", () => {
-
-        localStorage.removeItem(
-            "novaPrimaryColor"
-        );
-
-        localStorage.removeItem(
-            "novaPrimaryDarkColor"
-        );
-
-        localStorage.removeItem(
-            "novaTheme"
-        );
-
-        applySettings();
-
-    });
-
-
-/* =========================
-   BACK
-========================= */
-
-document
-    .getElementById("backBtn")
-    .addEventListener("click", async () => {
-
-        const user = auth.currentUser;
-
-        if (!user) {
-            window.location.href = "login.html";
-            return;
-        }
-
-        try {
-
-            const snap =
-                await getDoc(
-                    doc(db, "users", user.uid)
+                button.classList.toggle(
+                    "active",
+                    isActive
                 );
 
-            if (!snap.exists()) {
-                window.location.href = "login.html";
+                button.setAttribute(
+                    "aria-pressed",
+                    isActive
+                );
+
+            });
+
+
+        lightBtn.classList.toggle(
+            "active",
+            theme === "light"
+        );
+
+
+        darkBtn.classList.toggle(
+            "active",
+            theme === "dark"
+        );
+
+
+        lightBtn.setAttribute(
+            "aria-pressed",
+            theme === "light"
+        );
+
+
+        darkBtn.setAttribute(
+            "aria-pressed",
+            theme === "dark"
+        );
+
+
+        colorSelectionLabel.textContent =
+            "اللون الحالي: " +
+            (
+                colorNames[color] ||
+                "مخصص"
+            );
+
+    }
+
+
+    document
+        .querySelectorAll(".color-option")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    localStorage.setItem(
+                        "novaPrimaryColor",
+                        button.dataset.color
+                    );
+
+
+                    localStorage.setItem(
+                        "novaPrimaryDarkColor",
+                        button.dataset.dark
+                    );
+
+
+                    applySettings();
+
+
+                    showMessage(
+                        "تم تغيير لون المنصة بنجاح 🎨",
+                        "success"
+                    );
+
+                }
+            );
+
+        });
+
+
+    lightBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.setItem(
+                "novaTheme",
+                "light"
+            );
+
+
+            applySettings();
+
+
+            showMessage(
+                "تم تفعيل الوضع الفاتح ☀️",
+                "success"
+            );
+
+        }
+    );
+
+
+    darkBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.setItem(
+                "novaTheme",
+                "dark"
+            );
+
+
+            applySettings();
+
+
+            showMessage(
+                "تم تفعيل الوضع الداكن 🌙",
+                "success"
+            );
+
+        }
+    );
+
+
+    resetBtn.addEventListener(
+        "click",
+        () => {
+
+            const confirmed =
+                confirm(
+                    "هل تريد إعادة جميع إعدادات المظهر للوضع الافتراضي؟"
+                );
+
+
+            if (!confirmed) {
                 return;
             }
 
-            const role = snap.data().role;
 
-            if (role === "teacher") {
-                window.location.href = "teacher.html";
-            }
-            else if (role === "admin") {
-                window.location.href = "admin.html";
-            }
-            else {
-                window.location.href = "student.html";
-            }
+            localStorage.removeItem(
+                "novaPrimaryColor"
+            );
 
-        } catch (error) {
+            localStorage.removeItem(
+                "novaPrimaryDarkColor"
+            );
 
-            console.error(error);
+            localStorage.removeItem(
+                "novaTheme"
+            );
 
-            window.location.href = "login.html";
+
+            applySettings();
+
+
+            showMessage(
+                "تمت إعادة الإعدادات للوضع الافتراضي بنجاح 🔄",
+                "success"
+            );
 
         }
-
-    });
-
-
-/* =========================
-   AUTH CHECK
-========================= */
-
-onAuthStateChanged(auth, (user) => {
-
-    if (!user) {
-        window.location.href = "login.html";
-    }
-
-});
+    );
 
 
-applySettings();
+    backBtn.addEventListener(
+        "click",
+        async () => {
+
+            backBtn.disabled =
+                true;
+
+            backBtn.textContent =
+                "جاري الرجوع...";
+
+
+            const user =
+                auth.currentUser;
+
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            try {
+
+                const snap =
+                    await getDoc(
+                        doc(
+                            db,
+                            "users",
+                            user.uid
+                        )
+                    );
+
+
+                if (!snap.exists()) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                const role =
+                    snap.data().role;
+
+
+                if (role === "teacher") {
+
+                    window.location.href =
+                        "teacher.html";
+
+                } else if (
+                    role === "admin"
+                ) {
+
+                    window.location.href =
+                        "admin.html";
+
+                } else {
+
+                    window.location.href =
+                        "student.html";
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "SETTINGS BACK ERROR:",
+                    error
+                );
+
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+        }
+    );
+
+
+    onAuthStateChanged(
+        auth,
+        (user) => {
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+            }
+
+        }
+    );
+
+
+    applySettings();
 
 </script>
+
 
 <script src="../js/app.js"></script>
 
