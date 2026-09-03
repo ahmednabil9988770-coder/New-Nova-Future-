@@ -1,482 +1,464 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>حساب الطالب | Nova Future</title>
 
-    <title>حساب الطالب | Nova Future</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+        min-height: 100vh;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
-            min-height: 100vh;
-        }
+    button {
+        font-family: inherit;
+        cursor: pointer;
+    }
 
-        button {
-            font-family: inherit;
-            cursor: pointer;
-        }
+    .topbar {
+        background: white;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e5e7eb;
+    }
 
-        .topbar {
-            background: white;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #e5e7eb;
-        }
+    .logo {
+        font-size: 23px;
+        font-weight: bold;
+    }
 
-        .logo {
-            font-size: 23px;
-            font-weight: bold;
-        }
+    .logo span {
+        color: #2563eb;
+    }
 
-        .logo span {
-            color: #2563eb;
-        }
+    .logout-btn {
+        border: none;
+        background: #ef4444;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 10px;
+    }
 
-        .logout-btn {
-            border: none;
-            background: #ef4444;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 10px;
-        }
+    .container {
+        max-width: 1150px;
+        margin: auto;
+        padding: 25px 18px 50px;
+    }
 
-        .container {
-            max-width: 1150px;
-            margin: auto;
-            padding: 25px 18px 50px;
-        }
+    .welcome {
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        color: white;
+        padding: 28px;
+        border-radius: 20px;
+        margin-bottom: 22px;
+    }
 
-        .welcome {
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
-            color: white;
-            padding: 28px;
-            border-radius: 20px;
-            margin-bottom: 22px;
-        }
+    .welcome h1 {
+        font-size: 27px;
+        margin-bottom: 8px;
+    }
 
-        .welcome h1 {
-            font-size: 27px;
-            margin-bottom: 8px;
-        }
+    .welcome p {
+        opacity: .9;
+    }
 
-        .welcome p {
-            opacity: .9;
-        }
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+    .stat-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .stat-card h3 {
+        font-size: 26px;
+        margin-bottom: 5px;
+    }
+
+    .stat-card p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .section {
+        margin-bottom: 32px;
+    }
+
+    .section-title {
+        margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+        font-size: 22px;
+    }
+
+    .courses {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .course-card {
+        background: white;
+        padding: 20px;
+        border-radius: 17px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+    .course-icon {
+        width: 52px;
+        height: 52px;
+        background: #eef2ff;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+        margin-bottom: 14px;
+    }
+
+    .course-card h3 {
+        margin-bottom: 8px;
+    }
+
+    .course-card p {
+        color: #6b7280;
+        line-height: 1.6;
+        min-height: 45px;
+        margin-bottom: 15px;
+    }
+
+    .course-btn {
+        width: 100%;
+        border: none;
+        background: #2563eb;
+        color: white;
+        padding: 11px;
+        border-radius: 10px;
+    }
+
+    .lesson-box {
+        background: white;
+        padding: 22px;
+        border-radius: 17px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+    .selected-course {
+        color: #2563eb;
+        margin-bottom: 18px;
+    }
+
+    .lesson-card {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        padding: 17px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .lesson-card h3 {
+        margin-bottom: 8px;
+    }
+
+    .lesson-card p {
+        color: #6b7280;
+        line-height: 1.8;
+        white-space: pre-wrap;
+    }
+
+    .exams {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 17px;
+    }
+
+    .exam-card {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+    .exam-card h3 {
+        margin-bottom: 9px;
+    }
+
+    .exam-card p {
+        color: #6b7280;
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .exam-btn {
+        border: none;
+        background: #16a34a;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 10px;
+        margin-top: 5px;
+    }
+
+    .empty {
+        background: white;
+        padding: 24px;
+        border-radius: 15px;
+        text-align: center;
+        color: #6b7280;
+    }
+
+    #examSection,
+    #resultSection {
+        display: none;
+    }
+
+    .question {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 14px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.04);
+    }
+
+    .question h3 {
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    .option {
+        display: block;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+    }
+
+    .option input {
+        margin-left: 8px;
+    }
+
+    .submit-exam {
+        border: none;
+        background: #2563eb;
+        color: white;
+        padding: 13px 25px;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    .result-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    }
+
+    .result-score {
+        font-size: 45px;
+        font-weight: bold;
+        color: #2563eb;
+        margin: 15px 0;
+    }
+
+    @media (max-width: 800px) {
 
         .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
-        }
-
-        .stat-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .stat-card h3 {
-            font-size: 26px;
-            margin-bottom: 5px;
-        }
-
-        .stat-card p {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .section {
-            margin-bottom: 32px;
-        }
-
-        .section-title {
-            margin-bottom: 16px;
-        }
-
-        .section-title h2 {
-            font-size: 22px;
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .courses {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .course-card {
-            background: white;
-            padding: 20px;
-            border-radius: 17px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
-        }
-
-        .course-icon {
-            width: 52px;
-            height: 52px;
-            background: #eef2ff;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 27px;
-            margin-bottom: 14px;
-        }
-
-        .course-card h3 {
-            margin-bottom: 8px;
-        }
-
-        .course-card p {
-            color: #6b7280;
-            line-height: 1.6;
-            min-height: 45px;
-            margin-bottom: 15px;
-        }
-
-        .course-btn {
-            width: 100%;
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 11px;
-            border-radius: 10px;
-        }
-
-        .lesson-box {
-            background: white;
-            padding: 22px;
-            border-radius: 17px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
-        }
-
-        .selected-course {
-            color: #2563eb;
-            margin-bottom: 18px;
-        }
-
-        .lesson-card {
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            padding: 17px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-        }
-
-        .lesson-card h3 {
-            margin-bottom: 8px;
-        }
-
-        .lesson-card p {
-            color: #6b7280;
-            line-height: 1.8;
-            white-space: pre-wrap;
+            grid-template-columns: 1fr;
         }
 
         .exams {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 17px;
+            grid-template-columns: 1fr;
         }
 
-        .exam-card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.05);
+        .welcome h1 {
+            font-size: 23px;
+        }
+    }
+
+    @media (max-width: 450px) {
+
+        .container {
+            padding: 18px 12px 40px;
         }
 
-        .exam-card h3 {
-            margin-bottom: 9px;
+        .stats {
+            gap: 10px;
         }
 
-        .exam-card p {
-            color: #6b7280;
-            margin-bottom: 10px;
-            line-height: 1.6;
+        .stat-card {
+            padding: 15px 8px;
         }
 
-        .exam-btn {
-            border: none;
-            background: #16a34a;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 10px;
-            margin-top: 5px;
+        .stat-card h3 {
+            font-size: 22px;
         }
+    }
+</style>
 
-        .empty {
-            background: white;
-            padding: 24px;
-            border-radius: 15px;
-            text-align: center;
-            color: #6b7280;
-        }
+</head><body><header class="topbar"><div class="logo">
+    Nova <span>Future</span>
+</div>
 
-        #examSection,
-        #resultSection {
-            display: none;
-        }
+<button id="logoutBtn" class="logout-btn">
+    تسجيل الخروج
+</button>
 
-        .question {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 14px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.04);
-        }
+</header><main class="container"><section class="welcome">
 
-        .question h3 {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
+    <h1>
+        أهلاً بك يا <span id="studentName">الطالب</span> 👋
+    </h1>
 
-        .option {
-            display: block;
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
+    <p>
+        كمل رحلتك التعليمية وحقق أفضل نتيجة 🚀
+    </p>
 
-        .option input {
-            margin-left: 8px;
-        }
+</section>
 
-        .submit-exam {
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 13px 25px;
-            border-radius: 10px;
-            font-size: 16px;
-        }
 
-        .result-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 4px 18px rgba(0,0,0,.05);
-        }
+<section class="stats">
 
-        .result-score {
-            font-size: 45px;
-            font-weight: bold;
-            color: #2563eb;
-            margin: 15px 0;
-        }
-
-        @media (max-width: 800px) {
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .courses {
-                grid-template-columns: 1fr;
-            }
-
-            .exams {
-                grid-template-columns: 1fr;
-            }
-
-            .welcome h1 {
-                font-size: 23px;
-            }
-        }
-
-        @media (max-width: 450px) {
-
-            .container {
-                padding: 18px 12px 40px;
-            }
-
-            .stats {
-                gap: 10px;
-            }
-
-            .stat-card {
-                padding: 15px 8px;
-            }
-
-            .stat-card h3 {
-                font-size: 22px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<header class="topbar">
-
-    <div class="logo">
-        Nova <span>Future</span>
+    <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <h3 id="coursesCount">0</h3>
+        <p>الكورسات</p>
     </div>
 
-    <button id="logoutBtn" class="logout-btn">
-        تسجيل الخروج
-    </button>
+    <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <h3 id="lessonsCount">0</h3>
+        <p>الدروس</p>
+    </div>
 
-</header>
+    <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <h3 id="examsCount">0</h3>
+        <p>الامتحانات</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <h3 id="resultsCount">0</h3>
+        <p>النتائج</p>
+    </div>
+
+</section>
 
 
-<main class="container">
+<section class="section">
 
-    <section class="welcome">
+    <div class="section-title">
+        <h2>📚 الكورسات</h2>
+    </div>
 
-        <h1>
-            أهلاً بك يا <span id="studentName">الطالب</span> 👋
-        </h1>
+    <div id="coursesContainer" class="courses">
+        <div class="empty">
+            جاري تحميل الكورسات...
+        </div>
+    </div>
 
-        <p>
-            كمل رحلتك التعليمية وحقق أفضل نتيجة 🚀
-        </p>
-
-    </section>
+</section>
 
 
-    <section class="stats">
+<section
+    id="courseDetailsSection"
+    class="section"
+    style="display:none;"
+>
 
-        <div class="stat-card">
-            <div class="stat-icon">📚</div>
-            <h3 id="coursesCount">0</h3>
-            <p>الكورسات</p>
+    <div class="lesson-box">
+
+        <h2 class="selected-course">
+            📖 <span id="selectedCourseName"></span>
+        </h2>
+
+        <div id="lessonsContainer"></div>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+    <div class="section-title">
+        <h2>📝 الامتحانات</h2>
+    </div>
+
+    <div id="examsContainer" class="exams">
+
+        <div class="empty">
+            جاري تحميل الامتحانات...
         </div>
 
-        <div class="stat-card">
-            <div class="stat-icon">📖</div>
-            <h3 id="lessonsCount">0</h3>
-            <p>الدروس</p>
+    </div>
+
+</section>
+
+
+<section id="examSection" class="section">
+
+    <div class="lesson-box">
+
+        <h2 id="examTitle"></h2>
+
+        <div id="questionsContainer"></div>
+
+        <button
+            id="submitExamBtn"
+            class="submit-exam"
+        >
+            إنهاء الامتحان
+        </button>
+
+    </div>
+
+</section>
+
+
+<section id="resultSection" class="section">
+
+    <div class="result-card">
+
+        <h2>🎉 نتيجة الامتحان</h2>
+
+        <div id="resultScore" class="result-score">
+            0%
         </div>
 
-        <div class="stat-card">
-            <div class="stat-icon">📝</div>
-            <h3 id="examsCount">0</h3>
-            <p>الامتحانات</p>
-        </div>
+        <p id="resultDetails"></p>
 
-        <div class="stat-card">
-            <div class="stat-icon">🏆</div>
-            <h3 id="resultsCount">0</h3>
-            <p>النتائج</p>
-        </div>
+    </div>
 
-    </section>
+</section>
 
-
-    <section class="section">
-
-        <div class="section-title">
-            <h2>📚 الكورسات</h2>
-        </div>
-
-        <div id="coursesContainer" class="courses">
-            <div class="empty">
-                جاري تحميل الكورسات...
-            </div>
-        </div>
-
-    </section>
-
-
-    <section
-        id="courseDetailsSection"
-        class="section"
-        style="display:none;"
-    >
-
-        <div class="lesson-box">
-
-            <h2 class="selected-course">
-                📖 <span id="selectedCourseName"></span>
-            </h2>
-
-            <div id="lessonsContainer"></div>
-
-        </div>
-
-    </section>
-
-
-    <section class="section">
-
-        <div class="section-title">
-            <h2>📝 الامتحانات</h2>
-        </div>
-
-        <div id="examsContainer" class="exams">
-
-            <div class="empty">
-                جاري تحميل الامتحانات...
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <section id="examSection" class="section">
-
-        <div class="lesson-box">
-
-            <h2 id="examTitle"></h2>
-
-            <div id="questionsContainer"></div>
-
-            <button
-                id="submitExamBtn"
-                class="submit-exam"
-            >
-                إنهاء الامتحان
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <section id="resultSection" class="section">
-
-        <div class="result-card">
-
-            <h2>🎉 نتيجة الامتحان</h2>
-
-            <div id="resultScore" class="result-score">
-                0%
-            </div>
-
-            <p id="resultDetails"></p>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<script type="module">
+</main><script type="module">
 
     import {
         onAuthStateChanged,
@@ -553,17 +535,12 @@
                 userData.name || "الطالب";
 
 
-            /*
-             * كل جزء يتحمل الخطأ لوحده.
-             * لو جزء حصل فيه خطأ، باقي الحساب يفضل شغال.
-             */
-
             try {
-    await loadCourses();
-} catch (error) {
-    console.error("Courses Error:", error);
-    alert("خطأ الكورسات: " + error.message);
-}
+                await loadCourses();
+            } catch (error) {
+                console.error("Courses Error:", error);
+                alert("خطأ الكورسات: " + error.message);
+            }
 
             try {
                 await loadLessonsCount();
@@ -596,10 +573,6 @@
     });
 
 
-    /* =========================
-       LOGOUT
-    ========================= */
-
     document
         .getElementById("logoutBtn")
         .addEventListener("click", async () => {
@@ -610,10 +583,6 @@
 
         });
 
-
-    /* =========================
-       COURSES
-    ========================= */
 
     async function loadCourses() {
 
@@ -690,10 +659,6 @@
     }
 
 
-    /* =========================
-       LESSONS COUNT
-    ========================= */
-
     async function loadLessonsCount() {
 
         const snapshot =
@@ -707,10 +672,6 @@
 
     }
 
-
-    /* =========================
-       SHOW LESSONS
-    ========================= */
 
     async function showCourseLessons(
         courseId,
@@ -814,10 +775,6 @@
     }
 
 
-    /* =========================
-       EXAMS
-    ========================= */
-
     async function loadExams() {
 
         const container =
@@ -897,10 +854,6 @@
 
     }
 
-
-    /* =========================
-       START EXAM
-    ========================= */
 
     function startExam(
         examId,
@@ -1011,10 +964,6 @@
     }
 
 
-    /* =========================
-       SUBMIT EXAM
-    ========================= */
-
     document
         .getElementById("submitExamBtn")
         .addEventListener(
@@ -1078,6 +1027,8 @@
             Math.round(
                 (score / total) * 100
             );
+
+        alert("UID الطالب: " + currentUser.uid);
 
 
         try {
@@ -1149,20 +1100,16 @@
             );
 
             alert(
-    "خطأ حفظ النتيجة:\n\n" +
-    error.code +
-    "\n\n" +
-    error.message
-);
+                "خطأ حفظ النتيجة:\n\n" +
+                error.code +
+                "\n\n" +
+                error.message
+            );
 
         }
 
     }
 
-
-    /* =========================
-       RESULTS
-    ========================= */
 
     async function loadResults() {
 
@@ -1197,7 +1144,5 @@
 
     }
 
-</script>
-
-</body>
+</script></body>
 </html>
