@@ -13,6 +13,28 @@
 
     <style>
 
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --page-background: #f5f7fb;
+            --surface-color: #ffffff;
+            --text-color: #222222;
+            --border-color: #e5e7eb;
+            --muted-color: #555555;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--page-background);
+            color: var(--text-color);
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease;
+        }
+
         .dashboard {
             max-width: 1150px;
             margin: 30px auto;
@@ -21,7 +43,8 @@
 
         .top-bar,
         .card {
-            background: #fff;
+            background: var(--surface-color);
+            color: var(--text-color);
             border-radius: 16px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.06);
         }
@@ -61,7 +84,8 @@
         }
 
         .stat {
-            background: #f5f7fb;
+            background: var(--page-background);
+            color: var(--text-color);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -71,6 +95,7 @@
             display: block;
             font-size: 30px;
             margin-bottom: 8px;
+            color: var(--primary-color);
         }
 
         form {
@@ -84,11 +109,13 @@
         select {
             width: 100%;
             padding: 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 15px;
             font-family: inherit;
             box-sizing: border-box;
+            background: var(--surface-color);
+            color: var(--text-color);
         }
 
         textarea {
@@ -102,16 +129,21 @@
 
         .primary-btn {
             border: none;
-            background: #222;
+            background: var(--primary-color);
             color: #fff;
             padding: 13px;
             border-radius: 8px;
             font-size: 16px;
         }
 
+        .primary-btn:hover,
+        .secondary-btn:hover {
+            background: var(--primary-dark);
+        }
+
         .secondary-btn {
             border: none;
-            background: #2563eb;
+            background: var(--primary-color);
             color: #fff;
             padding: 11px 15px;
             border-radius: 8px;
@@ -128,10 +160,11 @@
         }
 
         .item {
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 18px;
             margin-bottom: 12px;
+            background: var(--surface-color);
         }
 
         .item h4 {
@@ -140,11 +173,11 @@
 
         .item p {
             margin-bottom: 8px;
-            color: #555;
+            color: var(--muted-color);
         }
 
         .empty {
-            color: #777;
+            color: var(--muted-color);
             text-align: center;
             padding: 20px;
         }
@@ -160,11 +193,11 @@
         }
 
         .question-box {
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 18px;
             margin-top: 10px;
-            background: #fafafa;
+            background: var(--page-background);
         }
 
         .question-box h4 {
@@ -188,10 +221,33 @@
         }
 
         .exam-info {
-            background: #f5f7fb;
+            background: var(--page-background);
             border-radius: 10px;
             padding: 12px;
             margin-top: 10px;
+        }
+
+        body.dark {
+            --page-background: #111827;
+            --surface-color: #1f2937;
+            --text-color: #f9fafb;
+            --border-color: #374151;
+            --muted-color: #d1d5db;
+        }
+
+        body.dark input,
+        body.dark textarea,
+        body.dark select {
+            color: var(--text-color);
+        }
+
+        @media (max-width: 700px) {
+
+            .dashboard {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
         }
 
     </style>
@@ -2213,6 +2269,7 @@
     </footer>
 
 
+    <!-- Global App -->
     <script src="../js/app.js"></script>
 
 </body>
