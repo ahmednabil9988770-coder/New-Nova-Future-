@@ -11,18 +11,32 @@
 
 <style>
     /* ========================================
-       Register Page
+       Register Page (Custom Dark Theme Match)
     ======================================== */
+
+    :root {
+        --bg-main: #0B0E14;
+        --bg-card: #121722;
+        --bg-sidebar: #0E121B;
+        --accent-purple: #6C3EE8;
+        --accent-glow: #8B5CF6;
+        --text-primary: #FFFFFF;
+        --text-secondary: #94A3B8;
+        --success-green: #10B981;
+        --border-color: #1E293B;
+        --input-bg: #0E121B;
+    }
 
     body {
         min-height: 100vh;
         background:
             radial-gradient(
                 circle at top right,
-                var(--primary-light),
+                rgba(108, 62, 232, 0.15),
                 transparent 35%
             ),
-            var(--bg-color);
+            var(--bg-main) !important;
+        color: var(--text-primary) !important;
     }
 
     .auth-header {
@@ -34,9 +48,9 @@
         justify-content: space-between;
         gap: 20px;
         padding: 16px 6%;
-        background: var(--surface-color);
-        border-bottom: 1px solid var(--border-color);
-        box-shadow: var(--shadow-sm);
+        background: var(--bg-sidebar) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     .brand {
@@ -44,7 +58,7 @@
         align-items: center;
         gap: 10px;
         text-decoration: none;
-        color: var(--text-color);
+        color: var(--text-primary) !important;
     }
 
     .brand-icon {
@@ -53,10 +67,10 @@
         display: grid;
         place-items: center;
         border-radius: 12px;
-        background: var(--primary-color);
+        background: var(--accent-purple) !important;
         color: white;
         font-size: 21px;
-        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+        box-shadow: 0 8px 20px rgba(108, 62, 232, 0.3);
     }
 
     .brand-text {
@@ -65,7 +79,7 @@
     }
 
     .home-link {
-        color: var(--primary-color);
+        color: var(--accent-glow) !important;
         font-weight: 700;
         text-decoration: none;
     }
@@ -81,10 +95,10 @@
 
     .register-card {
         padding: 34px;
-        background: var(--surface-color);
-        border: 1px solid var(--border-color);
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
         border-radius: 22px;
-        box-shadow: var(--shadow-lg);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         animation: registerAppear 0.45s ease;
     }
 
@@ -107,19 +121,20 @@
         display: grid;
         place-items: center;
         border-radius: 18px;
-        background: var(--primary-light);
+        background: rgba(108, 62, 232, 0.15);
         font-size: 30px;
     }
 
     .register-heading {
         text-align: center;
         margin-bottom: 8px;
+        color: var(--text-primary);
     }
 
     .register-description {
         margin-bottom: 28px;
         text-align: center;
-        color: var(--text-muted);
+        color: var(--text-secondary) !important;
         line-height: 1.8;
     }
 
@@ -137,6 +152,7 @@
         display: block;
         margin-bottom: 7px;
         font-weight: 700;
+        color: var(--text-primary);
     }
 
     .input-wrapper {
@@ -146,10 +162,10 @@
     .input-wrapper input {
         width: 100%;
         padding: 13px 14px;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--border-color) !important;
         border-radius: 11px;
-        background: var(--input-bg);
-        color: var(--text-color);
+        background: var(--input-bg) !important;
+        color: var(--text-primary) !important;
         font-size: 16px;
         transition:
             border-color 0.2s ease,
@@ -158,8 +174,8 @@
 
     .input-wrapper input:focus {
         outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px var(--primary-light);
+        border-color: var(--accent-purple) !important;
+        box-shadow: 0 0 0 4px rgba(108, 62, 232, 0.2) !important;
     }
 
     .password-wrapper input {
@@ -177,20 +193,20 @@
         border: 0;
         border-radius: 8px;
         background: transparent;
-        color: var(--text-muted);
+        color: var(--text-secondary);
         cursor: pointer;
         font-size: 18px;
     }
 
     .toggle-password:hover {
-        background: var(--primary-light);
-        color: var(--primary-color);
+        background: rgba(108, 62, 232, 0.2);
+        color: var(--accent-glow);
     }
 
     .password-hint {
         margin-top: 6px;
         font-size: 13px;
-        color: var(--text-muted);
+        color: var(--text-secondary) !important;
     }
 
     .register-button {
@@ -199,11 +215,12 @@
         margin-top: 5px;
         border: 0;
         border-radius: 11px;
-        background: var(--primary-color);
+        background: var(--accent-purple) !important;
         color: white;
         font-size: 16px;
         font-weight: 800;
         cursor: pointer;
+        box-shadow: 0 4px 15px rgba(108, 62, 232, 0.4);
         transition:
             transform 0.2s ease,
             background 0.2s ease,
@@ -211,9 +228,9 @@
     }
 
     .register-button:hover:not(:disabled) {
-        background: var(--primary-dark);
+        background: #5b30c9 !important;
         transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+        box-shadow: 0 8px 22px rgba(108, 62, 232, 0.5);
     }
 
     .register-button:disabled {
@@ -258,15 +275,15 @@
     }
 
     .register-message.error {
-        background: var(--danger-bg);
-        color: var(--danger-color);
-        border: 1px solid var(--danger-color);
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
     .register-message.success {
-        background: var(--success-bg);
-        color: var(--success-color);
-        border: 1px solid var(--success-color);
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success-green);
+        border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
     .auth-links {
@@ -275,6 +292,7 @@
         border-top: 1px solid var(--border-color);
         text-align: center;
         line-height: 2;
+        color: var(--text-secondary);
     }
 
     .auth-links p {
@@ -286,19 +304,19 @@
     }
 
     .login-link {
-        color: var(--primary-color);
+        color: var(--accent-glow) !important;
     }
 
     .back-home {
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        color: var(--text-muted);
+        color: var(--text-secondary) !important;
         text-decoration: none;
     }
 
     .back-home:hover {
-        color: var(--primary-color);
+        color: var(--accent-glow) !important;
     }
 
     @media (max-width: 600px) {
@@ -329,16 +347,6 @@
             height: 58px;
             font-size: 27px;
         }
-    }
-
-    body.dark {
-        background:
-            radial-gradient(
-                circle at top right,
-                rgba(37, 99, 235, 0.16),
-                transparent 35%
-            ),
-            var(--bg-color);
     }
 </style>
 
