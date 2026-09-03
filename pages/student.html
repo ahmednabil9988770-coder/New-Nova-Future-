@@ -21,6 +21,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 15px;
     }
 
     .logo {
@@ -28,7 +29,14 @@
         font-weight: bold;
     }
 
-    button {
+    .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    button,
+    .profile-btn {
         border: none;
         border-radius: 8px;
         padding: 10px 16px;
@@ -36,11 +44,17 @@
         background: #2563eb;
         color: white;
         font-size: 15px;
+        text-decoration: none;
+        display: inline-block;
     }
 
     button:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+    }
+
+    .profile-btn {
+        background: #374151;
     }
 
     .logout {
@@ -173,20 +187,55 @@
         }
 
         .topbar {
-            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .topbar-actions {
+            width: 100%;
+            justify-content: flex-end;
         }
     }
 </style>
 
-</head><body><div class="topbar">
-    <div class="logo">🚀 Nova Future</div>
-    <button class="logout" id="logoutBtn">تسجيل الخروج</button>
-</div><div class="container"><div class="welcome">
-    <h1>أهلاً بك يا <span id="studentName">...</span> 👋</h1>
-    <p>مرحباً بك في منصة Nova Future التعليمية.</p>
+</head><body><div class="topbar"><div class="logo">
+    🚀 Nova Future
 </div>
 
+<div class="topbar-actions">
+
+    <a
+        href="profile.html"
+        class="profile-btn"
+    >
+        👤 الملف الشخصي
+    </a>
+
+    <button
+        class="logout"
+        id="logoutBtn"
+    >
+        تسجيل الخروج
+    </button>
+
+</div>
+
+</div><div class="container"><div class="welcome">
+
+    <h1>
+        أهلاً بك يا
+        <span id="studentName">...</span>
+        👋
+    </h1>
+
+    <p>
+        مرحباً بك في منصة Nova Future التعليمية.
+    </p>
+
+</div>
+
+
 <div class="stats">
+
     <div class="stat">
         <strong id="coursesCount">0</strong>
         الدورات
@@ -206,31 +255,55 @@
         <strong id="resultsCount">0</strong>
         النتائج
     </div>
+
 </div>
 
+
 <div class="section">
+
     <h2>📚 الدورات</h2>
-    <div id="coursesList">جاري التحميل...</div>
+
+    <div id="coursesList">
+        جاري التحميل...
+    </div>
+
 </div>
 
+
 <div class="section">
+
     <h2>📖 الدروس</h2>
-    <div id="lessonsList">جاري التحميل...</div>
+
+    <div id="lessonsList">
+        جاري التحميل...
+    </div>
+
 </div>
+
 
 <div class="section">
+
     <h2>📝 الامتحانات</h2>
-    <div id="examsList">جاري التحميل...</div>
+
+    <div id="examsList">
+        جاري التحميل...
+    </div>
+
 </div>
 
-<div class="section hidden" id="examSection">
+
+<div
+    class="section hidden"
+    id="examSection"
+>
 
     <h2 id="examTitle"></h2>
 
     <p id="examDescription"></p>
 
-    <!-- TIMER -->
+
     <div class="timer-box">
+
         <div class="timer-label">
             ⏱️ الوقت المتبقي
         </div>
@@ -238,24 +311,34 @@
         <div id="examTimer">
             00:00
         </div>
+
     </div>
 
+
     <div id="questionsContainer"></div>
+
 
     <button id="submitExamBtn">
         تسليم الامتحان
     </button>
 
-    <div id="examMessage" class="message hidden"></div>
+
+    <div
+        id="examMessage"
+        class="message hidden"
+    ></div>
 
 </div>
 
+
 <div class="section">
+
     <h2>🏆 النتائج</h2>
 
     <div id="resultsList">
         جاري التحميل...
     </div>
+
 </div>
 
 </div><script type="module">
@@ -660,7 +743,6 @@ async function loadExams() {
 
 function startExam(exam) {
 
-    /* إيقاف أي عداد قديم */
     stopExamTimer();
 
 
@@ -760,10 +842,6 @@ function startExam(exam) {
         .getElementById("examMessage")
         .classList.add("hidden");
 
-
-    /* =========================
-       START TIMER
-    ========================= */
 
     const duration =
         Number(exam.duration || 0);
@@ -1048,11 +1126,6 @@ async function submitExam(isAutoSubmit = false) {
         );
 
 
-        /*
-           لو حصل خطأ في الحفظ،
-           نسمح بمحاولة التسليم مرة أخرى.
-        */
-
         examSubmitted = false;
 
         submitButton.disabled = false;
@@ -1080,12 +1153,6 @@ async function loadResults() {
             "resultsList"
         );
 
-
-    /*
-       مهم:
-       لا نطلب كل النتائج.
-       نطلب نتائج الطالب الحالي فقط.
-    */
 
     const resultsQuery =
         query(
