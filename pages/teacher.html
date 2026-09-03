@@ -1,277 +1,853 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+    <meta charset="UTF-8"><meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+    name="description"
+    content="لوحة تحكم المدرس في منصة Nova Future التعليمية."
+>
 
 <title>لوحة المدرس - Nova Future</title>
 
 <link rel="stylesheet" href="../css/style.css">
 
 <style>
+    /* =========================================
+       Teacher Dashboard - Page Design
+       ========================================= */
 
-    :root {
-        --primary-color: #2563eb;
-        --primary-dark: #1d4ed8;
-        --page-background: #f5f7fb;
-        --surface-color: #ffffff;
-        --text-color: #222222;
-        --border-color: #e5e7eb;
-        --muted-color: #555555;
+    .teacher-page {
+        min-height: 100vh;
     }
 
-    * {
-        box-sizing: border-box;
+    /* Header */
+    .teacher-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--surface-color, #ffffff);
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
     }
 
-    body {
-        margin: 0;
-        background: var(--page-background);
-        color: var(--text-color);
-        font-family: Arial, sans-serif;
-        transition: background-color 0.2s ease, color 0.2s ease;
-    }
-
-    .dashboard {
-        max-width: 1150px;
-        margin: 30px auto;
-        padding: 20px;
-    }
-
-    .top-bar,
-    .card {
-        background: var(--surface-color);
-        color: var(--text-color);
-        border-radius: 16px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    }
-
-    .top-bar {
-        padding: 20px;
-        margin-bottom: 20px;
+    .teacher-header-inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 16px 20px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        gap: 15px;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--text-color, #222222);
+        min-width: 0;
+    }
+
+    .brand-icon {
+        width: 46px;
+        height: 46px;
+        flex: 0 0 46px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: var(--primary-color, #2563eb);
+        color: #ffffff;
+        font-size: 23px;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+    }
+
+    .brand-text {
+        min-width: 0;
+    }
+
+    .brand-text strong {
+        display: block;
+        font-size: 18px;
+        line-height: 1.2;
+    }
+
+    .brand-text span {
+        display: block;
+        margin-top: 3px;
+        font-size: 13px;
+        color: var(--muted-color, #64748b);
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
         flex-wrap: wrap;
     }
 
-    .card {
-        padding: 25px;
-        margin-bottom: 20px;
+    .header-link {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 9px 13px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text-color, #222222);
+        background: var(--page-background, #f5f7fb);
+        border: 1px solid var(--border-color, #e5e7eb);
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s ease;
     }
 
-    .card h3 {
-        margin-bottom: 20px;
+    .header-link:hover {
+        border-color: var(--primary-color, #2563eb);
+        color: var(--primary-color, #2563eb);
+        transform: translateY(-1px);
     }
 
     .logout-btn {
+        min-height: 42px;
+        border: 0;
+        padding: 9px 14px;
+        border-radius: 10px;
         background: #dc2626;
-        color: #fff;
-        border: none;
-        padding: 10px 18px;
-        border-radius: 8px;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 700;
         cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .logout-btn:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+    }
+
+    .logout-btn:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Main */
+    .teacher-dashboard {
+        width: min(1180px, calc(100% - 32px));
+        margin: 28px auto 50px;
+    }
+
+    /* Welcome */
+    .welcome-card {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 22px;
+        padding: 30px;
+        border-radius: 22px;
+        background:
+            linear-gradient(
+                135deg,
+                var(--primary-color, #2563eb),
+                var(--primary-dark, #1d4ed8)
+            );
+        color: #ffffff;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.18);
+    }
+
+    .welcome-card::before,
+    .welcome-card::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .welcome-card::before {
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.08);
+        left: -80px;
+        top: -110px;
+    }
+
+    .welcome-card::after {
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.06);
+        right: -70px;
+        bottom: -90px;
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .welcome-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 11px;
+        margin-bottom: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .welcome-card h1 {
+        margin: 0 0 8px;
+        font-size: clamp(25px, 4vw, 34px);
+        line-height: 1.3;
+    }
+
+    .welcome-card h1 span {
+        color: #ffffff;
+    }
+
+    .welcome-card p {
+        margin: 0;
+        max-width: 760px;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.9);
         font-size: 15px;
     }
 
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 15px;
+    /* Section */
+    .dashboard-section {
+        margin-bottom: 22px;
     }
 
-    .stat {
-        background: var(--page-background);
-        color: var(--text-color);
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
+    .section-card {
+        background: var(--surface-color, #ffffff);
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.045);
     }
 
-    .stat strong {
-        display: block;
-        font-size: 30px;
-        margin-bottom: 8px;
-        color: var(--primary-color);
-    }
-
-    form {
+    .section-header {
         display: flex;
-        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: flex-start;
         gap: 12px;
     }
 
-    input,
-    textarea,
-    select {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        font-size: 15px;
-        font-family: inherit;
-        background: var(--surface-color);
-        color: var(--text-color);
+    .section-icon {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: var(--primary-light, #eff6ff);
+        color: var(--primary-color, #2563eb);
+        font-size: 20px;
     }
 
-    textarea {
-        min-height: 130px;
-        resize: vertical;
+    .section-heading h2,
+    .section-heading h3 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.4;
     }
 
-    button {
+    .section-heading p {
+        margin: 4px 0 0;
+        color: var(--muted-color, #64748b);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .section-count {
+        min-width: 34px;
+        height: 30px;
+        padding: 0 9px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-light, #eff6ff);
+        color: var(--primary-color, #2563eb);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    /* Stats */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+
+    .stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        border-radius: 15px;
+        background: var(--page-background, #f5f7fb);
+        border: 1px solid var(--border-color, #e5e7eb);
+        text-align: center;
+        transition: 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--primary-color, #2563eb);
+    }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 10px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: var(--surface-color, #ffffff);
+        font-size: 20px;
+    }
+
+    .stat-card strong {
+        display: block;
+        color: var(--primary-color, #2563eb);
+        font-size: 30px;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .stat-card span {
+        color: var(--muted-color, #64748b);
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* Forms */
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-color, #222222);
+    }
+
+    .form-help {
+        margin: 0;
+        color: var(--muted-color, #64748b);
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 4px;
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .danger-btn {
+        border: 0;
         cursor: pointer;
+        font-family: inherit;
+        font-weight: 700;
+        transition: 0.2s ease;
     }
 
     .primary-btn {
-        border: none;
-        background: var(--primary-color);
-        color: #fff;
-        padding: 13px;
-        border-radius: 8px;
-        font-size: 16px;
-    }
-
-    .primary-btn:hover,
-    .secondary-btn:hover {
-        background: var(--primary-dark);
-    }
-
-    .secondary-btn {
-        border: none;
-        background: var(--primary-color);
-        color: #fff;
-        padding: 11px 15px;
-        border-radius: 8px;
+        min-height: 46px;
+        padding: 11px 18px;
+        border-radius: 10px;
+        background: var(--primary-color, #2563eb);
+        color: #ffffff;
         font-size: 15px;
     }
 
-    .danger-btn {
-        border: none;
-        background: #dc2626;
-        color: #fff;
+    .primary-btn:hover {
+        background: var(--primary-dark, #1d4ed8);
+        transform: translateY(-1px);
+    }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .secondary-btn {
+        min-height: 42px;
         padding: 9px 14px;
-        border-radius: 8px;
+        border-radius: 10px;
+        background: var(--primary-color, #2563eb);
+        color: #ffffff;
         font-size: 14px;
     }
 
-    .item {
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 18px;
-        margin-bottom: 12px;
-        background: var(--surface-color);
+    .secondary-btn:hover {
+        background: var(--primary-dark, #1d4ed8);
     }
 
-    .item h4 {
-        margin-bottom: 8px;
+    .danger-btn {
+        min-height: 36px;
+        padding: 7px 12px;
+        border-radius: 9px;
+        background: #dc2626;
+        color: #ffffff;
+        font-size: 13px;
     }
 
-    .item p {
-        margin-bottom: 8px;
-        color: var(--muted-color);
-        line-height: 1.7;
+    .danger-btn:hover {
+        background: #b91c1c;
     }
 
-    .empty {
-        color: var(--muted-color);
-        text-align: center;
-        padding: 20px;
+    /* Messages */
+    .form-message {
+        min-height: 20px;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.6;
     }
 
     .success {
         color: #15803d;
-        margin-top: 8px;
     }
 
     .error {
         color: #dc2626;
-        margin-top: 8px;
     }
 
-    .question-box {
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
+    .info-message {
+        color: var(--primary-color, #2563eb);
+    }
+
+    /* Items */
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .item {
         padding: 18px;
-        margin-top: 10px;
-        background: var(--page-background);
+        border: 1px solid var(--border-color, #e5e7eb);
+        border-radius: 14px;
+        background: var(--surface-color, #ffffff);
+        transition: 0.2s ease;
     }
 
-    .question-box h4 {
-        margin-bottom: 15px;
+    .item:hover {
+        border-color: var(--primary-color, #2563eb);
+        box-shadow: 0 7px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .option-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 10px;
+    .item h4 {
+        margin: 0 0 9px;
+        color: var(--text-color, #222222);
+        font-size: 16px;
+        line-height: 1.5;
     }
 
-    .option-row input[type="radio"] {
-        width: auto;
+    .item p {
+        margin: 7px 0 0;
+        color: var(--muted-color, #64748b);
+        line-height: 1.7;
+        font-size: 14px;
+        word-break: break-word;
     }
 
-    .questions-title {
-        margin-top: 20px;
-        margin-bottom: 10px;
+    .item p strong {
+        color: var(--text-color, #222222);
     }
 
+    /* Empty / Loading */
+    .empty-state {
+        padding: 30px 18px;
+        text-align: center;
+        border: 1px dashed var(--border-color, #e5e7eb);
+        border-radius: 14px;
+        color: var(--muted-color, #64748b);
+        background: var(--page-background, #f5f7fb);
+    }
+
+    .empty-state-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    /* Exam */
     .exam-info {
-        background: var(--page-background);
-        border-radius: 10px;
-        padding: 12px;
-        margin-top: 10px;
+        margin-top: 13px;
+        padding: 13px;
+        border-radius: 11px;
+        background: var(--page-background, #f5f7fb);
+        border: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .exam-info p {
+        margin: 5px 0;
     }
 
     .exam-time-box {
-        background: var(--page-background);
-        border-radius: 10px;
+        margin-top: 12px;
         padding: 15px;
-        margin-top: 10px;
-        border-right: 4px solid var(--primary-color);
+        border-radius: 12px;
+        background: var(--primary-light, #eff6ff);
+        border-right: 4px solid var(--primary-color, #2563eb);
+    }
+
+    .exam-time-box h4 {
+        margin: 0 0 7px;
+        color: var(--text-color, #222222);
     }
 
     .exam-time-box p {
-        margin: 7px 0;
+        margin: 6px 0;
+        color: var(--muted-color, #64748b);
     }
 
     .time-label {
-        font-weight: bold;
-        color: var(--text-color);
+        color: var(--text-color, #222222);
+        font-weight: 700;
     }
 
-    body.dark {
-        --page-background: #111827;
-        --surface-color: #1f2937;
-        --text-color: #f9fafb;
-        --border-color: #374151;
-        --muted-color: #d1d5db;
+    /* Question Builder */
+    .question-builder {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 15px;
+        background: var(--page-background, #f5f7fb);
+        border: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .question-builder-header {
+        margin-bottom: 16px;
+    }
+
+    .question-builder-header h4 {
+        margin: 0 0 5px;
+        font-size: 17px;
+    }
+
+    .question-builder-header p {
+        margin: 0;
+        color: var(--muted-color, #64748b);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .options-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 14px 0;
+    }
+
+    .option-row {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr);
+        align-items: center;
+        gap: 8px;
+    }
+
+    .option-row input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        margin: 0 auto;
+        accent-color: var(--primary-color, #2563eb);
+        cursor: pointer;
+    }
+
+    .option-row input[type="text"] {
+        width: 100%;
+    }
+
+    .questions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 20px 0 10px;
+    }
+
+    .questions-header h4 {
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .questions-badge {
+        min-width: 30px;
+        height: 28px;
+        padding: 0 8px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-color, #2563eb);
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .question-box {
+        margin-top: 10px;
+        padding: 16px;
+        border-radius: 13px;
+        background: var(--surface-color, #ffffff);
+        border: 1px solid var(--border-color, #e5e7eb);
+    }
+
+    .question-box-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .question-number {
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--primary-color, #2563eb);
+    }
+
+    .question-box p {
+        margin: 7px 0;
+        color: var(--muted-color, #64748b);
+        line-height: 1.7;
+        font-size: 14px;
+    }
+
+    .question-box .question-text {
+        color: var(--text-color, #222222);
+        font-weight: 700;
+    }
+
+    .correct-option {
+        color: #15803d !important;
+        font-weight: 700;
+    }
+
+    /* Results */
+    .result-score {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 9px;
+        border-radius: 8px;
+        background: var(--primary-light, #eff6ff);
+        color: var(--primary-color, #2563eb);
+        font-weight: 800;
+    }
+
+    /* Footer */
+    .teacher-footer {
+        padding: 25px 20px 35px;
+        text-align: center;
+        color: var(--muted-color, #64748b);
+        font-size: 13px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .items-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
     }
 
     @media (max-width: 700px) {
-
-        .dashboard {
-            margin: 20px auto;
-            padding: 15px;
+        .teacher-header-inner {
+            padding: 12px 15px;
+            align-items: flex-start;
         }
 
-        .top-bar {
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            flex-basis: 40px;
+            border-radius: 11px;
+            font-size: 20px;
+        }
+
+        .brand-text strong {
+            font-size: 16px;
+        }
+
+        .brand-text span {
+            font-size: 11px;
+        }
+
+        .header-actions {
+            width: 100%;
+            justify-content: stretch;
+        }
+
+        .header-link,
+        .logout-btn {
+            flex: 1;
+            min-width: 0;
+            padding-inline: 8px;
+            font-size: 12px;
+        }
+
+        .teacher-dashboard {
+            width: min(100% - 20px, 1180px);
+            margin-top: 15px;
+        }
+
+        .welcome-card {
+            padding: 23px 18px;
+            border-radius: 17px;
+        }
+
+        .welcome-card p {
+            font-size: 13px;
+        }
+
+        .section-card {
+            padding: 17px;
+            border-radius: 15px;
+        }
+
+        .section-header {
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            flex-basis: 38px;
+            font-size: 18px;
+        }
+
+        .section-heading h2,
+        .section-heading h3 {
+            font-size: 17px;
+        }
+
+        .stats-grid {
+            gap: 9px;
+        }
+
+        .stat-card {
+            padding: 16px 9px;
+        }
+
+        .stat-card strong {
+            font-size: 25px;
+        }
+
+        .stat-card span {
+            font-size: 12px;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 17px;
+        }
+
+        .form-actions {
             flex-direction: column;
             align-items: stretch;
         }
 
-        .top-actions {
-            justify-content: stretch !important;
+        .primary-btn,
+        .secondary-btn {
+            width: 100%;
         }
 
-        .top-actions a,
-        .top-actions button {
-            flex: 1;
-            text-align: center;
+        .question-builder {
+            padding: 14px;
         }
 
+        .option-row {
+            grid-template-columns: 25px minmax(0, 1fr);
+        }
+
+        .question-box-top {
+            align-items: flex-start;
+        }
     }
 
+    @media (max-width: 420px) {
+        .teacher-header-inner {
+            flex-direction: column;
+        }
+
+        .brand {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .header-link,
+        .logout-btn {
+            width: 100%;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            scroll-behavior: auto !important;
+            transition: none !important;
+            animation: none !important;
+        }
+    }
 </style>
 
 <script type="module">
@@ -300,46 +876,145 @@
     let examQuestions = [];
 
 
-    // =====================================
-    // تسجيل الخروج
-    // =====================================
+    /* =====================================
+       أدوات مساعدة للواجهة
+       ===================================== */
+
+    function setMessage(elementId, text, type = "") {
+
+        const element =
+            document.getElementById(elementId);
+
+        if (!element) {
+            return;
+        }
+
+        element.textContent = text;
+        element.className =
+            `form-message ${type}`.trim();
+
+    }
+
+
+    function setButtonLoading(
+        button,
+        loadingText,
+        disabled = true
+    ) {
+
+        if (!button) {
+            return;
+        }
+
+        if (disabled) {
+
+            button.dataset.originalText =
+                button.textContent;
+
+            button.disabled = true;
+            button.textContent = loadingText;
+
+        } else {
+
+            button.disabled = false;
+
+            button.textContent =
+                button.dataset.originalText ||
+                button.textContent;
+
+        }
+
+    }
+
+
+    function createEmptyState(
+        icon,
+        message
+    ) {
+
+        return `
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    ${icon}
+                </div>
+                <p>${escapeHTML(message)}</p>
+            </div>
+        `;
+
+    }
+
+
+    /* =====================================
+       تسجيل الخروج
+       ===================================== */
 
     window.logoutTeacher = async function () {
 
+        const button =
+            document.getElementById(
+                "logoutButton"
+            );
+
         try {
+
+            setButtonLoading(
+                button,
+                "جاري الخروج..."
+            );
 
             await signOut(auth);
 
-            window.location.href = "login.html";
+            window.location.href =
+                "login.html";
 
         } catch (error) {
 
             console.error(error);
 
-            alert("حدث خطأ أثناء تسجيل الخروج ❌");
+            setButtonLoading(
+                button,
+                "تسجيل الخروج"
+            );
+
+            setMessage(
+                "globalMessage",
+                "حدث خطأ أثناء تسجيل الخروج. حاول مرة أخرى.",
+                "error"
+            );
 
         }
 
     };
 
 
-    // =====================================
-    // تحميل الكورسات
-    // =====================================
+    /* =====================================
+       تحميل الكورسات
+       ===================================== */
 
     async function loadCourses() {
 
         const coursesList =
-            document.getElementById("coursesList");
+            document.getElementById(
+                "coursesList"
+            );
 
         const lessonCourse =
-            document.getElementById("lessonCourse");
+            document.getElementById(
+                "lessonCourse"
+            );
 
         const examCourse =
-            document.getElementById("examCourse");
+            document.getElementById(
+                "examCourse"
+            );
 
 
-        coursesList.innerHTML = "";
+        coursesList.innerHTML =
+            createEmptyState(
+                "⏳",
+                "جاري تحميل الكورسات..."
+            );
+
 
         lessonCourse.innerHTML =
             '<option value="">اختر الكورس</option>';
@@ -352,18 +1027,28 @@
 
             const snapshot =
                 await getDocs(
-                    collection(db, "courses")
+                    collection(
+                        db,
+                        "courses"
+                    )
                 );
 
 
             if (snapshot.empty) {
 
                 coursesList.innerHTML =
-                    '<p class="empty">لا توجد كورسات حتى الآن.</p>';
+                    createEmptyState(
+                        "📚",
+                        "لا توجد كورسات حتى الآن."
+                    );
 
                 return;
 
             }
+
+
+            const fragment =
+                document.createDocumentFragment();
 
 
             snapshot.forEach((courseDoc) => {
@@ -378,7 +1063,9 @@
 
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 div.className = "item";
 
@@ -399,11 +1086,13 @@
                 `;
 
 
-                coursesList.appendChild(div);
+                fragment.appendChild(div);
 
 
                 const lessonOption =
-                    document.createElement("option");
+                    document.createElement(
+                        "option"
+                    );
 
                 lessonOption.value =
                     courseDoc.id;
@@ -417,7 +1106,9 @@
 
 
                 const examOption =
-                    document.createElement("option");
+                    document.createElement(
+                        "option"
+                    );
 
                 examOption.value =
                     courseDoc.id;
@@ -432,21 +1123,31 @@
             });
 
 
+            coursesList.innerHTML = "";
+            coursesList.appendChild(fragment);
+
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "COURSES ERROR:",
+                error
+            );
 
             coursesList.innerHTML =
-                '<p class="error">حدث خطأ أثناء تحميل الكورسات.</p>';
+                createEmptyState(
+                    "⚠️",
+                    "حدث خطأ أثناء تحميل الكورسات."
+                );
 
         }
 
     }
 
 
-    // =====================================
-    // إنشاء كورس
-    // =====================================
+    /* =====================================
+       إنشاء كورس
+       ===================================== */
 
     window.createCourse = async function (event) {
 
@@ -465,19 +1166,13 @@
             ).value.trim();
 
 
-        const message =
-            document.getElementById(
-                "courseMessage"
-            );
-
-
         if (!title) {
 
-            message.textContent =
-                "اكتب اسم الكورس.";
-
-            message.className =
-                "error";
+            setMessage(
+                "courseMessage",
+                "اكتب اسم الكورس أولاً.",
+                "error"
+            );
 
             return;
 
@@ -490,16 +1185,19 @@
             );
 
 
-        button.disabled = true;
-
-        button.textContent =
-            "جاري إنشاء الكورس...";
+        setButtonLoading(
+            button,
+            "جاري إنشاء الكورس..."
+        );
 
 
         try {
 
             await addDoc(
-                collection(db, "courses"),
+                collection(
+                    db,
+                    "courses"
+                ),
                 {
 
                     title: title,
@@ -521,15 +1219,17 @@
             );
 
 
-            message.textContent =
-                "تم إنشاء الكورس بنجاح 🎉";
-
-            message.className =
-                "success";
+            setMessage(
+                "courseMessage",
+                "تم إنشاء الكورس بنجاح 🎉",
+                "success"
+            );
 
 
             document
-                .getElementById("courseForm")
+                .getElementById(
+                    "courseForm"
+                )
                 .reset();
 
 
@@ -545,26 +1245,27 @@
             );
 
 
-            message.textContent =
-                "حدث خطأ أثناء إنشاء الكورس ❌";
-
-            message.className =
-                "error";
+            setMessage(
+                "courseMessage",
+                "حدث خطأ أثناء إنشاء الكورس. حاول مرة أخرى.",
+                "error"
+            );
 
         }
 
 
-        button.disabled = false;
-
-        button.textContent =
-            "إنشاء الكورس 📚";
+        setButtonLoading(
+            button,
+            "",
+            false
+        );
 
     };
 
 
-    // =====================================
-    // إضافة درس
-    // =====================================
+    /* =====================================
+       إضافة درس
+       ===================================== */
 
     window.addLesson = async function (event) {
 
@@ -572,25 +1273,28 @@
 
 
         const courseId =
-            document.getElementById("lessonCourse").value;
+            document.getElementById(
+                "lessonCourse"
+            ).value;
 
         const title =
-            document.getElementById("lessonTitle").value.trim();
+            document.getElementById(
+                "lessonTitle"
+            ).value.trim();
 
         const content =
-            document.getElementById("lessonContent").value.trim();
-
-        const message =
-            document.getElementById("lessonMessage");
+            document.getElementById(
+                "lessonContent"
+            ).value.trim();
 
 
         if (!courseId) {
 
-            message.textContent =
-                "اختار الكورس أولاً.";
-
-            message.className =
-                "error";
+            setMessage(
+                "lessonMessage",
+                "اختار الكورس أولاً.",
+                "error"
+            );
 
             return;
 
@@ -599,11 +1303,11 @@
 
         if (!title) {
 
-            message.textContent =
-                "اكتب اسم الدرس.";
-
-            message.className =
-                "error";
+            setMessage(
+                "lessonMessage",
+                "اكتب اسم الدرس.",
+                "error"
+            );
 
             return;
 
@@ -612,32 +1316,48 @@
 
         if (!content) {
 
-            message.textContent =
-                "اكتب محتوى الدرس.";
-
-            message.className =
-                "error";
+            setMessage(
+                "lessonMessage",
+                "اكتب محتوى الدرس.",
+                "error"
+            );
 
             return;
 
         }
 
 
+        const button =
+            document.getElementById(
+                "addLessonBtn"
+            );
+
+
+        setButtonLoading(
+            button,
+            "جاري إضافة الدرس..."
+        );
+
+
         try {
 
             const courseSnapshot =
                 await getDoc(
-                    doc(db, "courses", courseId)
+                    doc(
+                        db,
+                        "courses",
+                        courseId
+                    )
                 );
 
 
             if (!courseSnapshot.exists()) {
 
-                message.textContent =
-                    "الكورس غير موجود.";
-
-                message.className =
-                    "error";
+                setMessage(
+                    "lessonMessage",
+                    "الكورس غير موجود.",
+                    "error"
+                );
 
                 return;
 
@@ -649,7 +1369,10 @@
 
 
             await addDoc(
-                collection(db, "lessons"),
+                collection(
+                    db,
+                    "lessons"
+                ),
                 {
 
                     title: title,
@@ -673,15 +1396,17 @@
             );
 
 
-            message.textContent =
-                "تم إضافة الدرس بنجاح ✅";
-
-            message.className =
-                "success";
+            setMessage(
+                "lessonMessage",
+                "تم إضافة الدرس بنجاح ✅",
+                "success"
+            );
 
 
             document
-                .getElementById("lessonForm")
+                .getElementById(
+                    "lessonForm"
+                )
                 .reset();
 
 
@@ -690,43 +1415,68 @@
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "LESSON ERROR:",
+                error
+            );
 
-            message.textContent =
-                "حدث خطأ أثناء إضافة الدرس ❌";
-
-            message.className =
-                "error";
+            setMessage(
+                "lessonMessage",
+                "حدث خطأ أثناء إضافة الدرس. حاول مرة أخرى.",
+                "error"
+            );
 
         }
+
+
+        setButtonLoading(
+            button,
+            "",
+            false
+        );
 
     };
 
 
-    // =====================================
-    // تحميل الدروس
-    // =====================================
+    /* =====================================
+       تحميل الدروس
+       ===================================== */
 
     async function loadLessons() {
 
         const lessonsList =
-            document.getElementById("lessonsList");
+            document.getElementById(
+                "lessonsList"
+            );
 
-        lessonsList.innerHTML = "";
+        lessonsList.innerHTML =
+            createEmptyState(
+                "⏳",
+                "جاري تحميل الدروس..."
+            );
 
 
         try {
 
             const snapshot =
                 await getDocs(
-                    collection(db, "lessons")
+                    collection(
+                        db,
+                        "lessons"
+                    )
                 );
+
+
+            let count = 0;
 
 
             if (snapshot.empty) {
 
                 lessonsList.innerHTML =
-                    '<p class="empty">لا توجد دروس حتى الآن.</p>';
+                    createEmptyState(
+                        "📖",
+                        "لا توجد دروس حتى الآن."
+                    );
 
                 document.getElementById(
                     "lessonsCount"
@@ -737,7 +1487,7 @@
             }
 
 
-            let count = 0;
+            lessonsList.innerHTML = "";
 
 
             snapshot.forEach((lessonDoc) => {
@@ -749,7 +1499,9 @@
 
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 div.className = "item";
 
@@ -793,37 +1545,54 @@
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "LESSONS ERROR:",
+                error
+            );
 
             lessonsList.innerHTML =
-                '<p class="error">حدث خطأ أثناء تحميل الدروس.</p>';
+                createEmptyState(
+                    "⚠️",
+                    "حدث خطأ أثناء تحميل الدروس."
+                );
 
         }
 
     }
 
 
-    // =====================================
-    // الطلاب
-    // =====================================
+    /* =====================================
+       الطلاب
+       ===================================== */
 
     async function loadStudents() {
 
         const studentsList =
-            document.getElementById("studentsList");
+            document.getElementById(
+                "studentsList"
+            );
 
-        studentsList.innerHTML = "";
+        studentsList.innerHTML =
+            createEmptyState(
+                "⏳",
+                "جاري تحميل الطلاب..."
+            );
 
 
         try {
 
             const snapshot =
                 await getDocs(
-                    collection(db, "users")
+                    collection(
+                        db,
+                        "users"
+                    )
                 );
 
 
             let count = 0;
+
+            studentsList.innerHTML = "";
 
 
             snapshot.forEach((userDoc) => {
@@ -832,7 +1601,10 @@
                     userDoc.data();
 
 
-                if (user.role !== "student") {
+                if (
+                    user.role !==
+                    "student"
+                ) {
                     return;
                 }
 
@@ -841,7 +1613,9 @@
 
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
                 div.className = "item";
 
@@ -856,7 +1630,7 @@
                     </h4>
 
                     <p>
-                        البريد:
+                        <strong>البريد:</strong>
                         ${escapeHTML(
                             user.email ||
                             "غير موجود"
@@ -879,26 +1653,35 @@
             if (count === 0) {
 
                 studentsList.innerHTML =
-                    '<p class="empty">لا يوجد طلاب حتى الآن.</p>';
+                    createEmptyState(
+                        "👨‍🎓",
+                        "لا يوجد طلاب حتى الآن."
+                    );
 
             }
 
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "STUDENTS ERROR:",
+                error
+            );
 
             studentsList.innerHTML =
-                '<p class="error">حدث خطأ أثناء تحميل الطلاب.</p>';
+                createEmptyState(
+                    "⚠️",
+                    "حدث خطأ أثناء تحميل الطلاب."
+                );
 
         }
 
     }
 
 
-    // =====================================
-    // إضافة سؤال
-    // =====================================
+    /* =====================================
+       إضافة سؤال
+       ===================================== */
 
     window.addQuestion = function () {
 
@@ -932,19 +1715,14 @@
                 'input[name="correctAnswer"]:checked'
             );
 
-        const message =
-            document.getElementById(
-                "questionMessage"
-            );
-
 
         if (!questionText) {
 
-            message.textContent =
-                "اكتب السؤال أولاً.";
-
-            message.className =
-                "error";
+            setMessage(
+                "questionMessage",
+                "اكتب السؤال أولاً.",
+                "error"
+            );
 
             return;
 
@@ -958,11 +1736,11 @@
             !option4
         ) {
 
-            message.textContent =
-                "اكتب الاختيارات الأربعة.";
-
-            message.className =
-                "error";
+            setMessage(
+                "questionMessage",
+                "اكتب الاختيارات الأربعة.",
+                "error"
+            );
 
             return;
 
@@ -971,11 +1749,11 @@
 
         if (!correctAnswer) {
 
-            message.textContent =
-                "حدد الإجابة الصحيحة.";
-
-            message.className =
-                "error";
+            setMessage(
+                "questionMessage",
+                "حدد الإجابة الصحيحة.",
+                "error"
+            );
 
             return;
 
@@ -995,7 +1773,9 @@
             ],
 
             correctAnswer:
-                Number(correctAnswer.value)
+                Number(
+                    correctAnswer.value
+                )
 
         });
 
@@ -1033,18 +1813,18 @@
         });
 
 
-        message.textContent =
-            "تمت إضافة السؤال إلى الامتحان ✅";
-
-        message.className =
-            "success";
+        setMessage(
+            "questionMessage",
+            "تمت إضافة السؤال إلى الامتحان ✅",
+            "success"
+        );
 
     };
 
 
-    // =====================================
-    // عرض الأسئلة
-    // =====================================
+    /* =====================================
+       عرض الأسئلة
+       ===================================== */
 
     function renderQuestions() {
 
@@ -1063,10 +1843,15 @@
             examQuestions.length;
 
 
-        if (examQuestions.length === 0) {
+        if (
+            examQuestions.length === 0
+        ) {
 
             container.innerHTML =
-                '<p class="empty">لم تتم إضافة أسئلة بعد.</p>';
+                createEmptyState(
+                    "📝",
+                    "لم تتم إضافة أسئلة بعد."
+                );
 
             return;
 
@@ -1088,52 +1873,91 @@
 
                 div.innerHTML = `
 
-                    <div style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:center;
-                        gap:10px;
-                        margin-bottom:10px;
-                    ">
+                    <div class="question-box-top">
 
-                        <strong>
+                        <span class="question-number">
                             السؤال ${index + 1}
-                        </strong>
+                        </span>
 
                         <button
                             type="button"
                             class="danger-btn"
                             onclick="removeQuestion(${index})"
+                            aria-label="حذف السؤال ${index + 1}"
                         >
                             حذف
                         </button>
 
                     </div>
 
-                    <p>
-                        <strong>
-                            ${escapeHTML(question.question)}
-                        </strong>
+                    <p class="question-text">
+                        ${escapeHTML(
+                            question.question
+                        )}
                     </p>
 
-                    <p>
-                        1️⃣ ${escapeHTML(question.options[0])}
-                        ${question.correctAnswer === 0 ? " ✅" : ""}
+                    <p class="${
+                        question.correctAnswer === 0
+                            ? "correct-option"
+                            : ""
+                    }">
+                        1️⃣
+                        ${escapeHTML(
+                            question.options[0]
+                        )}
+                        ${
+                            question.correctAnswer === 0
+                                ? " ✅"
+                                : ""
+                        }
                     </p>
 
-                    <p>
-                        2️⃣ ${escapeHTML(question.options[1])}
-                        ${question.correctAnswer === 1 ? " ✅" : ""}
+                    <p class="${
+                        question.correctAnswer === 1
+                            ? "correct-option"
+                            : ""
+                    }">
+                        2️⃣
+                        ${escapeHTML(
+                            question.options[1]
+                        )}
+                        ${
+                            question.correctAnswer === 1
+                                ? " ✅"
+                                : ""
+                        }
                     </p>
 
-                    <p>
-                        3️⃣ ${escapeHTML(question.options[2])}
-                        ${question.correctAnswer === 2 ? " ✅" : ""}
+                    <p class="${
+                        question.correctAnswer === 2
+                            ? "correct-option"
+                            : ""
+                    }">
+                        3️⃣
+                        ${escapeHTML(
+                            question.options[2]
+                        )}
+                        ${
+                            question.correctAnswer === 2
+                                ? " ✅"
+                                : ""
+                        }
                     </p>
 
-                    <p>
-                        4️⃣ ${escapeHTML(question.options[3])}
-                        ${question.correctAnswer === 3 ? " ✅" : ""}
+                    <p class="${
+                        question.correctAnswer === 3
+                            ? "correct-option"
+                            : ""
+                    }">
+                        4️⃣
+                        ${escapeHTML(
+                            question.options[3]
+                        )}
+                        ${
+                            question.correctAnswer === 3
+                                ? " ✅"
+                                : ""
+                        }
                     </p>
 
                 `;
@@ -1147,25 +1971,41 @@
     }
 
 
-    // =====================================
-    // حذف سؤال
-    // =====================================
+    /* =====================================
+       حذف سؤال
+       ===================================== */
 
     window.removeQuestion = function (index) {
+
+        if (
+            index < 0 ||
+            index >= examQuestions.length
+        ) {
+            return;
+        }
+
 
         examQuestions.splice(
             index,
             1
         );
 
+
         renderQuestions();
+
+
+        setMessage(
+            "questionMessage",
+            "تم حذف السؤال.",
+            "info-message"
+        );
 
     };
 
 
-    // =====================================
-    // إنشاء الامتحان
-    // =====================================
+    /* =====================================
+       إنشاء الامتحان
+       ===================================== */
 
     window.createExam = async function (event) {
 
@@ -1204,19 +2044,14 @@
                 "examEndAt"
             ).value;
 
-        const message =
-            document.getElementById(
-                "examMessage"
-            );
-
 
         if (!title) {
 
-            message.textContent =
-                "اكتب اسم الامتحان.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "اكتب اسم الامتحان.",
+                "error"
+            );
 
             return;
 
@@ -1225,11 +2060,11 @@
 
         if (!courseId) {
 
-            message.textContent =
-                "اختار الكورس.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "اختار الكورس.",
+                "error"
+            );
 
             return;
 
@@ -1238,27 +2073,31 @@
 
         if (
             !duration ||
-            duration < 1
+            duration < 1 ||
+            duration > 300
         ) {
 
-            message.textContent =
-                "حدد مدة صحيحة للامتحان بالدقائق.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "حدد مدة صحيحة للامتحان من 1 إلى 300 دقيقة.",
+                "error"
+            );
 
             return;
 
         }
 
 
-        if (!startAtValue || !endAtValue) {
+        if (
+            !startAtValue ||
+            !endAtValue
+        ) {
 
-            message.textContent =
-                "حدد وقت بداية ونهاية الامتحان.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "حدد وقت بداية ونهاية الامتحان.",
+                "error"
+            );
 
             return;
 
@@ -1266,35 +2105,45 @@
 
 
         const startAt =
-            new Date(startAtValue);
+            new Date(
+                startAtValue
+            );
 
         const endAt =
-            new Date(endAtValue);
+            new Date(
+                endAtValue
+            );
 
 
         if (
-            Number.isNaN(startAt.getTime()) ||
-            Number.isNaN(endAt.getTime())
+            Number.isNaN(
+                startAt.getTime()
+            ) ||
+            Number.isNaN(
+                endAt.getTime()
+            )
         ) {
 
-            message.textContent =
-                "وقت البداية أو النهاية غير صحيح.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "وقت البداية أو النهاية غير صحيح.",
+                "error"
+            );
 
             return;
 
         }
 
 
-        if (endAt <= startAt) {
+        if (
+            endAt <= startAt
+        ) {
 
-            message.textContent =
-                "وقت النهاية يجب أن يكون بعد وقت البداية.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "وقت النهاية يجب أن يكون بعد وقت البداية.",
+                "error"
+            );
 
             return;
 
@@ -1305,15 +2154,27 @@
             examQuestions.length === 0
         ) {
 
-            message.textContent =
-                "أضف سؤالًا واحدًا على الأقل.";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "أضف سؤالًا واحدًا على الأقل.",
+                "error"
+            );
 
             return;
 
         }
+
+
+        const button =
+            document.getElementById(
+                "createExamBtn"
+            );
+
+
+        setButtonLoading(
+            button,
+            "جاري إنشاء الامتحان..."
+        );
 
 
         try {
@@ -1328,13 +2189,15 @@
                 );
 
 
-            if (!courseSnapshot.exists()) {
+            if (
+                !courseSnapshot.exists()
+            ) {
 
-                message.textContent =
-                    "الكورس غير موجود.";
-
-                message.className =
-                    "error";
+                setMessage(
+                    "examMessage",
+                    "الكورس غير موجود.",
+                    "error"
+                );
 
                 return;
 
@@ -1397,11 +2260,11 @@
             );
 
 
-            message.textContent =
-                "تم إنشاء الامتحان بنجاح 🎉";
-
-            message.className =
-                "success";
+            setMessage(
+                "examMessage",
+                "تم إنشاء الامتحان بنجاح 🎉",
+                "success"
+            );
 
 
             document.getElementById(
@@ -1427,20 +2290,27 @@
             );
 
 
-            message.textContent =
-                "حدث خطأ أثناء إنشاء الامتحان ❌";
-
-            message.className =
-                "error";
+            setMessage(
+                "examMessage",
+                "حدث خطأ أثناء إنشاء الامتحان. حاول مرة أخرى.",
+                "error"
+            );
 
         }
+
+
+        setButtonLoading(
+            button,
+            "",
+            false
+        );
 
     };
 
 
-    // =====================================
-    // تنسيق وقت الامتحان
-    // =====================================
+    /* =====================================
+       تنسيق وقت الامتحان
+       ===================================== */
 
     function formatExamDate(timestamp) {
 
@@ -1448,11 +2318,14 @@
             return "غير محدد";
         }
 
+
         try {
 
             return timestamp
                 .toDate()
-                .toLocaleString("ar-EG");
+                .toLocaleString(
+                    "ar-EG"
+                );
 
         } catch (error) {
 
@@ -1463,9 +2336,9 @@
     }
 
 
-    // =====================================
-    // تحميل الامتحانات
-    // =====================================
+    /* =====================================
+       تحميل الامتحانات
+       ===================================== */
 
     async function loadExams() {
 
@@ -1475,7 +2348,11 @@
             );
 
 
-        examsList.innerHTML = "";
+        examsList.innerHTML =
+            createEmptyState(
+                "⏳",
+                "جاري تحميل الامتحانات..."
+            );
 
 
         try {
@@ -1492,10 +2369,15 @@
             let count = 0;
 
 
-            if (snapshot.empty) {
+            if (
+                snapshot.empty
+            ) {
 
                 examsList.innerHTML =
-                    '<p class="empty">لا توجد امتحانات.</p>';
+                    createEmptyState(
+                        "📝",
+                        "لا توجد امتحانات حتى الآن."
+                    );
 
                 document.getElementById(
                     "examsCount"
@@ -1504,6 +2386,9 @@
                 return;
 
             }
+
+
+            examsList.innerHTML = "";
 
 
             snapshot.forEach((examDoc) => {
@@ -1576,12 +2461,18 @@
 
                     <div class="exam-time-box">
 
+                        <h4>
+                            🕐 وقت إتاحة الامتحان
+                        </h4>
+
                         <p>
                             📅
                             <span class="time-label">
                                 يبدأ:
                             </span>
-                            ${formatExamDate(exam.startAt)}
+                            ${formatExamDate(
+                                exam.startAt
+                            )}
                         </p>
 
                         <p>
@@ -1589,7 +2480,9 @@
                             <span class="time-label">
                                 ينتهي:
                             </span>
-                            ${formatExamDate(exam.endAt)}
+                            ${formatExamDate(
+                                exam.endAt
+                            )}
                         </p>
 
                     </div>
@@ -1597,7 +2490,9 @@
                 `;
 
 
-                examsList.appendChild(div);
+                examsList.appendChild(
+                    div
+                );
 
             });
 
@@ -1610,19 +2505,25 @@
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "EXAMS ERROR:",
+                error
+            );
 
             examsList.innerHTML =
-                '<p class="error">حدث خطأ أثناء تحميل الامتحانات.</p>';
+                createEmptyState(
+                    "⚠️",
+                    "حدث خطأ أثناء تحميل الامتحانات."
+                );
 
         }
 
     }
 
 
-    // =====================================
-    // النتائج
-    // =====================================
+    /* =====================================
+       النتائج
+       ===================================== */
 
     async function loadResults() {
 
@@ -1632,7 +2533,11 @@
             );
 
 
-        resultsList.innerHTML = "";
+        resultsList.innerHTML =
+            createEmptyState(
+                "⏳",
+                "جاري تحميل النتائج..."
+            );
 
 
         try {
@@ -1699,11 +2604,17 @@
             ) {
 
                 resultsList.innerHTML =
-                    '<p class="empty">لا توجد نتائج حتى الآن.</p>';
+                    createEmptyState(
+                        "📊",
+                        "لا توجد نتائج حتى الآن."
+                    );
 
                 return;
 
             }
+
+
+            resultsList.innerHTML = "";
 
 
             resultsSnapshot.forEach(
@@ -1774,7 +2685,9 @@
                         </h4>
 
                         <p>
-                            <strong>الامتحان:</strong>
+                            <strong>
+                                الامتحان:
+                            </strong>
                             ${escapeHTML(
                                 exam.title ||
                                 result.examTitle ||
@@ -1783,19 +2696,27 @@
                         </p>
 
                         <p>
-                            <strong>الدرجة:</strong>
+                            <strong>
+                                الدرجة:
+                            </strong>
                             ${result.score || 0}
                             من
                             ${result.total || 0}
                         </p>
 
                         <p>
-                            <strong>النسبة:</strong>
-                            ${result.percentage || 0}%
+                            <strong>
+                                النسبة:
+                            </strong>
+                            <span class="result-score">
+                                ${result.percentage || 0}%
+                            </span>
                         </p>
 
                         <p>
-                            <strong>التاريخ:</strong>
+                            <strong>
+                                التاريخ:
+                            </strong>
                             ${dateText}
                         </p>
 
@@ -1812,19 +2733,25 @@
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "RESULTS ERROR:",
+                error
+            );
 
             resultsList.innerHTML =
-                '<p class="error">حدث خطأ أثناء تحميل النتائج.</p>';
+                createEmptyState(
+                    "⚠️",
+                    "حدث خطأ أثناء تحميل النتائج."
+                );
 
         }
 
     }
 
 
-    // =====================================
-    // حماية الصفحة
-    // =====================================
+    /* =====================================
+       حماية الصفحة
+       ===================================== */
 
     onAuthStateChanged(
         auth,
@@ -1923,10 +2850,15 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "TEACHER PAGE ERROR:",
+                    error
+                );
 
-                alert(
-                    "حدث خطأ أثناء تحميل لوحة المدرس."
+                setMessage(
+                    "globalMessage",
+                    "حدث خطأ أثناء تحميل لوحة المدرس.",
+                    "error"
                 );
 
             }
@@ -1935,14 +2867,16 @@
     );
 
 
-    // =====================================
-    // حماية النصوص
-    // =====================================
+    /* =====================================
+       حماية النصوص
+       ===================================== */
 
     function escapeHTML(value) {
 
         const div =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         div.textContent =
             value == null
@@ -1955,550 +2889,1182 @@
 
 </script>
 
-</head><body><header>
+</head><body><div class="teacher-page">
 
-    <h1>
-        Nova Future 🚀
-    </h1>
+    <!-- =====================================
+         Header
+         ===================================== -->
 
-    <p>
-        لوحة المدرس
-    </p>
+    <header class="teacher-header">
 
-</header>
-
-
-<main class="dashboard">
-
-
-    <!-- الترحيب -->
-
-    <div class="top-bar">
-
-        <div>
-
-            <h2>
-                أهلاً بك يا
-                <span id="teacherName">...</span>
-                👨‍🏫
-            </h2>
-
-            <p>
-                إدارة الكورسات والدروس والامتحانات
-                ومتابعة الطلاب والنتائج.
-            </p>
-
-        </div>
-
-
-        <div
-            class="top-actions"
-            style="
-                display: flex;
-                gap: 10px;
-                align-items: center;
-                flex-wrap: wrap;
-            "
-        >
+        <div class="teacher-header-inner">
 
             <a
-                href="profile.html"
-                class="secondary-btn"
-                style="
-                    text-decoration: none;
-                    display: inline-block;
-                "
+                href="../index.html"
+                class="brand"
+                aria-label="العودة إلى الصفحة الرئيسية"
             >
-                👤 الملف الشخصي
+
+                <span
+                    class="brand-icon"
+                    aria-hidden="true"
+                >
+                    🚀
+                </span>
+
+                <span class="brand-text">
+
+                    <strong>
+                        Nova Future
+                    </strong>
+
+                    <span>
+                        لوحة تحكم المدرس
+                    </span>
+
+                </span>
+
             </a>
 
 
-            <a
-                href="settings.html"
-                class="secondary-btn"
-                style="
-                    text-decoration: none;
-                    display: inline-block;
-                "
+            <nav
+                class="header-actions"
+                aria-label="روابط لوحة المدرس"
             >
-                ⚙️ الإعدادات
-            </a>
 
+                <a
+                    href="profile.html"
+                    class="header-link"
+                >
+                    👤 الملف الشخصي
+                </a>
 
-            <button
-                class="logout-btn"
-                onclick="logoutTeacher()"
-            >
-                تسجيل الخروج
-            </button>
+                <a
+                    href="settings.html"
+                    class="header-link"
+                >
+                    ⚙️ الإعدادات
+                </a>
+
+                <button
+                    type="button"
+                    class="logout-btn"
+                    id="logoutButton"
+                    onclick="logoutTeacher()"
+                >
+                    تسجيل الخروج
+                </button>
+
+            </nav>
 
         </div>
 
-    </div>
+    </header>
 
 
-    <!-- الإحصائيات -->
+    <!-- =====================================
+         Main
+         ===================================== -->
 
-    <div class="card">
+    <main class="teacher-dashboard">
 
-        <h3>
-            📊 إحصائيات سريعة
-        </h3>
+        <!-- الترحيب -->
 
-        <div class="stats">
+        <section class="welcome-card">
 
-            <div class="stat">
+            <div class="welcome-content">
 
-                <strong id="studentsCount">
-                    0
-                </strong>
+                <div class="welcome-badge">
+                    👨‍🏫 مساحة المدرس
+                </div>
 
-                الطلاب
-
-            </div>
-
-            <div class="stat">
-
-                <strong id="lessonsCount">
-                    0
-                </strong>
-
-                الدروس
-
-            </div>
-
-            <div class="stat">
-
-                <strong id="examsCount">
-                    0
-                </strong>
-
-                الامتحانات
-
-            </div>
-
-            <div class="stat">
-
-                <strong id="resultsCount">
-                    0
-                </strong>
-
-                النتائج
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- الكورسات الموجودة -->
-
-    <div class="card">
-
-        <h3>
-            📚 الكورسات
-        </h3>
-
-        <div id="coursesList">
-
-            <p class="empty">
-                جاري تحميل الكورسات...
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- إنشاء كورس -->
-
-    <div class="card">
-
-        <h3>
-            ➕ إنشاء كورس جديد
-        </h3>
-
-        <form
-            id="courseForm"
-            onsubmit="createCourse(event)"
-        >
-
-            <input
-                type="text"
-                id="courseTitle"
-                placeholder="اسم الكورس"
-                required
-            >
-
-            <textarea
-                id="courseDescription"
-                placeholder="وصف الكورس"
-            ></textarea>
-
-            <button
-                type="submit"
-                class="primary-btn"
-                id="createCourseBtn"
-            >
-                إنشاء الكورس 📚
-            </button>
-
-            <p id="courseMessage"></p>
-
-        </form>
-
-    </div>
-
-
-    <!-- إضافة درس -->
-
-    <div class="card">
-
-        <h3>
-            ➕ إضافة درس جديد
-        </h3>
-
-        <form
-            id="lessonForm"
-            onsubmit="addLesson(event)"
-        >
-
-            <select
-                id="lessonCourse"
-                required
-            >
-
-                <option value="">
-                    جاري تحميل الكورسات...
-                </option>
-
-            </select>
-
-            <input
-                type="text"
-                id="lessonTitle"
-                placeholder="اسم الدرس"
-                required
-            >
-
-            <textarea
-                id="lessonContent"
-                placeholder="اكتب محتوى الدرس هنا..."
-                required
-            ></textarea>
-
-            <button
-                type="submit"
-                class="primary-btn"
-            >
-                إضافة الدرس 📖
-            </button>
-
-            <p id="lessonMessage"></p>
-
-        </form>
-
-    </div>
-
-
-    <!-- الدروس -->
-
-    <div class="card">
-
-        <h3>
-            📖 الدروس الموجودة
-        </h3>
-
-        <div id="lessonsList">
-
-            <p class="empty">
-                جاري تحميل الدروس...
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- الطلاب -->
-
-    <div class="card">
-
-        <h3>
-            👨‍🎓 الطلاب
-        </h3>
-
-        <div id="studentsList">
-
-            <p class="empty">
-                جاري تحميل الطلاب...
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- إنشاء امتحان -->
-
-    <div class="card">
-
-        <h3>
-            ➕ إنشاء امتحان جديد
-        </h3>
-
-        <form
-            id="examForm"
-            onsubmit="createExam(event)"
-        >
-
-            <input
-                type="text"
-                id="examTitle"
-                placeholder="اسم الامتحان"
-                required
-            >
-
-            <textarea
-                id="examDescription"
-                placeholder="وصف الامتحان"
-            ></textarea>
-
-            <select
-                id="examCourse"
-                required
-            >
-
-                <option value="">
-                    جاري تحميل الكورسات...
-                </option>
-
-            </select>
-
-            <input
-                type="number"
-                id="examDuration"
-                placeholder="مدة الحل بالدقائق"
-                min="1"
-                max="300"
-                required
-            >
-
-            <!-- وقت إتاحة الامتحان -->
-
-            <div class="exam-time-box">
-
-                <h4>
-                    🕐 تحديد وقت إتاحة الامتحان
-                </h4>
+                <h1>
+                    أهلاً بك يا
+                    <span id="teacherName">
+                        ...
+                    </span>
+                    👋
+                </h1>
 
                 <p>
-                    الطالب يستطيع دخول الامتحان فقط خلال الفترة المحددة هنا.
+                    من هنا تقدر تدير الكورسات والدروس
+                    والامتحانات، وتتابع الطلاب والنتائج
+                    من مكان واحد.
                 </p>
-
-                <label for="examStartAt">
-                    📅 تاريخ ووقت البداية
-                </label>
-
-                <input
-                    type="datetime-local"
-                    id="examStartAt"
-                    required
-                >
-
-                <label for="examEndAt">
-                    ⏰ تاريخ ووقت النهاية
-                </label>
-
-                <input
-                    type="datetime-local"
-                    id="examEndAt"
-                    required
-                >
 
             </div>
 
+        </section>
 
-            <!-- إضافة سؤال -->
 
-            <div class="question-box">
+        <p
+            id="globalMessage"
+            class="form-message"
+            aria-live="polite"
+        ></p>
 
-                <h4>
-                    ➕ إضافة سؤال
-                </h4>
 
-                <div id="questionForm">
+        <!-- =====================================
+             الإحصائيات
+             ===================================== -->
 
-                    <input
-                        type="text"
-                        id="questionText"
-                        placeholder="اكتب السؤال"
-                    >
+        <section class="dashboard-section">
 
-                    <div class="option-row">
+            <div class="section-card">
 
-                        <input
-                            type="radio"
-                            name="correctAnswer"
-                            value="0"
-                        >
+                <div class="section-header">
 
-                        <input
-                            type="text"
-                            id="option1"
-                            placeholder="الاختيار الأول"
-                        >
+                    <div class="section-heading">
 
-                    </div>
+                        <div class="section-icon">
+                            📊
+                        </div>
 
-                    <div class="option-row">
+                        <div>
 
-                        <input
-                            type="radio"
-                            name="correctAnswer"
-                            value="1"
-                        >
+                            <h2>
+                                إحصائيات سريعة
+                            </h2>
 
-                        <input
-                            type="text"
-                            id="option2"
-                            placeholder="الاختيار الثاني"
-                        >
+                            <p>
+                                نظرة سريعة على محتوى لوحتك.
+                            </p>
+
+                        </div>
 
                     </div>
 
-                    <div class="option-row">
+                </div>
 
-                        <input
-                            type="radio"
-                            name="correctAnswer"
-                            value="2"
-                        >
 
-                        <input
-                            type="text"
-                            id="option3"
-                            placeholder="الاختيار الثالث"
-                        >
+                <div class="stats-grid">
 
-                    </div>
+                    <div class="stat-card">
 
-                    <div class="option-row">
+                        <div class="stat-icon">
+                            👨‍🎓
+                        </div>
 
-                        <input
-                            type="radio"
-                            name="correctAnswer"
-                            value="3"
-                        >
+                        <strong id="studentsCount">
+                            0
+                        </strong>
 
-                        <input
-                            type="text"
-                            id="option4"
-                            placeholder="الاختيار الرابع"
-                        >
+                        <span>
+                            الطلاب
+                        </span>
 
                     </div>
 
-                    <button
-                        type="button"
-                        class="secondary-btn"
-                        onclick="addQuestion()"
-                    >
-                        إضافة السؤال ➕
-                    </button>
 
-                    <p id="questionMessage"></p>
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            📖
+                        </div>
+
+                        <strong id="lessonsCount">
+                            0
+                        </strong>
+
+                        <span>
+                            الدروس
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            📝
+                        </div>
+
+                        <strong id="examsCount">
+                            0
+                        </strong>
+
+                        <span>
+                            الامتحانات
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            📊
+                        </div>
+
+                        <strong id="resultsCount">
+                            0
+                        </strong>
+
+                        <span>
+                            النتائج
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
+        </section>
 
-            <!-- الأسئلة -->
 
-            <h4 class="questions-title">
+        <!-- =====================================
+             الكورسات
+             ===================================== -->
 
-                الأسئلة المضافة:
+        <section class="dashboard-section">
 
-                <span id="questionsCount">
-                    0
-                </span>
+            <div class="section-card">
 
-            </h4>
+                <div class="section-header">
 
-            <div id="questionsList">
+                    <div class="section-heading">
 
-                <p class="empty">
-                    لم تتم إضافة أسئلة بعد.
-                </p>
+                        <div class="section-icon">
+                            📚
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                الكورسات
+                            </h2>
+
+                            <p>
+                                الكورسات المتاحة على المنصة.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="coursesList"
+                    class="items-grid"
+                >
+
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            جاري تحميل الكورسات...
+                        </p>
+                    </div>
+
+                </div>
 
             </div>
 
-
-            <button
-                type="submit"
-                class="primary-btn"
-            >
-                إنشاء الامتحان 🎉
-            </button>
-
-            <p id="examMessage"></p>
-
-        </form>
-
-    </div>
+        </section>
 
 
-    <!-- الامتحانات -->
+        <!-- =====================================
+             إنشاء كورس
+             ===================================== -->
 
-    <div class="card">
+        <section class="dashboard-section">
 
-        <h3>
-            📝 الامتحانات
-        </h3>
+            <div class="section-card">
 
-        <div id="examsList">
+                <div class="section-header">
 
-            <p class="empty">
-                جاري تحميل الامتحانات...
-            </p>
+                    <div class="section-heading">
 
-        </div>
+                        <div class="section-icon">
+                            ➕
+                        </div>
 
-    </div>
+                        <div>
 
+                            <h2>
+                                إنشاء كورس جديد
+                            </h2>
 
-    <!-- النتائج -->
+                            <p>
+                                أضف كورسًا جديدًا للمنصة.
+                            </p>
 
-    <div class="card">
+                        </div>
 
-        <h3>
-            📊 نتائج الطلاب
-        </h3>
+                    </div>
 
-        <div id="resultsList">
-
-            <p class="empty">
-                جاري تحميل النتائج...
-            </p>
-
-        </div>
-
-    </div>
-
-</main>
+                </div>
 
 
-<footer>
+                <form
+                    id="courseForm"
+                    onsubmit="createCourse(event)"
+                >
 
-    <p>
-        © 2026 Nova Future
-    </p>
+                    <div class="form-grid">
 
-</footer>
+                        <div class="form-group">
+
+                            <label for="courseTitle">
+                                اسم الكورس
+                            </label>
+
+                            <input
+                                type="text"
+                                id="courseTitle"
+                                placeholder="مثال: الرياضيات للصف الأول"
+                                autocomplete="off"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="courseDescription">
+                                وصف الكورس
+                            </label>
+
+                            <input
+                                type="text"
+                                id="courseDescription"
+                                placeholder="وصف مختصر للكورس"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <div class="form-actions">
+
+                                <button
+                                    type="submit"
+                                    class="primary-btn"
+                                    id="createCourseBtn"
+                                >
+                                    إنشاء الكورس 📚
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <p
+                        id="courseMessage"
+                        class="form-message"
+                        aria-live="polite"
+                    ></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             إضافة درس
+             ===================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            📖
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                إضافة درس جديد
+                            </h2>
+
+                            <p>
+                                أضف درسًا ومحتواه داخل أحد الكورسات.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="lessonForm"
+                    onsubmit="addLesson(event)"
+                >
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="lessonCourse">
+                                الكورس
+                            </label>
+
+                            <select
+                                id="lessonCourse"
+                                required
+                            >
+
+                                <option value="">
+                                    جاري تحميل الكورسات...
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="lessonTitle">
+                                اسم الدرس
+                            </label>
+
+                            <input
+                                type="text"
+                                id="lessonTitle"
+                                placeholder="مثال: الدرس الأول"
+                                autocomplete="off"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label for="lessonContent">
+                                محتوى الدرس
+                            </label>
+
+                            <textarea
+                                id="lessonContent"
+                                placeholder="اكتب محتوى الدرس هنا..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <div class="form-actions">
+
+                                <button
+                                    type="submit"
+                                    class="primary-btn"
+                                    id="addLessonBtn"
+                                >
+                                    إضافة الدرس 📖
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <p
+                        id="lessonMessage"
+                        class="form-message"
+                        aria-live="polite"
+                    ></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             الدروس
+             ===================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            📖
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                الدروس الموجودة
+                            </h2>
+
+                            <p>
+                                كل الدروس التي تم إضافتها.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="section-count"
+                        id="lessonsSectionCount"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="lessonsList"
+                    class="items-grid"
+                >
+
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            جاري تحميل الدروس...
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             الطلاب
+             ===================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            👨‍🎓
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                الطلاب
+                            </h2>
+
+                            <p>
+                                الطلاب المسجلون في المنصة.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="section-count"
+                        id="studentsSectionCount"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="studentsList"
+                    class="items-grid"
+                >
+
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            جاري تحميل الطلاب...
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             إنشاء امتحان
+             ===================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            📝
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                إنشاء امتحان جديد
+                            </h2>
+
+                            <p>
+                                أنشئ الامتحان وحدد مدته ووقت إتاحته وأسئلته.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="examForm"
+                    onsubmit="createExam(event)"
+                >
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="examTitle">
+                                اسم الامتحان
+                            </label>
+
+                            <input
+                                type="text"
+                                id="examTitle"
+                                placeholder="مثال: امتحان الوحدة الأولى"
+                                autocomplete="off"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="examCourse">
+                                الكورس
+                            </label>
+
+                            <select
+                                id="examCourse"
+                                required
+                            >
+
+                                <option value="">
+                                    جاري تحميل الكورسات...
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label for="examDescription">
+                                وصف الامتحان
+                            </label>
+
+                            <textarea
+                                id="examDescription"
+                                placeholder="اكتب وصفًا مختصرًا للامتحان..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="examDuration">
+                                مدة الحل بالدقائق
+                            </label>
+
+                            <input
+                                type="number"
+                                id="examDuration"
+                                placeholder="مثال: 30"
+                                min="1"
+                                max="300"
+                                required
+                            >
+
+                            <p class="form-help">
+                                مدة الحل من 1 إلى 300 دقيقة.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- وقت الإتاحة -->
+
+                    <div class="exam-time-box">
+
+                        <h4>
+                            🕐 تحديد وقت إتاحة الامتحان
+                        </h4>
+
+                        <p>
+                            الطالب يستطيع دخول الامتحان فقط خلال الفترة المحددة هنا.
+                        </p>
+
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+
+                                <label for="examStartAt">
+                                    📅 تاريخ ووقت البداية
+                                </label>
+
+                                <input
+                                    type="datetime-local"
+                                    id="examStartAt"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="examEndAt">
+                                    ⏰ تاريخ ووقت النهاية
+                                </label>
+
+                                <input
+                                    type="datetime-local"
+                                    id="examEndAt"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- إضافة سؤال -->
+
+                    <div class="question-builder">
+
+                        <div class="question-builder-header">
+
+                            <h4>
+                                ➕ إضافة سؤال
+                            </h4>
+
+                            <p>
+                                اكتب السؤال والاختيارات الأربعة، ثم حدد الإجابة الصحيحة.
+                            </p>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="questionText">
+                                السؤال
+                            </label>
+
+                            <input
+                                type="text"
+                                id="questionText"
+                                placeholder="اكتب السؤال هنا..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <div class="options-list">
+
+                            <div class="option-row">
+
+                                <input
+                                    type="radio"
+                                    name="correctAnswer"
+                                    value="0"
+                                    aria-label="الاختيار الأول هو الإجابة الصحيحة"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="option1"
+                                    placeholder="الاختيار الأول"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+
+                            <div class="option-row">
+
+                                <input
+                                    type="radio"
+                                    name="correctAnswer"
+                                    value="1"
+                                    aria-label="الاختيار الثاني هو الإجابة الصحيحة"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="option2"
+                                    placeholder="الاختيار الثاني"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+
+                            <div class="option-row">
+
+                                <input
+                                    type="radio"
+                                    name="correctAnswer"
+                                    value="2"
+                                    aria-label="الاختيار الثالث هو الإجابة الصحيحة"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="option3"
+                                    placeholder="الاختيار الثالث"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+
+                            <div class="option-row">
+
+                                <input
+                                    type="radio"
+                                    name="correctAnswer"
+                                    value="3"
+                                    aria-label="الاختيار الرابع هو الإجابة الصحيحة"
+                                >
+
+                                <input
+                                    type="text"
+                                    id="option4"
+                                    placeholder="الاختيار الرابع"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            onclick="addQuestion()"
+                        >
+                            إضافة السؤال ➕
+                        </button>
+
+
+                        <p
+                            id="questionMessage"
+                            class="form-message"
+                            aria-live="polite"
+                        ></p>
+
+                    </div>
+
+
+                    <!-- الأسئلة المضافة -->
+
+                    <div class="questions-header">
+
+                        <h4>
+                            الأسئلة المضافة
+                        </h4>
+
+                        <span
+                            class="questions-badge"
+                            id="questionsCount"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div id="questionsList">
+
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                📝
+                            </div>
+
+                            <p>
+                                لم تتم إضافة أسئلة بعد.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                            id="createExamBtn"
+                        >
+                            إنشاء الامتحان 🎉
+                        </button>
+
+                    </div>
+
+
+                    <p
+                        id="examMessage"
+                        class="form-message"
+                        aria-live="polite"
+                    ></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             الامتحانات
+             ===================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            📝
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                الامتحانات
+                            </h2>
+
+                            <p>
+                                الامتحانات التي تم إنشاؤها على المنصة.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="section-count"
+                        id="examsSectionCount"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="examsList"
+                    class="items-grid"
+                >
+
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            جاري تحميل الامتحانات...
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             النتائج
+             ===================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            📊
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                نتائج الطلاب
+                            </h2>
+
+                            <p>
+                                متابعة درجات ونتائج الطلاب في الامتحانات.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span
+                        class="section-count"
+                        id="resultsSectionCount"
+                    >
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="resultsList"
+                    class="items-grid"
+                >
+
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            جاري تحميل النتائج...
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         Footer
+         ===================================== -->
+
+    <footer class="teacher-footer">
+
+        <p>
+            © 2026 Nova Future — جميع الحقوق محفوظة.
+        </p>
+
+    </footer>
+
+</div>
 
 
 <script src="../js/app.js"></script>
+
+
+<script>
+    /*
+     * مزامنة عدادات الأقسام مع الإحصائيات الرئيسية.
+     * لا يوجد أي اتصال بـ Firebase هنا.
+     */
+
+    const counterPairs = [
+        ["lessonsCount", "lessonsSectionCount"],
+        ["studentsCount", "studentsSectionCount"],
+        ["examsCount", "examsSectionCount"],
+        ["resultsCount", "resultsSectionCount"]
+    ];
+
+    function syncSectionCounters() {
+
+        counterPairs.forEach(
+            ([sourceId, targetId]) => {
+
+                const source =
+                    document.getElementById(
+                        sourceId
+                    );
+
+                const target =
+                    document.getElementById(
+                        targetId
+                    );
+
+                if (source && target) {
+
+                    target.textContent =
+                        source.textContent;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    setInterval(
+        syncSectionCounters,
+        500
+    );
+
+</script>
 
 </body></html>
