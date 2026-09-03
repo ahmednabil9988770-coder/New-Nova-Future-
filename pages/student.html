@@ -13,15 +13,27 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --background-color: #f4f7fb;
+            --surface-color: #ffffff;
+            --text-color: #222;
+            --border-color: #e5e7eb;
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #222;
+            background: var(--background-color);
+            color: var(--text-color);
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease;
         }
 
         .topbar {
-            background: #111827;
+            background: var(--primary-dark);
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -48,7 +60,7 @@
             border-radius: 8px;
             padding: 10px 16px;
             cursor: pointer;
-            background: #2563eb;
+            background: var(--primary-color);
             color: white;
             font-size: 15px;
             text-decoration: none;
@@ -65,7 +77,7 @@
         }
 
         .settings-btn {
-            background: #7c3aed;
+            background: var(--primary-color);
         }
 
         .logout {
@@ -79,7 +91,7 @@
         }
 
         .welcome {
-            background: white;
+            background: var(--surface-color);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 20px;
@@ -98,7 +110,7 @@
         }
 
         .stat {
-            background: white;
+            background: var(--surface-color);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -109,11 +121,11 @@
             display: block;
             font-size: 28px;
             margin-bottom: 8px;
-            color: #2563eb;
+            color: var(--primary-color);
         }
 
         .section {
-            background: white;
+            background: var(--surface-color);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
@@ -121,14 +133,14 @@
         }
 
         .card {
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 15px;
             margin: 10px 0;
         }
 
         .exam-card {
-            border-right: 5px solid #2563eb;
+            border-right: 5px solid var(--primary-color);
         }
 
         .result-card {
@@ -142,7 +154,7 @@
         .question {
             margin: 20px 0;
             padding: 15px;
-            background: #f8fafc;
+            background: var(--background-color);
             border-radius: 10px;
         }
 
@@ -150,8 +162,8 @@
             display: block;
             margin: 10px 0;
             padding: 10px;
-            background: white;
-            border: 1px solid #ddd;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
         }
 
@@ -186,6 +198,21 @@
 
         .timer-warning {
             color: #dc2626 !important;
+        }
+
+        body.dark {
+            --background-color: #111827;
+            --surface-color: #1f2937;
+            --text-color: #f9fafb;
+            --border-color: #374151;
+        }
+
+        body.dark .question {
+            background: #111827;
+        }
+
+        body.dark .message {
+            background: #312e81;
         }
 
         @media (max-width: 700px) {
@@ -230,6 +257,7 @@
             <a
                 href="settings.html"
                 class="settings-btn"
+                id="settingsBtn"
             >
                 ⚙️ الإعدادات
             </a>
@@ -1289,6 +1317,10 @@ function escapeHTML(value) {
 }
 
 </script>
+
+
+<!-- Global App -->
+<script src="../js/app.js"></script>
 
 </body>
 </html>
