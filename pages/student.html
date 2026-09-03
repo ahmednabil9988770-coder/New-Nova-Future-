@@ -1,437 +1,868 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta
+    name="description"
+    content="لوحة الطالب في منصة Nova Future التعليمية"
+>
 
-    <title>Nova Future - الطالب</title>
+<title>لوحة الطالب - Nova Future</title>
 
-    <style>
+<link rel="stylesheet" href="../css/style.css">
 
-        * {
-            box-sizing: border-box;
+<style>
+    /* ========================================
+       STUDENT DASHBOARD
+    ======================================== */
+
+    body {
+        background:
+            radial-gradient(
+                circle at top right,
+                var(--primary-light),
+                transparent 30%
+            ),
+            var(--bg-color);
+    }
+
+    /* ========================================
+       TOPBAR
+    ======================================== */
+
+    .student-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--surface-color);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .topbar-inner {
+        width: min(100% - 32px, 1200px);
+        min-height: 70px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--text-color);
+        text-decoration: none;
+    }
+
+    .brand-icon {
+        width: 43px;
+        height: 43px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--primary-color);
+        color: white;
+        font-size: 21px;
+        box-shadow: 0 7px 18px rgba(37, 99, 235, 0.2);
+    }
+
+    .brand-name {
+        font-size: 20px;
+        font-weight: 900;
+    }
+
+    .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .topbar-btn {
+        min-height: 40px;
+        padding: 9px 13px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .topbar-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .profile-btn {
+        background: var(--primary-light);
+        color: var(--primary-color);
+    }
+
+    .settings-btn {
+        background: var(--surface-soft);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+    }
+
+    .logout-btn {
+        border: 0;
+        background: var(--danger-color);
+        color: white;
+        cursor: pointer;
+    }
+
+    /* ========================================
+       PAGE CONTAINER
+    ======================================== */
+
+    .student-container {
+        width: min(100% - 32px, 1200px);
+        margin: 32px auto 50px;
+    }
+
+    /* ========================================
+       WELCOME
+    ======================================== */
+
+    .welcome-card {
+        position: relative;
+        overflow: hidden;
+        padding: 32px;
+        margin-bottom: 22px;
+        background:
+            linear-gradient(
+                135deg,
+                var(--primary-color),
+                var(--primary-dark)
+            );
+        color: white;
+        border-radius: 22px;
+        box-shadow: 0 14px 35px rgba(37, 99, 235, 0.2);
+    }
+
+    .welcome-card::before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        left: -70px;
+        bottom: -90px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .welcome-card::after {
+        content: "";
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        right: 40%;
+        top: -80px;
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .welcome-label {
+        display: inline-flex;
+        padding: 6px 11px;
+        margin-bottom: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .welcome-card h1 {
+        margin: 0 0 8px;
+        font-size: clamp(25px, 4vw, 34px);
+    }
+
+    .welcome-card p {
+        margin: 0;
+        opacity: 0.9;
+        line-height: 1.8;
+    }
+
+    /* ========================================
+       STATS
+    ======================================== */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        box-shadow: var(--shadow-sm);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 13px;
+        border-radius: 11px;
+        background: var(--primary-light);
+        font-size: 20px;
+    }
+
+    .stat-number {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--primary-color);
+        font-size: 29px;
+        font-weight: 900;
+    }
+
+    .stat-label {
+        color: var(--text-muted);
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* ========================================
+       SECTIONS
+    ======================================== */
+
+    .dashboard-section {
+        margin-bottom: 22px;
+        padding: 24px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .section-subtitle {
+        margin: 4px 0 0;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    /* ========================================
+       DATA CARDS
+    ======================================== */
+
+    .data-card {
+        margin-top: 12px;
+        padding: 18px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 13px;
+        transition:
+            border-color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .data-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+    }
+
+    .data-card h3 {
+        margin-top: 0;
+        margin-bottom: 9px;
+    }
+
+    .data-card p {
+        margin: 7px 0;
+        line-height: 1.8;
+        color: var(--text-muted);
+    }
+
+    .data-card p strong {
+        color: var(--text-color);
+    }
+
+    .empty-state {
+        padding: 25px 15px;
+        text-align: center;
+        color: var(--text-muted);
+        background: var(--surface-soft);
+        border: 1px dashed var(--border-color);
+        border-radius: 12px;
+    }
+
+    /* ========================================
+       EXAMS
+    ======================================== */
+
+    .exam-card {
+        border-right: 5px solid var(--primary-color);
+    }
+
+    .exam-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 13px 0;
+    }
+
+    .exam-meta-item {
+        padding: 7px 10px;
+        border-radius: 8px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border-color);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .exam-time {
+        margin: 13px 0;
+        padding: 12px 14px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        line-height: 1.9;
+        font-size: 14px;
+    }
+
+    .exam-status {
+        margin: 12px 0;
+        font-weight: 800;
+    }
+
+    .exam-not-started {
+        color: var(--warning-color);
+    }
+
+    .exam-ended {
+        color: var(--danger-color);
+    }
+
+    .exam-available {
+        color: var(--success-color);
+    }
+
+    .exam-action {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 7px;
+        border: 0;
+        border-radius: 10px;
+        background: var(--primary-color);
+        color: white;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+            background 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .exam-action:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+
+    .exam-action:disabled {
+        background: var(--border-color);
+        color: var(--text-muted);
+        cursor: not-allowed;
+    }
+
+    /* ========================================
+       STUDY DUA
+    ======================================== */
+
+    .study-dua {
+        margin: 15px 0;
+        padding: 16px;
+        background: var(--primary-light);
+        border: 1px solid var(--primary-color);
+        border-right: 5px solid var(--primary-color);
+        border-radius: 12px;
+        text-align: center;
+        line-height: 1.9;
+    }
+
+    .study-dua-title {
+        margin-bottom: 6px;
+        font-weight: 800;
+    }
+
+    .study-dua-text {
+        font-size: 16px;
+    }
+
+    /* ========================================
+       EXAM SOLVING
+    ======================================== */
+
+    .exam-solving {
+        border-top: 4px solid var(--primary-color);
+    }
+
+    .exam-solving-header {
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 18px;
+    }
+
+    .exam-solving-header h2 {
+        margin: 0 0 7px;
+    }
+
+    .exam-solving-header p {
+        margin: 0;
+        color: var(--text-muted);
+        line-height: 1.8;
+    }
+
+    .timer-box {
+        position: sticky;
+        top: 85px;
+        z-index: 10;
+        margin: 0 0 22px;
+        padding: 17px;
+        background: var(--warning-bg);
+        border: 2px solid var(--warning-color);
+        border-radius: 14px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .timer-label {
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    #examTimer {
+        direction: ltr;
+        font-size: 34px;
+        font-weight: 900;
+        color: var(--warning-color);
+        letter-spacing: 1px;
+    }
+
+    .timer-warning {
+        color: var(--danger-color) !important;
+        animation: timerPulse 1s infinite;
+    }
+
+    @keyframes timerPulse {
+        50% {
+            opacity: 0.55;
+        }
+    }
+
+    /* ========================================
+       QUESTIONS
+    ======================================== */
+
+    .question {
+        margin: 16px 0;
+        padding: 19px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border-color);
+        border-radius: 13px;
+    }
+
+    .question-title {
+        display: block;
+        margin-bottom: 13px;
+        line-height: 1.8;
+    }
+
+    .option {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        margin: 9px 0;
+        padding: 12px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 9px;
+        cursor: pointer;
+        line-height: 1.7;
+        transition:
+            border-color 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .option:hover {
+        border-color: var(--primary-color);
+        background: var(--primary-light);
+    }
+
+    .option input {
+        width: auto;
+        margin-top: 4px;
+        accent-color: var(--primary-color);
+    }
+
+    .submit-exam-btn {
+        width: 100%;
+        min-height: 50px;
+        margin-top: 15px;
+        border: 0;
+        border-radius: 11px;
+        background: var(--primary-color);
+        color: white;
+        font-size: 16px;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .submit-exam-btn:hover:not(:disabled) {
+        background: var(--primary-dark);
+    }
+
+    .submit-exam-btn:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+
+    /* ========================================
+       MESSAGES
+    ======================================== */
+
+    .exam-message {
+        margin-top: 16px;
+        padding: 15px;
+        background: var(--success-bg);
+        border: 1px solid var(--success-color);
+        border-radius: 11px;
+        color: var(--success-color);
+        line-height: 1.8;
+        font-weight: 700;
+    }
+
+    .page-message {
+        margin-bottom: 20px;
+        padding: 14px;
+        border-radius: 11px;
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-color);
+        color: var(--danger-color);
+        line-height: 1.8;
+    }
+
+    /* ========================================
+       MOTIVATION
+    ======================================== */
+
+    .motivation-box {
+        margin-top: 14px;
+        padding: 15px;
+        background: var(--success-bg);
+        border: 1px solid var(--success-color);
+        border-right: 5px solid var(--success-color);
+        border-radius: 11px;
+        text-align: center;
+        line-height: 1.8;
+    }
+
+    .motivation-title {
+        margin-bottom: 5px;
+        color: var(--success-color);
+        font-weight: 900;
+    }
+
+    .motivation-text {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    /* ========================================
+       RESULTS
+    ======================================== */
+
+    .result-card {
+        border-right: 5px solid var(--success-color);
+    }
+
+    .result-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin: 12px 0;
+    }
+
+    .result-badge {
+        padding: 7px 11px;
+        border-radius: 8px;
+        background: var(--success-bg);
+        color: var(--success-color);
+        font-weight: 800;
+        font-size: 14px;
+    }
+
+    .wrong-answers {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .wrong-title {
+        margin-bottom: 12px;
+        color: var(--danger-color);
+        font-weight: 900;
+    }
+
+    .wrong-question {
+        margin-top: 11px;
+        padding: 14px;
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-color);
+        border-right: 4px solid var(--danger-color);
+        border-radius: 10px;
+    }
+
+    .wrong-question p {
+        margin: 7px 0;
+        line-height: 1.8;
+    }
+
+    .student-answer {
+        color: var(--danger-color);
+        font-weight: 800;
+    }
+
+    .correct-answer {
+        color: var(--success-color);
+        font-weight: 800;
+    }
+
+    .no-wrong-answers {
+        margin-top: 14px;
+        padding: 12px;
+        background: var(--success-bg);
+        border: 1px solid var(--success-color);
+        color: var(--success-color);
+        border-radius: 9px;
+        font-weight: 800;
+    }
+
+    /* ========================================
+       DARK MODE
+    ======================================== */
+
+    body.dark .welcome-card {
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    body.dark .option:hover {
+        background: rgba(37, 99, 235, 0.12);
+    }
+
+    /* ========================================
+       RESPONSIVE
+    ======================================== */
+
+    @media (max-width: 900px) {
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --background-color: #f4f7fb;
-            --surface-color: #ffffff;
-            --text-color: #222;
-            --border-color: #e5e7eb;
-        }
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: var(--background-color);
-            color: var(--text-color);
-            transition:
-                background-color 0.2s ease,
-                color 0.2s ease;
-        }
+    @media (max-width: 650px) {
 
-        .topbar {
-            background: var(--primary-dark);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
+        .topbar-inner {
+            width: min(100% - 22px, 1200px);
+            min-height: auto;
+            padding: 12px 0;
+            align-items: flex-start;
+            flex-direction: column;
         }
 
         .topbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        button,
-        .profile-btn,
-        .settings-btn {
-            border: none;
-            border-radius: 8px;
-            padding: 10px 16px;
-            cursor: pointer;
-            background: var(--primary-color);
-            color: white;
-            font-size: 15px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .profile-btn {
-            background: #374151;
-        }
-
-        .settings-btn {
-            background: var(--primary-color);
-        }
-
-        .logout {
-            background: #dc2626;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 25px auto;
-            padding: 0 15px;
-        }
-
-        .welcome {
-            background: var(--surface-color);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.08);
-        }
-
-        .welcome h1 {
-            margin-top: 0;
-        }
-
-        .stats {
+            width: 100%;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(3, 1fr);
         }
 
-        .stat {
-            background: var(--surface-color);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 3px 12px rgba(0,0,0,.07);
+        .topbar-btn {
+            width: 100%;
+            padding: 9px 6px;
+            font-size: 12px;
         }
 
-        .stat strong {
-            display: block;
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: var(--primary-color);
+        .student-container {
+            width: min(100% - 22px, 1200px);
+            margin-top: 20px;
         }
 
-        .section {
-            background: var(--surface-color);
-            padding: 20px;
+        .welcome-card {
+            padding: 24px 20px;
+            border-radius: 17px;
+        }
+
+        .dashboard-section {
+            padding: 18px 15px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 12px rgba(0,0,0,.07);
         }
 
-        .card {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-        }
-
-        .exam-card {
-            border-right: 5px solid var(--primary-color);
-        }
-
-        .result-card {
-            border-right: 5px solid #16a34a;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .question {
-            margin: 20px 0;
-            padding: 15px;
-            background: var(--background-color);
-            border-radius: 10px;
-        }
-
-        .option {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-        }
-
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            background: #eef2ff;
+        .section-heading {
+            align-items: flex-start;
         }
 
         .timer-box {
-            background: #fff7ed;
-            border: 2px solid #f97316;
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0 20px;
-            text-align: center;
-        }
-
-        .timer-label {
-            font-size: 16px;
-            margin-bottom: 5px;
-            font-weight: bold;
+            top: 10px;
         }
 
         #examTimer {
-            font-size: 32px;
-            font-weight: bold;
-            color: #ea580c;
-            direction: ltr;
+            font-size: 30px;
         }
 
-        .timer-warning {
-            color: #dc2626 !important;
+    }
+
+    @media (max-width: 430px) {
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
         }
 
-        /* =========================
-           EXAM AVAILABILITY
-        ========================= */
-
-        .exam-time {
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-            margin: 12px 0;
-            line-height: 1.8;
+        .stat-card {
+            padding: 15px 12px;
         }
 
-        .exam-status {
-            font-weight: bold;
-            margin: 10px 0;
+        .stat-number {
+            font-size: 25px;
         }
 
-        .exam-not-started {
-            color: #d97706;
+        .stat-label {
+            font-size: 12px;
         }
 
-        .exam-ended {
-            color: #dc2626;
-        }
-
-        .exam-available {
-            color: #15803d;
-        }
-
-        /* =========================
-           STUDY DUA
-        ========================= */
-
-        .study-dua {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-right: 5px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            line-height: 1.9;
-            text-align: center;
-        }
-
-        .study-dua-title {
-            font-weight: bold;
+        .stat-icon {
+            width: 37px;
+            height: 37px;
             font-size: 17px;
-            margin-bottom: 8px;
         }
 
-        .study-dua-text {
-            font-size: 16px;
+        .topbar-actions {
+            grid-template-columns: 1fr;
         }
 
-        body.dark .study-dua {
-            background: #172554;
-            border-color: #1e40af;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
         }
 
-        /* =========================
-           MOTIVATION
-        ========================= */
+    }
+</style>
 
-        .motivation-box {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-right: 5px solid #16a34a;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            text-align: center;
-            line-height: 1.8;
-        }
+</head><body><!-- ========================================
+     TOPBAR
+======================================== -->
 
-        .motivation-title {
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #15803d;
-        }
+<header class="student-topbar">
 
-        .motivation-text {
-            font-size: 17px;
-            font-weight: bold;
-        }
+    <div class="topbar-inner">
 
-        body.dark .motivation-box {
-            background: #052e16;
-            border-color: #166534;
-        }
+        <a href="../index.html" class="brand">
 
-        /* =========================
-           WRONG ANSWERS
-        ========================= */
+            <span class="brand-icon">
+                🚀
+            </span>
 
-        .wrong-answers {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
+            <span class="brand-name">
+                Nova Future
+            </span>
 
-        .wrong-title {
-            color: #dc2626;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
+        </a>
 
-        .wrong-question {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-right: 5px solid #dc2626;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 12px;
-        }
-
-        .wrong-question p {
-            margin: 8px 0;
-            line-height: 1.7;
-        }
-
-        .student-answer {
-            color: #dc2626;
-            font-weight: bold;
-        }
-
-        .correct-answer {
-            color: #15803d;
-            font-weight: bold;
-        }
-
-        .no-wrong-answers {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #15803d;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        body.dark {
-            --background-color: #111827;
-            --surface-color: #1f2937;
-            --text-color: #f9fafb;
-            --border-color: #374151;
-        }
-
-        body.dark .question {
-            background: #111827;
-        }
-
-        body.dark .message {
-            background: #312e81;
-        }
-
-        body.dark .wrong-question {
-            background: #450a0a;
-            border-color: #7f1d1d;
-        }
-
-        body.dark .no-wrong-answers {
-            background: #052e16;
-            border-color: #166534;
-        }
-
-        body.dark .exam-time {
-            background: #111827;
-        }
-
-        @media (max-width: 700px) {
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .topbar {
-                flex-wrap: wrap;
-            }
-
-            .topbar-actions {
-                width: 100%;
-                justify-content: flex-end;
-                flex-wrap: wrap;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-    <div class="topbar">
-
-        <div class="logo">
-            🚀 Nova Future
-        </div>
 
         <div class="topbar-actions">
 
             <a
                 href="profile.html"
-                class="profile-btn"
+                class="topbar-btn profile-btn"
             >
                 👤 الملف الشخصي
             </a>
 
             <a
                 href="settings.html"
-                class="settings-btn"
-                id="settingsBtn"
+                class="topbar-btn settings-btn"
             >
                 ⚙️ الإعدادات
             </a>
 
             <button
-                class="logout"
+                type="button"
+                class="topbar-btn logout-btn"
                 id="logoutBtn"
             >
-                تسجيل الخروج
+                🚪 تسجيل الخروج
             </button>
 
         </div>
 
     </div>
 
+</header>
 
-    <div class="container">
 
-        <div class="welcome">
+<!-- ========================================
+     MAIN
+======================================== -->
+
+<main class="student-container">
+
+    <!-- Welcome -->
+
+    <section class="welcome-card">
+
+        <div class="welcome-content">
+
+            <span class="welcome-label">
+                🎓 لوحة الطالب
+            </span>
 
             <h1>
                 أهلاً بك يا
@@ -440,641 +871,611 @@
             </h1>
 
             <p>
-                مرحباً بك في منصة Nova Future التعليمية.
+                تابع دوراتك ودروسك وامتحاناتك ونتائجك من مكان واحد.
             </p>
 
         </div>
 
+    </section>
 
-        <div class="stats">
 
-            <div class="stat">
-                <strong id="coursesCount">0</strong>
+    <!-- Page Error -->
+
+    <div
+        id="pageMessage"
+        class="page-message hidden"
+        role="alert"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- Statistics -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <span
+                class="stat-number"
+                id="coursesCount"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
                 الدورات
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📖
             </div>
 
-            <div class="stat">
-                <strong id="lessonsCount">0</strong>
+            <span
+                class="stat-number"
+                id="lessonsCount"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
                 الدروس
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📝
             </div>
 
-            <div class="stat">
-                <strong id="examsCount">0</strong>
+            <span
+                class="stat-number"
+                id="examsCount"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
                 الامتحانات
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🏆
             </div>
 
-            <div class="stat">
-                <strong id="resultsCount">0</strong>
+            <span
+                class="stat-number"
+                id="resultsCount"
+            >
+                0
+            </span>
+
+            <span class="stat-label">
                 النتائج
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- Courses -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    📚 الدورات
+                </h2>
+
+                <p class="section-subtitle">
+                    الدورات التعليمية المتاحة لك
+                </p>
+
             </div>
 
         </div>
 
+        <div id="coursesList">
+            جاري تحميل الدورات...
+        </div>
 
-        <div class="section">
+    </section>
 
-            <h2>📚 الدورات</h2>
 
-            <div id="coursesList">
-                جاري التحميل...
+    <!-- Lessons -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    📖 الدروس
+                </h2>
+
+                <p class="section-subtitle">
+                    ابدأ المذاكرة وراجع محتوى الدروس
+                </p>
+
             </div>
 
         </div>
 
+        <div id="lessonsList">
+            جاري تحميل الدروس...
+        </div>
 
-        <div class="section">
+    </section>
 
-            <h2>📖 الدروس</h2>
 
-            <div id="lessonsList">
-                جاري التحميل...
+    <!-- Exams -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    📝 الامتحانات
+                </h2>
+
+                <p class="section-subtitle">
+                    الامتحانات المتاحة ومواعيدها
+                </p>
+
             </div>
 
         </div>
 
-
-        <div class="section">
-
-            <h2>📝 الامتحانات</h2>
-
-            <div id="examsList">
-                جاري التحميل...
-            </div>
-
+        <div id="examsList">
+            جاري تحميل الامتحانات...
         </div>
 
+    </section>
 
-        <div
-            class="section hidden"
-            id="examSection"
-        >
 
-            <h2 id="examTitle"></h2>
+    <!-- Exam Solving -->
+
+    <section
+        class="dashboard-section exam-solving hidden"
+        id="examSection"
+    >
+
+        <div class="exam-solving-header">
+
+            <h2 id="examTitle">
+                الامتحان
+            </h2>
 
             <p id="examDescription"></p>
 
-
-            <div class="timer-box">
-
-                <div class="timer-label">
-                    ⏱️ الوقت المتبقي
-                </div>
-
-                <div id="examTimer">
-                    00:00
-                </div>
-
-            </div>
-
-
-            <div id="questionsContainer"></div>
-
-
-            <button id="submitExamBtn">
-                تسليم الامتحان
-            </button>
-
-
-            <div
-                id="examMessage"
-                class="message hidden"
-            ></div>
-
         </div>
 
 
-        <div class="section">
+        <div class="timer-box">
 
-            <h2>🏆 النتائج</h2>
+            <div class="timer-label">
+                ⏱️ الوقت المتبقي
+            </div>
 
-            <div id="resultsList">
-                جاري التحميل...
+            <div id="examTimer">
+                00:00
             </div>
 
         </div>
 
-    </div>
 
+        <div id="questionsContainer"></div>
+
+
+        <button
+            type="button"
+            id="submitExamBtn"
+            class="submit-exam-btn"
+        >
+            تسليم الامتحان
+        </button>
+
+
+        <div
+            id="examMessage"
+            class="exam-message hidden"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </section>
+
+
+    <!-- Results -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    🏆 النتائج
+                </h2>
+
+                <p class="section-subtitle">
+                    راجع درجاتك والأخطاء في كل امتحان
+                </p>
+
+            </div>
+
+        </div>
+
+        <div id="resultsList">
+            جاري تحميل النتائج...
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ========================================
+     FIREBASE + STUDENT LOGIC
+======================================== -->
 
 <script type="module">
 
-import {
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    import {
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    import {
+        doc,
+        getDoc,
+        collection,
+        getDocs,
+        addDoc,
+        serverTimestamp,
+        query,
+        where
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    import {
+        auth,
+        db
+    } from "../js/firebase-config.js";
 
 
-import {
-    doc,
-    getDoc,
-    collection,
-    getDocs,
-    addDoc,
-    serverTimestamp,
-    query,
-    where
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    /* ========================================
+       STATE
+    ======================================== */
+
+    let currentUser = null;
+    let currentExam = null;
+
+    let examTimerInterval = null;
+    let examTimeRemaining = 0;
+    let examSubmitted = false;
 
 
-import {
-    auth,
-    db
-} from "../js/firebase-config.js";
+    /* ========================================
+       MOTIVATION
+    ======================================== */
 
+    const motivationalSentences = [
 
-let currentUser = null;
-let currentExam = null;
+        "💪 كل خطوة بتقربك من هدفك، كمل وما تستسلمش.",
 
-let examTimerInterval = null;
-let examTimeRemaining = 0;
-let examSubmitted = false;
+        "🌟 تعبك النهارده هو نجاحك بكرة.",
 
+        "🚀 أنت قادر تحقق أكتر مما تتخيل، ثق بنفسك.",
 
-/* =========================
-   MOTIVATIONAL SENTENCES
-========================= */
+        "🔥 الغلط مش نهاية الطريق، الغلط فرصة تتعلم وتتحسن.",
 
-const motivationalSentences = [
+        "🎯 ركز على تقدمك، وكل محاولة بتخليك أقوى.",
 
-    "💪 كل خطوة بتقربك من هدفك، كمل وما تستسلمش.",
+        "🏆 النجاح مش بييجي مرة واحدة، بييجي من الاستمرار.",
 
-    "🌟 تعبك النهارده هو نجاحك بكرة.",
+        "✨ افتخر بنفسك لأنك حاولت وبذلت مجهود.",
 
-    "🚀 أنت قادر تحقق أكتر مما تتخيل، ثق بنفسك.",
+        "📚 كل سؤال جاوبت عليه هو خطوة جديدة في طريق التعلم.",
 
-    "🔥 الغلط مش نهاية الطريق، الغلط فرصة تتعلم وتتحسن.",
+        "💡 اتعلم من نتيجتك، وطوّر نفسك في المحاولة الجاية.",
 
-    "🎯 ركز على تقدمك، وكل محاولة بتخليك أقوى.",
+        "🌱 النجاح محتاج صبر واستمرار، وأنت تقدر تكمل."
 
-    "🏆 النجاح مش بييجي مرة واحدة، بييجي من الاستمرار.",
-
-    "✨ افتخر بنفسك لأنك حاولت وبذلت مجهود.",
-
-    "📚 كل سؤال جاوبت عليه هو خطوة جديدة في طريق التعلم.",
-
-    "💡 اتعلم من نتيجتك، وطوّر نفسك في المحاولة الجاية.",
-
-    "🌱 النجاح محتاج صبر واستمرار، وأنت تقدر تكمل."
-
-];
-
-
-/* =========================
-   STUDY DUA
-========================= */
-
-const studyDua =
-    "رَبِّ زِدْنِي عِلْمًا";
-
-
-/* =========================
-   GET RANDOM MOTIVATION
-========================= */
-
-function getRandomMotivation() {
-
-    const randomIndex =
-        Math.floor(
-            Math.random() *
-            motivationalSentences.length
-        );
-
-
-    return motivationalSentences[
-        randomIndex
     ];
 
-}
+
+    const studyDua =
+        "رَبِّ زِدْنِي عِلْمًا";
 
 
-/* =========================
-   AUTH
-========================= */
+    function getRandomMotivation() {
 
-onAuthStateChanged(auth, async (user) => {
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                motivationalSentences.length
+            );
 
-    if (!user) {
+        return motivationalSentences[randomIndex];
 
-        window.location.href = "login.html";
-
-        return;
     }
 
 
-    currentUser = user;
+    /* ========================================
+       PAGE MESSAGE
+    ======================================== */
 
+    function showPageMessage(text) {
 
-    try {
+        const message =
+            document.getElementById(
+                "pageMessage"
+            );
 
-        const userRef =
-            doc(db, "users", user.uid);
+        message.textContent = text;
 
-
-        const userSnap =
-            await getDoc(userRef);
-
-
-        if (!userSnap.exists()) {
-
-            alert("لم يتم العثور على بيانات الطالب.");
-
-            await signOut(auth);
-
-            window.location.href = "login.html";
-
-            return;
-        }
-
-
-        const userData =
-            userSnap.data();
-
-
-        if (userData.role !== "student") {
-
-            alert("هذا الحساب ليس حساب طالب.");
-
-            await signOut(auth);
-
-            window.location.href = "login.html";
-
-            return;
-        }
-
-
-        document.getElementById("studentName").textContent =
-            userData.name || "الطالب";
-
-
-        await loadCourses();
-        await loadLessons();
-        await loadExams();
-        await loadResults();
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "حدث خطأ أثناء تحميل بيانات الطالب:\n\n" +
-            error.code +
-            "\n\n" +
-            error.message
+        message.classList.remove(
+            "hidden"
         );
 
     }
 
-});
 
+    /* ========================================
+       AUTH
+    ======================================== */
 
-/* =========================
-   LOGOUT
-========================= */
+    onAuthStateChanged(
+        auth,
+        async (user) => {
 
-document
-    .getElementById("logoutBtn")
-    .addEventListener("click", async () => {
+            if (!user) {
 
-        stopExamTimer();
+                window.location.href =
+                    "login.html";
 
-        await signOut(auth);
+                return;
 
-        window.location.href = "login.html";
+            }
 
-    });
 
+            currentUser = user;
 
-/* =========================
-   COURSES
-========================= */
 
-async function loadCourses() {
+            try {
 
-    const container =
-        document.getElementById("coursesList");
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
 
 
-    const snapshot =
-        await getDocs(
-            collection(db, "courses")
-        );
+                const userSnap =
+                    await getDoc(
+                        userRef
+                    );
 
 
-    container.innerHTML = "";
+                if (!userSnap.exists()) {
 
+                    showPageMessage(
+                        "لم يتم العثور على بيانات الطالب. سيتم تسجيل خروجك."
+                    );
 
-    let count = 0;
+                    await signOut(auth);
 
+                    setTimeout(
+                        () => {
+                            window.location.href =
+                                "login.html";
+                        },
+                        1200
+                    );
 
-    snapshot.forEach((docSnap) => {
+                    return;
 
-        const course =
-            docSnap.data();
+                }
 
 
-        count++;
+                const userData =
+                    userSnap.data();
 
 
-        const div =
-            document.createElement("div");
+                if (
+                    userData.role !==
+                    "student"
+                ) {
 
+                    showPageMessage(
+                        "هذا الحساب ليس حساب طالب. سيتم تسجيل خروجك."
+                    );
 
-        div.className = "card";
+                    await signOut(auth);
 
+                    setTimeout(
+                        () => {
+                            window.location.href =
+                                "login.html";
+                        },
+                        1200
+                    );
 
-        div.innerHTML = `
+                    return;
 
-            <h3>
-                ${escapeHTML(
-                    course.title || "بدون عنوان"
-                )}
-            </h3>
+                }
 
-            <p>
-                ${escapeHTML(
-                    course.description || ""
-                )}
-            </p>
 
-        `;
+                document.getElementById(
+                    "studentName"
+                ).textContent =
+                    userData.name ||
+                    "الطالب";
 
 
-        container.appendChild(div);
+                await loadCourses();
+                await loadLessons();
+                await loadExams();
+                await loadResults();
 
-    });
 
+            } catch (error) {
 
-    if (count === 0) {
+                console.error(
+                    "STUDENT PAGE ERROR:",
+                    error
+                );
 
-        container.innerHTML =
-            "<p>لا توجد دورات حالياً.</p>";
+                showPageMessage(
+                    "حدث خطأ أثناء تحميل البيانات. حاول تحديث الصفحة مرة أخرى."
+                );
 
-    }
-
-
-    document.getElementById("coursesCount").textContent =
-        count;
-
-}
-
-
-/* =========================
-   LESSONS
-========================= */
-
-async function loadLessons() {
-
-    const container =
-        document.getElementById("lessonsList");
-
-
-    const snapshot =
-        await getDocs(
-            collection(db, "lessons")
-        );
-
-
-    container.innerHTML = "";
-
-
-    let count = 0;
-
-
-    snapshot.forEach((docSnap) => {
-
-        const lesson =
-            docSnap.data();
-
-
-        count++;
-
-
-        const div =
-            document.createElement("div");
-
-
-        div.className = "card";
-
-
-        div.innerHTML = `
-
-            <h3>
-                ${escapeHTML(
-                    lesson.title || "درس بدون عنوان"
-                )}
-            </h3>
-
-            <p>
-                <strong>الدورة:</strong>
-                ${escapeHTML(
-                    lesson.courseName || ""
-                )}
-            </p>
-
-            <p>
-                ${escapeHTML(
-                    lesson.content || ""
-                )}
-            </p>
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
-
-
-    if (count === 0) {
-
-        container.innerHTML =
-            "<p>لا توجد دروس حالياً.</p>";
-
-    }
-
-
-    document.getElementById("lessonsCount").textContent =
-        count;
-
-}
-
-
-/* =========================
-   EXAM AVAILABILITY
-========================= */
-
-function getExamAvailabilityStatus(exam) {
-
-    if (!exam.startAt || !exam.endAt) {
-
-        return {
-            status: "available"
-        };
-
-    }
-
-
-    try {
-
-        const start =
-            exam.startAt.toDate();
-
-        const end =
-            exam.endAt.toDate();
-
-        const now =
-            new Date();
-
-
-        if (now < start) {
-
-            return {
-                status: "not-started",
-                start: start,
-                end: end
-            };
+            }
 
         }
+    );
 
 
-        if (now > end) {
+    /* ========================================
+       LOGOUT
+    ======================================== */
 
-            return {
-                status: "ended",
-                start: start,
-                end: end
-            };
+    document
+        .getElementById("logoutBtn")
+        .addEventListener(
+            "click",
+            async () => {
 
-        }
+                stopExamTimer();
 
+                try {
 
-        return {
-            status: "available",
-            start: start,
-            end: end
-        };
+                    await signOut(auth);
 
+                    window.location.href =
+                        "login.html";
 
-    } catch (error) {
+                } catch (error) {
 
-        console.error(
-            "EXAM TIME ERROR:",
-            error
-        );
+                    console.error(
+                        "LOGOUT ERROR:",
+                        error
+                    );
 
-        return {
-            status: "available"
-        };
+                    showPageMessage(
+                        "حدث خطأ أثناء تسجيل الخروج. حاول مرة أخرى."
+                    );
 
-    }
+                }
 
-}
-
-
-/* =========================
-   FORMAT DATE
-========================= */
-
-function formatExamDate(date) {
-
-    if (!date) {
-
-        return "غير محدد";
-
-    }
-
-
-    try {
-
-        return date.toLocaleString(
-            "ar-EG",
-            {
-                dateStyle: "medium",
-                timeStyle: "short"
             }
         );
 
-    } catch (error) {
 
-        return "غير محدد";
+    /* ========================================
+       COURSES
+    ======================================== */
 
-    }
+    async function loadCourses() {
 
-}
-
-
-/* =========================
-   EXAMS
-========================= */
-
-async function loadExams() {
-
-    const container =
-        document.getElementById("examsList");
+        const container =
+            document.getElementById(
+                "coursesList"
+            );
 
 
-    const snapshot =
-        await getDocs(
-            collection(db, "exams")
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "courses"
+                )
+            );
+
+
+        container.innerHTML = "";
+
+
+        let count = 0;
+
+
+        snapshot.forEach(
+            (docSnap) => {
+
+                const course =
+                    docSnap.data();
+
+
+                count++;
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "data-card";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ${escapeHTML(
+                            course.title ||
+                            "بدون عنوان"
+                        )}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            course.description ||
+                            "لا يوجد وصف لهذه الدورة."
+                        )}
+                    </p>
+
+                `;
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
         );
 
 
-    container.innerHTML = "";
+        if (count === 0) {
 
+            container.innerHTML = `
 
-    let count = 0;
-
-
-    snapshot.forEach((docSnap) => {
-
-        const exam =
-            docSnap.data();
-
-
-        count++;
-
-
-        const availability =
-            getExamAvailabilityStatus(exam);
-
-
-        const div =
-            document.createElement("div");
-
-
-        div.className =
-            "card exam-card";
-
-
-        let availabilityHTML = "";
-
-        let buttonHTML = "";
-
-
-        if (
-            availability.start &&
-            availability.end
-        ) {
-
-            availabilityHTML = `
-
-                <div class="exam-time">
-
-                    <div>
-                        📅 <strong>يبدأ:</strong>
-                        ${formatExamDate(
-                            availability.start
-                        )}
-                    </div>
-
-                    <div>
-                        ⏰ <strong>ينتهي:</strong>
-                        ${formatExamDate(
-                            availability.end
-                        )}
-                    </div>
-
+                <div class="empty-state">
+                    📚 لا توجد دورات حالياً.
                 </div>
 
             `;
@@ -1082,637 +1483,847 @@ async function loadExams() {
         }
 
 
-        if (availability.status === "not-started") {
+        document.getElementById(
+            "coursesCount"
+        ).textContent =
+            count;
 
-            buttonHTML = `
+    }
 
-                <div class="exam-status exam-not-started">
-                    ⏳ لم يبدأ الامتحان بعد
+
+    /* ========================================
+       LESSONS
+    ======================================== */
+
+    async function loadLessons() {
+
+        const container =
+            document.getElementById(
+                "lessonsList"
+            );
+
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "lessons"
+                )
+            );
+
+
+        container.innerHTML = "";
+
+
+        let count = 0;
+
+
+        snapshot.forEach(
+            (docSnap) => {
+
+                const lesson =
+                    docSnap.data();
+
+
+                count++;
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "data-card";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ${escapeHTML(
+                            lesson.title ||
+                            "درس بدون عنوان"
+                        )}
+                    </h3>
+
+                    <p>
+                        <strong>
+                            الدورة:
+                        </strong>
+
+                        ${escapeHTML(
+                            lesson.courseName ||
+                            "غير محددة"
+                        )}
+                    </p>
+
+                    <p>
+                        ${escapeHTML(
+                            lesson.content ||
+                            "لا يوجد محتوى لهذا الدرس."
+                        )}
+                    </p>
+
+                `;
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+        if (count === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty-state">
+                    📖 لا توجد دروس حالياً.
                 </div>
-
-                <div class="study-dua">
-
-                    <div class="study-dua-title">
-                        🤲 دعاء قبل المذاكرة
-                    </div>
-
-                    <div class="study-dua-text">
-                        ${escapeHTML(studyDua)}
-                    </div>
-
-                </div>
-
-                <button disabled>
-                    الامتحان لم يبدأ
-                </button>
 
             `;
 
-        } else if (
-            availability.status === "ended"
+        }
+
+
+        document.getElementById(
+            "lessonsCount"
+        ).textContent =
+            count;
+
+    }
+
+
+    /* ========================================
+       EXAM AVAILABILITY
+    ======================================== */
+
+    function getExamAvailabilityStatus(
+        exam
+    ) {
+
+        if (
+            !exam.startAt ||
+            !exam.endAt
         ) {
 
-            buttonHTML = `
+            return {
+                status: "available"
+            };
 
-                <div class="exam-status exam-ended">
-                    ❌ انتهى وقت الامتحان
+        }
+
+
+        try {
+
+            const start =
+                exam.startAt.toDate();
+
+            const end =
+                exam.endAt.toDate();
+
+            const now =
+                new Date();
+
+
+            if (now < start) {
+
+                return {
+                    status: "not-started",
+                    start: start,
+                    end: end
+                };
+
+            }
+
+
+            if (now > end) {
+
+                return {
+                    status: "ended",
+                    start: start,
+                    end: end
+                };
+
+            }
+
+
+            return {
+                status: "available",
+                start: start,
+                end: end
+            };
+
+
+        } catch (error) {
+
+            console.error(
+                "EXAM TIME ERROR:",
+                error
+            );
+
+            return {
+                status: "available"
+            };
+
+        }
+
+    }
+
+
+    /* ========================================
+       FORMAT DATE
+    ======================================== */
+
+    function formatExamDate(
+        date
+    ) {
+
+        if (!date) {
+
+            return "غير محدد";
+
+        }
+
+
+        try {
+
+            return date.toLocaleString(
+                "ar-EG",
+                {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                }
+            );
+
+        } catch (error) {
+
+            return "غير محدد";
+
+        }
+
+    }
+
+
+    /* ========================================
+       EXAMS
+    ======================================== */
+
+    async function loadExams() {
+
+        const container =
+            document.getElementById(
+                "examsList"
+            );
+
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "exams"
+                )
+            );
+
+
+        container.innerHTML = "";
+
+
+        let count = 0;
+
+
+        snapshot.forEach(
+            (docSnap) => {
+
+                const exam =
+                    docSnap.data();
+
+
+                count++;
+
+
+                const availability =
+                    getExamAvailabilityStatus(
+                        exam
+                    );
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "data-card exam-card";
+
+
+                let availabilityHTML =
+                    "";
+
+
+                let buttonHTML =
+                    "";
+
+
+                if (
+                    availability.start &&
+                    availability.end
+                ) {
+
+                    availabilityHTML = `
+
+                        <div class="exam-time">
+
+                            <div>
+                                📅
+                                <strong>
+                                    يبدأ:
+                                </strong>
+
+                                ${formatExamDate(
+                                    availability.start
+                                )}
+
+                            </div>
+
+                            <div>
+                                ⏰
+                                <strong>
+                                    ينتهي:
+                                </strong>
+
+                                ${formatExamDate(
+                                    availability.end
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                if (
+                    availability.status ===
+                    "not-started"
+                ) {
+
+                    buttonHTML = `
+
+                        <div class="exam-status exam-not-started">
+                            ⏳ لم يبدأ الامتحان بعد
+                        </div>
+
+                        <div class="study-dua">
+
+                            <div class="study-dua-title">
+                                🤲 دعاء قبل المذاكرة
+                            </div>
+
+                            <div class="study-dua-text">
+                                ${escapeHTML(
+                                    studyDua
+                                )}
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="exam-action"
+                            disabled
+                        >
+                            الامتحان لم يبدأ
+                        </button>
+
+                    `;
+
+                }
+                else if (
+                    availability.status ===
+                    "ended"
+                ) {
+
+                    buttonHTML = `
+
+                        <div class="exam-status exam-ended">
+                            ❌ انتهى وقت الامتحان
+                        </div>
+
+                        <button
+                            type="button"
+                            class="exam-action"
+                            disabled
+                        >
+                            انتهى الامتحان
+                        </button>
+
+                    `;
+
+                }
+                else {
+
+                    buttonHTML = `
+
+                        <div class="exam-status exam-available">
+                            ✅ الامتحان متاح الآن
+                        </div>
+
+                        <div class="study-dua">
+
+                            <div class="study-dua-title">
+                                🤲 دعاء قبل الامتحان
+                            </div>
+
+                            <div class="study-dua-text">
+                                ${escapeHTML(
+                                    studyDua
+                                )}
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="exam-action"
+                        >
+                            🚀 ابدأ الامتحان
+                        </button>
+
+                    `;
+
+                }
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ${escapeHTML(
+                            exam.title ||
+                            "امتحان"
+                        )}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            exam.description ||
+                            "لا يوجد وصف لهذا الامتحان."
+                        )}
+                    </p>
+
+                    <div class="exam-meta">
+
+                        <span class="exam-meta-item">
+                            📝
+                            ${(exam.questions || []).length}
+                            سؤال
+                        </span>
+
+                        <span class="exam-meta-item">
+                            ⏱️
+                            ${Number(
+                                exam.duration ||
+                                0
+                            )}
+                            دقيقة
+                        </span>
+
+                    </div>
+
+                    ${availabilityHTML}
+
+                    ${buttonHTML}
+
+                `;
+
+
+                const button =
+                    div.querySelector(
+                        ".exam-action"
+                    );
+
+
+                if (
+                    availability.status ===
+                        "available" &&
+                    button
+                ) {
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            startExam({
+                                id:
+                                    docSnap.id,
+
+                                ...exam
+                            });
+
+                        }
+                    );
+
+                }
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+        if (count === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty-state">
+                    📝 لا توجد امتحانات حالياً.
                 </div>
 
-                <button disabled>
-                    انتهى الامتحان
-                </button>
-
             `;
+
+        }
+
+
+        document.getElementById(
+            "examsCount"
+        ).textContent =
+            count;
+
+    }
+
+
+    /* ========================================
+       START EXAM
+    ======================================== */
+
+    function startExam(exam) {
+
+        const availability =
+            getExamAvailabilityStatus(
+                exam
+            );
+
+
+        if (
+            availability.status ===
+            "not-started"
+        ) {
+
+            showExamMessage(
+                "لم يبدأ وقت هذا الامتحان بعد ⏳"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            availability.status ===
+            "ended"
+        ) {
+
+            showExamMessage(
+                "انتهى وقت هذا الامتحان ❌"
+            );
+
+            return;
+
+        }
+
+
+        stopExamTimer();
+
+        currentExam =
+            exam;
+
+        examSubmitted =
+            false;
+
+
+        const examSection =
+            document.getElementById(
+                "examSection"
+            );
+
+
+        examSection.classList.remove(
+            "hidden"
+        );
+
+
+        document.getElementById(
+            "examTitle"
+        ).textContent =
+            exam.title ||
+            "الامتحان";
+
+
+        document.getElementById(
+            "examDescription"
+        ).textContent =
+            exam.description ||
+            "";
+
+
+        const container =
+            document.getElementById(
+                "questionsContainer"
+            );
+
+
+        container.innerHTML =
+            "";
+
+
+        const questions =
+            exam.questions ||
+            [];
+
+
+        questions.forEach(
+            (question, index) => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "question";
+
+
+                let optionsHTML =
+                    "";
+
+
+                (
+                    question.options ||
+                    []
+                ).forEach(
+                    (
+                        option,
+                        optionIndex
+                    ) => {
+
+                        optionsHTML += `
+
+                            <label class="option">
+
+                                <input
+                                    type="radio"
+                                    name="question_${index}"
+                                    value="${optionIndex}"
+                                >
+
+                                <span>
+                                    ${escapeHTML(
+                                        option
+                                    )}
+                                </span>
+
+                            </label>
+
+                        `;
+
+                    }
+                );
+
+
+                div.innerHTML = `
+
+                    <strong class="question-title">
+
+                        ${index + 1}.
+                        ${escapeHTML(
+                            question.question ||
+                            ""
+                        )}
+
+                    </strong>
+
+                    ${optionsHTML}
+
+                `;
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
+        );
+
+
+        const submitButton =
+            document.getElementById(
+                "submitExamBtn"
+            );
+
+
+        submitButton.disabled =
+            false;
+
+        submitButton.textContent =
+            "تسليم الامتحان";
+
+
+        const examMessage =
+            document.getElementById(
+                "examMessage"
+            );
+
+
+        examMessage.classList.add(
+            "hidden"
+        );
+
+
+        const duration =
+            Number(
+                exam.duration ||
+                0
+            );
+
+
+        if (duration > 0) {
+
+            examTimeRemaining =
+                duration * 60;
+
+            updateTimerDisplay();
+
+
+            examTimerInterval =
+                setInterval(
+                    () => {
+
+                        examTimeRemaining--;
+
+                        updateTimerDisplay();
+
+
+                        if (
+                            examTimeRemaining <=
+                            0
+                        ) {
+
+                            stopExamTimer();
+
+                            autoSubmitExam();
+
+                        }
+
+                    },
+                    1000
+                );
 
         } else {
 
-            buttonHTML = `
-
-                <div class="exam-status exam-available">
-                    ✅ الامتحان متاح الآن
-                </div>
-
-                <div class="study-dua">
-
-                    <div class="study-dua-title">
-                        🤲 دعاء قبل الامتحان
-                    </div>
-
-                    <div class="study-dua-text">
-                        ${escapeHTML(studyDua)}
-                    </div>
-
-                </div>
-
-                <button>
-                    ابدأ الامتحان
-                </button>
-
-            `;
+            document.getElementById(
+                "examTimer"
+            ).textContent =
+                "بدون وقت محدد";
 
         }
 
 
-        div.innerHTML = `
+        examSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
 
-            <h3>
-                ${escapeHTML(
-                    exam.title || "امتحان"
-                )}
-            </h3>
-
-            <p>
-                ${escapeHTML(
-                    exam.description || ""
-                )}
-            </p>
-
-            <p>
-                عدد الأسئلة:
-                ${(exam.questions || []).length}
-            </p>
-
-            <p>
-                مدة الحل:
-                ${Number(exam.duration || 0)}
-                دقيقة
-            </p>
-
-            ${availabilityHTML}
-
-            ${buttonHTML}
-
-        `;
+    }
 
 
-        const button =
-            div.querySelector("button");
+    /* ========================================
+       TIMER
+    ======================================== */
+
+    function updateTimerDisplay() {
+
+        const timer =
+            document.getElementById(
+                "examTimer"
+            );
+
+
+        const minutes =
+            Math.floor(
+                examTimeRemaining /
+                60
+            );
+
+
+        const seconds =
+            examTimeRemaining %
+            60;
+
+
+        timer.textContent =
+            String(minutes)
+                .padStart(2, "0") +
+            ":" +
+            String(seconds)
+                .padStart(2, "0");
 
 
         if (
-            availability.status === "available" &&
-            button
+            examTimeRemaining <=
+            60
         ) {
 
-            button.addEventListener(
-                "click",
-                () => {
+            timer.classList.add(
+                "timer-warning"
+            );
 
-                    startExam({
+        } else {
 
-                        id: docSnap.id,
-
-                        ...exam
-
-                    });
-
-                }
+            timer.classList.remove(
+                "timer-warning"
             );
 
         }
 
-
-        container.appendChild(div);
-
-    });
-
-
-    if (count === 0) {
-
-        container.innerHTML =
-            "<p>لا توجد امتحانات حالياً.</p>";
-
     }
 
 
-    document.getElementById("examsCount").textContent =
-        count;
-
-}
-
-
-/* =========================
-   START EXAM
-========================= */
-
-function startExam(exam) {
-
-    const availability =
-        getExamAvailabilityStatus(exam);
-
-
-    if (
-        availability.status ===
-        "not-started"
-    ) {
-
-        alert(
-            "لم يبدأ وقت هذا الامتحان بعد ⏳"
-        );
-
-        return;
-
-    }
-
-
-    if (
-        availability.status ===
-        "ended"
-    ) {
-
-        alert(
-            "انتهى وقت هذا الامتحان ❌"
-        );
-
-        return;
-
-    }
-
-
-    stopExamTimer();
-
-    currentExam = exam;
-
-    examSubmitted = false;
-
-
-    document
-        .getElementById("examSection")
-        .classList.remove("hidden");
-
-
-    document.getElementById("examTitle").textContent =
-        exam.title || "الامتحان";
-
-
-    document.getElementById("examDescription").textContent =
-        exam.description || "";
-
-
-    const container =
-        document.getElementById(
-            "questionsContainer"
-        );
-
-
-    container.innerHTML = "";
-
-
-    const questions =
-        exam.questions || [];
-
-
-    questions.forEach((question, index) => {
-
-        const div =
-            document.createElement("div");
-
-
-        div.className =
-            "question";
-
-
-        let optionsHTML = "";
-
-
-        (question.options || [])
-            .forEach((option, optionIndex) => {
-
-                optionsHTML += `
-
-                    <label class="option">
-
-                        <input
-                            type="radio"
-                            name="question_${index}"
-                            value="${optionIndex}"
-                        >
-
-                        ${escapeHTML(option)}
-
-                    </label>
-
-                `;
-
-            });
-
-
-        div.innerHTML = `
-
-            <strong>
-                ${index + 1}.
-                ${escapeHTML(
-                    question.question || ""
-                )}
-            </strong>
-
-            ${optionsHTML}
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
-
-
-    const submitButton =
-        document.getElementById(
-            "submitExamBtn"
-        );
-
-
-    submitButton.disabled = false;
-
-    submitButton.textContent =
-        "تسليم الامتحان";
-
-
-    document
-        .getElementById("examMessage")
-        .classList.add("hidden");
-
-
-    const duration =
-        Number(exam.duration || 0);
-
-
-    if (duration > 0) {
-
-        examTimeRemaining =
-            duration * 60;
-
-        updateTimerDisplay();
-
-
-        examTimerInterval =
-            setInterval(() => {
-
-                examTimeRemaining--;
-
-                updateTimerDisplay();
-
-
-                if (
-                    examTimeRemaining <= 0
-                ) {
-
-                    stopExamTimer();
-
-                    autoSubmitExam();
-
-                }
-
-            }, 1000);
-
-    } else {
-
-        document
-            .getElementById("examTimer")
-            .textContent =
-                "بدون وقت محدد";
-
-    }
-
-
-    document
-        .getElementById("examSection")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-}
-
-
-/* =========================
-   TIMER DISPLAY
-========================= */
-
-function updateTimerDisplay() {
-
-    const timer =
-        document.getElementById(
-            "examTimer"
-        );
-
-
-    const minutes =
-        Math.floor(
-            examTimeRemaining / 60
-        );
-
-
-    const seconds =
-        examTimeRemaining % 60;
-
-
-    timer.textContent =
-        String(minutes).padStart(2, "0") +
-        ":" +
-        String(seconds).padStart(2, "0");
-
-
-    if (
-        examTimeRemaining <= 60
-    ) {
-
-        timer.classList.add(
-            "timer-warning"
-        );
-
-    } else {
-
-        timer.classList.remove(
-            "timer-warning"
-        );
-
-    }
-
-}
-
-
-/* =========================
-   STOP TIMER
-========================= */
-
-function stopExamTimer() {
-
-    if (
-        examTimerInterval !== null
-    ) {
-
-        clearInterval(
-            examTimerInterval
-        );
-
-        examTimerInterval = null;
-
-    }
-
-}
-
-
-/* =========================
-   AUTO SUBMIT
-========================= */
-
-async function autoSubmitExam() {
-
-    if (examSubmitted) {
-
-        return;
-
-    }
-
-
-    const message =
-        document.getElementById(
-            "examMessage"
-        );
-
-
-    message.classList.remove(
-        "hidden"
-    );
-
-
-    message.textContent =
-        "⏰ انتهى وقت الامتحان، جاري تسليم الإجابات تلقائيًا...";
-
-
-    await submitExam(true);
-
-}
-
-
-/* =========================
-   SUBMIT EXAM
-========================= */
-
-document
-    .getElementById("submitExamBtn")
-    .addEventListener(
-        "click",
-        () => {
-
-            submitExam(false);
+    function stopExamTimer() {
+
+        if (
+            examTimerInterval !==
+            null
+        ) {
+
+            clearInterval(
+                examTimerInterval
+            );
+
+            examTimerInterval =
+                null;
 
         }
-    );
-
-
-async function submitExam(
-    isAutoSubmit = false
-) {
-
-    if (!currentExam) {
-
-        alert(
-            "اختر امتحان أولاً."
-        );
-
-        return;
 
     }
 
 
-    if (examSubmitted) {
+    /* ========================================
+       EXAM MESSAGE
+    ======================================== */
 
-        return;
-
-    }
-
-
-    examSubmitted = true;
-
-    stopExamTimer();
-
-
-    const submitButton =
-        document.getElementById(
-            "submitExamBtn"
-        );
-
-
-    submitButton.disabled = true;
-
-
-    const questions =
-        currentExam.questions || [];
-
-
-    let score = 0;
-
-    const wrongAnswers = [];
-
-
-    questions.forEach(
-        (question, index) => {
-
-            const selected =
-                document.querySelector(
-                    `input[name="question_${index}"]:checked`
-                );
-
-
-            const selectedIndex =
-                selected
-                    ? Number(
-                        selected.value
-                    )
-                    : null;
-
-
-            const correctIndex =
-                Number(
-                    question.correctAnswer
-                );
-
-
-            if (
-                selectedIndex ===
-                correctIndex
-            ) {
-
-                score++;
-
-            } else {
-
-                wrongAnswers.push({
-
-                    question:
-                        question.question ||
-                        "",
-
-                    studentAnswer:
-                        selectedIndex !==
-                        null
-                            ? (
-                                question.options &&
-                                question.options[
-                                    selectedIndex
-                                ]
-                                    ? question.options[
-                                        selectedIndex
-                                    ]
-                                    : "إجابة غير معروفة"
-                            )
-                            : "لم يتم اختيار إجابة",
-
-                    correctAnswer:
-                        question.options &&
-                        question.options[
-                            correctIndex
-                        ]
-                            ? question.options[
-                                correctIndex
-                            ]
-                            : "إجابة غير معروفة"
-
-                });
-
-            }
-
-        }
-    );
-
-
-    const total =
-        questions.length;
-
-
-    const percentage =
-        total > 0
-            ? Math.round(
-                (score / total) * 100
-            )
-            : 0;
-
-
-    const resultData = {
-
-        studentId:
-            currentUser.uid,
-
-        studentName:
-            document.getElementById(
-                "studentName"
-            ).textContent,
-
-        examId:
-            currentExam.id,
-
-        examTitle:
-            currentExam.title,
-
-        score:
-            score,
-
-        total:
-            total,
-
-        percentage:
-            percentage,
-
-        wrongAnswers:
-            wrongAnswers,
-
-        createdAt:
-            serverTimestamp()
-
-    };
-
-
-    try {
-
-        await addDoc(
-            collection(
-                db,
-                "results"
-            ),
-            resultData
-        );
-
+    function showExamMessage(
+        text
+    ) {
 
         const message =
             document.getElementById(
@@ -1720,310 +2331,561 @@ async function submitExam(
             );
 
 
+        message.textContent =
+            text;
+
+
         message.classList.remove(
             "hidden"
         );
 
-
-        const motivation =
-            getRandomMotivation();
+    }
 
 
-        if (isAutoSubmit) {
+    /* ========================================
+       AUTO SUBMIT
+    ======================================== */
 
-            message.innerHTML = `
+    async function autoSubmitExam() {
 
-                ⏰ انتهى الوقت وتم تسليم الامتحان تلقائيًا.
-                النتيجة: ${score}/${total} (${percentage}%)
+        if (examSubmitted) {
 
-                <div class="motivation-box">
-
-                    <div class="motivation-title">
-                        🌟 رسالة تشجيعية
-                    </div>
-
-                    <div class="motivation-text">
-                        ${escapeHTML(
-                            motivation
-                        )}
-                    </div>
-
-                </div>
-
-            `;
-
-        } else {
-
-            message.innerHTML = `
-
-                تم تسليم الامتحان بنجاح 🎉
-                النتيجة: ${score}/${total} (${percentage}%)
-
-                <div class="motivation-box">
-
-                    <div class="motivation-title">
-                        🌟 رسالة تشجيعية
-                    </div>
-
-                    <div class="motivation-text">
-                        ${escapeHTML(
-                            motivation
-                        )}
-                    </div>
-
-                </div>
-
-            `;
+            return;
 
         }
+
+
+        showExamMessage(
+            "⏰ انتهى وقت الامتحان، جاري تسليم الإجابات تلقائيًا..."
+        );
+
+
+        await submitExam(
+            true
+        );
+
+    }
+
+
+    /* ========================================
+       SUBMIT
+    ======================================== */
+
+    document
+        .getElementById(
+            "submitExamBtn"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                submitExam(
+                    false
+                );
+
+            }
+        );
+
+
+    async function submitExam(
+        isAutoSubmit = false
+    ) {
+
+        if (!currentExam) {
+
+            showExamMessage(
+                "اختر امتحان أولاً."
+            );
+
+            return;
+
+        }
+
+
+        if (examSubmitted) {
+
+            return;
+
+        }
+
+
+        examSubmitted =
+            true;
+
+
+        stopExamTimer();
+
+
+        const submitButton =
+            document.getElementById(
+                "submitExamBtn"
+            );
+
+
+        submitButton.disabled =
+            true;
 
 
         submitButton.textContent =
-            "تم تسليم الامتحان ✅";
+            "جاري حفظ النتيجة...";
 
 
-        await loadResults();
+        const questions =
+            currentExam.questions ||
+            [];
 
 
-    } catch (error) {
+        let score = 0;
 
-        console.error(
-            "RESULT ERROR:",
-            error
+        const wrongAnswers = [];
+
+
+        questions.forEach(
+            (
+                question,
+                index
+            ) => {
+
+                const selected =
+                    document.querySelector(
+                        `input[name="question_${index}"]:checked`
+                    );
+
+
+                const selectedIndex =
+                    selected
+                        ? Number(
+                            selected.value
+                        )
+                        : null;
+
+
+                const correctIndex =
+                    Number(
+                        question.correctAnswer
+                    );
+
+
+                if (
+                    selectedIndex ===
+                    correctIndex
+                ) {
+
+                    score++;
+
+                } else {
+
+                    wrongAnswers.push({
+
+                        question:
+                            question.question ||
+                            "",
+
+                        studentAnswer:
+                            selectedIndex !==
+                            null
+                                ? (
+                                    question.options &&
+                                    question.options[
+                                        selectedIndex
+                                    ]
+                                        ? question.options[
+                                            selectedIndex
+                                        ]
+                                        : "إجابة غير معروفة"
+                                )
+                                : "لم يتم اختيار إجابة",
+
+                        correctAnswer:
+                            question.options &&
+                            question.options[
+                                correctIndex
+                            ]
+                                ? question.options[
+                                    correctIndex
+                                ]
+                                : "إجابة غير معروفة"
+
+                    });
+
+                }
+
+            }
         );
 
 
-        examSubmitted = false;
-
-        submitButton.disabled = false;
-
-
-        alert(
-            "خطأ أثناء حفظ النتيجة:\n\n" +
-            error.code +
-            "\n\n" +
-            error.message
-        );
-
-    }
-
-}
+        const total =
+            questions.length;
 
 
-/* =========================
-   RESULTS
-========================= */
-
-async function loadResults() {
-
-    const container =
-        document.getElementById(
-            "resultsList"
-        );
-
-
-    const resultsQuery =
-        query(
-            collection(
-                db,
-                "results"
-            ),
-            where(
-                "studentId",
-                "==",
-                currentUser.uid
-            )
-        );
+        const percentage =
+            total > 0
+                ? Math.round(
+                    (
+                        score /
+                        total
+                    ) *
+                    100
+                )
+                : 0;
 
 
-    const snapshot =
-        await getDocs(
-            resultsQuery
-        );
+        const resultData = {
+
+            studentId:
+                currentUser.uid,
+
+            studentName:
+                document.getElementById(
+                    "studentName"
+                ).textContent,
+
+            examId:
+                currentExam.id,
+
+            examTitle:
+                currentExam.title,
+
+            score:
+                score,
+
+            total:
+                total,
+
+            percentage:
+                percentage,
+
+            wrongAnswers:
+                wrongAnswers,
+
+            createdAt:
+                serverTimestamp()
+
+        };
 
 
-    container.innerHTML = "";
+        try {
+
+            await addDoc(
+                collection(
+                    db,
+                    "results"
+                ),
+                resultData
+            );
 
 
-    let count = 0;
+            const motivation =
+                getRandomMotivation();
 
 
-    snapshot.forEach(
-        (docSnap) => {
-
-            const result =
-                docSnap.data();
-
-
-            count++;
-
-
-            const div =
-                document.createElement(
-                    "div"
+            const message =
+                document.getElementById(
+                    "examMessage"
                 );
 
 
-            div.className =
-                "card result-card";
+            message.classList.remove(
+                "hidden"
+            );
 
 
-            let wrongAnswersHTML =
-                "";
+            message.innerHTML = `
 
+                <div>
+                    ${
+                        isAutoSubmit
+                            ? "⏰ انتهى الوقت وتم تسليم الامتحان تلقائيًا."
+                            : "🎉 تم تسليم الامتحان بنجاح."
+                    }
+                </div>
 
-            if (
-                Array.isArray(
-                    result.wrongAnswers
-                ) &&
-                result.wrongAnswers.length >
-                    0
-            ) {
-
-                wrongAnswersHTML = `
-
-                    <div class="wrong-answers">
-
-                        <div class="wrong-title">
-                            ❌ الأسئلة التي أخطأت فيها
-                        </div>
-
-                        ${result.wrongAnswers
-                            .map(
-                                (
-                                    wrong,
-                                    index
-                                ) => `
-
-                                    <div class="wrong-question">
-
-                                        <p>
-                                            <strong>
-                                                ${index + 1}.
-                                                ${escapeHTML(
-                                                    wrong.question ||
-                                                    ""
-                                                )}
-                                            </strong>
-                                        </p>
-
-                                        <p>
-                                            إجابتك:
-                                            <span class="student-answer">
-                                                ${escapeHTML(
-                                                    wrong.studentAnswer ||
-                                                    "لم يتم اختيار إجابة"
-                                                )}
-                                            </span>
-                                        </p>
-
-                                        <p>
-                                            الإجابة الصحيحة:
-                                            <span class="correct-answer">
-                                                ${escapeHTML(
-                                                    wrong.correctAnswer ||
-                                                    "غير معروفة"
-                                                )}
-                                            </span>
-                                        </p>
-
-                                    </div>
-
-                                `
-                            )
-                            .join("")}
-
-                    </div>
-
-                `;
-
-            } else {
-
-                wrongAnswersHTML = `
-
-                    <div class="no-wrong-answers">
-                        🎉 ممتاز! لم تخطئ في أي سؤال في هذا الامتحان.
-                    </div>
-
-                `;
-
-            }
-
-
-            div.innerHTML = `
-
-                <h3>
-                    ${escapeHTML(
-                        result.examTitle ||
-                        "امتحان"
-                    )}
-                </h3>
-
-                <p>
+                <div>
                     النتيجة:
-                    ${result.score || 0}/${result.total || 0}
-                </p>
+                    ${score}/${total}
+                    (${percentage}%)
+                </div>
 
-                <p>
-                    النسبة:
-                    ${result.percentage || 0}%
-                </p>
+                <div class="motivation-box">
 
-                ${wrongAnswersHTML}
+                    <div class="motivation-title">
+                        🌟 رسالة تشجيعية
+                    </div>
+
+                    <div class="motivation-text">
+                        ${escapeHTML(
+                            motivation
+                        )}
+                    </div>
+
+                </div>
 
             `;
 
 
-            container.appendChild(
-                div
+            submitButton.textContent =
+                "تم تسليم الامتحان ✅";
+
+
+            await loadResults();
+
+
+        } catch (error) {
+
+            console.error(
+                "RESULT ERROR:",
+                error
+            );
+
+
+            examSubmitted =
+                false;
+
+
+            submitButton.disabled =
+                false;
+
+
+            submitButton.textContent =
+                "تسليم الامتحان";
+
+
+            showExamMessage(
+                "حدث خطأ أثناء حفظ النتيجة. حاول مرة أخرى."
             );
 
         }
-    );
-
-
-    if (count === 0) {
-
-        container.innerHTML =
-            "<p>لا توجد نتائج حتى الآن.</p>";
 
     }
 
 
-    document.getElementById(
-        "resultsCount"
-    ).textContent =
-        count;
+    /* ========================================
+       RESULTS
+    ======================================== */
 
-}
+    async function loadResults() {
+
+        const container =
+            document.getElementById(
+                "resultsList"
+            );
 
 
-/* =========================
-   SECURITY HELPER
-========================= */
+        const resultsQuery =
+            query(
+                collection(
+                    db,
+                    "results"
+                ),
+                where(
+                    "studentId",
+                    "==",
+                    currentUser.uid
+                )
+            );
 
-function escapeHTML(value) {
 
-    const div =
-        document.createElement(
-            "div"
+        const snapshot =
+            await getDocs(
+                resultsQuery
+            );
+
+
+        container.innerHTML =
+            "";
+
+
+        let count = 0;
+
+
+        snapshot.forEach(
+            (docSnap) => {
+
+                const result =
+                    docSnap.data();
+
+
+                count++;
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "data-card result-card";
+
+
+                let wrongAnswersHTML =
+                    "";
+
+
+                if (
+                    Array.isArray(
+                        result.wrongAnswers
+                    ) &&
+                    result.wrongAnswers.length >
+                        0
+                ) {
+
+                    wrongAnswersHTML = `
+
+                        <div class="wrong-answers">
+
+                            <div class="wrong-title">
+                                ❌ الأسئلة التي أخطأت فيها
+                            </div>
+
+                            ${result.wrongAnswers
+                                .map(
+                                    (
+                                        wrong,
+                                        index
+                                    ) => `
+
+                                        <div class="wrong-question">
+
+                                            <p>
+                                                <strong>
+                                                    ${index + 1}.
+                                                    ${escapeHTML(
+                                                        wrong.question ||
+                                                        ""
+                                                    )}
+                                                </strong>
+                                            </p>
+
+                                            <p>
+                                                إجابتك:
+                                                <span class="student-answer">
+                                                    ${escapeHTML(
+                                                        wrong.studentAnswer ||
+                                                        "لم يتم اختيار إجابة"
+                                                    )}
+                                                </span>
+                                            </p>
+
+                                            <p>
+                                                الإجابة الصحيحة:
+                                                <span class="correct-answer">
+                                                    ${escapeHTML(
+                                                        wrong.correctAnswer ||
+                                                        "غير معروفة"
+                                                    )}
+                                                </span>
+                                            </p>
+
+                                        </div>
+
+                                    `
+                                )
+                                .join("")}
+
+                        </div>
+
+                    `;
+
+                } else {
+
+                    wrongAnswersHTML = `
+
+                        <div class="no-wrong-answers">
+                            🎉 ممتاز! لم تخطئ في أي سؤال في هذا الامتحان.
+                        </div>
+
+                    `;
+
+                }
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        ${escapeHTML(
+                            result.examTitle ||
+                            "امتحان"
+                        )}
+                    </h3>
+
+                    <div class="result-summary">
+
+                        <span class="result-badge">
+                            🎯
+                            ${result.score || 0}/${result.total || 0}
+                        </span>
+
+                        <span class="result-badge">
+                            📊
+                            ${result.percentage || 0}%
+                        </span>
+
+                    </div>
+
+                    ${wrongAnswersHTML}
+
+                `;
+
+
+                container.appendChild(
+                    div
+                );
+
+            }
         );
 
 
-    div.textContent =
-        value == null
-            ? ""
-            : String(value);
+        if (count === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty-state">
+                    🏆 لا توجد نتائج حتى الآن.
+                </div>
+
+            `;
+
+        }
 
 
-    return div.innerHTML;
+        document.getElementById(
+            "resultsCount"
+        ).textContent =
+            count;
 
-}
+    }
+
+
+    /* ========================================
+       SECURITY HELPER
+    ======================================== */
+
+    function escapeHTML(
+        value
+    ) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.textContent =
+            value == null
+                ? ""
+                : String(value);
+
+
+        return div.innerHTML;
+
+    }
 
 </script>
 
 
+<!-- Global Settings -->
+
 <script src="../js/app.js"></script>
 
-</body>
-</html>
+</body></html>
