@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>حساب الطالب | Nova Future</title>
-
-<style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساب الطالب | Nova Future</title><style>
     * {
         box-sizing: border-box;
         margin: 0;
@@ -283,7 +283,6 @@
     }
 
     @media (max-width: 800px) {
-
         .stats {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -302,7 +301,6 @@
     }
 
     @media (max-width: 450px) {
-
         .container {
             padding: 18px 12px 40px;
         }
@@ -321,16 +319,14 @@
     }
 </style>
 
-</head><body><header class="topbar"><div class="logo">
-    Nova <span>Future</span>
-</div>
-
-<button id="logoutBtn" class="logout-btn">
+</head><body><header class="topbar">
+    <div class="logo">
+        Nova <span>Future</span>
+    </div><button id="logoutBtn" class="logout-btn">
     تسجيل الخروج
 </button>
 
 </header><main class="container"><section class="welcome">
-
     <h1>
         أهلاً بك يا <span id="studentName">الطالب</span> 👋
     </h1>
@@ -338,9 +334,7 @@
     <p>
         كمل رحلتك التعليمية وحقق أفضل نتيجة 🚀
     </p>
-
 </section>
-
 
 <section class="stats">
 
@@ -370,7 +364,6 @@
 
 </section>
 
-
 <section class="section">
 
     <div class="section-title">
@@ -384,7 +377,6 @@
     </div>
 
 </section>
-
 
 <section
     id="courseDetailsSection"
@@ -404,7 +396,6 @@
 
 </section>
 
-
 <section class="section">
 
     <div class="section-title">
@@ -420,7 +411,6 @@
     </div>
 
 </section>
-
 
 <section id="examSection" class="section">
 
@@ -440,7 +430,6 @@
     </div>
 
 </section>
-
 
 <section id="resultSection" class="section">
 
@@ -470,7 +459,7 @@
         getDoc,
         collection,
         getDocs,
-        addDoc,
+        setDoc,
         serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
@@ -564,9 +553,7 @@
 
             console.error("Account Error:", error);
 
-            alert(
-                "حدث خطأ أثناء تحميل الحساب."
-            );
+            alert("حدث خطأ أثناء تحميل الحساب.");
 
         }
 
@@ -587,18 +574,15 @@
     async function loadCourses() {
 
         const container =
-            document.getElementById(
-                "coursesContainer"
-            );
+            document.getElementById("coursesContainer");
 
         const snapshot =
             await getDocs(
                 collection(db, "courses")
             );
 
-        document.getElementById(
-            "coursesCount"
-        ).textContent = snapshot.size;
+        document.getElementById("coursesCount").textContent =
+            snapshot.size;
 
         container.innerHTML = "";
 
@@ -666,9 +650,8 @@
                 collection(db, "lessons")
             );
 
-        document.getElementById(
-            "lessonsCount"
-        ).textContent = snapshot.size;
+        document.getElementById("lessonsCount").textContent =
+            snapshot.size;
 
     }
 
@@ -679,18 +662,13 @@
     ) {
 
         const section =
-            document.getElementById(
-                "courseDetailsSection"
-            );
+            document.getElementById("courseDetailsSection");
 
         const container =
-            document.getElementById(
-                "lessonsContainer"
-            );
+            document.getElementById("lessonsContainer");
 
-        document.getElementById(
-            "selectedCourseName"
-        ).textContent = courseName;
+        document.getElementById("selectedCourseName").textContent =
+            courseName;
 
         section.style.display = "block";
 
@@ -759,10 +737,7 @@
 
         } catch (error) {
 
-            console.error(
-                "Show Lessons Error:",
-                error
-            );
+            console.error("Show Lessons Error:", error);
 
             container.innerHTML = `
                 <div class="empty">
@@ -778,18 +753,15 @@
     async function loadExams() {
 
         const container =
-            document.getElementById(
-                "examsContainer"
-            );
+            document.getElementById("examsContainer");
 
         const snapshot =
             await getDocs(
                 collection(db, "exams")
             );
 
-        document.getElementById(
-            "examsCount"
-        ).textContent = snapshot.size;
+        document.getElementById("examsCount").textContent =
+            snapshot.size;
 
         container.innerHTML = "";
 
@@ -865,9 +837,7 @@
             exam.questions.length === 0
         ) {
 
-            alert(
-                "هذا الامتحان لا يحتوي على أسئلة."
-            );
+            alert("هذا الامتحان لا يحتوي على أسئلة.");
 
             return;
         }
@@ -877,15 +847,11 @@
             ...exam
         };
 
-        document.getElementById(
-            "examTitle"
-        ).textContent =
+        document.getElementById("examTitle").textContent =
             exam.title || "الامتحان";
 
         const container =
-            document.getElementById(
-                "questionsContainer"
-            );
+            document.getElementById("questionsContainer");
 
         container.innerHTML = "";
 
@@ -946,18 +912,14 @@
         );
 
 
-        document.getElementById(
-            "examSection"
-        ).style.display = "block";
+        document.getElementById("examSection").style.display =
+            "block";
 
-        document.getElementById(
-            "resultSection"
-        ).style.display = "none";
+        document.getElementById("resultSection").style.display =
+            "none";
 
 
-        document.getElementById(
-            "examSection"
-        ).scrollIntoView({
+        document.getElementById("examSection").scrollIntoView({
             behavior: "smooth"
         });
 
@@ -1008,9 +970,7 @@
 
             if (
                 Number(selected.value) ===
-                Number(
-                    questions[i].correctAnswer
-                )
+                Number(questions[i].correctAnswer)
             ) {
 
                 score++;
@@ -1028,13 +988,22 @@
                 (score / total) * 100
             );
 
-        alert("UID الطالب: " + currentUser.uid);
-
 
         try {
 
-            await addDoc(
-                collection(db, "results"),
+            const resultId =
+                currentUser.uid + "_" + currentExam.id;
+
+            const resultRef =
+                doc(
+                    db,
+                    "results",
+                    resultId
+                );
+
+
+            await setDoc(
+                resultRef,
                 {
                     studentId: currentUser.uid,
 
@@ -1100,7 +1069,7 @@
             );
 
             alert(
-                "خطأ حفظ النتيجة:\n\n" +
+                "فشل حفظ النتيجة في Firebase:\n\n" +
                 error.code +
                 "\n\n" +
                 error.message
