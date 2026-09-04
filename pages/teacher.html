@@ -1,1194 +1,1145 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta
+    name="description"
+    content="لوحة تحكم المدرس في منصة Nova Future التعليمية."
+>
 
-    <meta
-        name="description"
-        content="لوحة تحكم المدرس في منصة Nova Future التعليمية."
-    >
+<title>لوحة المدرس - Nova Future</title>
 
-    <title>لوحة المدرس - Nova Future</title>
+<link rel="stylesheet" href="../css/style.css">
 
-    <link rel="stylesheet" href="../css/style.css">
+<style>
+    .teacher-page {
+        min-height: 100vh;
+    }
 
-    <style>
-        .teacher-page {
-            min-height: 100vh;
+    /* ================================
+       Header
+    ================================= */
+
+    .teacher-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(17, 27, 46, 0.94);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(14px);
+    }
+
+    .teacher-header-inner {
+        width: min(1180px, calc(100% - 32px));
+        min-height: 76px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--text-color);
+    }
+
+    .brand-icon {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: linear-gradient(
+            135deg,
+            var(--primary-light),
+            var(--primary-color)
+        );
+        color: #fff;
+        font-size: 22px;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+    }
+
+    .brand-text strong {
+        display: block;
+        font-size: 18px;
+        color: #fff;
+    }
+
+    .brand-text span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted-color);
+        font-size: 11px;
+        letter-spacing: 0.7px;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .header-link,
+    .logout-btn {
+        min-height: 42px;
+        padding: 9px 14px;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .header-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+        color: var(--text-secondary);
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid var(--border-color);
+    }
+
+    .header-link:hover {
+        color: #fff;
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+    }
+
+    .logout-btn {
+        border: 1px solid rgba(220, 38, 38, 0.35);
+        background: rgba(220, 38, 38, 0.12);
+        color: #fca5a5;
+    }
+
+    .logout-btn:hover {
+        background: #dc2626;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .logout-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* ================================
+       Main
+    ================================= */
+
+    .teacher-dashboard {
+        width: min(1180px, calc(100% - 32px));
+        margin: 28px auto 50px;
+    }
+
+    /* ================================
+       Welcome
+    ================================= */
+
+    .welcome-card {
+        position: relative;
+        overflow: hidden;
+        padding: 32px;
+        margin-bottom: 22px;
+        border-radius: 22px;
+        background:
+            radial-gradient(
+                circle at 85% 20%,
+                rgba(255,255,255,.12),
+                transparent 28%
+            ),
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8,
+                #172554
+            );
+        border: 1px solid rgba(96,165,250,.25);
+        box-shadow: 0 20px 45px rgba(37,99,235,.22);
+    }
+
+    .welcome-card::before,
+    .welcome-card::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .welcome-card::before {
+        width: 240px;
+        height: 240px;
+        left: -100px;
+        top: -130px;
+        background: rgba(255,255,255,.07);
+    }
+
+    .welcome-card::after {
+        width: 180px;
+        height: 180px;
+        right: -80px;
+        bottom: -110px;
+        background: rgba(255,255,255,.06);
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .welcome-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 12px;
+        margin-bottom: 13px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.17);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .welcome-card h1 {
+        margin: 0 0 8px;
+        color: #fff;
+        font-size: clamp(25px, 4vw, 35px);
+        line-height: 1.35;
+    }
+
+    .welcome-card h1 span {
+        color: #fff;
+    }
+
+    .welcome-card p {
+        max-width: 760px;
+        margin: 0;
+        color: rgba(255,255,255,.88);
+        font-size: 14px;
+        line-height: 1.9;
+    }
+
+    /* ================================
+       Sections
+    ================================= */
+
+    .dashboard-section {
+        margin-bottom: 22px;
+    }
+
+    .section-card {
+        padding: 24px;
+        border-radius: 18px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 8px 28px rgba(0,0,0,.18);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .section-icon {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: rgba(37,99,235,.14);
+        border: 1px solid rgba(59,130,246,.18);
+        color: #60a5fa;
+        font-size: 19px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: var(--text-color);
+        font-size: 20px;
+    }
+
+    .section-heading p {
+        margin: 5px 0 0;
+        color: var(--muted-color);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .section-count {
+        min-width: 35px;
+        height: 30px;
+        padding: 0 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: rgba(37,99,235,.15);
+        color: #60a5fa;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    /* ================================
+       Stats
+    ================================= */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+
+    .stat-card {
+        padding: 20px 15px;
+        text-align: center;
+        border-radius: 15px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border-color);
+        transition: .2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(59,130,246,.55);
+        box-shadow: 0 12px 28px rgba(37,99,235,.12);
+    }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 10px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: rgba(37,99,235,.13);
+        font-size: 20px;
+    }
+
+    .stat-card strong {
+        display: block;
+        margin-bottom: 7px;
+        color: #60a5fa;
+        font-size: 29px;
+        line-height: 1;
+    }
+
+    .stat-card span {
+        color: var(--muted-color);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /* ================================
+       Forms
+    ================================= */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 16px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .form-help {
+        margin: 0;
+        color: var(--muted-color);
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 5px;
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .danger-btn {
+        border: 0;
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .primary-btn {
+        min-height: 46px;
+        padding: 11px 18px;
+        border-radius: 10px;
+        background: linear-gradient(
+            135deg,
+            var(--primary-light),
+            var(--primary-color)
+        );
+        color: #fff;
+        font-size: 14px;
+        box-shadow: 0 8px 20px rgba(37,99,235,.2);
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 11px 25px rgba(37,99,235,.3);
+    }
+
+    .secondary-btn {
+        min-height: 42px;
+        padding: 9px 15px;
+        border-radius: 10px;
+        background: rgba(37,99,235,.13);
+        border: 1px solid rgba(59,130,246,.22);
+        color: #60a5fa;
+        font-size: 13px;
+    }
+
+    .secondary-btn:hover {
+        background: var(--primary-color);
+        color: #fff;
+    }
+
+    .danger-btn {
+        min-height: 35px;
+        padding: 7px 12px;
+        border-radius: 9px;
+        background: rgba(220,38,38,.12);
+        border: 1px solid rgba(220,38,38,.2);
+        color: #fca5a5;
+        font-size: 12px;
+    }
+
+    .danger-btn:hover {
+        background: #dc2626;
+        color: #fff;
+    }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled {
+        opacity: .55;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* ================================
+       Messages
+    ================================= */
+
+    .form-message {
+        min-height: 20px;
+        margin: 10px 0 0;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+
+    .success {
+        color: #4ade80;
+    }
+
+    .error {
+        color: #f87171;
+    }
+
+    .info-message {
+        color: #60a5fa;
+    }
+
+    /* ================================
+       Items
+    ================================= */
+
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 12px;
+    }
+
+    .item {
+        padding: 18px;
+        border-radius: 14px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border-color);
+        transition: .2s ease;
+    }
+
+    .item:hover {
+        border-color: rgba(59,130,246,.5);
+        transform: translateY(-1px);
+    }
+
+    .item h4 {
+        margin: 0 0 9px;
+        color: var(--text-color);
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .item p {
+        margin: 7px 0 0;
+        color: var(--muted-color);
+        font-size: 13px;
+        line-height: 1.8;
+        word-break: break-word;
+    }
+
+    .item p strong {
+        color: var(--text-secondary);
+    }
+
+    /* ================================
+       Empty
+    ================================= */
+
+    .empty-state {
+        padding: 30px 18px;
+        text-align: center;
+        border: 1px dashed var(--border-color);
+        border-radius: 14px;
+        background: rgba(15,23,42,.45);
+        color: var(--muted-color);
+    }
+
+    .empty-state-icon {
+        margin-bottom: 8px;
+        font-size: 28px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    /* ================================
+       Exam
+    ================================= */
+
+    .exam-info {
+        margin-top: 13px;
+        padding: 13px;
+        border-radius: 11px;
+        background: rgba(15,23,42,.65);
+        border: 1px solid var(--border-color);
+    }
+
+    .exam-info p {
+        margin: 5px 0;
+    }
+
+    .exam-time-box {
+        margin-top: 14px;
+        padding: 16px;
+        border-radius: 12px;
+        background: rgba(37,99,235,.09);
+        border-right: 4px solid var(--primary-color);
+    }
+
+    .exam-time-box h4 {
+        margin: 0 0 8px;
+        color: var(--text-color);
+        font-size: 14px;
+    }
+
+    .exam-time-box p {
+        margin: 6px 0;
+        color: var(--muted-color);
+        font-size: 13px;
+    }
+
+    .time-label {
+        color: var(--text-secondary);
+        font-weight: 700;
+    }
+
+    /* ================================
+       Question Builder
+    ================================= */
+
+    .question-builder {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(15,23,42,.58);
+        border: 1px solid var(--border-color);
+    }
+
+    .question-builder-header {
+        margin-bottom: 16px;
+    }
+
+    .question-builder-header h4 {
+        margin: 0 0 5px;
+        color: var(--text-color);
+        font-size: 16px;
+    }
+
+    .question-builder-header p {
+        margin: 0;
+        color: var(--muted-color);
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .options-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 14px 0;
+    }
+
+    .option-row {
+        display: grid;
+        grid-template-columns: 30px minmax(0,1fr);
+        align-items: center;
+        gap: 8px;
+    }
+
+    .option-row input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        margin: auto;
+        accent-color: var(--primary-color);
+        cursor: pointer;
+    }
+
+    .questions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 20px 0 10px;
+    }
+
+    .questions-header h4 {
+        margin: 0;
+        color: var(--text-color);
+        font-size: 15px;
+    }
+
+    .questions-badge {
+        min-width: 30px;
+        height: 28px;
+        padding: 0 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: var(--primary-color);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .question-box {
+        margin-top: 10px;
+        padding: 16px;
+        border-radius: 13px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border-color);
+    }
+
+    .question-box-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .question-number {
+        color: #60a5fa;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .question-box p {
+        margin: 7px 0;
+        color: var(--muted-color);
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .question-box .question-text {
+        color: var(--text-color);
+        font-weight: 700;
+    }
+
+    .correct-option {
+        color: #4ade80 !important;
+        font-weight: 700;
+    }
+
+    /* ================================
+       Results
+    ================================= */
+
+    .result-score {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 9px;
+        border-radius: 8px;
+        background: rgba(37,99,235,.13);
+        color: #60a5fa;
+        font-weight: 800;
+    }
+
+    /* ================================
+       Footer
+    ================================= */
+
+    .teacher-footer {
+        padding: 25px 20px 35px;
+        text-align: center;
+        color: var(--muted-color);
+        font-size: 12px;
+    }
+
+    /* ================================
+       Responsive
+    ================================= */
+
+    @media (max-width: 900px) {
+        .stats-grid {
+            grid-template-columns: repeat(2,1fr);
         }
 
-        /* ================================
-           Header
-        ================================= */
-
-        .teacher-header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(17, 27, 46, 0.94);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(14px);
+        .items-grid {
+            grid-template-columns: 1fr;
         }
 
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
+    }
+
+    @media (max-width: 700px) {
         .teacher-header-inner {
-            width: min(1180px, calc(100% - 32px));
-            min-height: 76px;
-            margin: auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            width: calc(100% - 20px);
+            min-height: auto;
+            padding: 12px 0;
+            flex-direction: column;
+            align-items: stretch;
         }
 
         .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-color);
-        }
-
-        .brand-icon {
-            width: 46px;
-            height: 46px;
-            display: grid;
-            place-items: center;
-            border-radius: 14px;
-            background: linear-gradient(
-                135deg,
-                var(--primary-light),
-                var(--primary-color)
-            );
-            color: #fff;
-            font-size: 22px;
-            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
-        }
-
-        .brand-text strong {
-            display: block;
-            font-size: 18px;
-            color: #fff;
-        }
-
-        .brand-text span {
-            display: block;
-            margin-top: 3px;
-            color: var(--muted-color);
-            font-size: 11px;
-            letter-spacing: 0.7px;
+            justify-content: center;
         }
 
         .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
         }
 
         .header-link,
         .logout-btn {
-            min-height: 42px;
-            padding: 9px 14px;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s ease;
+            width: 100%;
+            padding-inline: 7px;
+            font-size: 11px;
         }
-
-        .header-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            text-decoration: none;
-            color: var(--text-secondary);
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid var(--border-color);
-        }
-
-        .header-link:hover {
-            color: #fff;
-            border-color: var(--primary-color);
-            transform: translateY(-1px);
-        }
-
-        .logout-btn {
-            border: 1px solid rgba(220, 38, 38, 0.35);
-            background: rgba(220, 38, 38, 0.12);
-            color: #fca5a5;
-        }
-
-        .logout-btn:hover {
-            background: #dc2626;
-            color: #fff;
-            transform: translateY(-1px);
-        }
-
-        .logout-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ================================
-           Main
-        ================================= */
 
         .teacher-dashboard {
-            width: min(1180px, calc(100% - 32px));
-            margin: 28px auto 50px;
+            width: calc(100% - 20px);
+            margin-top: 15px;
         }
-
-        /* ================================
-           Welcome
-        ================================= */
 
         .welcome-card {
-            position: relative;
-            overflow: hidden;
-            padding: 32px;
-            margin-bottom: 22px;
-            border-radius: 22px;
-            background:
-                radial-gradient(
-                    circle at 85% 20%,
-                    rgba(255,255,255,.12),
-                    transparent 28%
-                ),
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #1d4ed8,
-                    #172554
-                );
-            border: 1px solid rgba(96,165,250,.25);
-            box-shadow: 0 20px 45px rgba(37,99,235,.22);
-        }
-
-        .welcome-card::before,
-        .welcome-card::after {
-            content: "";
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .welcome-card::before {
-            width: 240px;
-            height: 240px;
-            left: -100px;
-            top: -130px;
-            background: rgba(255,255,255,.07);
-        }
-
-        .welcome-card::after {
-            width: 180px;
-            height: 180px;
-            right: -80px;
-            bottom: -110px;
-            background: rgba(255,255,255,.06);
-        }
-
-        .welcome-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 12px;
-            margin-bottom: 13px;
-            border-radius: 999px;
-            background: rgba(255,255,255,.12);
-            border: 1px solid rgba(255,255,255,.17);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .welcome-card h1 {
-            margin: 0 0 8px;
-            color: #fff;
-            font-size: clamp(25px, 4vw, 35px);
-            line-height: 1.35;
-        }
-
-        .welcome-card h1 span {
-            color: #fff;
+            padding: 23px 18px;
+            border-radius: 17px;
         }
 
         .welcome-card p {
-            max-width: 760px;
-            margin: 0;
-            color: rgba(255,255,255,.88);
-            font-size: 14px;
-            line-height: 1.9;
-        }
-
-        /* ================================
-           Sections
-        ================================= */
-
-        .dashboard-section {
-            margin-bottom: 22px;
+            font-size: 13px;
         }
 
         .section-card {
-            padding: 24px;
-            border-radius: 18px;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 28px rgba(0,0,0,.18);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .section-heading {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .section-icon {
-            width: 42px;
-            height: 42px;
-            flex: 0 0 42px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            background: rgba(37,99,235,.14);
-            border: 1px solid rgba(59,130,246,.18);
-            color: #60a5fa;
-            font-size: 19px;
+            padding: 17px;
+            border-radius: 15px;
         }
 
         .section-heading h2 {
-            margin: 0;
-            color: var(--text-color);
-            font-size: 20px;
+            font-size: 17px;
         }
 
         .section-heading p {
-            margin: 5px 0 0;
-            color: var(--muted-color);
-            font-size: 13px;
-            line-height: 1.6;
+            font-size: 12px;
         }
-
-        .section-count {
-            min-width: 35px;
-            height: 30px;
-            padding: 0 9px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 999px;
-            background: rgba(37,99,235,.15);
-            color: #60a5fa;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        /* ================================
-           Stats
-        ================================= */
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
+            gap: 9px;
         }
 
         .stat-card {
-            padding: 20px 15px;
-            text-align: center;
-            border-radius: 15px;
-            background: var(--surface-soft);
-            border: 1px solid var(--border-color);
-            transition: .2s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(59,130,246,.55);
-            box-shadow: 0 12px 28px rgba(37,99,235,.12);
-        }
-
-        .stat-icon {
-            width: 44px;
-            height: 44px;
-            margin: 0 auto 10px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            background: rgba(37,99,235,.13);
-            font-size: 20px;
+            padding: 16px 8px;
         }
 
         .stat-card strong {
-            display: block;
-            margin-bottom: 7px;
-            color: #60a5fa;
-            font-size: 29px;
-            line-height: 1;
+            font-size: 24px;
         }
 
         .stat-card span {
-            color: var(--muted-color);
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 11px;
         }
 
-        /* ================================
-           Forms
-        ================================= */
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0,1fr));
-            gap: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .form-help {
-            margin: 0;
-            color: var(--muted-color);
-            font-size: 12px;
-            line-height: 1.6;
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 17px;
         }
 
         .form-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
+            flex-direction: column;
+            align-items: stretch;
         }
 
         .primary-btn,
-        .secondary-btn,
-        .danger-btn {
-            border: 0;
-            font-family: inherit;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .primary-btn {
-            min-height: 46px;
-            padding: 11px 18px;
-            border-radius: 10px;
-            background: linear-gradient(
-                135deg,
-                var(--primary-light),
-                var(--primary-color)
-            );
-            color: #fff;
-            font-size: 14px;
-            box-shadow: 0 8px 20px rgba(37,99,235,.2);
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 11px 25px rgba(37,99,235,.3);
-        }
-
         .secondary-btn {
-            min-height: 42px;
-            padding: 9px 15px;
-            border-radius: 10px;
-            background: rgba(37,99,235,.13);
-            border: 1px solid rgba(59,130,246,.22);
-            color: #60a5fa;
-            font-size: 13px;
+            width: 100%;
         }
-
-        .secondary-btn:hover {
-            background: var(--primary-color);
-            color: #fff;
-        }
-
-        .danger-btn {
-            min-height: 35px;
-            padding: 7px 12px;
-            border-radius: 9px;
-            background: rgba(220,38,38,.12);
-            border: 1px solid rgba(220,38,38,.2);
-            color: #fca5a5;
-            font-size: 12px;
-        }
-
-        .danger-btn:hover {
-            background: #dc2626;
-            color: #fff;
-        }
-
-        .primary-btn:disabled,
-        .secondary-btn:disabled {
-            opacity: .55;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ================================
-           Messages
-        ================================= */
-
-        .form-message {
-            min-height: 20px;
-            margin: 10px 0 0;
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.6;
-        }
-
-        .success {
-            color: #4ade80;
-        }
-
-        .error {
-            color: #f87171;
-        }
-
-        .info-message {
-            color: #60a5fa;
-        }
-
-        /* ================================
-           Items
-        ================================= */
-
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(2,minmax(0,1fr));
-            gap: 12px;
-        }
-
-        .item {
-            padding: 18px;
-            border-radius: 14px;
-            background: var(--surface-soft);
-            border: 1px solid var(--border-color);
-            transition: .2s ease;
-        }
-
-        .item:hover {
-            border-color: rgba(59,130,246,.5);
-            transform: translateY(-1px);
-        }
-
-        .item h4 {
-            margin: 0 0 9px;
-            color: var(--text-color);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .item p {
-            margin: 7px 0 0;
-            color: var(--muted-color);
-            font-size: 13px;
-            line-height: 1.8;
-            word-break: break-word;
-        }
-
-        .item p strong {
-            color: var(--text-secondary);
-        }
-
-        /* ================================
-           Empty
-        ================================= */
-
-        .empty-state {
-            padding: 30px 18px;
-            text-align: center;
-            border: 1px dashed var(--border-color);
-            border-radius: 14px;
-            background: rgba(15,23,42,.45);
-            color: var(--muted-color);
-        }
-
-        .empty-state-icon {
-            margin-bottom: 8px;
-            font-size: 28px;
-        }
-
-        .empty-state p {
-            margin: 0;
-            line-height: 1.7;
-        }
-
-        /* ================================
-           Exam
-        ================================= */
-
-        .exam-info {
-            margin-top: 13px;
-            padding: 13px;
-            border-radius: 11px;
-            background: rgba(15,23,42,.65);
-            border: 1px solid var(--border-color);
-        }
-
-        .exam-info p {
-            margin: 5px 0;
-        }
-
-        .exam-time-box {
-            margin-top: 14px;
-            padding: 16px;
-            border-radius: 12px;
-            background: rgba(37,99,235,.09);
-            border-right: 4px solid var(--primary-color);
-        }
-
-        .exam-time-box h4 {
-            margin: 0 0 8px;
-            color: var(--text-color);
-            font-size: 14px;
-        }
-
-        .exam-time-box p {
-            margin: 6px 0;
-            color: var(--muted-color);
-            font-size: 13px;
-        }
-
-        .time-label {
-            color: var(--text-secondary);
-            font-weight: 700;
-        }
-
-        /* ================================
-           Question Builder
-        ================================= */
 
         .question-builder {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(15,23,42,.58);
-            border: 1px solid var(--border-color);
+            padding: 14px;
         }
+    }
 
-        .question-builder-header {
-            margin-bottom: 16px;
-        }
-
-        .question-builder-header h4 {
-            margin: 0 0 5px;
-            color: var(--text-color);
+    @media (max-width: 420px) {
+        .brand-text strong {
             font-size: 16px;
         }
 
-        .question-builder-header p {
-            margin: 0;
-            color: var(--muted-color);
-            font-size: 12px;
-            line-height: 1.7;
+        .brand-text span {
+            font-size: 10px;
         }
 
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 14px 0;
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            flex-basis: 40px;
+            font-size: 19px;
         }
 
-        .option-row {
-            display: grid;
-            grid-template-columns: 30px minmax(0,1fr);
-            align-items: center;
-            gap: 8px;
+        .header-actions {
+            grid-template-columns: 1fr 1fr;
         }
 
-        .option-row input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            margin: auto;
-            accent-color: var(--primary-color);
-            cursor: pointer;
+        .logout-btn {
+            grid-column: 1 / -1;
         }
+    }
 
-        .questions-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin: 20px 0 10px;
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            scroll-behavior: auto !important;
+            transition: none !important;
+            animation: none !important;
         }
+    }
+</style>
 
-        .questions-header h4 {
-            margin: 0;
-            color: var(--text-color);
-            font-size: 15px;
-        }
+</head><body><div class="teacher-page"><!-- ================================
+     Header
+================================= -->
 
-        .questions-badge {
-            min-width: 30px;
-            height: 28px;
-            padding: 0 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 999px;
-            background: var(--primary-color);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 800;
-        }
+<header class="teacher-header">
 
-        .question-box {
-            margin-top: 10px;
-            padding: 16px;
-            border-radius: 13px;
-            background: var(--surface-soft);
-            border: 1px solid var(--border-color);
-        }
+    <div class="teacher-header-inner">
 
-        .question-box-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        <a
+            href="../index.html"
+            class="brand"
+            aria-label="العودة إلى الصفحة الرئيسية"
+        >
+            <span class="brand-icon" aria-hidden="true">🚀</span>
 
-        .question-number {
-            color: #60a5fa;
-            font-size: 13px;
-            font-weight: 800;
-        }
+            <span class="brand-text">
+                <strong>Nova Future</strong>
+                <span>LEARN TODAY · SHAPE TOMORROW</span>
+            </span>
+        </a>
 
-        .question-box p {
-            margin: 7px 0;
-            color: var(--muted-color);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .question-box .question-text {
-            color: var(--text-color);
-            font-weight: 700;
-        }
-
-        .correct-option {
-            color: #4ade80 !important;
-            font-weight: 700;
-        }
-
-        /* ================================
-           Results
-        ================================= */
-
-        .result-score {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 9px;
-            border-radius: 8px;
-            background: rgba(37,99,235,.13);
-            color: #60a5fa;
-            font-weight: 800;
-        }
-
-        /* ================================
-           Footer
-        ================================= */
-
-        .teacher-footer {
-            padding: 25px 20px 35px;
-            text-align: center;
-            color: var(--muted-color);
-            font-size: 12px;
-        }
-
-        /* ================================
-           Responsive
-        ================================= */
-
-        @media (max-width: 900px) {
-            .stats-grid {
-                grid-template-columns: repeat(2,1fr);
-            }
-
-            .items-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full {
-                grid-column: auto;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .teacher-header-inner {
-                width: calc(100% - 20px);
-                min-height: auto;
-                padding: 12px 0;
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .brand {
-                justify-content: center;
-            }
-
-            .header-actions {
-                display: grid;
-                grid-template-columns: repeat(3,1fr);
-            }
-
-            .header-link,
-            .logout-btn {
-                width: 100%;
-                padding-inline: 7px;
-                font-size: 11px;
-            }
-
-            .teacher-dashboard {
-                width: calc(100% - 20px);
-                margin-top: 15px;
-            }
-
-            .welcome-card {
-                padding: 23px 18px;
-                border-radius: 17px;
-            }
-
-            .welcome-card p {
-                font-size: 13px;
-            }
-
-            .section-card {
-                padding: 17px;
-                border-radius: 15px;
-            }
-
-            .section-heading h2 {
-                font-size: 17px;
-            }
-
-            .section-heading p {
-                font-size: 12px;
-            }
-
-            .stats-grid {
-                gap: 9px;
-            }
-
-            .stat-card {
-                padding: 16px 8px;
-            }
-
-            .stat-card strong {
-                font-size: 24px;
-            }
-
-            .stat-card span {
-                font-size: 11px;
-            }
-
-            .stat-icon {
-                width: 38px;
-                height: 38px;
-                font-size: 17px;
-            }
-
-            .form-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .primary-btn,
-            .secondary-btn {
-                width: 100%;
-            }
-
-            .question-builder {
-                padding: 14px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .brand-text strong {
-                font-size: 16px;
-            }
-
-            .brand-text span {
-                font-size: 10px;
-            }
-
-            .brand-icon {
-                width: 40px;
-                height: 40px;
-                flex-basis: 40px;
-                font-size: 19px;
-            }
-
-            .header-actions {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .logout-btn {
-                grid-column: 1 / -1;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                transition: none !important;
-                animation: none !important;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="teacher-page">
-
-    <!-- ================================
-         Header
-    ================================= -->
-
-    <header class="teacher-header">
-
-        <div class="teacher-header-inner">
-
-            <a
-                href="../index.html"
-                class="brand"
-                aria-label="العودة إلى الصفحة الرئيسية"
-            >
-                <span class="brand-icon" aria-hidden="true">🚀</span>
-
-                <span class="brand-text">
-                    <strong>Nova Future</strong>
-                    <span>LEARN TODAY · SHAPE TOMORROW</span>
-                </span>
+        <nav
+            class="header-actions"
+            aria-label="روابط لوحة المدرس"
+        >
+            <a href="profile.html" class="header-link">
+                👤 الملف الشخصي
             </a>
 
-            <nav
-                class="header-actions"
-                aria-label="روابط لوحة المدرس"
+            <a href="settings.html" class="header-link">
+                ⚙️ الإعدادات
+            </a>
+
+            <button
+                type="button"
+                class="logout-btn"
+                id="logoutButton"
+                onclick="logoutTeacher()"
             >
-                <a href="profile.html" class="header-link">
-                    👤 الملف الشخصي
-                </a>
+                تسجيل الخروج
+            </button>
+        </nav>
 
-                <a href="settings.html" class="header-link">
-                    ⚙️ الإعدادات
-                </a>
+    </div>
 
-                <button
-                    type="button"
-                    class="logout-btn"
-                    id="logoutButton"
-                    onclick="logoutTeacher()"
-                >
-                    تسجيل الخروج
-                </button>
-            </nav>
+</header>
+
+
+<!-- ================================
+     Main
+================================= -->
+
+<main class="teacher-dashboard">
+
+    <section class="welcome-card">
+
+        <div class="welcome-content">
+
+            <div class="welcome-badge">
+                👨‍🏫 مساحة المدرس
+            </div>
+
+            <h1>
+                أهلاً بك يا
+                <span id="teacherName">...</span>
+                👋
+            </h1>
+
+            <p>
+                من هنا تقدر تدير الكورسات والدروس والامتحانات،
+                وتتابع الطلاب والنتائج من مكان واحد.
+            </p>
 
         </div>
 
-    </header>
+    </section>
+
+
+    <p
+        id="globalMessage"
+        class="form-message"
+        aria-live="polite"
+    ></p>
 
 
     <!-- ================================
-         Main
+         Statistics
     ================================= -->
 
-    <main class="teacher-dashboard">
+    <section class="dashboard-section">
 
-        <section class="welcome-card">
+        <div class="section-card">
 
-            <div class="welcome-content">
+            <div class="section-header">
 
-                <div class="welcome-badge">
-                    👨‍🏫 مساحة المدرس
-                </div>
+                <div class="section-heading">
 
-                <h1>
-                    أهلاً بك يا
-                    <span id="teacherName">...</span>
-                    👋
-                </h1>
+                    <div class="section-icon">📊</div>
 
-                <p>
-                    من هنا تقدر تدير الكورسات والدروس والامتحانات،
-                    وتتابع الطلاب والنتائج من مكان واحد.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <p
-            id="globalMessage"
-            class="form-message"
-            aria-live="polite"
-        ></p>
-
-
-        <!-- ================================
-             Statistics
-        ================================= -->
-
-        <section class="dashboard-section">
-
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📊</div>
-
-                        <div>
-                            <h2>إحصائيات سريعة</h2>
-                            <p>نظرة سريعة على محتوى لوحتك.</p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-                        <div class="stat-icon">👨‍🎓</div>
-
-                        <strong id="studentsCount">0</strong>
-
-                        <span>الطلاب</span>
-                    </div>
-
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📖</div>
-
-                        <strong id="lessonsCount">0</strong>
-
-                        <span>الدروس</span>
-                    </div>
-
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📝</div>
-
-                        <strong id="examsCount">0</strong>
-
-                        <span>الامتحانات</span>
-                    </div>
-
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📊</div>
-
-                        <strong id="resultsCount">0</strong>
-
-                        <span>النتائج</span>
+                    <div>
+                        <h2>إحصائيات سريعة</h2>
+                        <p>نظرة سريعة على محتوى لوحتك.</p>
                     </div>
 
                 </div>
 
             </div>
 
-        </section>
 
+            <div class="stats-grid">
 
-        <!-- ================================
-             Courses
-        ================================= -->
+                <div class="stat-card">
+                    <div class="stat-icon">👨‍🎓</div>
 
-        <section class="dashboard-section">
+                    <strong id="studentsCount">0</strong>
 
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📚</div>
-
-                        <div>
-                            <h2>الكورسات</h2>
-                            <p>الكورسات المتاحة على المنصة.</p>
-                        </div>
-
-                    </div>
-
+                    <span>الطلاب</span>
                 </div>
 
 
-                <div
-                    id="coursesList"
-                    class="items-grid"
-                >
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⏳</div>
-                        <p>جاري تحميل الكورسات...</p>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+
+                    <strong id="lessonsCount">0</strong>
+
+                    <span>الدروس</span>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+
+                    <strong id="examsCount">0</strong>
+
+                    <span>الامتحانات</span>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+
+                    <strong id="resultsCount">0</strong>
+
+                    <span>النتائج</span>
                 </div>
 
             </div>
 
-        </section>
+        </div>
+
+    </section>
 
 
-        <!-- ================================
-             Create Course
-        ================================= -->
+    <!-- ================================
+         Courses
+    ================================= -->
 
-        <section class="dashboard-section">
+    <section class="dashboard-section">
 
-            <div class="section-card">
+        <div class="section-card">
 
-                <div class="section-header">
+            <div class="section-header">
 
-                    <div class="section-heading">
+                <div class="section-heading">
 
-                        <div class="section-icon">➕</div>
+                    <div class="section-icon">📚</div>
 
-                        <div>
-                            <h2>إنشاء كورس جديد</h2>
-                            <p>أضف كورسًا جديدًا للمنصة.</p>
-                        </div>
-
+                    <div>
+                        <h2>الكورسات</h2>
+                        <p>الكورسات المتاحة على المنصة.</p>
                     </div>
 
                 </div>
 
+            </div>
 
-                <form
-                    id="courseForm"
-                    onsubmit="createCourse(event)"
-                >
 
-                    <div class="form-grid">
+            <div
+                id="coursesList"
+                class="items-grid"
+            >
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>جاري تحميل الكورسات...</p>
+                </div>
+            </div>
 
-                        <div class="form-group">
+        </div>
 
-                            <label for="courseTitle">
-                                اسم الكورس
-                            </label>
+    </section>
 
-                            <input
-                                type="text"
-                                id="courseTitle"
-                                placeholder="مثال: الرياضيات للصف الأول"
-                                autocomplete="off"
-                                required
+
+    <!-- ================================
+         Create Course
+    ================================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">➕</div>
+
+                    <div>
+                        <h2>إنشاء كورس جديد</h2>
+                        <p>أضف كورسًا جديدًا للمنصة.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="courseForm"
+                onsubmit="createCourse(event)"
+            >
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="courseTitle">
+                            اسم الكورس
+                        </label>
+
+                        <input
+                            type="text"
+                            id="courseTitle"
+                            placeholder="مثال: الرياضيات للصف الأول"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="courseDescription">
+                            وصف الكورس
+                        </label>
+
+                        <input
+                            type="text"
+                            id="courseDescription"
+                            placeholder="وصف مختصر للكورس"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <div class="form-actions">
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                                id="createCourseBtn"
                             >
+                                إنشاء الكورس 📚
+                            </button>
 
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="courseDescription">
-                                وصف الكورس
-                            </label>
-
-                            <input
-                                type="text"
-                                id="courseDescription"
-                                placeholder="وصف مختصر للكورس"
-                                autocomplete="off"
-                            >
-
-                        </div>
-
-
-                        <div class="form-group full">
-
-                            <div class="form-actions">
-
-                                <button
-                                    type="submit"
-                                    class="primary-btn"
-                                    id="createCourseBtn"
-                                >
-                                    إنشاء الكورس 📚
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <p
-                        id="courseMessage"
-                        class="form-message"
-                        aria-live="polite"
-                    ></p>
-
-                </form>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================
-             Add Lesson
-        ================================= -->
-
-        <section class="dashboard-section">
-
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📖</div>
-
-                        <div>
-                            <h2>إضافة درس جديد</h2>
-                            <p>
-                                أضف درسًا ومحتواه داخل أحد الكورسات.
-                            </p>
                         </div>
 
                     </div>
@@ -1196,550 +1147,513 @@
                 </div>
 
 
-                <form
-                    id="lessonForm"
-                    onsubmit="addLesson(event)"
-                >
+                <p
+                    id="courseMessage"
+                    class="form-message"
+                    aria-live="polite"
+                ></p>
 
-                    <div class="form-grid">
+            </form>
 
-                        <div class="form-group">
+        </div>
 
-                            <label for="lessonCourse">
-                                الكورس
-                            </label>
+    </section>
 
-                            <select id="lessonCourse" required>
-                                <option value="">
-                                    جاري تحميل الكورسات...
-                                </option>
-                            </select>
 
-                        </div>
+    <!-- ================================
+         Add Lesson
+    ================================= -->
 
+    <section class="dashboard-section">
 
-                        <div class="form-group">
+        <div class="section-card">
 
-                            <label for="lessonTitle">
-                                اسم الدرس
-                            </label>
+            <div class="section-header">
 
-                            <input
-                                type="text"
-                                id="lessonTitle"
-                                placeholder="مثال: الدرس الأول"
-                                autocomplete="off"
-                                required
-                            >
+                <div class="section-heading">
 
-                        </div>
+                    <div class="section-icon">📖</div>
 
-
-                        <div class="form-group full">
-
-                            <label for="lessonContent">
-                                محتوى الدرس
-                            </label>
-
-                            <textarea
-                                id="lessonContent"
-                                placeholder="اكتب محتوى الدرس هنا..."
-                                required
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="form-group full">
-
-                            <div class="form-actions">
-
-                                <button
-                                    type="submit"
-                                    class="primary-btn"
-                                    id="addLessonBtn"
-                                >
-                                    إضافة الدرس 📖
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <p
-                        id="lessonMessage"
-                        class="form-message"
-                        aria-live="polite"
-                    ></p>
-
-                </form>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================
-             Lessons
-        ================================= -->
-
-        <section class="dashboard-section">
-
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📖</div>
-
-                        <div>
-                            <h2>الدروس الموجودة</h2>
-                            <p>كل الدروس التي تم إضافتها.</p>
-                        </div>
-
-                    </div>
-
-                    <span
-                        class="section-count"
-                        id="lessonsSectionCount"
-                    >
-                        0
-                    </span>
-
-                </div>
-
-
-                <div
-                    id="lessonsList"
-                    class="items-grid"
-                >
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⏳</div>
-                        <p>جاري تحميل الدروس...</p>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================
-             Students
-        ================================= -->
-
-        <section class="dashboard-section">
-
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">👨‍🎓</div>
-
-                        <div>
-                            <h2>الطلاب</h2>
-                            <p>الطلاب المسجلون في المنصة.</p>
-                        </div>
-
-                    </div>
-
-                    <span
-                        class="section-count"
-                        id="studentsSectionCount"
-                    >
-                        0
-                    </span>
-
-                </div>
-
-
-                <div
-                    id="studentsList"
-                    class="items-grid"
-                >
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⏳</div>
-                        <p>جاري تحميل الطلاب...</p>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================================
-             Create Exam
-        ================================= -->
-
-        <section class="dashboard-section">
-
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📝</div>
-
-                        <div>
-                            <h2>إنشاء امتحان جديد</h2>
-                            <p>
-                                أنشئ الامتحان وحدد مدته ووقت إتاحته وأسئلته.
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <form
-                    id="examForm"
-                    onsubmit="createExam(event)"
-                >
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-
-                            <label for="examTitle">
-                                اسم الامتحان
-                            </label>
-
-                            <input
-                                type="text"
-                                id="examTitle"
-                                placeholder="مثال: امتحان الوحدة الأولى"
-                                autocomplete="off"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="examCourse">
-                                الكورس
-                            </label>
-
-                            <select id="examCourse" required>
-                                <option value="">
-                                    جاري تحميل الكورسات...
-                                </option>
-                            </select>
-
-                        </div>
-
-
-                        <div class="form-group full">
-
-                            <label for="examDescription">
-                                وصف الامتحان
-                            </label>
-
-                            <textarea
-                                id="examDescription"
-                                placeholder="اكتب وصفًا مختصرًا للامتحان..."
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="examDuration">
-                                مدة الحل بالدقائق
-                            </label>
-
-                            <input
-                                type="number"
-                                id="examDuration"
-                                placeholder="مثال: 30"
-                                min="1"
-                                max="300"
-                                required
-                            >
-
-                            <p class="form-help">
-                                مدة الحل من 1 إلى 300 دقيقة.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Exam Availability -->
-
-                    <div class="exam-time-box">
-
-                        <h4>
-                            🕐 تحديد وقت إتاحة الامتحان
-                        </h4>
-
+                    <div>
+                        <h2>إضافة درس جديد</h2>
                         <p>
-                            الطالب يستطيع دخول الامتحان فقط خلال الفترة المحددة هنا.
+                            أضف درسًا ومحتواه داخل أحد الكورسات.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="lessonForm"
+                onsubmit="addLesson(event)"
+            >
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="lessonCourse">
+                            الكورس
+                        </label>
+
+                        <select id="lessonCourse" required>
+                            <option value="">
+                                جاري تحميل الكورسات...
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="lessonTitle">
+                            اسم الدرس
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lessonTitle"
+                            placeholder="مثال: الدرس الأول"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="lessonContent">
+                            محتوى الدرس
+                        </label>
+
+                        <textarea
+                            id="lessonContent"
+                            placeholder="اكتب محتوى الدرس هنا..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <div class="form-actions">
+
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                                id="addLessonBtn"
+                            >
+                                إضافة الدرس 📖
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <p
+                    id="lessonMessage"
+                    class="form-message"
+                    aria-live="polite"
+                ></p>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         Lessons
+    ================================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">📖</div>
+
+                    <div>
+                        <h2>الدروس الموجودة</h2>
+                        <p>كل الدروس التي تم إضافتها.</p>
+                    </div>
+
+                </div>
+
+                <span
+                    class="section-count"
+                    id="lessonsSectionCount"
+                >
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                id="lessonsList"
+                class="items-grid"
+            >
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>جاري تحميل الدروس...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         Students
+    ================================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">👨‍🎓</div>
+
+                    <div>
+                        <h2>الطلاب</h2>
+                        <p>الطلاب المسجلون في المنصة.</p>
+                    </div>
+
+                </div>
+
+                <span
+                    class="section-count"
+                    id="studentsSectionCount"
+                >
+                    0
+                </span>
+
+            </div>
+
+
+            <div
+                id="studentsList"
+                class="items-grid"
+            >
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>جاري تحميل الطلاب...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         Create Exam
+    ================================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">📝</div>
+
+                    <div>
+                        <h2>إنشاء امتحان جديد</h2>
+                        <p>
+                            أنشئ الامتحان وحدد مدته ووقت إتاحته وأسئلته.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="examForm"
+                onsubmit="createExam(event)"
+            >
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="examTitle">
+                            اسم الامتحان
+                        </label>
+
+                        <input
+                            type="text"
+                            id="examTitle"
+                            placeholder="مثال: امتحان الوحدة الأولى"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="examCourse">
+                            الكورس
+                        </label>
+
+                        <select id="examCourse" required>
+                            <option value="">
+                                جاري تحميل الكورسات...
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="examDescription">
+                            وصف الامتحان
+                        </label>
+
+                        <textarea
+                            id="examDescription"
+                            placeholder="اكتب وصفًا مختصرًا للامتحان..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="examDuration">
+                            مدة الحل بالدقائق
+                        </label>
+
+                        <input
+                            type="number"
+                            id="examDuration"
+                            placeholder="مثال: 30"
+                            min="1"
+                            max="300"
+                            required
+                        >
+
+                        <p class="form-help">
+                            مدة الحل من 1 إلى 300 دقيقة.
                         </p>
 
-
-                        <div class="form-grid">
-
-                            <div class="form-group">
-
-                                <label for="examStartAt">
-                                    📅 تاريخ ووقت البداية
-                                </label>
-
-                                <input
-                                    type="datetime-local"
-                                    id="examStartAt"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="examEndAt">
-                                    ⏰ تاريخ ووقت النهاية
-                                </label>
-
-                                <input
-                                    type="datetime-local"
-                                    id="examEndAt"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
                     </div>
 
+                </div>
 
-                    <!-- Question Builder -->
 
-                    <div class="question-builder">
+                <!-- Exam Availability -->
 
-                        <div class="question-builder-header">
+                <div class="exam-time-box">
 
-                            <h4>➕ إضافة سؤال</h4>
+                    <h4>
+                        🕐 تحديد وقت إتاحة الامتحان
+                    </h4>
 
-                            <p>
-                                اكتب السؤال والاختيارات الأربعة، ثم حدد الإجابة الصحيحة.
-                            </p>
+                    <p>
+                        الطالب يستطيع دخول الامتحان فقط خلال الفترة المحددة هنا.
+                    </p>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="examStartAt">
+                                📅 تاريخ ووقت البداية
+                            </label>
+
+                            <input
+                                type="datetime-local"
+                                id="examStartAt"
+                                required
+                            >
 
                         </div>
 
 
                         <div class="form-group">
 
-                            <label for="questionText">
-                                السؤال
+                            <label for="examEndAt">
+                                ⏰ تاريخ ووقت النهاية
                             </label>
 
                             <input
+                                type="datetime-local"
+                                id="examEndAt"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Question Builder -->
+
+                <div class="question-builder">
+
+                    <div class="question-builder-header">
+
+                        <h4>➕ إضافة سؤال</h4>
+
+                        <p>
+                            اكتب السؤال والاختيارات الأربعة، ثم حدد الإجابة الصحيحة.
+                        </p>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="questionText">
+                            السؤال
+                        </label>
+
+                        <input
+                            type="text"
+                            id="questionText"
+                            placeholder="اكتب السؤال هنا..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <div class="options-list">
+
+                        <div class="option-row">
+
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="0"
+                                aria-label="الاختيار الأول هو الإجابة الصحيحة"
+                            >
+
+                            <input
                                 type="text"
-                                id="questionText"
-                                placeholder="اكتب السؤال هنا..."
+                                id="option1"
+                                placeholder="الاختيار الأول"
                                 autocomplete="off"
                             >
 
                         </div>
 
 
-                        <div class="options-list">
+                        <div class="option-row">
 
-                            <div class="option-row">
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="1"
+                                aria-label="الاختيار الثاني هو الإجابة الصحيحة"
+                            >
 
-                                <input
-                                    type="radio"
-                                    name="correctAnswer"
-                                    value="0"
-                                    aria-label="الاختيار الأول هو الإجابة الصحيحة"
-                                >
-
-                                <input
-                                    type="text"
-                                    id="option1"
-                                    placeholder="الاختيار الأول"
-                                    autocomplete="off"
-                                >
-
-                            </div>
-
-
-                            <div class="option-row">
-
-                                <input
-                                    type="radio"
-                                    name="correctAnswer"
-                                    value="1"
-                                    aria-label="الاختيار الثاني هو الإجابة الصحيحة"
-                                >
-
-                                <input
-                                    type="text"
-                                    id="option2"
-                                    placeholder="الاختيار الثاني"
-                                    autocomplete="off"
-                                >
-
-                            </div>
-
-
-                            <div class="option-row">
-
-                                <input
-                                    type="radio"
-                                    name="correctAnswer"
-                                    value="2"
-                                    aria-label="الاختيار الثالث هو الإجابة الصحيحة"
-                                >
-
-                                <input
-                                    type="text"
-                                    id="option3"
-                                    placeholder="الاختيار الثالث"
-                                    autocomplete="off"
-                                >
-
-                            </div>
-
-
-                            <div class="option-row">
-
-                                <input
-                                    type="radio"
-                                    name="correctAnswer"
-                                    value="3"
-                                    aria-label="الاختيار الرابع هو الإجابة الصحيحة"
-                                >
-
-                                <input
-                                    type="text"
-                                    id="option4"
-                                    placeholder="الاختيار الرابع"
-                                    autocomplete="off"
-                                >
-
-                            </div>
+                            <input
+                                type="text"
+                                id="option2"
+                                placeholder="الاختيار الثاني"
+                                autocomplete="off"
+                            >
 
                         </div>
 
 
-                        <button
-                            type="button"
-                            class="secondary-btn"
-                            onclick="addQuestion()"
-                        >
-                            إضافة السؤال ➕
-                        </button>
+                        <div class="option-row">
+
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="2"
+                                aria-label="الاختيار الثالث هو الإجابة الصحيحة"
+                            >
+
+                            <input
+                                type="text"
+                                id="option3"
+                                placeholder="الاختيار الثالث"
+                                autocomplete="off"
+                            >
+
+                        </div>
 
 
-                        <p
-                            id="questionMessage"
-                            class="form-message"
-                            aria-live="polite"
-                        ></p>
+                        <div class="option-row">
 
-                    </div>
+                            <input
+                                type="radio"
+                                name="correctAnswer"
+                                value="3"
+                                aria-label="الاختيار الرابع هو الإجابة الصحيحة"
+                            >
 
-
-                    <!-- Added Questions -->
-
-                    <div class="questions-header">
-
-                        <h4>الأسئلة المضافة</h4>
-
-                        <span
-                            class="questions-badge"
-                            id="questionsCount"
-                        >
-                            0
-                        </span>
-
-                    </div>
-
-
-                    <div id="questionsList">
-
-                        <div class="empty-state">
-
-                            <div class="empty-state-icon">
-                                📝
-                            </div>
-
-                            <p>
-                                لم تتم إضافة أسئلة بعد.
-                            </p>
+                            <input
+                                type="text"
+                                id="option4"
+                                placeholder="الاختيار الرابع"
+                                autocomplete="off"
+                            >
 
                         </div>
 
                     </div>
 
 
-                    <div class="form-actions">
-
-                        <button
-                            type="submit"
-                            class="primary-btn"
-                            id="createExamBtn"
-                        >
-                            إنشاء الامتحان 🎉
-                        </button>
-
-                    </div>
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="addQuestion()"
+                    >
+                        إضافة السؤال ➕
+                    </button>
 
 
                     <p
-                        id="examMessage"
+                        id="questionMessage"
                         class="form-message"
                         aria-live="polite"
                     ></p>
 
-                </form>
-
-            </div>
-
-        </section>
+                </div>
 
 
-        <!-- ================================
-             Exams
-        ================================= -->
+                <!-- Added Questions -->
 
-        <section class="dashboard-section">
+                <div class="questions-header">
 
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📝</div>
-
-                        <div>
-                            <h2>الامتحانات</h2>
-                            <p>
-                                الامتحانات التي تم إنشاؤها على المنصة.
-                            </p>
-                        </div>
-
-                    </div>
+                    <h4>الأسئلة المضافة</h4>
 
                     <span
-                        class="section-count"
-                        id="examsSectionCount"
+                        class="questions-badge"
+                        id="questionsCount"
                     >
                         0
                     </span>
@@ -1747,81 +1661,154 @@
                 </div>
 
 
-                <div
-                    id="examsList"
-                    class="items-grid"
-                >
+                <div id="questionsList">
+
                     <div class="empty-state">
-                        <div class="empty-state-icon">⏳</div>
-                        <p>جاري تحميل الامتحانات...</p>
-                    </div>
-                </div>
 
-            </div>
-
-        </section>
-
-
-        <!-- ================================
-             Results
-        ================================= -->
-
-        <section class="dashboard-section">
-
-            <div class="section-card">
-
-                <div class="section-header">
-
-                    <div class="section-heading">
-
-                        <div class="section-icon">📊</div>
-
-                        <div>
-                            <h2>نتائج الطلاب</h2>
-                            <p>
-                                متابعة درجات ونتائج الطلاب في الامتحانات.
-                            </p>
+                        <div class="empty-state-icon">
+                            📝
                         </div>
 
+                        <p>
+                            لم تتم إضافة أسئلة بعد.
+                        </p>
+
                     </div>
 
-                    <span
-                        class="section-count"
-                        id="resultsSectionCount"
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                        id="createExamBtn"
                     >
-                        0
-                    </span>
+                        إنشاء الامتحان 🎉
+                    </button>
 
                 </div>
 
 
-                <div
-                    id="resultsList"
-                    class="items-grid"
-                >
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⏳</div>
-                        <p>جاري تحميل النتائج...</p>
+                <p
+                    id="examMessage"
+                    class="form-message"
+                    aria-live="polite"
+                ></p>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         Exams
+    ================================= -->
+
+    <section class="dashboard-section">
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">📝</div>
+
+                    <div>
+                        <h2>الامتحانات</h2>
+                        <p>
+                            الامتحانات التي تم إنشاؤها على المنصة.
+                        </p>
                     </div>
+
                 </div>
+
+                <span
+                    class="section-count"
+                    id="examsSectionCount"
+                >
+                    0
+                </span>
 
             </div>
 
-        </section>
 
-    </main>
+            <div
+                id="examsList"
+                class="items-grid"
+            >
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>جاري تحميل الامتحانات...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
 
 
-    <footer class="teacher-footer">
-        <p>
-            © 2026 Nova Future — جميع الحقوق محفوظة.
-        </p>
-    </footer>
+    <!-- ================================
+         Results
+    ================================= -->
 
-</div>
+    <section class="dashboard-section">
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">📊</div>
+
+                    <div>
+                        <h2>نتائج الطلاب</h2>
+                        <p>
+                            متابعة درجات ونتائج الطلاب في الامتحانات.
+                        </p>
+                    </div>
+
+                </div>
+
+                <span
+                    class="section-count"
+                    id="resultsSectionCount"
+                >
+                    0
+                </span>
+
+            </div>
 
 
-<script type="module">
+            <div
+                id="resultsList"
+                class="items-grid"
+            >
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>جاري تحميل النتائج...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="teacher-footer">
+    <p>
+        © 2026 Nova Future — جميع الحقوق محفوظة.
+    </p>
+</footer>
+
+</div><script type="module">
 
     import {
         onAuthStateChanged,
@@ -1844,7 +1831,183 @@
     } from "../js/firebase-config.js";
 
 
+    /* ================================
+       Exam State
+    ================================= */
+
     let examQuestions = [];
+
+    // مفتاح مسودة الامتحان في المتصفح
+    const EXAM_DRAFT_KEY =
+        "nova_future_exam_draft";
+
+
+    /* ================================
+       Exam Draft
+    ================================= */
+
+    function saveExamDraft() {
+
+        try {
+
+            const draft = {
+
+                examTitle:
+                    document.getElementById("examTitle")
+                        .value,
+
+                examCourse:
+                    document.getElementById("examCourse")
+                        .value,
+
+                examDescription:
+                    document.getElementById("examDescription")
+                        .value,
+
+                examDuration:
+                    document.getElementById("examDuration")
+                        .value,
+
+                examStartAt:
+                    document.getElementById("examStartAt")
+                        .value,
+
+                examEndAt:
+                    document.getElementById("examEndAt")
+                        .value,
+
+                examQuestions:
+                    examQuestions
+            };
+
+
+            localStorage.setItem(
+                EXAM_DRAFT_KEY,
+                JSON.stringify(draft)
+            );
+
+        } catch (error) {
+
+            console.error(
+                "SAVE EXAM DRAFT ERROR:",
+                error
+            );
+        }
+    }
+
+
+    function loadExamDraft() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    EXAM_DRAFT_KEY
+                );
+
+
+            if (!saved) {
+                return;
+            }
+
+
+            const draft =
+                JSON.parse(saved);
+
+
+            document.getElementById(
+                "examTitle"
+            ).value =
+                draft.examTitle || "";
+
+
+            document.getElementById(
+                "examCourse"
+            ).value =
+                draft.examCourse || "";
+
+
+            document.getElementById(
+                "examDescription"
+            ).value =
+                draft.examDescription || "";
+
+
+            document.getElementById(
+                "examDuration"
+            ).value =
+                draft.examDuration || "";
+
+
+            document.getElementById(
+                "examStartAt"
+            ).value =
+                draft.examStartAt || "";
+
+
+            document.getElementById(
+                "examEndAt"
+            ).value =
+                draft.examEndAt || "";
+
+
+            examQuestions =
+                Array.isArray(
+                    draft.examQuestions
+                )
+                    ? draft.examQuestions
+                    : [];
+
+
+            renderQuestions();
+
+
+            if (
+                examQuestions.length > 0 ||
+                draft.examTitle ||
+                draft.examDescription ||
+                draft.examDuration ||
+                draft.examStartAt ||
+                draft.examEndAt
+            ) {
+
+                setMessage(
+                    "globalMessage",
+                    "تم استرجاع مسودة الامتحان تلقائيًا 💾",
+                    "info-message"
+                );
+            }
+
+        } catch (error) {
+
+            console.error(
+                "LOAD EXAM DRAFT ERROR:",
+                error
+            );
+
+            localStorage.removeItem(
+                EXAM_DRAFT_KEY
+            );
+        }
+    }
+
+
+    function clearExamDraft() {
+
+        try {
+
+            localStorage.removeItem(
+                EXAM_DRAFT_KEY
+            );
+
+        } catch (error) {
+
+            console.error(
+                "CLEAR EXAM DRAFT ERROR:",
+                error
+            );
+        }
+    }
 
 
     /* ================================
@@ -1853,24 +2016,36 @@
 
     function setMessage(elementId, text, type = "") {
 
-        const element = document.getElementById(elementId);
+        const element =
+            document.getElementById(elementId);
 
         if (!element) return;
 
         element.textContent = text;
-        element.className = `form-message ${type}`.trim();
+
+        element.className =
+            `form-message ${type}`.trim();
     }
 
 
-    function setButtonLoading(button, loadingText, disabled = true) {
+    function setButtonLoading(
+        button,
+        loadingText,
+        disabled = true
+    ) {
 
         if (!button) return;
 
+
         if (disabled) {
 
-            button.dataset.originalText = button.textContent;
+            button.dataset.originalText =
+                button.textContent;
+
             button.disabled = true;
-            button.textContent = loadingText;
+
+            button.textContent =
+                loadingText;
 
         } else {
 
@@ -1887,8 +2062,13 @@
 
         return `
             <div class="empty-state">
-                <div class="empty-state-icon">${icon}</div>
-                <p>${escapeHTML(message)}</p>
+                <div class="empty-state-icon">
+                    ${icon}
+                </div>
+
+                <p>
+                    ${escapeHTML(message)}
+                </p>
             </div>
         `;
     }
@@ -1896,12 +2076,53 @@
 
     function escapeHTML(value) {
 
-        const div = document.createElement("div");
+        const div =
+            document.createElement("div");
 
         div.textContent =
-            value == null ? "" : String(value);
+            value == null
+                ? ""
+                : String(value);
 
         return div.innerHTML;
+    }
+
+
+    /* ================================
+       Auto Save Exam Form
+    ================================= */
+
+    function setupExamDraftAutoSave() {
+
+        const examForm =
+            document.getElementById(
+                "examForm"
+            );
+
+
+        if (!examForm) {
+            return;
+        }
+
+
+        examForm.addEventListener(
+            "input",
+            function () {
+
+                saveExamDraft();
+
+            }
+        );
+
+
+        examForm.addEventListener(
+            "change",
+            function () {
+
+                saveExamDraft();
+
+            }
+        );
     }
 
 
@@ -1912,7 +2133,10 @@
     window.logoutTeacher = async function () {
 
         const button =
-            document.getElementById("logoutButton");
+            document.getElementById(
+                "logoutButton"
+            );
+
 
         try {
 
@@ -1921,19 +2145,24 @@
                 "جاري الخروج..."
             );
 
+
             await signOut(auth);
 
-            window.location.href = "login.html";
+
+            window.location.href =
+                "login.html";
 
         } catch (error) {
 
             console.error(error);
+
 
             setButtonLoading(
                 button,
                 "تسجيل الخروج",
                 false
             );
+
 
             setMessage(
                 "globalMessage",
@@ -1951,13 +2180,19 @@
     async function loadCourses() {
 
         const coursesList =
-            document.getElementById("coursesList");
+            document.getElementById(
+                "coursesList"
+            );
 
         const lessonCourse =
-            document.getElementById("lessonCourse");
+            document.getElementById(
+                "lessonCourse"
+            );
 
         const examCourse =
-            document.getElementById("examCourse");
+            document.getElementById(
+                "examCourse"
+            );
 
 
         coursesList.innerHTML =
@@ -1978,7 +2213,10 @@
 
             const snapshot =
                 await getDocs(
-                    collection(db, "courses")
+                    collection(
+                        db,
+                        "courses"
+                    )
                 );
 
 
@@ -1998,62 +2236,101 @@
                 document.createDocumentFragment();
 
 
-            snapshot.forEach((courseDoc) => {
+            snapshot.forEach(
+                (courseDoc) => {
 
-                const course = courseDoc.data();
-
-                const courseName =
-                    course.name ||
-                    course.title ||
-                    "بدون اسم";
+                    const course =
+                        courseDoc.data();
 
 
-                const div =
-                    document.createElement("div");
-
-                div.className = "item";
-
-                div.innerHTML = `
-                    <h4>
-                        📚 ${escapeHTML(courseName)}
-                    </h4>
-
-                    <p>
-                        ${escapeHTML(
-                            course.description ||
-                            "لا يوجد وصف للكورس."
-                        )}
-                    </p>
-                `;
-
-                fragment.appendChild(div);
+                    const courseName =
+                        course.name ||
+                        course.title ||
+                        "بدون اسم";
 
 
-                const lessonOption =
-                    document.createElement("option");
-
-                lessonOption.value = courseDoc.id;
-                lessonOption.textContent = courseName;
-
-                lessonCourse.appendChild(lessonOption);
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
 
 
-                const examOption =
-                    document.createElement("option");
+                    div.className =
+                        "item";
 
-                examOption.value = courseDoc.id;
-                examOption.textContent = courseName;
 
-                examCourse.appendChild(examOption);
-            });
+                    div.innerHTML = `
+                        <h4>
+                            📚
+                            ${escapeHTML(courseName)}
+                        </h4>
+
+                        <p>
+                            ${escapeHTML(
+                                course.description ||
+                                "لا يوجد وصف للكورس."
+                            )}
+                        </p>
+                    `;
+
+
+                    fragment.appendChild(div);
+
+
+                    const lessonOption =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    lessonOption.value =
+                        courseDoc.id;
+
+
+                    lessonOption.textContent =
+                        courseName;
+
+
+                    lessonCourse.appendChild(
+                        lessonOption
+                    );
+
+
+                    const examOption =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    examOption.value =
+                        courseDoc.id;
+
+
+                    examOption.textContent =
+                        courseName;
+
+
+                    examCourse.appendChild(
+                        examOption
+                    );
+
+                }
+            );
 
 
             coursesList.innerHTML = "";
-            coursesList.appendChild(fragment);
+
+            coursesList.appendChild(
+                fragment
+            );
 
         } catch (error) {
 
-            console.error("COURSES ERROR:", error);
+            console.error(
+                "COURSES ERROR:",
+                error
+            );
+
 
             coursesList.innerHTML =
                 createEmptyState(
@@ -2068,18 +2345,23 @@
        Create Course
     ================================= */
 
-    window.createCourse = async function (event) {
+    window.createCourse = async function (
+        event
+    ) {
 
         event.preventDefault();
 
 
         const title =
-            document.getElementById("courseTitle")
-                .value.trim();
+            document.getElementById(
+                "courseTitle"
+            ).value.trim();
+
 
         const description =
-            document.getElementById("courseDescription")
-                .value.trim();
+            document.getElementById(
+                "courseDescription"
+            ).value.trim();
 
 
         if (!title) {
@@ -2095,7 +2377,9 @@
 
 
         const button =
-            document.getElementById("createCourseBtn");
+            document.getElementById(
+                "createCourseBtn"
+            );
 
 
         setButtonLoading(
@@ -2107,9 +2391,14 @@
         try {
 
             await addDoc(
-                collection(db, "courses"),
+                collection(
+                    db,
+                    "courses"
+                ),
                 {
+
                     title,
+
                     description,
 
                     teacherId:
@@ -2134,7 +2423,9 @@
 
 
             document
-                .getElementById("courseForm")
+                .getElementById(
+                    "courseForm"
+                )
                 .reset();
 
 
@@ -2147,6 +2438,7 @@
                 error.code,
                 error.message
             );
+
 
             setMessage(
                 "courseMessage",
@@ -2168,21 +2460,29 @@
        Add Lesson
     ================================= */
 
-    window.addLesson = async function (event) {
+    window.addLesson = async function (
+        event
+    ) {
 
         event.preventDefault();
 
 
         const courseId =
-            document.getElementById("lessonCourse").value;
+            document.getElementById(
+                "lessonCourse"
+            ).value;
+
 
         const title =
-            document.getElementById("lessonTitle")
-                .value.trim();
+            document.getElementById(
+                "lessonTitle"
+            ).value.trim();
+
 
         const content =
-            document.getElementById("lessonContent")
-                .value.trim();
+            document.getElementById(
+                "lessonContent"
+            ).value.trim();
 
 
         if (!courseId) {
@@ -2222,7 +2522,9 @@
 
 
         const button =
-            document.getElementById("addLessonBtn");
+            document.getElementById(
+                "addLessonBtn"
+            );
 
 
         setButtonLoading(
@@ -2235,7 +2537,11 @@
 
             const courseSnapshot =
                 await getDoc(
-                    doc(db, "courses", courseId)
+                    doc(
+                        db,
+                        "courses",
+                        courseId
+                    )
                 );
 
 
@@ -2246,6 +2552,7 @@
                     "الكورس غير موجود.",
                     "error"
                 );
+
 
                 setButtonLoading(
                     button,
@@ -2262,9 +2569,14 @@
 
 
             await addDoc(
-                collection(db, "lessons"),
+                collection(
+                    db,
+                    "lessons"
+                ),
                 {
+
                     title,
+
                     content,
 
                     courseId,
@@ -2291,7 +2603,9 @@
 
 
             document
-                .getElementById("lessonForm")
+                .getElementById(
+                    "lessonForm"
+                )
                 .reset();
 
 
@@ -2303,6 +2617,7 @@
                 "LESSON ERROR:",
                 error
             );
+
 
             setMessage(
                 "lessonMessage",
@@ -2327,7 +2642,9 @@
     async function loadLessons() {
 
         const lessonsList =
-            document.getElementById("lessonsList");
+            document.getElementById(
+                "lessonsList"
+            );
 
 
         lessonsList.innerHTML =
@@ -2341,59 +2658,82 @@
 
             const snapshot =
                 await getDocs(
-                    collection(db, "lessons")
+                    collection(
+                        db,
+                        "lessons"
+                    )
                 );
 
 
             let count = 0;
 
+
             lessonsList.innerHTML = "";
 
 
-            snapshot.forEach((lessonDoc) => {
+            snapshot.forEach(
+                (lessonDoc) => {
 
-                const lesson = lessonDoc.data();
-
-                count++;
-
-
-                const div =
-                    document.createElement("div");
-
-                div.className = "item";
-
-                div.innerHTML = `
-                    <h4>
-                        📖 ${escapeHTML(
-                            lesson.title ||
-                            "درس بدون عنوان"
-                        )}
-                    </h4>
-
-                    <p>
-                        <strong>الكورس:</strong>
-                        ${escapeHTML(
-                            lesson.courseName ||
-                            "غير محدد"
-                        )}
-                    </p>
-
-                    <p>
-                        ${escapeHTML(
-                            lesson.content ||
-                            "لا يوجد محتوى."
-                        )}
-                    </p>
-                `;
+                    const lesson =
+                        lessonDoc.data();
 
 
-                lessonsList.appendChild(div);
-            });
+                    count++;
+
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "item";
+
+
+                    div.innerHTML = `
+                        <h4>
+                            📖
+                            ${escapeHTML(
+                                lesson.title ||
+                                "درس بدون عنوان"
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>الكورس:</strong>
+                            ${escapeHTML(
+                                lesson.courseName ||
+                                "غير محدد"
+                            )}
+                        </p>
+
+                        <p>
+                            ${escapeHTML(
+                                lesson.content ||
+                                "لا يوجد محتوى."
+                            )}
+                        </p>
+                    `;
+
+
+                    lessonsList.appendChild(
+                        div
+                    );
+                }
+            );
 
 
             document.getElementById(
                 "lessonsCount"
-            ).textContent = count;
+            ).textContent =
+                count;
+
+
+            document.getElementById(
+                "lessonsSectionCount"
+            ).textContent =
+                count;
 
 
             if (count === 0) {
@@ -2412,6 +2752,7 @@
                 error
             );
 
+
             lessonsList.innerHTML =
                 createEmptyState(
                     "⚠️",
@@ -2428,7 +2769,9 @@
     async function loadStudents() {
 
         const studentsList =
-            document.getElementById("studentsList");
+            document.getElementById(
+                "studentsList"
+            );
 
 
         studentsList.innerHTML =
@@ -2442,58 +2785,83 @@
 
             const snapshot =
                 await getDocs(
-                    collection(db, "users")
+                    collection(
+                        db,
+                        "users"
+                    )
                 );
 
 
             let count = 0;
 
+
             studentsList.innerHTML = "";
 
 
-            snapshot.forEach((userDoc) => {
+            snapshot.forEach(
+                (userDoc) => {
 
-                const user = userDoc.data();
+                    const user =
+                        userDoc.data();
 
 
-                if (user.role !== "student") {
-                    return;
+                    if (
+                        user.role !==
+                        "student"
+                    ) {
+                        return;
+                    }
+
+
+                    count++;
+
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "item";
+
+
+                    div.innerHTML = `
+                        <h4>
+                            👨‍🎓
+                            ${escapeHTML(
+                                user.name ||
+                                "بدون اسم"
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>البريد:</strong>
+                            ${escapeHTML(
+                                user.email ||
+                                "غير موجود"
+                            )}
+                        </p>
+                    `;
+
+
+                    studentsList.appendChild(
+                        div
+                    );
                 }
-
-
-                count++;
-
-
-                const div =
-                    document.createElement("div");
-
-                div.className = "item";
-
-                div.innerHTML = `
-                    <h4>
-                        👨‍🎓 ${escapeHTML(
-                            user.name ||
-                            "بدون اسم"
-                        )}
-                    </h4>
-
-                    <p>
-                        <strong>البريد:</strong>
-                        ${escapeHTML(
-                            user.email ||
-                            "غير موجود"
-                        )}
-                    </p>
-                `;
-
-
-                studentsList.appendChild(div);
-            });
+            );
 
 
             document.getElementById(
                 "studentsCount"
-            ).textContent = count;
+            ).textContent =
+                count;
+
+
+            document.getElementById(
+                "studentsSectionCount"
+            ).textContent =
+                count;
 
 
             if (count === 0) {
@@ -2512,6 +2880,7 @@
                 error
             );
 
+
             studentsList.innerHTML =
                 createEmptyState(
                     "⚠️",
@@ -2528,24 +2897,33 @@
     window.addQuestion = function () {
 
         const questionText =
-            document.getElementById("questionText")
-                .value.trim();
+            document.getElementById(
+                "questionText"
+            ).value.trim();
+
 
         const option1 =
-            document.getElementById("option1")
-                .value.trim();
+            document.getElementById(
+                "option1"
+            ).value.trim();
+
 
         const option2 =
-            document.getElementById("option2")
-                .value.trim();
+            document.getElementById(
+                "option2"
+            ).value.trim();
+
 
         const option3 =
-            document.getElementById("option3")
-                .value.trim();
+            document.getElementById(
+                "option3"
+            ).value.trim();
+
 
         const option4 =
-            document.getElementById("option4")
-                .value.trim();
+            document.getElementById(
+                "option4"
+            ).value.trim();
 
 
         const correctAnswer =
@@ -2597,7 +2975,8 @@
 
         examQuestions.push({
 
-            question: questionText,
+            question:
+                questionText,
 
             options: [
                 option1,
@@ -2607,8 +2986,14 @@
             ],
 
             correctAnswer:
-                Number(correctAnswer.value)
+                Number(
+                    correctAnswer.value
+                )
         });
+
+
+        // حفظ الأسئلة فورًا
+        saveExamDraft();
 
 
         renderQuestions();
@@ -2618,17 +3003,21 @@
             "questionText"
         ).value = "";
 
+
         document.getElementById(
             "option1"
         ).value = "";
+
 
         document.getElementById(
             "option2"
         ).value = "";
 
+
         document.getElementById(
             "option3"
         ).value = "";
+
 
         document.getElementById(
             "option4"
@@ -2637,11 +3026,14 @@
 
         document.querySelectorAll(
             'input[name="correctAnswer"]'
-        ).forEach((radio) => {
+        ).forEach(
+            (radio) => {
 
-            radio.checked = false;
+                radio.checked =
+                    false;
 
-        });
+            }
+        );
 
 
         setMessage(
@@ -2659,7 +3051,9 @@
     function renderQuestions() {
 
         const container =
-            document.getElementById("questionsList");
+            document.getElementById(
+                "questionsList"
+            );
 
 
         container.innerHTML = "";
@@ -2671,7 +3065,9 @@
             examQuestions.length;
 
 
-        if (examQuestions.length === 0) {
+        if (
+            examQuestions.length === 0
+        ) {
 
             container.innerHTML =
                 createEmptyState(
@@ -2687,9 +3083,13 @@
             (question, index) => {
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
-                div.className = "question-box";
+
+                div.className =
+                    "question-box";
 
 
                 div.innerHTML = `
@@ -2720,27 +3120,42 @@
 
 
                     ${question.options.map(
-                        (option, optionIndex) => `
+                        (
+                            option,
+                            optionIndex
+                        ) => `
+
                             <p class="${
-                                question.correctAnswer === optionIndex
+                                question.correctAnswer ===
+                                optionIndex
                                     ? "correct-option"
                                     : ""
                             }">
+
                                 ${optionIndex + 1}️⃣
-                                ${escapeHTML(option)}
+
+                                ${escapeHTML(
+                                    option
+                                )}
+
                                 ${
-                                    question.correctAnswer === optionIndex
+                                    question.correctAnswer ===
+                                    optionIndex
                                         ? " ✅"
                                         : ""
                                 }
+
                             </p>
+
                         `
                     ).join("")}
 
                 `;
 
 
-                container.appendChild(div);
+                container.appendChild(
+                    div
+                );
             }
         );
     }
@@ -2750,63 +3165,85 @@
        Remove Question
     ================================= */
 
-    window.removeQuestion = function (index) {
+    window.removeQuestion =
+        function (index) {
 
-        if (
-            index < 0 ||
-            index >= examQuestions.length
-        ) {
-            return;
-        }
-
-
-        examQuestions.splice(index, 1);
-
-        renderQuestions();
+            if (
+                index < 0 ||
+                index >= examQuestions.length
+            ) {
+                return;
+            }
 
 
-        setMessage(
-            "questionMessage",
-            "تم حذف السؤال.",
-            "info-message"
-        );
-    };
+            examQuestions.splice(
+                index,
+                1
+            );
+
+
+            // حفظ التعديل بعد الحذف
+            saveExamDraft();
+
+
+            renderQuestions();
+
+
+            setMessage(
+                "questionMessage",
+                "تم حذف السؤال.",
+                "info-message"
+            );
+        };
 
 
     /* ================================
        Create Exam
     ================================= */
 
-    window.createExam = async function (event) {
+    window.createExam = async function (
+        event
+    ) {
 
         event.preventDefault();
 
 
         const title =
-            document.getElementById("examTitle")
-                .value.trim();
+            document.getElementById(
+                "examTitle"
+            ).value.trim();
+
 
         const description =
-            document.getElementById("examDescription")
-                .value.trim();
+            document.getElementById(
+                "examDescription"
+            ).value.trim();
+
 
         const courseId =
-            document.getElementById("examCourse")
-                .value;
+            document.getElementById(
+                "examCourse"
+            ).value;
+
 
         const duration =
             Number(
-                document.getElementById("examDuration")
-                    .value
+                document.getElementById(
+                    "examDuration"
+                ).value
             );
 
+
         const startAtValue =
-            document.getElementById("examStartAt")
-                .value;
+            document.getElementById(
+                "examStartAt"
+            ).value;
+
 
         const endAtValue =
-            document.getElementById("examEndAt")
-                .value;
+            document.getElementById(
+                "examEndAt"
+            ).value;
 
 
         if (!title) {
@@ -2865,15 +3302,24 @@
 
 
         const startAt =
-            new Date(startAtValue);
+            new Date(
+                startAtValue
+            );
+
 
         const endAt =
-            new Date(endAtValue);
+            new Date(
+                endAtValue
+            );
 
 
         if (
-            Number.isNaN(startAt.getTime()) ||
-            Number.isNaN(endAt.getTime())
+            Number.isNaN(
+                startAt.getTime()
+            ) ||
+            Number.isNaN(
+                endAt.getTime()
+            )
         ) {
 
             setMessage(
@@ -2898,7 +3344,9 @@
         }
 
 
-        if (examQuestions.length === 0) {
+        if (
+            examQuestions.length === 0
+        ) {
 
             setMessage(
                 "examMessage",
@@ -2911,7 +3359,9 @@
 
 
         const button =
-            document.getElementById("createExamBtn");
+            document.getElementById(
+                "createExamBtn"
+            );
 
 
         setButtonLoading(
@@ -2924,17 +3374,24 @@
 
             const courseSnapshot =
                 await getDoc(
-                    doc(db, "courses", courseId)
+                    doc(
+                        db,
+                        "courses",
+                        courseId
+                    )
                 );
 
 
-            if (!courseSnapshot.exists()) {
+            if (
+                !courseSnapshot.exists()
+            ) {
 
                 setMessage(
                     "examMessage",
                     "الكورس غير موجود.",
                     "error"
                 );
+
 
                 setButtonLoading(
                     button,
@@ -2951,7 +3408,10 @@
 
 
             await addDoc(
-                collection(db, "exams"),
+                collection(
+                    db,
+                    "exams"
+                ),
                 {
 
                     title,
@@ -2976,10 +3436,14 @@
                     duration,
 
                     startAt:
-                        Timestamp.fromDate(startAt),
+                        Timestamp.fromDate(
+                            startAt
+                        ),
 
                     endAt:
-                        Timestamp.fromDate(endAt),
+                        Timestamp.fromDate(
+                            endAt
+                        ),
 
                     questions:
                         examQuestions,
@@ -2990,6 +3454,11 @@
             );
 
 
+            // الامتحان اتخزن بنجاح
+            // لذلك نمسح المسودة القديمة
+            clearExamDraft();
+
+
             setMessage(
                 "examMessage",
                 "تم إنشاء الامتحان بنجاح 🎉",
@@ -2998,13 +3467,17 @@
 
 
             document
-                .getElementById("examForm")
+                .getElementById(
+                    "examForm"
+                )
                 .reset();
 
 
             examQuestions = [];
 
+
             renderQuestions();
+
 
             await loadExams();
 
@@ -3015,6 +3488,7 @@
                 error.code,
                 error.message
             );
+
 
             setMessage(
                 "examMessage",
@@ -3036,7 +3510,9 @@
        Format Date
     ================================= */
 
-    function formatExamDate(timestamp) {
+    function formatExamDate(
+        timestamp
+    ) {
 
         if (!timestamp) {
             return "غير محدد";
@@ -3047,7 +3523,9 @@
 
             return timestamp
                 .toDate()
-                .toLocaleString("ar-EG");
+                .toLocaleString(
+                    "ar-EG"
+                );
 
         } catch (error) {
 
@@ -3063,7 +3541,9 @@
     async function loadExams() {
 
         const examsList =
-            document.getElementById("examsList");
+            document.getElementById(
+                "examsList"
+            );
 
 
         examsList.innerHTML =
@@ -3077,109 +3557,144 @@
 
             const snapshot =
                 await getDocs(
-                    collection(db, "exams")
+                    collection(
+                        db,
+                        "exams"
+                    )
                 );
 
 
             let count = 0;
 
+
             examsList.innerHTML = "";
 
 
-            snapshot.forEach((examDoc) => {
+            snapshot.forEach(
+                (examDoc) => {
 
-                const exam = examDoc.data();
-
-                count++;
-
-
-                const questionsCount =
-                    Array.isArray(exam.questions)
-                        ? exam.questions.length
-                        : 0;
+                    const exam =
+                        examDoc.data();
 
 
-                const div =
-                    document.createElement("div");
-
-                div.className = "item";
+                    count++;
 
 
-                div.innerHTML = `
+                    const questionsCount =
+                        Array.isArray(
+                            exam.questions
+                        )
+                            ? exam.questions.length
+                            : 0;
 
-                    <h4>
-                        📝 ${escapeHTML(
-                            exam.title ||
-                            "امتحان بدون عنوان"
-                        )}
-                    </h4>
 
-                    <p>
-                        ${escapeHTML(
-                            exam.description ||
-                            "لا يوجد وصف."
-                        )}
-                    </p>
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
 
-                    <div class="exam-info">
 
-                        <p>
-                            📚
-                            <strong>الكورس:</strong>
-                            ${escapeHTML(
-                                exam.courseName ||
-                                "غير محدد"
-                            )}
-                        </p>
+                    div.className =
+                        "item";
 
-                        <p>
-                            ⏱️
-                            <strong>مدة الحل:</strong>
-                            ${exam.duration || 0}
-                            دقيقة
-                        </p>
 
-                        <p>
-                            📝
-                            <strong>عدد الأسئلة:</strong>
-                            ${questionsCount}
-                        </p>
-
-                    </div>
-
-                    <div class="exam-time-box">
+                    div.innerHTML = `
 
                         <h4>
-                            🕐 وقت إتاحة الامتحان
+                            📝
+                            ${escapeHTML(
+                                exam.title ||
+                                "امتحان بدون عنوان"
+                            )}
                         </h4>
 
                         <p>
-                            📅
-                            <span class="time-label">
-                                يبدأ:
-                            </span>
-                            ${formatExamDate(exam.startAt)}
+                            ${escapeHTML(
+                                exam.description ||
+                                "لا يوجد وصف."
+                            )}
                         </p>
 
-                        <p>
-                            ⏰
-                            <span class="time-label">
-                                ينتهي:
-                            </span>
-                            ${formatExamDate(exam.endAt)}
-                        </p>
+                        <div class="exam-info">
 
-                    </div>
-                `;
+                            <p>
+                                📚
+                                <strong>الكورس:</strong>
+
+                                ${escapeHTML(
+                                    exam.courseName ||
+                                    "غير محدد"
+                                )}
+                            </p>
+
+                            <p>
+                                ⏱️
+                                <strong>مدة الحل:</strong>
+
+                                ${exam.duration || 0}
+                                دقيقة
+                            </p>
+
+                            <p>
+                                📝
+                                <strong>عدد الأسئلة:</strong>
+
+                                ${questionsCount}
+                            </p>
+
+                        </div>
+
+                        <div class="exam-time-box">
+
+                            <h4>
+                                🕐 وقت إتاحة الامتحان
+                            </h4>
+
+                            <p>
+                                📅
+
+                                <span class="time-label">
+                                    يبدأ:
+                                </span>
+
+                                ${formatExamDate(
+                                    exam.startAt
+                                )}
+                            </p>
+
+                            <p>
+                                ⏰
+
+                                <span class="time-label">
+                                    ينتهي:
+                                </span>
+
+                                ${formatExamDate(
+                                    exam.endAt
+                                )}
+                            </p>
+
+                        </div>
+                    `;
 
 
-                examsList.appendChild(div);
-            });
+                    examsList.appendChild(
+                        div
+                    );
+                }
+            );
 
 
             document.getElementById(
                 "examsCount"
-            ).textContent = count;
+            ).textContent =
+                count;
+
+
+            document.getElementById(
+                "examsSectionCount"
+            ).textContent =
+                count;
 
 
             if (count === 0) {
@@ -3198,6 +3713,7 @@
                 error
             );
 
+
             examsList.innerHTML =
                 createEmptyState(
                     "⚠️",
@@ -3214,7 +3730,9 @@
     async function loadResults() {
 
         const resultsList =
-            document.getElementById("resultsList");
+            document.getElementById(
+                "resultsList"
+            );
 
 
         resultsList.innerHTML =
@@ -3228,38 +3746,54 @@
 
             const resultsSnapshot =
                 await getDocs(
-                    collection(db, "results")
+                    collection(
+                        db,
+                        "results"
+                    )
                 );
+
 
             const usersSnapshot =
                 await getDocs(
-                    collection(db, "users")
+                    collection(
+                        db,
+                        "users"
+                    )
                 );
+
 
             const examsSnapshot =
                 await getDocs(
-                    collection(db, "exams")
+                    collection(
+                        db,
+                        "exams"
+                    )
                 );
 
 
             const users = {};
+
             const exams = {};
 
 
-            usersSnapshot.forEach((userDoc) => {
+            usersSnapshot.forEach(
+                (userDoc) => {
 
-                users[userDoc.id] =
-                    userDoc.data();
+                    users[userDoc.id] =
+                        userDoc.data();
 
-            });
+                }
+            );
 
 
-            examsSnapshot.forEach((examDoc) => {
+            examsSnapshot.forEach(
+                (examDoc) => {
 
-                exams[examDoc.id] =
-                    examDoc.data();
+                    exams[examDoc.id] =
+                        examDoc.data();
 
-            });
+                }
+            );
 
 
             document.getElementById(
@@ -3268,7 +3802,15 @@
                 resultsSnapshot.size;
 
 
-            if (resultsSnapshot.empty) {
+            document.getElementById(
+                "resultsSectionCount"
+            ).textContent =
+                resultsSnapshot.size;
+
+
+            if (
+                resultsSnapshot.empty
+            ) {
 
                 resultsList.innerHTML =
                     createEmptyState(
@@ -3283,89 +3825,124 @@
             resultsList.innerHTML = "";
 
 
-            resultsSnapshot.forEach((resultDoc) => {
+            resultsSnapshot.forEach(
+                (resultDoc) => {
 
-                const result =
-                    resultDoc.data();
-
-
-                const student =
-                    users[result.studentId] || {};
-
-                const exam =
-                    exams[result.examId] || {};
+                    const result =
+                        resultDoc.data();
 
 
-                let dateText =
-                    "غير محدد";
+                    const student =
+                        users[
+                            result.studentId
+                        ] || {};
 
 
-                if (result.createdAt) {
+                    const exam =
+                        exams[
+                            result.examId
+                        ] || {};
 
-                    try {
 
-                        dateText =
-                            result.createdAt
-                                .toDate()
-                                .toLocaleString("ar-EG");
+                    let dateText =
+                        "غير محدد";
 
-                    } catch (error) {
 
-                        dateText = "غير محدد";
+                    if (
+                        result.createdAt
+                    ) {
+
+                        try {
+
+                            dateText =
+                                result.createdAt
+                                    .toDate()
+                                    .toLocaleString(
+                                        "ar-EG"
+                                    );
+
+                        } catch (
+                            error
+                        ) {
+
+                            dateText =
+                                "غير محدد";
+                        }
                     }
+
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "item";
+
+
+                    div.innerHTML = `
+
+                        <h4>
+                            👨‍🎓
+
+                            ${escapeHTML(
+                                student.name ||
+                                result.studentName ||
+                                "طالب غير معروف"
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>
+                                الامتحان:
+                            </strong>
+
+                            ${escapeHTML(
+                                exam.title ||
+                                result.examTitle ||
+                                "امتحان غير معروف"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                الدرجة:
+                            </strong>
+
+                            ${result.score || 0}
+
+                            من
+
+                            ${result.total || 0}
+                        </p>
+
+                        <p>
+                            <strong>
+                                النسبة:
+                            </strong>
+
+                            <span class="result-score">
+                                ${result.percentage || 0}%
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>
+                                التاريخ:
+                            </strong>
+
+                            ${dateText}
+                        </p>
+
+                    `;
+
+
+                    resultsList.appendChild(
+                        div
+                    );
                 }
-
-
-                const div =
-                    document.createElement("div");
-
-                div.className = "item";
-
-
-                div.innerHTML = `
-
-                    <h4>
-                        👨‍🎓
-                        ${escapeHTML(
-                            student.name ||
-                            result.studentName ||
-                            "طالب غير معروف"
-                        )}
-                    </h4>
-
-                    <p>
-                        <strong>الامتحان:</strong>
-                        ${escapeHTML(
-                            exam.title ||
-                            result.examTitle ||
-                            "امتحان غير معروف"
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>الدرجة:</strong>
-                        ${result.score || 0}
-                        من
-                        ${result.total || 0}
-                    </p>
-
-                    <p>
-                        <strong>النسبة:</strong>
-                        <span class="result-score">
-                            ${result.percentage || 0}%
-                        </span>
-                    </p>
-
-                    <p>
-                        <strong>التاريخ:</strong>
-                        ${dateText}
-                    </p>
-
-                `;
-
-
-                resultsList.appendChild(div);
-            });
+            );
 
         } catch (error) {
 
@@ -3373,6 +3950,7 @@
                 "RESULTS ERROR:",
                 error
             );
+
 
             resultsList.innerHTML =
                 createEmptyState(
@@ -3412,9 +3990,12 @@
                     );
 
 
-                if (!userSnapshot.exists()) {
+                if (
+                    !userSnapshot.exists()
+                ) {
 
                     await signOut(auth);
+
 
                     window.location.href =
                         "login.html";
@@ -3427,15 +4008,22 @@
                     userSnapshot.data();
 
 
-                if (userData.role !== "teacher") {
+                if (
+                    userData.role !==
+                    "teacher"
+                ) {
 
-                    if (userData.role === "admin") {
+                    if (
+                        userData.role ===
+                        "admin"
+                    ) {
 
                         window.location.href =
                             "admin.html";
 
                     } else if (
-                        userData.role === "student"
+                        userData.role ===
+                        "student"
                     ) {
 
                         window.location.href =
@@ -3444,6 +4032,7 @@
                     } else {
 
                         await signOut(auth);
+
 
                         window.location.href =
                             "login.html";
@@ -3468,12 +4057,22 @@
                     loadResults()
                 ]);
 
+
+                // بعد تحميل الكورسات
+                // نسترجع مسودة الامتحان
+                loadExamDraft();
+
+
+                // تشغيل الحفظ التلقائي
+                setupExamDraftAutoSave();
+
             } catch (error) {
 
                 console.error(
                     "TEACHER PAGE ERROR:",
                     error
                 );
+
 
                 setMessage(
                     "globalMessage",
@@ -3484,10 +4083,5 @@
         }
     );
 
-</script>
-
-
-<script src="../js/app.js"></script>
-
-</body>
+</script><script src="../js/app.js"></script></body>
 </html>
