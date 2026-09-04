@@ -4567,36 +4567,47 @@ examMonitoringActive = false;
                 )
                 : 0;
 
+const resultData = {
 
-        const resultData = {
+    studentId:
+        currentUser.uid,
 
-            studentId:
-                currentUser.uid,
+    studentName:
+        currentStudent?.name ||
+        currentUser.displayName ||
+        "طالب",
 
-            studentName:
-                currentStudent?.name ||
-                currentUser.displayName ||
-                "طالب",
+    examId:
+        activeExam.id,
 
-            examId:
-                activeExam.id,
+    examTitle:
+        activeExam.title ||
+        "امتحان",
 
-            examTitle:
-                activeExam.title ||
-                "امتحان",
+    score,
 
-            score,
+    total,
 
-            total,
+    percentage,
 
-            percentage,
+    wrongAnswers,
 
-            wrongAnswers,
+    /* سبب انتهاء الامتحان */
+    submissionReason:
+        examViolationCount >= MAX_EXAM_VIOLATIONS
+            ? "انتهى بسبب مخالفات مغادرة الامتحان"
+            : autoSubmitted
+                ? "انتهى تلقائيًا بسبب انتهاء الوقت"
+                : "تم التسليم بواسطة الطالب",
 
-            createdAt:
-                serverTimestamp()
+    violationCount:
+        examViolationCount,
 
-        };
+    createdAt:
+        serverTimestamp()
+
+};
+        
 
 
         try {
