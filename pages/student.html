@@ -4370,6 +4370,8 @@ lastViolationTime = 0;
     */
 
     function stopExam() {
+        /* إيقاف مراقبة الامتحان */
+examMonitoringActive = false;
 
         clearInterval(
             examTimerInterval
