@@ -1,1369 +1,1423 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
 
-<head>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <meta charset="UTF-8">
+<meta
+    name="description"
+    content="تسجيل الدخول إلى منصة Nova Future التعليمية."
+>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<title>تسجيل الدخول - Nova Future</title>
 
-    <meta
-        name="description"
-        content="تسجيل الدخول إلى منصة Nova Future التعليمية."
-    >
+<link
+    rel="stylesheet"
+    href="../css/style.css"
+>
 
-    <title>تسجيل الدخول - Nova Future</title>
+<style>
 
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
+    /* =========================================
+       LOGIN PAGE
+       نفس هوية صفحة الطالب
+    ========================================= */
 
-    <style>
+    .auth-page {
+        min-height: 100vh;
 
-        /* =========================================
-           LOGIN PAGE
-        ========================================= */
+        display: flex;
+        flex-direction: column;
 
-        .auth-page {
-            min-height: 100vh;
+        background:
+            radial-gradient(
+                circle at 10% 0%,
+                rgba(37, 99, 235, 0.15),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 90% 10%,
+                rgba(37, 99, 235, 0.10),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #0b1220 0%,
+                #0f172a 55%,
+                #0b1220 100%
+            );
+    }
 
-            display: flex;
-            flex-direction: column;
+    /* =========================================
+       HEADER
+    ========================================= */
 
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--background-color),
-                    var(--surface-secondary)
-                );
+    .auth-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+        padding: 12px 20px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(10, 17, 30, 0.97),
+                rgba(15, 23, 42, 0.94)
+            );
+
+        border-bottom:
+            1px solid rgba(96, 165, 250, 0.12);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .auth-header-inner {
+        width: min(1050px, 100%);
+
+        min-height: 54px;
+
+        margin: 0 auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+    }
+
+    .auth-brand {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 10px;
+
+        color: #ffffff;
+
+        font-size: 19px;
+        font-weight: 900;
+
+        text-decoration: none;
+    }
+
+    .auth-brand:hover {
+        color: #ffffff;
+    }
+
+    .auth-brand-icon {
+        width: 44px;
+        height: 44px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 14px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #3b82f6,
+                #1d4ed8
+            );
+
+        color: #ffffff;
+
+        box-shadow:
+            0 8px 24px rgba(37, 99, 235, 0.28);
+    }
+
+    .auth-brand-text {
+        display: flex;
+        flex-direction: column;
+
+        line-height: 1.15;
+    }
+
+    .auth-brand-text strong {
+        color: #ffffff;
+
+        font-size: 17px;
+        font-weight: 1000;
+    }
+
+    .auth-brand-text small {
+        margin-top: 2px;
+
+        color: #64748b;
+
+        font-size: 8px;
+        letter-spacing: 1px;
+    }
+
+    .home-link {
+        min-height: 40px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 8px 14px;
+
+        border-radius: 11px;
+
+        color: #cbd5e1;
+
+        background:
+            rgba(37, 99, 235, 0.06);
+
+        border:
+            1px solid rgba(96, 165, 250, 0.12);
+
+        font-size: 13px;
+        font-weight: 800;
+
+        text-decoration: none;
+
+        transition:
+            background .25s ease,
+            color .25s ease,
+            border-color .25s ease,
+            transform .25s ease;
+    }
+
+    .home-link:hover {
+        color: #ffffff;
+
+        background:
+            rgba(37, 99, 235, 0.14);
+
+        border-color:
+            rgba(96, 165, 250, 0.28);
+
+        transform:
+            translateY(-1px);
+    }
+
+    /* =========================================
+       MAIN
+    ========================================= */
+
+    .auth-main {
+        flex: 1;
+
+        width: min(100%, 540px);
+
+        margin: 0 auto;
+
+        padding: 55px 20px 45px;
+
+        display: flex;
+        align-items: center;
+    }
+
+    /* =========================================
+       AUTH CARD
+    ========================================= */
+
+    .auth-card {
+        position: relative;
+
+        width: 100%;
+
+        padding: 38px 32px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(17, 27, 46, 0.98),
+                rgba(11, 18, 32, 0.98)
+            );
+
+        border:
+            1px solid rgba(96, 165, 250, 0.18);
+
+        border-radius: 24px;
+
+        box-shadow:
+            0 22px 55px rgba(0, 0, 0, 0.35);
+
+        overflow: hidden;
+
+        animation:
+            authFadeUp .5s ease both;
+    }
+
+    .auth-card::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        right: 0;
+        left: 0;
+
+        height: 3px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #3b82f6,
+                #60a5fa,
+                #3b82f6,
+                transparent
+            );
+    }
+
+    .auth-card::after {
+        content: "";
+
+        position: absolute;
+
+        width: 180px;
+        height: 180px;
+
+        top: -120px;
+        left: -80px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(37, 99, 235, 0.07);
+
+        pointer-events: none;
+    }
+
+    /* =========================================
+       AUTH ICON
+    ========================================= */
+
+    .auth-icon {
+        position: relative;
+        z-index: 1;
+
+        width: 70px;
+        height: 70px;
+
+        margin: 0 auto 18px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 21px;
+
+        background:
+            rgba(37, 99, 235, 0.12);
+
+        border:
+            1px solid rgba(96, 165, 250, 0.20);
+
+        box-shadow:
+            0 10px 30px rgba(37, 99, 235, 0.10);
+
+        font-size: 31px;
+    }
+
+    /* =========================================
+       TITLE
+    ========================================= */
+
+    .auth-title {
+        position: relative;
+        z-index: 1;
+
+        text-align: center;
+
+        margin-bottom: 8px;
+    }
+
+    .auth-title h1 {
+        margin-bottom: 7px;
+
+        color: #ffffff;
+
+        font-size: 28px;
+        font-weight: 1000;
+    }
+
+    .auth-title p {
+        margin: 0;
+
+        color: #94a3b8;
+
+        font-size: 13px;
+    }
+
+    /* =========================================
+       FORM
+    ========================================= */
+
+    .login-form {
+        position: relative;
+        z-index: 1;
+
+        margin-top: 28px;
+    }
+
+    .field-group {
+        margin-bottom: 17px;
+    }
+
+    .field-label {
+        display: flex;
+        align-items: center;
+
+        gap: 6px;
+
+        margin-bottom: 8px;
+
+        color: #e2e8f0;
+
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .field-input-wrapper {
+        position: relative;
+    }
+
+    .field-icon {
+        position: absolute;
+
+        top: 50%;
+        right: 14px;
+
+        transform:
+            translateY(-50%);
+
+        color: #64748b;
+
+        font-size: 16px;
+
+        pointer-events: none;
+
+        transition:
+            color .25s ease;
+    }
+
+    .field-input-wrapper:focus-within .field-icon {
+        color: #60a5fa;
+    }
+
+    .field-input {
+        width: 100%;
+
+        min-height: 51px;
+
+        margin: 0;
+
+        padding:
+            13px 43px 13px 15px;
+
+        background:
+            #0b1424;
+
+        border:
+            1px solid rgba(96, 165, 250, 0.17);
+
+        border-radius: 13px;
+
+        color: #f8fafc;
+
+        outline: none;
+
+        transition:
+            border-color .25s ease,
+            box-shadow .25s ease,
+            background .25s ease;
+    }
+
+    .field-input::placeholder {
+        color: #64748b;
+    }
+
+    .field-input:focus {
+        background:
+            #0d1728;
+
+        border-color:
+            #3b82f6;
+
+        box-shadow:
+            0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .password-input {
+        padding-left: 50px;
+    }
+
+    /* =========================================
+       PASSWORD TOGGLE
+    ========================================= */
+
+    .password-toggle {
+        position: absolute;
+
+        top: 50%;
+        left: 7px;
+
+        transform:
+            translateY(-50%);
+
+        width: 39px;
+        height: 39px;
+
+        min-height: 39px;
+
+        display: grid;
+        place-items: center;
+
+        padding: 0;
+        margin: 0;
+
+        border: 0;
+        border-radius: 10px;
+
+        background: transparent;
+
+        color: #64748b;
+
+        font-size: 16px;
+
+        box-shadow: none;
+
+        transition:
+            background .2s ease,
+            color .2s ease;
+    }
+
+    .password-toggle:hover {
+        transform:
+            translateY(-50%);
+
+        background:
+            rgba(37, 99, 235, 0.12);
+
+        color: #60a5fa;
+
+        box-shadow: none;
+    }
+
+    /* =========================================
+       MESSAGE
+    ========================================= */
+
+    .login-message {
+        display: none;
+
+        margin: 0 0 17px;
+
+        padding: 12px 14px;
+
+        border-radius: 12px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        line-height: 1.7;
+
+        text-align: right;
+
+        border: 1px solid transparent;
+    }
+
+    .login-message.show {
+        display: block;
+
+        animation:
+            messageAppear .25s ease both;
+    }
+
+    .login-message.error {
+        color: #fca5a5;
+
+        background:
+            rgba(239, 68, 68, 0.10);
+
+        border-color:
+            rgba(239, 68, 68, 0.20);
+    }
+
+    .login-message.info {
+        color: #7dd3fc;
+
+        background:
+            rgba(56, 189, 248, 0.10);
+
+        border-color:
+            rgba(56, 189, 248, 0.20);
+    }
+
+    .login-message.success {
+        color: #86efac;
+
+        background:
+            rgba(34, 197, 94, 0.10);
+
+        border-color:
+            rgba(34, 197, 94, 0.20);
+    }
+
+    /* =========================================
+       SUBMIT
+    ========================================= */
+
+    .login-submit {
+        width: 100%;
+
+        min-height: 52px;
+
+        margin-top: 4px;
+
+        border: 0;
+        border-radius: 13px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #3b82f6,
+                #1d4ed8
+            );
+
+        color: #ffffff;
+
+        font-size: 15px;
+        font-weight: 900;
+
+        box-shadow:
+            0 10px 27px rgba(37, 99, 235, 0.25);
+
+        transition:
+            transform .25s ease,
+            box-shadow .25s ease,
+            opacity .25s ease;
+    }
+
+    .login-submit:hover {
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 15px 35px rgba(37, 99, 235, 0.35);
+    }
+
+    .login-submit:active {
+        transform:
+            translateY(0);
+    }
+
+    .login-submit.loading {
+        pointer-events: none;
+        opacity: .75;
+    }
+
+    .button-spinner {
+        display: none;
+
+        width: 19px;
+        height: 19px;
+
+        border:
+            3px solid rgba(255, 255, 255, .30);
+
+        border-top-color:
+            #ffffff;
+
+        border-radius: 50%;
+
+        animation:
+            loginSpin .75s linear infinite;
+    }
+
+    .login-submit.loading .button-spinner {
+        display: inline-block;
+    }
+
+    .login-submit.loading .button-text {
+        display: none;
+    }
+
+    /* =========================================
+       LINKS
+    ========================================= */
+
+    .auth-links {
+        position: relative;
+        z-index: 1;
+
+        margin-top: 23px;
+        padding-top: 20px;
+
+        border-top:
+            1px solid rgba(96, 165, 250, 0.10);
+
+        text-align: center;
+    }
+
+    .register-text {
+        margin-bottom: 12px;
+
+        color: #94a3b8;
+
+        font-size: 13px;
+    }
+
+    .register-link {
+        color: #60a5fa;
+
+        font-weight: 900;
+
+        text-decoration: none;
+    }
+
+    .register-link:hover {
+        color: #93c5fd;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 5px;
+
+        color: #64748b;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        text-decoration: none;
+
+        transition: color .2s ease;
+    }
+
+    .back-link:hover {
+        color: #60a5fa;
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    .auth-footer {
+        padding: 22px 20px;
+
+        text-align: center;
+
+        color: #475569;
+
+        font-size: 12px;
+
+        border-top:
+            1px solid rgba(96, 165, 250, 0.07);
+
+        background:
+            rgba(7, 13, 24, 0.55);
+    }
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+
+    @keyframes authFadeUp {
+
+        from {
+            opacity: 0;
+
+            transform:
+                translateY(18px);
         }
 
+        to {
+            opacity: 1;
 
-        /* =========================================
-           AUTH HEADER
-        ========================================= */
+            transform:
+                translateY(0);
+        }
+    }
+
+    @keyframes messageAppear {
+
+        from {
+            opacity: 0;
+
+            transform:
+                translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+    }
+
+    @keyframes loginSpin {
+
+        from {
+            transform:
+                rotate(0deg);
+        }
+
+        to {
+            transform:
+                rotate(360deg);
+        }
+    }
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 600px) {
 
         .auth-header {
-            padding: 18px 20px;
-
-            background:
-                var(--surface-color);
-
-            border-bottom:
-                1px solid var(--border-color);
-
-            box-shadow:
-                0 2px 12px rgba(15, 23, 42, 0.04);
+            padding: 10px 13px;
         }
 
         .auth-header-inner {
-            max-width: 1050px;
-
-            margin: 0 auto;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 15px;
+            min-height: 50px;
         }
 
         .auth-brand {
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: 9px;
-
-            color:
-                var(--heading-color);
-
-            font-size: 20px;
-
-            font-weight: 900;
-
-            text-decoration: none;
-        }
-
-        .auth-brand:hover {
-            color:
-                var(--heading-color);
+            font-size: 17px;
         }
 
         .auth-brand-icon {
             width: 40px;
             height: 40px;
 
-            display: flex;
+            border-radius: 13px;
+        }
 
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 11px;
-
-            background:
-                var(--primary-color);
-
-            color:
-                #ffffff;
-
-            box-shadow:
-                0 5px 14px
-                rgba(37, 99, 235, 0.2);
+        .auth-brand-text small {
+            display: none;
         }
 
         .home-link {
-            display: inline-flex;
-
-            align-items: center;
-
             min-height: 38px;
 
             padding:
-                7px 13px;
+                7px 10px;
 
-            border-radius:
-                9px;
-
-            color:
-                var(--muted-color);
-
-            font-size: 13px;
-
-            font-weight: 700;
-
-            text-decoration: none;
-
-            transition:
-                background-color 0.2s ease,
-                color 0.2s ease;
+            font-size: 11px;
         }
-
-        .home-link:hover {
-            background:
-                var(--primary-light);
-
-            color:
-                var(--primary-color);
-        }
-
-
-        /* =========================================
-           AUTH MAIN
-        ========================================= */
 
         .auth-main {
-            flex: 1;
-
             width: 100%;
 
-            max-width:
-                520px;
-
-            margin:
-                0 auto;
-
             padding:
-                55px 20px;
+                30px 13px 35px;
         }
-
-
-        /* =========================================
-           AUTH CARD
-        ========================================= */
 
         .auth-card {
-            position: relative;
-
-            background:
-                var(--surface-color);
-
-            border:
-                1px solid var(--border-color);
+            padding:
+                32px 20px;
 
             border-radius:
-                22px;
-
-            padding:
-                38px 32px;
-
-            box-shadow:
-                var(--shadow-lg);
-
-            overflow:
-                hidden;
-
-            animation:
-                authFadeUp 0.5s ease both;
+                21px;
         }
-
-        .auth-card::before {
-            content: "";
-
-            position: absolute;
-
-            top: 0;
-            right: 0;
-            left: 0;
-
-            height: 4px;
-
-            background:
-                var(--primary-color);
-        }
-
-
-        /* =========================================
-           AUTH ICON
-        ========================================= */
 
         .auth-icon {
-            width: 68px;
-            height: 68px;
+            width: 63px;
+            height: 63px;
 
-            margin:
-                0 auto 18px;
+            border-radius: 19px;
 
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            border-radius:
-                19px;
-
-            background:
-                var(--primary-light);
-
-            font-size:
-                31px;
-        }
-
-
-        /* =========================================
-           AUTH TITLE
-        ========================================= */
-
-        .auth-title {
-            text-align:
-                center;
-
-            margin-bottom:
-                8px;
+            font-size: 28px;
         }
 
         .auth-title h1 {
-            color:
-                var(--heading-color);
-
-            font-size:
-                28px;
-
-            font-weight:
-                900;
-
-            margin-bottom:
-                7px;
+            font-size: 25px;
         }
 
         .auth-title p {
-            color:
-                var(--muted-color);
-
-            font-size:
-                14px;
-
-            margin:
-                0;
-        }
-
-
-        /* =========================================
-           FORM
-        ========================================= */
-
-        .login-form {
-            margin-top:
-                28px;
-        }
-
-        .field-group {
-            margin-bottom:
-                16px;
-        }
-
-        .field-label {
-            display: flex;
-
-            align-items: center;
-
-            gap: 6px;
-
-            margin-bottom:
-                7px;
-
-            color:
-                var(--heading-color);
-
-            font-size:
-                13px;
-
-            font-weight:
-                800;
-        }
-
-        .field-input-wrapper {
-            position:
-                relative;
-        }
-
-        .field-icon {
-            position:
-                absolute;
-
-            top:
-                50%;
-
-            right:
-                14px;
-
-            transform:
-                translateY(-50%);
-
-            font-size:
-                17px;
-
-            pointer-events:
-                none;
-
-            opacity:
-                0.75;
+            font-size: 12px;
         }
 
         .field-input {
-            margin:
-                0;
-
-            padding-right:
-                43px;
-
-            min-height:
-                50px;
+            min-height: 49px;
         }
-
-        .password-input {
-            padding-left:
-                48px;
-        }
-
-
-        /* =========================================
-           PASSWORD TOGGLE
-        ========================================= */
-
-        .password-toggle {
-            position:
-                absolute;
-
-            top:
-                50%;
-
-            left:
-                8px;
-
-            transform:
-                translateY(-50%);
-
-            width:
-                38px;
-
-            height:
-                38px;
-
-            min-height:
-                38px;
-
-            padding:
-                0;
-
-            margin:
-                0;
-
-            border:
-                none;
-
-            background:
-                transparent;
-
-            color:
-                var(--muted-color);
-
-            box-shadow:
-                none;
-
-            font-size:
-                16px;
-        }
-
-        .password-toggle:hover {
-            background:
-                var(--primary-light);
-
-            color:
-                var(--primary-color);
-
-            transform:
-                translateY(-50%);
-            
-            box-shadow:
-                none;
-        }
-
-
-        /* =========================================
-           ERROR / INFO MESSAGE
-        ========================================= */
-
-        .login-message {
-            display:
-                none;
-
-            padding:
-                12px 14px;
-
-            margin:
-                0 0 16px;
-
-            border-radius:
-                11px;
-
-            font-size:
-                13px;
-
-            line-height:
-                1.7;
-
-            text-align:
-                right;
-        }
-
-        .login-message.show {
-            display:
-                block;
-
-            animation:
-                messageAppear 0.25s ease both;
-        }
-
-        .login-message.error {
-            background:
-                var(--danger-bg);
-
-            color:
-                var(--danger-color);
-
-            border:
-                1px solid #fecaca;
-        }
-
-        .login-message.info {
-            background:
-                var(--info-bg);
-
-            color:
-                var(--info-color);
-
-            border:
-                1px solid #bae6fd;
-        }
-
-        .login-message.success {
-            background:
-                var(--success-bg);
-
-            color:
-                var(--success-color);
-
-            border:
-                1px solid #bbf7d0;
-        }
-
-
-        /* =========================================
-           SUBMIT BUTTON
-        ========================================= */
 
         .login-submit {
-            width:
-                100%;
-
-            min-height:
-                51px;
-
-            margin-top:
-                5px;
-
-            border-radius:
-                13px;
-
-            font-size:
-                15px;
+            min-height: 50px;
         }
+    }
 
-        .login-submit.loading {
-            pointer-events:
-                none;
+</style>
 
-            opacity:
-                0.75;
-        }
+</head><body class="auth-page"><!-- =========================================
+     HEADER
+========================================= -->
 
-        .button-spinner {
-            display:
-                none;
+<header class="auth-header">
 
-            width:
-                19px;
+    <div class="auth-header-inner">
 
-            height:
-                19px;
+        <a
+            href="../index.html"
+            class="auth-brand"
+            aria-label="Nova Future"
+        >
 
-            border:
-                3px solid
-                rgba(255, 255, 255, 0.35);
+            <span class="auth-brand-icon">
+                🚀
+            </span>
 
-            border-top-color:
-                #ffffff;
+            <span class="auth-brand-text">
 
-            border-radius:
-                50%;
+                <strong>
+                    NOVA FUTURE
+                </strong>
 
-            animation:
-                loginSpin 0.75s linear infinite;
-        }
+                <small>
+                    LEARN TODAY · SHAPE TOMORROW
+                </small>
 
-        .login-submit.loading .button-spinner {
-            display:
-                inline-block;
-        }
+            </span>
 
-        .login-submit.loading .button-text {
-            display:
-                none;
-        }
+        </a>
 
+        <a
+            href="../index.html"
+            class="home-link"
+        >
+            ← الرئيسية
+        </a>
 
-        /* =========================================
-           AUTH FOOTER LINKS
-        ========================================= */
+    </div>
 
-        .auth-links {
-            margin-top:
-                23px;
+</header>
 
-            padding-top:
-                20px;
 
-            border-top:
-                1px solid
-                var(--border-light);
+<!-- =========================================
+     MAIN
+========================================= -->
 
-            text-align:
-                center;
-        }
+<main class="auth-main">
 
-        .register-text {
-            color:
-                var(--muted-color);
+    <section class="auth-card">
 
-            font-size:
-                14px;
+        <div class="auth-icon">
+            🔐
+        </div>
 
-            margin-bottom:
-                12px;
-        }
+        <div class="auth-title">
 
-        .register-link {
-            color:
-                var(--primary-color);
+            <h1>
+                مرحبًا بعودتك 👋
+            </h1>
 
-            font-weight:
-                800;
-        }
+            <p>
+                سجّل دخولك للوصول إلى حسابك
+            </p>
 
-        .register-link:hover {
-            color:
-                var(--primary-dark);
-        }
+        </div>
 
-        .back-link {
-            display:
-                inline-flex;
 
-            align-items:
-                center;
+        <form
+            id="loginForm"
+            class="login-form"
+            onsubmit="loginUser(event)"
+        >
 
-            gap:
-                5px;
+            <!-- MESSAGE -->
 
-            color:
-                var(--muted-color);
+            <div
+                id="loginMessage"
+                class="login-message"
+                role="alert"
+                aria-live="polite"
+            ></div>
 
-            font-size:
-                13px;
 
-            font-weight:
-                700;
+            <!-- EMAIL -->
 
-            text-decoration:
-                none;
-        }
+            <div class="field-group">
 
-        .back-link:hover {
-            color:
-                var(--primary-color);
-        }
+                <label
+                    class="field-label"
+                    for="email"
+                >
+                    📧 البريد الإلكتروني
+                </label>
 
+                <div class="field-input-wrapper">
 
-        /* =========================================
-           FOOTER
-        ========================================= */
+                    <span class="field-icon">
+                        ✉️
+                    </span>
 
-        .auth-footer {
-            padding:
-                20px;
+                    <input
+                        class="field-input"
+                        type="email"
+                        id="email"
+                        placeholder="example@email.com"
+                        autocomplete="email"
+                        required
+                    >
 
-            text-align:
-                center;
+                </div>
 
-            color:
-                var(--muted-color);
+            </div>
 
-            font-size:
-                12px;
-        }
 
+            <!-- PASSWORD -->
 
-        /* =========================================
-           ANIMATIONS
-        ========================================= */
+            <div class="field-group">
 
-        @keyframes authFadeUp {
+                <label
+                    class="field-label"
+                    for="password"
+                >
+                    🔑 كلمة المرور
+                </label>
 
-            from {
-                opacity: 0;
+                <div class="field-input-wrapper">
 
-                transform:
-                    translateY(16px);
-            }
+                    <span class="field-icon">
+                        🔒
+                    </span>
 
-            to {
-                opacity: 1;
+                    <input
+                        class="field-input password-input"
+                        type="password"
+                        id="password"
+                        placeholder="أدخل كلمة المرور"
+                        autocomplete="current-password"
+                        required
+                    >
 
-                transform:
-                    translateY(0);
-            }
-        }
+                    <button
+                        type="button"
+                        id="passwordToggle"
+                        class="password-toggle"
+                        aria-label="إظهار كلمة المرور"
+                    >
+                        👁️
+                    </button>
 
-        @keyframes messageAppear {
+                </div>
 
-            from {
-                opacity: 0;
+            </div>
 
-                transform:
-                    translateY(-5px);
-            }
 
-            to {
-                opacity: 1;
+            <!-- SUBMIT -->
 
-                transform:
-                    translateY(0);
-            }
-        }
+            <button
+                type="submit"
+                id="loginButton"
+                class="login-submit"
+            >
 
-        @keyframes loginSpin {
+                <span class="button-text">
+                    تسجيل الدخول
+                </span>
 
-            from {
-                transform:
-                    rotate(0deg);
-            }
+                <span
+                    class="button-spinner"
+                    aria-hidden="true"
+                ></span>
 
-            to {
-                transform:
-                    rotate(360deg);
-            }
-        }
+            </button>
 
+        </form>
 
-        /* =========================================
-           DARK MODE
-        ========================================= */
 
-        body.dark .auth-header {
-            box-shadow:
-                0 2px 15px
-                rgba(0, 0, 0, 0.18);
-        }
+        <!-- LINKS -->
 
-        body.dark .login-message.error {
-            border-color:
-                #7f1d1d;
-        }
+        <div class="auth-links">
 
-        body.dark .login-message.info {
-            border-color:
-                #075985;
-        }
+            <p class="register-text">
 
-        body.dark .login-message.success {
-            border-color:
-                #166534;
-        }
+                ليس لديك حساب؟
 
+                <a
+                    href="register.html"
+                    class="register-link"
+                >
+                    إنشاء حساب جديد
+                </a>
 
-        /* =========================================
-           MOBILE
-        ========================================= */
-
-        @media (max-width: 600px) {
-
-            .auth-header {
-                padding:
-                    13px 14px;
-            }
-
-            .auth-brand {
-                font-size:
-                    18px;
-            }
-
-            .auth-brand-icon {
-                width:
-                    37px;
-
-                height:
-                    37px;
-            }
-
-            .home-link {
-                font-size:
-                    12px;
-
-                padding:
-                    6px 9px;
-            }
-
-            .auth-main {
-                padding:
-                    30px 14px;
-            }
-
-            .auth-card {
-                padding:
-                    32px 20px;
-
-                border-radius:
-                    18px;
-            }
-
-            .auth-title h1 {
-                font-size:
-                    25px;
-            }
-
-            .auth-icon {
-                width:
-                    62px;
-
-                height:
-                    62px;
-
-                font-size:
-                    28px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body class="auth-page">
-
-
-    <!-- =========================================
-         HEADER
-    ========================================= -->
-
-    <header class="auth-header">
-
-        <div class="auth-header-inner">
+            </p>
 
             <a
                 href="../index.html"
-                class="auth-brand"
+                class="back-link"
             >
-
-                <span class="auth-brand-icon">
-                    🚀
-                </span>
-
-                <span>
-                    Nova Future
-                </span>
-
-            </a>
-
-
-            <a
-                href="../index.html"
-                class="home-link"
-            >
-                ← الرئيسية
+                ← العودة إلى الصفحة الرئيسية
             </a>
 
         </div>
 
-    </header>
+    </section>
 
+</main>
 
 
-    <!-- =========================================
-         MAIN
-    ========================================= -->
+<!-- =========================================
+     FOOTER
+========================================= -->
 
-    <main class="auth-main">
+<footer class="auth-footer">
 
-        <section class="auth-card">
+    © 2026 Nova Future — جميع الحقوق محفوظة
 
+</footer>
 
-            <div class="auth-icon">
-                🔐
-            </div>
 
+<!-- =========================================
+     FIREBASE LOGIN
+========================================= -->
 
-            <div class="auth-title">
+<script type="module">
 
-                <h1>
-                    مرحبًا بعودتك 👋
-                </h1>
+    import {
+        signInWithEmailAndPassword
+    } from
+        "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-                <p>
-                    سجّل دخولك للوصول إلى حسابك
-                </p>
+    import {
+        doc,
+        getDoc
+    } from
+        "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-            </div>
+    import {
+        auth,
+        db
+    } from
+        "../js/firebase-config.js";
 
 
-            <form
-                id="loginForm"
-                class="login-form"
-                onsubmit="loginUser(event)"
-            >
+    /* =========================================
+       ELEMENTS
+    ========================================= */
 
+    const loginForm =
+        document.getElementById("loginForm");
 
-                <!-- MESSAGE -->
+    const loginButton =
+        document.getElementById("loginButton");
 
-                <div
-                    id="loginMessage"
-                    class="login-message"
-                    role="alert"
-                    aria-live="polite"
-                ></div>
+    const loginMessage =
+        document.getElementById("loginMessage");
 
+    const emailInput =
+        document.getElementById("email");
 
+    const passwordInput =
+        document.getElementById("password");
 
-                <!-- EMAIL -->
+    const passwordToggle =
+        document.getElementById("passwordToggle");
 
-                <div class="field-group">
 
-                    <label
-                        class="field-label"
-                        for="email"
-                    >
-                        📧 البريد الإلكتروني
-                    </label>
+    /* =========================================
+       MESSAGE
+    ========================================= */
 
-                    <div class="field-input-wrapper">
+    function showMessage(
+        message,
+        type = "error"
+    ) {
 
-                        <span class="field-icon">
-                            ✉️
-                        </span>
+        loginMessage.textContent =
+            message;
 
-                        <input
-                            class="field-input"
-                            type="email"
-                            id="email"
-                            placeholder="example@email.com"
-                            autocomplete="email"
-                            required
-                        >
+        loginMessage.className =
+            "login-message show " + type;
+    }
 
-                    </div>
 
-                </div>
+    function clearMessage() {
 
+        loginMessage.textContent =
+            "";
 
+        loginMessage.className =
+            "login-message";
+    }
 
-                <!-- PASSWORD -->
 
-                <div class="field-group">
+    /* =========================================
+       LOADING
+    ========================================= */
 
-                    <label
-                        class="field-label"
-                        for="password"
-                    >
-                        🔑 كلمة المرور
-                    </label>
+    function setLoading(
+        isLoading
+    ) {
 
-                    <div class="field-input-wrapper">
+        if (isLoading) {
 
-                        <span class="field-icon">
-                            🔒
-                        </span>
+            loginButton.classList.add(
+                "loading"
+            );
 
-                        <input
-                            class="field-input password-input"
-                            type="password"
-                            id="password"
-                            placeholder="أدخل كلمة المرور"
-                            autocomplete="current-password"
-                            required
-                        >
+            loginButton.disabled =
+                true;
 
-                        <button
-                            type="button"
-                            id="passwordToggle"
-                            class="password-toggle"
-                            aria-label="إظهار كلمة المرور"
-                        >
-                            👁️
-                        </button>
+            emailInput.disabled =
+                true;
 
-                    </div>
+            passwordInput.disabled =
+                true;
 
-                </div>
+        } else {
 
+            loginButton.classList.remove(
+                "loading"
+            );
 
+            loginButton.disabled =
+                false;
 
-                <!-- SUBMIT -->
+            emailInput.disabled =
+                false;
 
-                <button
-                    type="submit"
-                    id="loginButton"
-                    class="login-submit"
-                >
-
-                    <span class="button-text">
-                        تسجيل الدخول
-                    </span>
-
-                    <span
-                        class="button-spinner"
-                        aria-hidden="true"
-                    ></span>
-
-                </button>
-
-
-            </form>
-
-
-
-            <!-- LINKS -->
-
-            <div class="auth-links">
-
-                <p class="register-text">
-
-                    ليس لديك حساب؟
-                    <a
-                        href="register.html"
-                        class="register-link"
-                    >
-                        إنشاء حساب جديد
-                    </a>
-
-                </p>
-
-
-                <a
-                    href="../index.html"
-                    class="back-link"
-                >
-                    ← العودة إلى الصفحة الرئيسية
-                </a>
-
-            </div>
-
-
-        </section>
-
-    </main>
-
-
-
-    <!-- =========================================
-         FOOTER
-    ========================================= -->
-
-    <footer class="auth-footer">
-
-        © 2026 Nova Future — جميع الحقوق محفوظة
-
-    </footer>
-
-
-
-    <!-- =========================================
-         FIREBASE LOGIN
-    ========================================= -->
-
-    <script type="module">
-
-        import {
-            signInWithEmailAndPassword
-        } from
-            "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-        import {
-            doc,
-            getDoc
-        } from
-            "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
-        import {
-            auth,
-            db
-        } from
-            "../js/firebase-config.js";
-
-
-        /* =========================================
-           ELEMENTS
-        ========================================= */
-
-        const loginForm =
-            document.getElementById("loginForm");
-
-        const loginButton =
-            document.getElementById("loginButton");
-
-        const loginMessage =
-            document.getElementById("loginMessage");
-
-        const emailInput =
-            document.getElementById("email");
-
-        const passwordInput =
-            document.getElementById("password");
-
-        const passwordToggle =
-            document.getElementById("passwordToggle");
-
-
-        /* =========================================
-           MESSAGE
-        ========================================= */
-
-        function showMessage(message, type = "error") {
-
-            loginMessage.textContent =
-                message;
-
-            loginMessage.className =
-                "login-message show " + type;
+            passwordInput.disabled =
+                false;
 
         }
 
+    }
 
-        function clearMessage() {
 
-            loginMessage.textContent =
-                "";
+    /* =========================================
+       PASSWORD VISIBILITY
+    ========================================= */
 
-            loginMessage.className =
-                "login-message";
+    passwordToggle.addEventListener(
+        "click",
+        function () {
+
+            const isPassword =
+                passwordInput.type ===
+                "password";
+
+            passwordInput.type =
+                isPassword
+                    ? "text"
+                    : "password";
+
+            passwordToggle.textContent =
+                isPassword
+                    ? "🙈"
+                    : "👁️";
+
+            passwordToggle.setAttribute(
+                "aria-label",
+                isPassword
+                    ? "إخفاء كلمة المرور"
+                    : "إظهار كلمة المرور"
+            );
 
         }
+    );
 
 
-        /* =========================================
-           LOADING
-        ========================================= */
+    /* =========================================
+       LOGIN
+    ========================================= */
 
-        function setLoading(isLoading) {
+    window.loginUser =
+        async function (event) {
 
-            if (isLoading) {
+            event.preventDefault();
 
-                loginButton.classList.add(
-                    "loading"
+            clearMessage();
+
+            const email =
+                emailInput.value.trim();
+
+            const password =
+                passwordInput.value;
+
+
+            if (
+                !email ||
+                !password
+            ) {
+
+                showMessage(
+                    "من فضلك أدخل البريد الإلكتروني وكلمة المرور."
                 );
 
-                loginButton.disabled =
-                    true;
-
-                emailInput.disabled =
-                    true;
-
-                passwordInput.disabled =
-                    true;
-
-            } else {
-
-                loginButton.classList.remove(
-                    "loading"
-                );
-
-                loginButton.disabled =
-                    false;
-
-                emailInput.disabled =
-                    false;
-
-                passwordInput.disabled =
-                    false;
-
+                return;
             }
 
-        }
+
+            setLoading(true);
 
 
-        /* =========================================
-           PASSWORD VISIBILITY
-        ========================================= */
+            try {
 
-        passwordToggle.addEventListener(
-            "click",
-            function () {
-
-                const isPassword =
-                    passwordInput.type === "password";
-
-                passwordInput.type =
-                    isPassword
-                        ? "text"
-                        : "password";
-
-                passwordToggle.textContent =
-                    isPassword
-                        ? "🙈"
-                        : "👁️";
-
-                passwordToggle.setAttribute(
-                    "aria-label",
-                    isPassword
-                        ? "إخفاء كلمة المرور"
-                        : "إظهار كلمة المرور"
-                );
-
-            }
-        );
+                const userCredential =
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
 
 
-        /* =========================================
-           LOGIN
-        ========================================= */
-
-        window.loginUser =
-            async function (event) {
-
-                event.preventDefault();
-
-                clearMessage();
-
-                const email =
-                    emailInput.value
-                        .trim();
-
-                const password =
-                    passwordInput.value;
+                const user =
+                    userCredential.user;
 
 
-                if (!email || !password) {
+                const userDoc =
+                    await getDoc(
+                        doc(
+                            db,
+                            "users",
+                            user.uid
+                        )
+                    );
+
+
+                if (!userDoc.exists()) {
 
                     showMessage(
-                        "من فضلك أدخل البريد الإلكتروني وكلمة المرور."
+                        "تم تسجيل الدخول، لكن بيانات الحساب غير موجودة. تواصل مع إدارة المنصة."
                     );
+
+                    setLoading(false);
 
                     return;
                 }
 
 
-                setLoading(true);
+                const userData =
+                    userDoc.data();
 
 
-                try {
+                if (
+                    userData.role ===
+                    "student"
+                ) {
 
-                    const userCredential =
-                        await signInWithEmailAndPassword(
-                            auth,
-                            email,
-                            password
-                        );
+                    window.location.href =
+                        "student.html";
 
-
-                    const user =
-                        userCredential.user;
-
-
-                    const userDoc =
-                        await getDoc(
-                            doc(
-                                db,
-                                "users",
-                                user.uid
-                            )
-                        );
-
-
-                    if (!userDoc.exists()) {
-
-                        showMessage(
-                            "تم تسجيل الدخول، لكن بيانات الحساب غير موجودة. تواصل مع إدارة المنصة."
-                        );
-
-                        setLoading(false);
-
-                        return;
-                    }
-
-
-                    const userData =
-                        userDoc.data();
-
-
-                    if (userData.role === "student") {
-
-                        window.location.href =
-                            "student.html";
-
-                        return;
-
-                    }
-
-
-                    if (userData.role === "teacher") {
-
-                        window.location.href =
-                            "teacher.html";
-
-                        return;
-
-                    }
-
-
-                    if (userData.role === "admin") {
-
-                        window.location.href =
-                            "admin.html";
-
-                        return;
-
-                    }
-
-
-                    showMessage(
-                        "نوع الحساب غير معروف. تواصل مع إدارة المنصة."
-                    );
-
-                    setLoading(false);
-
-                } catch (error) {
-
-                    console.error(
-                        "LOGIN ERROR:",
-                        error
-                    );
-
-
-                    let message =
-                        "تعذر تسجيل الدخول. تأكد من بياناتك وحاول مرة أخرى.";
-
-
-                    if (
-                        error.code ===
-                        "auth/invalid-credential"
-                    ) {
-
-                        message =
-                            "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-
-                    } else if (
-                        error.code ===
-                        "auth/user-not-found"
-                    ) {
-
-                        message =
-                            "لا يوجد حساب بهذا البريد الإلكتروني.";
-
-                    } else if (
-                        error.code ===
-                        "auth/wrong-password"
-                    ) {
-
-                        message =
-                            "كلمة المرور غير صحيحة.";
-
-                    } else if (
-                        error.code ===
-                        "auth/invalid-email"
-                    ) {
-
-                        message =
-                            "البريد الإلكتروني غير صحيح.";
-
-                    } else if (
-                        error.code ===
-                        "auth/too-many-requests"
-                    ) {
-
-                        message =
-                            "تمت محاولات تسجيل دخول كثيرة. حاول مرة أخرى بعد قليل.";
-
-                    }
-
-
-                    showMessage(
-                        message,
-                        "error"
-                    );
-
-                    setLoading(false);
-
+                    return;
                 }
 
-            };
+
+                if (
+                    userData.role ===
+                    "teacher"
+                ) {
+
+                    window.location.href =
+                        "teacher.html";
+
+                    return;
+                }
 
 
-        /* =========================================
-           CLEAR ERROR WHEN USER TYPES
-        ========================================= */
+                if (
+                    userData.role ===
+                    "admin"
+                ) {
 
-        emailInput.addEventListener(
-            "input",
-            clearMessage
-        );
+                    window.location.href =
+                        "admin.html";
 
-        passwordInput.addEventListener(
-            "input",
-            clearMessage
-        );
-
-    </script>
+                    return;
+                }
 
 
-    <!-- GLOBAL APP -->
+                showMessage(
+                    "نوع الحساب غير معروف. تواصل مع إدارة المنصة."
+                );
 
-    <script src="../js/app.js"></script>
+                setLoading(false);
 
-</body>
+            } catch (error) {
 
-</html>
+                console.error(
+                    "LOGIN ERROR:",
+                    error
+                );
+
+
+                let message =
+                    "تعذر تسجيل الدخول. تأكد من بياناتك وحاول مرة أخرى.";
+
+
+                if (
+                    error.code ===
+                    "auth/invalid-credential"
+                ) {
+
+                    message =
+                        "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+                } else if (
+                    error.code ===
+                    "auth/user-not-found"
+                ) {
+
+                    message =
+                        "لا يوجد حساب بهذا البريد الإلكتروني.";
+
+                } else if (
+                    error.code ===
+                    "auth/wrong-password"
+                ) {
+
+                    message =
+                        "كلمة المرور غير صحيحة.";
+
+                } else if (
+                    error.code ===
+                    "auth/invalid-email"
+                ) {
+
+                    message =
+                        "البريد الإلكتروني غير صحيح.";
+
+                } else if (
+                    error.code ===
+                    "auth/too-many-requests"
+                ) {
+
+                    message =
+                        "تمت محاولات تسجيل دخول كثيرة. حاول مرة أخرى بعد قليل.";
+                }
+
+
+                showMessage(
+                    message,
+                    "error"
+                );
+
+                setLoading(false);
+            }
+
+        };
+
+
+    /* =========================================
+       CLEAR ERROR WHEN USER TYPES
+    ========================================= */
+
+    emailInput.addEventListener(
+        "input",
+        clearMessage
+    );
+
+    passwordInput.addEventListener(
+        "input",
+        clearMessage
+    );
+
+</script>
+
+
+<!-- GLOBAL APP -->
+
+<script src="../js/app.js"></script>
+
+</body></html>
