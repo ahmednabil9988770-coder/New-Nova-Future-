@@ -2687,6 +2687,13 @@ async function recordExamViolation(reason) {
     lastViolationTime = now;
 
     examViolationCount++;
+    const violationCounter =
+    document.getElementById("examViolationCount");
+
+if (violationCounter) {
+    violationCounter.textContent =
+        examViolationCount;
+}
 
     console.warn(
         "Exam violation detected:",
