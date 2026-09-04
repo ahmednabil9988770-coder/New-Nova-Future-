@@ -2419,7 +2419,18 @@
     let currentQuestionIndex = 0;
     let selectedAnswers = [];
     let examTimerInterval = null;
-    let examEndTime = null;
+let examEndTime = null;
+
+/* =====================================================
+   EXAM MONITORING
+===================================================== */
+
+let examViolationCount = 0;
+let examMonitoringActive = false;
+let examViolationSaving = false;
+let lastViolationTime = 0;
+
+const EXAM_VIOLATION_COOLDOWN = 1500;
 
 
     /* =====================================================
@@ -2645,7 +2656,97 @@
 
         return duration;
     }
+/* =====================================================
+   EXAM LEAVE / TAB SWITCH MONITOR
+===================================================== */
 
+async function recordExamViolation(reason) {
+
+    if (!activeExam || !examMonitoringActive) {
+        return;
+    }
+
+    const now = Date.now();
+
+    /* منع تسجيل نفس الحدث عدة مرات بسرعة */
+    if (
+        now - lastViolationTime <
+        EXAM_VIOLATION_COOLDOWN
+    ) {
+        return;
+    }
+
+    lastViolationTime = now;
+
+    examViolationCount++;
+
+    console.warn(
+        "Exam violation detected:",
+        reason
+    );
+
+    /*
+       محاولة تسجيل المخالفة في Firestore.
+       إذا كانت قواعد Firestore لا تسمح بذلك،
+       لن يتوقف الامتحان بسبب خطأ التسجيل.
+    */
+
+    if (
+        !currentUser ||
+        !activeExam ||
+        examViolationSaving
+    ) {
+        return;
+    }
+
+    examViolationSaving = true;
+
+    try {
+
+        await addDoc(
+            collection(
+                db,
+                "examViolations"
+            ),
+            {
+                studentId:
+                    currentUser.uid,
+
+                studentName:
+                    currentStudent?.name ||
+                    currentUser.displayName ||
+                    "طالب",
+
+                examId:
+                    activeExam.id,
+
+                examTitle:
+                    activeExam.title ||
+                    "امتحان",
+
+                reason,
+
+                violationNumber:
+                    examViolationCount,
+
+                createdAt:
+                    serverTimestamp()
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Saving exam violation error:",
+            error
+        );
+
+    } finally {
+
+        examViolationSaving = false;
+    }
+
+}
 
     /* =====================================================
        AUTH
@@ -2766,6 +2867,51 @@
 
         }
     );
+    /* =====================================================
+   VISIBILITY CHANGE MONITOR
+===================================================== */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (!examMonitoringActive) {
+            return;
+        }
+
+        if (
+            document.visibilityState ===
+            "hidden"
+        ) {
+
+            recordExamViolation(
+                "مغادرة صفحة الامتحان أو الانتقال إلى تبويب آخر"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   WINDOW BLUR MONITOR
+===================================================== */
+
+window.addEventListener(
+    "blur",
+    () => {
+
+        if (!examMonitoringActive) {
+            return;
+        }
+
+        recordExamViolation(
+            "فقدان تركيز نافذة الامتحان"
+        );
+
+    }
+);
 
 
     /* =====================================================
