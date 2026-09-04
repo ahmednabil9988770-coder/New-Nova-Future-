@@ -1,3 +1,4 @@
+:::writing{variant="document" id="58321"}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -16,31 +17,9 @@
 
     <style>
         /* =========================================
-           FORCE DARK MODE VARIABLES (لإزالة أي خلفية بيضاء)
+           Nova Future - Admin Dashboard
+           Page-specific styles only
         ========================================= */
-        :root {
-            --bg-color: #0f1016;
-            --surface-color: #161822;
-            --surface-secondary: #1a1d29;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-light: rgba(255, 255, 255, 0.04);
-            --heading-color: #ffffff;
-            --text-color: #9ca3af;
-            --muted-color: #9ca3af;
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: rgba(37, 99, 235, 0.15);
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.25);
-            --radius-lg: 22px;
-            --transition: all 0.2s ease;
-            --danger-bg: rgba(239, 68, 68, 0.15);
-            --danger-color: #ef4444;
-            --success-bg: rgba(34, 197, 94, 0.15);
-            --success-color: #22c55e;
-            --warning-bg: rgba(234, 179, 8, 0.15);
-            --warning-color: #eab308;
-        }
 
         body {
             background:
@@ -49,8 +28,7 @@
                     var(--primary-light),
                     transparent 32%
                 ),
-                var(--bg-color) !important;
-            color: var(--text-color) !important;
+                var(--bg-color);
         }
 
         .admin-shell {
@@ -104,7 +82,7 @@
             margin: 0;
             font-size: 19px;
             font-weight: 800;
-            color: var(--heading-color);
+            color: var(--text-color);
         }
 
         .brand-text span {
@@ -154,7 +132,6 @@
             font-size: 14px;
             font-weight: 800;
             transition: var(--transition);
-            cursor: pointer;
         }
 
         .logout-btn:hover {
@@ -301,7 +278,7 @@
 
         .section-heading h3 {
             margin: 0;
-            color: var(--heading-color);
+            color: var(--text-color);
             font-size: 19px;
         }
 
@@ -324,7 +301,7 @@
             padding: 20px;
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            background: var(--surface-secondary);
+            background: var(--bg-color);
             transition: var(--transition);
         }
 
@@ -361,7 +338,7 @@
         .stat-number {
             display: block;
             margin-top: 14px;
-            color: var(--heading-color);
+            color: var(--text-color);
             font-size: 30px;
             line-height: 1;
             font-weight: 900;
@@ -384,32 +361,13 @@
         .form-group label {
             font-size: 13px;
             font-weight: 800;
-            color: var(--heading-color);
+            color: var(--text-color);
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 14px;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            background: var(--surface-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--heading-color);
-            padding: 12px 14px;
-            border-radius: 11px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: var(--primary-color);
-            outline: none;
         }
 
         .form-actions {
@@ -429,7 +387,6 @@
             font-size: 14px;
             font-weight: 800;
             transition: var(--transition);
-            cursor: pointer;
         }
 
         .primary-admin-btn:hover {
@@ -455,7 +412,6 @@
             font-size: 13px;
             font-weight: 800;
             transition: var(--transition);
-            cursor: pointer;
         }
 
         .secondary-admin-btn:hover {
@@ -473,7 +429,6 @@
             font-size: 13px;
             font-weight: 800;
             transition: var(--transition);
-            cursor: pointer;
         }
 
         .danger-admin-btn:hover {
@@ -492,7 +447,7 @@
             padding: 18px;
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            background: var(--surface-secondary);
+            background: var(--bg-color);
             transition: var(--transition);
         }
 
@@ -510,7 +465,7 @@
 
         .item-title {
             margin: 0;
-            color: var(--heading-color);
+            color: var(--text-color);
             font-size: 16px;
             font-weight: 800;
             line-height: 1.6;
@@ -609,7 +564,7 @@
             color: var(--muted-color);
             border: 1px dashed var(--border-color);
             border-radius: 14px;
-            background: var(--surface-secondary);
+            background: var(--bg-color);
         }
 
         .empty-icon {
@@ -660,6 +615,37 @@
             text-align: center;
             color: var(--muted-color);
             font-size: 13px;
+        }
+
+        /* Dark mode */
+
+        body.dark {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(37, 99, 235, 0.13),
+                    transparent 32%
+                ),
+                var(--bg-color);
+        }
+
+        body.dark .welcome {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.24);
+        }
+
+        body.dark .stat-card,
+        body.dark .admin-item,
+        body.dark .empty-state {
+            background: var(--bg-color);
+        }
+
+        body.dark .question-area {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(37, 99, 235, 0.11),
+                    var(--surface-color)
+                );
         }
 
         /* Responsive */
@@ -761,6 +747,22 @@
 
             .item-actions > button {
                 width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .loading-spinner {
+                animation: none;
+            }
+
+            .stat-card,
+            .admin-item,
+            .header-link,
+            .logout-btn,
+            .primary-admin-btn,
+            .secondary-admin-btn,
+            .danger-admin-btn {
+                transition: none;
             }
         }
     </style>
@@ -3146,3 +3148,4 @@
 </body>
 
 </html>
+:::
