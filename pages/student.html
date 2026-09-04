@@ -3989,6 +3989,12 @@ selectedAnswers = Array(questions.length).fill(null);
 
 /* بدء مراقبة الامتحان */
 examViolationCount = 0;
+        const violationCounter =
+    document.getElementById("examViolationCount");
+
+if (violationCounter) {
+    violationCounter.textContent = "0";
+}
 examMonitoringActive = true;
 examViolationSaving = false;
 lastViolationTime = 0;
