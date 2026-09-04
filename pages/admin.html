@@ -1,2189 +1,1237 @@
-:::writing{variant="document" id="58321"}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
-        content="لوحة تحكم الأدمن في منصة Nova Future التعليمية."
+        content="تسجيل الدخول إلى منصة Nova Future التعليمية."
     >
 
-    <title>لوحة الأدمن - Nova Future</title>
+    <title>تسجيل الدخول - Nova Future</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
     <style>
+
         /* =========================================
-           Nova Future - Admin Dashboard
-           Page-specific styles only
+           FORCE DARK MODE VARIABLES (لإزالة أي خلفية بيضاء)
         ========================================= */
+        :root {
+            --background-color: #0f1016;
+            --surface-color: #161822;
+            --surface-secondary: #1a1d29;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-light: rgba(255, 255, 255, 0.04);
+            --heading-color: #ffffff;
+            --text-color: #9ca3af;
+            --muted-color: #9ca3af;
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: rgba(37, 99, 235, 0.15);
+            --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
 
         body {
-            background:
-                radial-gradient(
-                    circle at top right,
-                    var(--primary-light),
-                    transparent 32%
-                ),
-                var(--bg-color);
+            background-color: var(--background-color) !important;
+            color: var(--text-color) !important;
         }
 
-        .admin-shell {
-            width: min(1180px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 32px 0 50px;
-        }
 
-        /* Header */
+        /* =========================================
+           LOGIN PAGE
+        ========================================= */
 
-        .admin-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: var(--surface-color);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-        }
+        .auth-page {
+            min-height: 100vh;
 
-        .admin-header-inner {
-            width: min(1180px, calc(100% - 32px));
-            min-height: 74px;
-            margin: 0 auto;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
+            flex-direction: column;
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 0;
-        }
-
-        .brand-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
-            display: grid;
-            place-items: center;
-            flex-shrink: 0;
-            background: var(--primary-color);
-            color: #fff;
-            font-size: 22px;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
-        }
-
-        .brand-text h1 {
-            margin: 0;
-            font-size: 19px;
-            font-weight: 800;
-            color: var(--text-color);
-        }
-
-        .brand-text span {
-            display: block;
-            margin-top: 2px;
-            font-size: 12px;
-            color: var(--muted-color);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .header-link {
-            min-height: 42px;
-            padding: 0 14px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            color: var(--text-color);
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 700;
-            transition: var(--transition);
-        }
-
-        .header-link:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-1px);
-        }
-
-        .logout-btn {
-            min-height: 42px;
-            padding: 0 15px;
-            border: 1px solid rgba(220, 38, 38, 0.18);
-            border-radius: 10px;
-            background: var(--danger-bg);
-            color: var(--danger-color);
-            font-size: 14px;
-            font-weight: 800;
-            transition: var(--transition);
-        }
-
-        .logout-btn:hover {
-            background: var(--danger-color);
-            color: #fff;
-            transform: translateY(-1px);
-        }
-
-        /* Welcome */
-
-        .welcome {
-            margin-bottom: 24px;
-            padding: 28px;
-            border-radius: var(--radius-lg);
             background:
                 linear-gradient(
                     135deg,
-                    var(--primary-color),
-                    var(--primary-dark)
+                    var(--background-color),
+                    var(--surface-secondary)
                 );
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
         }
 
-        .welcome::before,
-        .welcome::after {
+
+        /* =========================================
+           AUTH HEADER
+        ========================================= */
+
+        .auth-header {
+            padding: 18px 20px;
+
+            background:
+                var(--surface-color);
+
+            border-bottom:
+                1px solid var(--border-color);
+
+            box-shadow:
+                0 2px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-header-inner {
+            max-width: 1050px;
+
+            margin: 0 auto;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+        .auth-brand {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color:
+                var(--heading-color);
+
+            font-size: 20px;
+
+            font-weight: 900;
+
+            text-decoration: none;
+        }
+
+        .auth-brand:hover {
+            color:
+                var(--heading-color);
+        }
+
+        .auth-brand-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background:
+                var(--primary-color);
+
+            color:
+                #ffffff;
+
+            box-shadow:
+                0 5px 14px
+                rgba(37, 99, 235, 0.2);
+        }
+
+        .home-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            min-height: 38px;
+
+            padding:
+                7px 13px;
+
+            border-radius:
+                9px;
+
+            color:
+                var(--muted-color);
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-decoration: none;
+
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .home-link:hover {
+            background:
+                var(--primary-light);
+
+            color:
+                var(--primary-color);
+        }
+
+
+        /* =========================================
+           AUTH MAIN
+        ========================================= */
+
+        .auth-main {
+            flex: 1;
+
+            width: 100%;
+
+            max-width:
+                520px;
+
+            margin:
+                0 auto;
+
+            padding:
+                55px 20px;
+        }
+
+
+        /* =========================================
+           AUTH CARD
+        ========================================= */
+
+        .auth-card {
+            position: relative;
+
+            background:
+                var(--surface-color);
+
+            border:
+                1px solid var(--border-color);
+
+            border-radius:
+                22px;
+
+            padding:
+                38px 32px;
+
+            box-shadow:
+                var(--shadow-lg);
+
+            overflow:
+                hidden;
+
+            animation:
+                authFadeUp 0.5s ease both;
+        }
+
+        .auth-card::before {
             content: "";
+
             position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            pointer-events: none;
+
+            top: 0;
+            right: 0;
+            left: 0;
+
+            height: 4px;
+
+            background:
+                var(--primary-color);
         }
 
-        .welcome::before {
-            width: 220px;
-            height: 220px;
-            top: -120px;
-            left: -70px;
-        }
 
-        .welcome::after {
-            width: 180px;
-            height: 180px;
-            bottom: -110px;
-            right: -50px;
-        }
+        /* =========================================
+           AUTH ICON
+        ========================================= */
 
-        .welcome-content {
-            position: relative;
-            z-index: 1;
-        }
+        .auth-icon {
+            width: 68px;
+            height: 68px;
 
-        .welcome-badge {
-            display: inline-flex;
+            margin:
+                0 auto 18px;
+
+            display: flex;
+
             align-items: center;
+            justify-content: center;
+
+            border-radius:
+                19px;
+
+            background:
+                var(--primary-light);
+
+            font-size:
+                31px;
+        }
+
+
+        /* =========================================
+           AUTH TITLE
+        ========================================= */
+
+        .auth-title {
+            text-align:
+                center;
+
+            margin-bottom:
+                8px;
+        }
+
+        .auth-title h1 {
+            color:
+                var(--heading-color);
+
+            font-size:
+                28px;
+
+            font-weight:
+                900;
+
+            margin-bottom:
+                7px;
+        }
+
+        .auth-title p {
+            color:
+                var(--muted-color);
+
+            font-size:
+                14px;
+
+            margin:
+                0;
+        }
+
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .login-form {
+            margin-top:
+                28px;
+        }
+
+        .field-group {
+            margin-bottom:
+                16px;
+        }
+
+        .field-label {
+            display: flex;
+
+            align-items: center;
+
             gap: 6px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.13);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 12px;
+
+            margin-bottom:
+                7px;
+
+            color:
+                var(--heading-color);
+
+            font-size:
+                13px;
+
+            font-weight:
+                800;
         }
 
-        .welcome h2 {
-            margin: 0 0 8px;
-            color: #fff;
-            font-size: clamp(22px, 4vw, 30px);
+        .field-input-wrapper {
+            position:
+                relative;
         }
 
-        .welcome p {
-            margin: 0;
-            color: rgba(255, 255, 255, 0.86);
-            line-height: 1.8;
+        .field-icon {
+            position:
+                absolute;
+
+            top:
+                50%;
+
+            right:
+                14px;
+
+            transform:
+                translateY(-50%);
+
+            font-size:
+                17px;
+
+            pointer-events:
+                none;
+
+            opacity:
+                0.75;
         }
 
-        /* Page status */
+        .field-input {
+            margin:
+                0;
 
-        .page-message {
-            display: none;
-            margin-bottom: 20px;
-            padding: 13px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            border: 1px solid transparent;
-        }
+            padding-right:
+                43px;
 
-        .page-message.show {
-            display: block;
-        }
-
-        .page-message.success {
-            color: var(--success-color);
-            background: var(--success-bg);
-            border-color: rgba(22, 163, 74, 0.16);
-        }
-
-        .page-message.error {
-            color: var(--danger-color);
-            background: var(--danger-bg);
-            border-color: rgba(220, 38, 38, 0.16);
-        }
-
-        /* Section */
-
-        .admin-section {
-            margin-bottom: 24px;
-            padding: 24px;
-            background: var(--surface-color);
+            min-height:
+                50px;
+            
+            background: var(--surface-secondary);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .section-heading {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .section-title-wrap {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .section-icon {
-            width: 42px;
-            height: 42px;
-            flex-shrink: 0;
-            display: grid;
-            place-items: center;
+            color: var(--heading-color);
             border-radius: 12px;
-            background: var(--primary-light);
-            color: var(--primary-color);
-            font-size: 19px;
         }
 
-        .section-heading h3 {
-            margin: 0;
-            color: var(--text-color);
-            font-size: 19px;
-        }
-
-        .section-heading p {
-            margin: 4px 0 0;
-            color: var(--muted-color);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        /* Stats */
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .stat-card {
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            background: var(--bg-color);
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
+        .field-input:focus {
             border-color: var(--primary-color);
-            box-shadow: var(--shadow-sm);
+            outline: none;
         }
 
-        .stat-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
+        .password-input {
+            padding-left:
+                48px;
         }
 
-        .stat-icon {
-            width: 38px;
-            height: 38px;
-            display: grid;
-            place-items: center;
-            border-radius: 11px;
-            background: var(--primary-light);
-            color: var(--primary-color);
-            font-size: 17px;
+
+        /* =========================================
+           PASSWORD TOGGLE
+        ========================================= */
+
+        .password-toggle {
+            position:
+                absolute;
+
+            top:
+                50%;
+
+            left:
+                8px;
+
+            transform:
+                translateY(-50%);
+
+            width:
+                38px;
+
+            height:
+                38px;
+
+            min-height:
+                38px;
+
+            padding:
+                0;
+
+            margin:
+                0;
+
+            border:
+                none;
+
+            background:
+                transparent;
+
+            color:
+                var(--muted-color);
+
+            box-shadow:
+                none;
+
+            font-size:
+                16px;
         }
 
-        .stat-label {
-            color: var(--muted-color);
-            font-size: 13px;
-            font-weight: 700;
+        .password-toggle:hover {
+            background:
+                var(--primary-light);
+
+            color:
+                var(--primary-color);
+
+            transform:
+                translateY(-50%);
+            
+            box-shadow:
+                none;
         }
 
-        .stat-number {
-            display: block;
-            margin-top: 14px;
-            color: var(--text-color);
-            font-size: 30px;
-            line-height: 1;
-            font-weight: 900;
+
+        /* =========================================
+           ERROR / INFO MESSAGE
+        ========================================= */
+
+        .login-message {
+            display:
+                none;
+
+            padding:
+                12px 14px;
+
+            margin:
+                0 0 16px;
+
+            border-radius:
+                11px;
+
+            font-size:
+                13px;
+
+            line-height:
+                1.7;
+
+            text-align:
+                right;
         }
 
-        /* Forms */
+        .login-message.show {
+            display:
+                block;
 
-        .admin-form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+            animation:
+                messageAppear 0.25s ease both;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
+        .login-message.error {
+            background:
+                rgba(239, 68, 68, 0.15);
+
+            color:
+                #ef4444;
+
+            border:
+                1px solid #7f1d1d;
         }
 
-        .form-group label {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--text-color);
+        .login-message.info {
+            background:
+                rgba(14, 165, 233, 0.15);
+
+            color:
+                #0ea5e9;
+
+            border:
+                1px solid #075985;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
+        .login-message.success {
+            background:
+                rgba(34, 197, 94, 0.15);
+
+            color:
+                #22c55e;
+
+            border:
+                1px solid #166534;
         }
 
-        .form-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
 
-        .primary-admin-btn {
-            min-height: 46px;
-            padding: 0 18px;
-            border: 0;
-            border-radius: 11px;
+        /* =========================================
+           SUBMIT BUTTON
+        ========================================= */
+
+        .login-submit {
+            width:
+                100%;
+
+            min-height:
+                51px;
+
+            margin-top:
+                5px;
+
+            border-radius:
+                13px;
+
+            font-size:
+                15px;
+                
             background: var(--primary-color);
-            color: #fff;
-            font-size: 14px;
-            font-weight: 800;
-            transition: var(--transition);
+            color: #ffffff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
         }
 
-        .primary-admin-btn:hover {
+        .login-submit:hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
         }
 
-        .primary-admin-btn:disabled,
-        .secondary-admin-btn:disabled,
-        .danger-admin-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .login-submit.loading {
+            pointer-events:
+                none;
+
+            opacity:
+                0.75;
         }
 
-        .secondary-admin-btn {
-            min-height: 40px;
-            padding: 0 13px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background: var(--surface-color);
-            color: var(--primary-color);
-            font-size: 13px;
-            font-weight: 800;
-            transition: var(--transition);
+        .button-spinner {
+            display:
+                none;
+
+            width:
+                19px;
+
+            height:
+                19px;
+
+            border:
+                3px solid
+                rgba(255, 255, 255, 0.35);
+
+            border-top-color:
+                #ffffff;
+
+            border-radius:
+                50%;
+
+            animation:
+                loginSpin 0.75s linear infinite;
         }
 
-        .secondary-admin-btn:hover {
-            border-color: var(--primary-color);
-            background: var(--primary-light);
+        .login-submit.loading .button-spinner {
+            display:
+                inline-block;
         }
 
-        .danger-admin-btn {
-            min-height: 40px;
-            padding: 0 13px;
-            border: 1px solid rgba(220, 38, 38, 0.18);
-            border-radius: 10px;
-            background: var(--danger-bg);
-            color: var(--danger-color);
-            font-size: 13px;
-            font-weight: 800;
-            transition: var(--transition);
+        .login-submit.loading .button-text {
+            display:
+                none;
         }
 
-        .danger-admin-btn:hover {
-            background: var(--danger-color);
-            color: #fff;
+
+        /* =========================================
+           AUTH FOOTER LINKS
+        ========================================= */
+
+        .auth-links {
+            margin-top:
+                23px;
+
+            padding-top:
+                20px;
+
+            border-top:
+                1px solid
+                var(--border-light);
+
+            text-align:
+                center;
         }
 
-        /* Lists */
+        .register-text {
+            color:
+                var(--muted-color);
 
-        .items-list {
-            display: grid;
-            gap: 12px;
+            font-size:
+                14px;
+
+            margin-bottom:
+                12px;
         }
 
-        .admin-item {
-            padding: 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            background: var(--bg-color);
-            transition: var(--transition);
+        .register-link {
+            color:
+                var(--primary-color);
+
+            font-weight:
+                800;
         }
 
-        .admin-item:hover {
-            border-color: rgba(37, 99, 235, 0.35);
-            box-shadow: var(--shadow-sm);
+        .register-link:hover {
+            color:
+                var(--primary-dark);
         }
 
-        .item-head {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 14px;
+        .back-link {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                5px;
+
+            color:
+                var(--muted-color);
+
+            font-size:
+                13px;
+
+            font-weight:
+                700;
+
+            text-decoration:
+                none;
         }
 
-        .item-title {
-            margin: 0;
-            color: var(--text-color);
-            font-size: 16px;
-            font-weight: 800;
-            line-height: 1.6;
+        .back-link:hover {
+            color:
+                var(--primary-color);
         }
 
-        .item-description {
-            margin: 7px 0 0;
-            color: var(--muted-color);
-            font-size: 13px;
-            line-height: 1.8;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .auth-footer {
+            padding:
+                20px;
+
+            text-align:
+                center;
+
+            color:
+                var(--muted-color);
+
+            font-size:
+                12px;
         }
 
-        .item-meta {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 13px;
-        }
 
-        .meta-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 9px;
-            border-radius: 999px;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            color: var(--muted-color);
-            font-size: 11px;
-            font-weight: 700;
-        }
+        /* =========================================
+           ANIMATIONS
+        ========================================= */
 
-        .role-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-        }
+        @keyframes authFadeUp {
 
-        .role-student {
-            color: var(--primary-color);
-            background: var(--primary-light);
-        }
+            from {
+                opacity: 0;
 
-        .role-teacher {
-            color: var(--success-color);
-            background: var(--success-bg);
-        }
+                transform:
+                    translateY(16px);
+            }
 
-        .role-admin {
-            color: var(--warning-color);
-            background: var(--warning-bg);
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 14px;
-        }
-
-        /* Question form */
-
-        .question-area {
-            border: 2px solid var(--primary-color);
-            background:
-                linear-gradient(
-                    180deg,
-                    var(--primary-light),
-                    var(--surface-color)
-                );
-        }
-
-        .question-intro {
-            margin: -4px 0 18px;
-            color: var(--muted-color);
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .answer-select {
-            border-color: var(--primary-color);
-            background: var(--surface-color);
-        }
-
-        /* Empty/loading */
-
-        .empty-state {
-            padding: 32px 18px;
-            text-align: center;
-            color: var(--muted-color);
-            border: 1px dashed var(--border-color);
-            border-radius: 14px;
-            background: var(--bg-color);
-        }
-
-        .empty-icon {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 28px;
-            opacity: 0.7;
-        }
-
-        .loading-state {
-            padding: 25px;
-            text-align: center;
-            color: var(--muted-color);
-        }
-
-        .loading-spinner {
-            width: 25px;
-            height: 25px;
-            margin: 0 auto 10px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: adminSpin 0.8s linear infinite;
-        }
-
-        @keyframes adminSpin {
             to {
-                transform: rotate(360deg);
+                opacity: 1;
+
+                transform:
+                    translateY(0);
             }
         }
 
-        /* Results */
+        @keyframes messageAppear {
 
-        .result-score {
-            font-weight: 900;
-            color: var(--primary-color);
-        }
+            from {
+                opacity: 0;
 
-        .result-percentage {
-            font-weight: 900;
-            color: var(--success-color);
-        }
+                transform:
+                    translateY(-5px);
+            }
 
-        /* Footer */
+            to {
+                opacity: 1;
 
-        .admin-footer {
-            padding: 25px 16px 35px;
-            text-align: center;
-            color: var(--muted-color);
-            font-size: 13px;
-        }
-
-        /* Dark mode */
-
-        body.dark {
-            background:
-                radial-gradient(
-                    circle at top right,
-                    rgba(37, 99, 235, 0.13),
-                    transparent 32%
-                ),
-                var(--bg-color);
-        }
-
-        body.dark .welcome {
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.24);
-        }
-
-        body.dark .stat-card,
-        body.dark .admin-item,
-        body.dark .empty-state {
-            background: var(--bg-color);
-        }
-
-        body.dark .question-area {
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(37, 99, 235, 0.11),
-                    var(--surface-color)
-                );
-        }
-
-        /* Responsive */
-
-        @media (max-width: 1050px) {
-            .stats-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                transform:
+                    translateY(0);
             }
         }
 
-        @media (max-width: 760px) {
-            .admin-shell {
-                width: min(100% - 22px, 700px);
-                padding-top: 20px;
+        @keyframes loginSpin {
+
+            from {
+                transform:
+                    rotate(0deg);
             }
 
-            .admin-header-inner {
-                width: min(100% - 22px, 700px);
-                min-height: auto;
-                padding: 12px 0;
-                align-items: flex-start;
-            }
-
-            .header-actions {
-                justify-content: flex-end;
-            }
-
-            .header-link,
-            .logout-btn {
-                min-height: 38px;
-                padding: 0 11px;
-                font-size: 12px;
-            }
-
-            .brand-icon {
-                width: 42px;
-                height: 42px;
-            }
-
-            .brand-text h1 {
-                font-size: 16px;
-            }
-
-            .brand-text span {
-                font-size: 11px;
-            }
-
-            .welcome {
-                padding: 22px;
-            }
-
-            .admin-section {
-                padding: 18px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-heading {
-                flex-direction: column;
-            }
-
-            .item-head {
-                flex-direction: column;
+            to {
+                transform:
+                    rotate(360deg);
             }
         }
 
-        @media (max-width: 480px) {
-            .admin-header-inner {
-                flex-direction: column;
-                align-items: stretch;
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 600px) {
+
+            .auth-header {
+                padding:
+                    13px 14px;
             }
 
-            .header-actions {
-                justify-content: stretch;
+            .auth-brand {
+                font-size:
+                    18px;
             }
 
-            .header-link,
-            .logout-btn {
-                flex: 1;
+            .auth-brand-icon {
+                width:
+                    37px;
+
+                height:
+                    37px;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .home-link {
+                font-size:
+                    12px;
+
+                padding:
+                    6px 9px;
             }
 
-            .welcome h2 {
-                font-size: 22px;
+            .auth-main {
+                padding:
+                    30px 14px;
             }
 
-            .form-actions > button {
-                width: 100%;
+            .auth-card {
+                padding:
+                    32px 20px;
+
+                border-radius:
+                    18px;
             }
 
-            .item-actions > button {
-                width: 100%;
+            .auth-title h1 {
+                font-size:
+                    25px;
             }
+
+            .auth-icon {
+                width:
+                    62px;
+
+                height:
+                    62px;
+
+                font-size:
+                    28px;
+            }
+
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .loading-spinner {
-                animation: none;
-            }
-
-            .stat-card,
-            .admin-item,
-            .header-link,
-            .logout-btn,
-            .primary-admin-btn,
-            .secondary-admin-btn,
-            .danger-admin-btn {
-                transition: none;
-            }
-        }
     </style>
+
+</head>
+
+
+<body class="auth-page">
+
+
+    <!-- =========================================
+         HEADER
+    ========================================= -->
+
+    <header class="auth-header">
+
+        <div class="auth-header-inner">
+
+            <a
+                href="../index.html"
+                class="auth-brand"
+            >
+
+                <span class="auth-brand-icon">
+                    🚀
+                </span>
+
+                <span>
+                    Nova Future
+                </span>
+
+            </a>
+
+
+            <a
+                href="../index.html"
+                class="home-link"
+            >
+                ← الرئيسية
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================
+         MAIN
+    ========================================= -->
+
+    <main class="auth-main">
+
+        <section class="auth-card">
+
+
+            <div class="auth-icon">
+                🔐
+            </div>
+
+
+            <div class="auth-title">
+
+                <h1>
+                    مرحبًا بعودتك 👋
+                </h1>
+
+                <p>
+                    سجّل دخولك للوصول إلى حسابك
+                </p>
+
+            </div>
+
+
+            <form
+                id="loginForm"
+                class="login-form"
+                onsubmit="loginUser(event)"
+            >
+
+
+                <!-- MESSAGE -->
+
+                <div
+                    id="loginMessage"
+                    class="login-message"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+
+
+                <!-- EMAIL -->
+
+                <div class="field-group">
+
+                    <label
+                        class="field-label"
+                        for="email"
+                    >
+                        📧 البريد الإلكتروني
+                    </label>
+
+                    <div class="field-input-wrapper">
+
+                        <span class="field-icon">
+                            ✉️
+                        </span>
+
+                        <input
+                            class="field-input"
+                            type="email"
+                            id="email"
+                            placeholder="example@email.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="field-group">
+
+                    <label
+                        class="field-label"
+                        for="password"
+                    >
+                        🔑 كلمة المرور
+                    </label>
+
+                    <div class="field-input-wrapper">
+
+                        <span class="field-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            class="field-input password-input"
+                            type="password"
+                            id="password"
+                            placeholder="أدخل كلمة المرور"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="passwordToggle"
+                            class="password-toggle"
+                            aria-label="إظهار كلمة المرور"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    id="loginButton"
+                    class="login-submit"
+                >
+
+                    <span class="button-text">
+                        تسجيل الدخول
+                    </span>
+
+                    <span
+                        class="button-spinner"
+                        aria-hidden="true"
+                    ></span>
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- LINKS -->
+
+            <div class="auth-links">
+
+                <p class="register-text">
+
+                    ليس لديك حساب؟
+                    <a
+                        href="register.html"
+                        class="register-link"
+                    >
+                        إنشاء حساب جديد
+                    </a>
+
+                </p>
+
+
+                <a
+                    href="../index.html"
+                    class="back-link"
+                >
+                    ← العودة إلى الصفحة الرئيسية
+                </a>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
+
+    <footer class="auth-footer">
+
+        © 2026 Nova Future — جميع الحقوق محفوظة
+
+    </footer>
+
+
+
+    <!-- =========================================
+         FIREBASE LOGIN
+    ========================================= -->
 
     <script type="module">
 
         import {
-            onAuthStateChanged,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+            signInWithEmailAndPassword
+        } from
+            "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
         import {
             doc,
-            getDoc,
-            collection,
-            getDocs,
-            updateDoc,
-            addDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+            getDoc
+        } from
+            "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-        import { auth, db } from "../js/firebase-config.js";
+        import {
+            auth,
+            db
+        } from
+            "../js/firebase-config.js";
 
 
         /* =========================================
-           Helpers
+           ELEMENTS
         ========================================= */
 
-        function escapeHTML(value) {
+        const loginForm =
+            document.getElementById("loginForm");
 
-            const div = document.createElement("div");
+        const loginButton =
+            document.getElementById("loginButton");
 
-            div.textContent =
-                value === undefined || value === null
-                    ? ""
-                    : String(value);
+        const loginMessage =
+            document.getElementById("loginMessage");
 
-            return div.innerHTML;
+        const emailInput =
+            document.getElementById("email");
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const passwordToggle =
+            document.getElementById("passwordToggle");
+
+
+        /* =========================================
+           MESSAGE
+        ========================================= */
+
+        function showMessage(message, type = "error") {
+
+            loginMessage.textContent =
+                message;
+
+            loginMessage.className =
+                "login-message show " + type;
+
         }
 
 
-        function showPageMessage(message, type = "success") {
+        function clearMessage() {
 
-            const element =
-                document.getElementById("pageMessage");
+            loginMessage.textContent =
+                "";
 
-            if (!element) {
-                return;
-            }
+            loginMessage.className =
+                "login-message";
 
-            element.textContent = message;
-            element.className = `page-message show ${type}`;
-
-            window.setTimeout(() => {
-
-                element.classList.remove("show");
-
-            }, 4500);
         }
 
 
-        function setMessage(elementId, message, type) {
+        /* =========================================
+           LOADING
+        ========================================= */
 
-            const element =
-                document.getElementById(elementId);
+        function setLoading(isLoading) {
 
-            if (!element) {
-                return;
-            }
+            if (isLoading) {
 
-            element.textContent = message;
-            element.className = type;
-        }
+                loginButton.classList.add(
+                    "loading"
+                );
 
+                loginButton.disabled =
+                    true;
 
-        function setButtonLoading(button, loading, loadingText) {
+                emailInput.disabled =
+                    true;
 
-            if (!button) {
-                return;
-            }
-
-            if (loading) {
-
-                button.dataset.originalText =
-                    button.textContent;
-
-                button.textContent =
-                    loadingText || "جاري التنفيذ...";
-
-                button.disabled = true;
+                passwordInput.disabled =
+                    true;
 
             } else {
 
-                button.textContent =
-                    button.dataset.originalText ||
-                    button.textContent;
+                loginButton.classList.remove(
+                    "loading"
+                );
 
-                button.disabled = false;
-            }
-        }
+                loginButton.disabled =
+                    false;
 
+                emailInput.disabled =
+                    false;
 
-        function loadingHTML(text = "جاري التحميل...") {
+                passwordInput.disabled =
+                    false;
 
-            return `
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <div>${escapeHTML(text)}</div>
-                </div>
-            `;
-        }
-
-
-        function emptyHTML(icon, text) {
-
-            return `
-                <div class="empty-state">
-                    <span class="empty-icon">${icon}</span>
-                    <div>${escapeHTML(text)}</div>
-                </div>
-            `;
-        }
-
-
-        function formatDate(timestamp) {
-
-            if (!timestamp) {
-                return "غير محدد";
             }
 
-            try {
-
-                return timestamp
-                    .toDate()
-                    .toLocaleString("ar-EG");
-
-            } catch (error) {
-
-                return "غير محدد";
-            }
         }
 
 
         /* =========================================
-           Logout
+           PASSWORD VISIBILITY
         ========================================= */
 
-        window.logoutAdmin = async function() {
+        passwordToggle.addEventListener(
+            "click",
+            function () {
 
-            const button =
-                document.querySelector(".logout-btn");
+                const isPassword =
+                    passwordInput.type === "password";
 
-            try {
+                passwordInput.type =
+                    isPassword
+                        ? "text"
+                        : "password";
 
-                setButtonLoading(
-                    button,
-                    true,
-                    "جاري الخروج..."
+                passwordToggle.textContent =
+                    isPassword
+                        ? "🙈"
+                        : "👁️";
+
+                passwordToggle.setAttribute(
+                    "aria-label",
+                    isPassword
+                        ? "إخفاء كلمة المرور"
+                        : "إظهار كلمة المرور"
                 );
 
-                await signOut(auth);
-
-                window.location.href =
-                    "login.html";
-
-            } catch (error) {
-
-                console.error(
-                    "ADMIN LOGOUT ERROR:",
-                    error
-                );
-
-                setButtonLoading(button, false);
-
-                showPageMessage(
-                    "حدث خطأ أثناء تسجيل الخروج.",
-                    "error"
-                );
             }
-        };
+        );
 
 
         /* =========================================
-           Statistics
+           LOGIN
         ========================================= */
 
-        async function loadStatistics() {
+        window.loginUser =
+            async function (event) {
 
-            try {
+                event.preventDefault();
 
-                const usersSnapshot =
-                    await getDocs(
-                        collection(db, "users")
-                    );
+                clearMessage();
 
-                const coursesSnapshot =
-                    await getDocs(
-                        collection(db, "courses")
-                    );
+                const email =
+                    emailInput.value
+                        .trim();
 
-                const examsSnapshot =
-                    await getDocs(
-                        collection(db, "exams")
-                    );
+                const password =
+                    passwordInput.value;
 
-                const resultsSnapshot =
-                    await getDocs(
-                        collection(db, "results")
-                    );
 
+                if (!email || !password) {
 
-                let students = 0;
-                let teachers = 0;
-
-
-                usersSnapshot.forEach((userDoc) => {
-
-                    const user =
-                        userDoc.data();
-
-                    if (user.role === "student") {
-                        students++;
-                    }
-
-                    if (user.role === "teacher") {
-                        teachers++;
-                    }
-                });
-
-
-                document.getElementById(
-                    "studentsCount"
-                ).textContent = students;
-
-
-                document.getElementById(
-                    "teachersCount"
-                ).textContent = teachers;
-
-
-                document.getElementById(
-                    "coursesCount"
-                ).textContent = coursesSnapshot.size;
-
-
-                document.getElementById(
-                    "examsCount"
-                ).textContent = examsSnapshot.size;
-
-
-                document.getElementById(
-                    "resultsCount"
-                ).textContent = resultsSnapshot.size;
-
-            } catch (error) {
-
-                console.error(
-                    "STATISTICS ERROR:",
-                    error
-                );
-
-                showPageMessage(
-                    "تعذر تحميل إحصائيات المنصة.",
-                    "error"
-                );
-            }
-        }
-
-
-        /* =========================================
-           Users
-        ========================================= */
-
-        async function loadUsers() {
-
-            const usersList =
-                document.getElementById("usersList");
-
-            usersList.innerHTML =
-                loadingHTML("جاري تحميل المستخدمين...");
-
-
-            try {
-
-                const snapshot =
-                    await getDocs(
-                        collection(db, "users")
-                    );
-
-
-                if (snapshot.empty) {
-
-                    usersList.innerHTML =
-                        emptyHTML(
-                            "👥",
-                            "لا يوجد مستخدمون حتى الآن."
-                        );
-
-                    return;
-                }
-
-
-                snapshot.forEach((userDoc) => {
-
-                    const user =
-                        userDoc.data();
-
-
-                    const div =
-                        document.createElement("article");
-
-                    div.className =
-                        "admin-item";
-
-
-                    let roleText =
-                        "غير معروف";
-
-                    let roleClass =
-                        "";
-
-                    if (user.role === "student") {
-
-                        roleText = "طالب";
-                        roleClass = "role-student";
-
-                    } else if (user.role === "teacher") {
-
-                        roleText = "مدرس";
-                        roleClass = "role-teacher";
-
-                    } else if (user.role === "admin") {
-
-                        roleText = "أدمن";
-                        roleClass = "role-admin";
-                    }
-
-
-                    div.innerHTML = `
-                        <div class="item-head">
-
-                            <div>
-
-                                <h4 class="item-title">
-                                    ${escapeHTML(
-                                        user.name ||
-                                        "بدون اسم"
-                                    )}
-                                </h4>
-
-                                <p class="item-description">
-                                    ${escapeHTML(
-                                        user.email ||
-                                        "البريد الإلكتروني غير موجود"
-                                    )}
-                                </p>
-
-                            </div>
-
-                            <span class="role-chip ${roleClass}">
-                                ${roleText}
-                            </span>
-
-                        </div>
-                    `;
-
-
-                    if (
-                        user.role === "student" ||
-                        user.role === "teacher"
-                    ) {
-
-                        const actions =
-                            document.createElement("div");
-
-                        actions.className =
-                            "item-actions";
-
-
-                        const changeBtn =
-                            document.createElement("button");
-
-                        changeBtn.type = "button";
-
-                        changeBtn.className =
-                            "secondary-admin-btn";
-
-
-                        changeBtn.textContent =
-                            user.role === "student"
-                                ? "تحويل إلى مدرس 👨‍🏫"
-                                : "تحويل إلى طالب 👨‍🎓";
-
-
-                        changeBtn.onclick =
-                            () => changeUserRole(
-                                userDoc.id,
-                                user.role === "student"
-                                    ? "teacher"
-                                    : "student",
-                                changeBtn
-                            );
-
-
-                        actions.appendChild(changeBtn);
-
-                        div.appendChild(actions);
-                    }
-
-
-                    usersList.appendChild(div);
-                });
-
-            } catch (error) {
-
-                console.error(
-                    "USERS ERROR:",
-                    error
-                );
-
-                usersList.innerHTML =
-                    `
-                    <div class="page-message show error">
-                        حدث خطأ أثناء تحميل المستخدمين.
-                    </div>
-                    `;
-            }
-        }
-
-
-        /* =========================================
-           Change Role
-        ========================================= */
-
-        async function changeUserRole(
-            userId,
-            newRole,
-            button
-        ) {
-
-            const roleText =
-                newRole === "teacher"
-                    ? "مدرس"
-                    : "طالب";
-
-
-            const confirmed =
-                window.confirm(
-                    `هل أنت متأكد من تحويل هذا الحساب إلى ${roleText}؟`
-                );
-
-
-            if (!confirmed) {
-                return;
-            }
-
-
-            try {
-
-                setButtonLoading(
-                    button,
-                    true,
-                    "جاري التغيير..."
-                );
-
-
-                await updateDoc(
-                    doc(db, "users", userId),
-                    {
-                        role: newRole
-                    }
-                );
-
-
-                showPageMessage(
-                    `تم تحويل الحساب إلى ${roleText} بنجاح ✅`,
-                    "success"
-                );
-
-
-                await loadUsers();
-
-                await loadStatistics();
-
-            } catch (error) {
-
-                console.error(
-                    "ROLE CHANGE ERROR:",
-                    error
-                );
-
-                setButtonLoading(
-                    button,
-                    false
-                );
-
-                showPageMessage(
-                    "حدث خطأ أثناء تغيير دور المستخدم.",
-                    "error"
-                );
-            }
-        }
-
-
-        /* =========================================
-           Courses
-        ========================================= */
-
-        async function loadCourses() {
-
-            const coursesList =
-                document.getElementById("coursesList");
-
-            coursesList.innerHTML =
-                loadingHTML("جاري تحميل الكورسات...");
-
-
-            try {
-
-                const snapshot =
-                    await getDocs(
-                        collection(db, "courses")
-                    );
-
-
-                if (snapshot.empty) {
-
-                    coursesList.innerHTML =
-                        emptyHTML(
-                            "📚",
-                            "لا توجد كورسات حتى الآن."
-                        );
-
-                    return;
-                }
-
-
-                snapshot.forEach((courseDoc) => {
-
-                    const course =
-                        courseDoc.data();
-
-
-                    const div =
-                        document.createElement("article");
-
-                    div.className =
-                        "admin-item";
-
-
-                    div.innerHTML = `
-                        <div class="item-head">
-
-                            <div>
-
-                                <h4 class="item-title">
-                                    ${escapeHTML(
-                                        course.name ||
-                                        course.title ||
-                                        "بدون اسم"
-                                    )}
-                                </h4>
-
-                                <p class="item-description">
-                                    ${escapeHTML(
-                                        course.description ||
-                                        "لا يوجد وصف لهذا الكورس."
-                                    )}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="item-meta">
-
-                            <span class="meta-chip">
-                                📚 كورس
-                            </span>
-
-                        </div>
-                    `;
-
-
-                    coursesList.appendChild(div);
-                });
-
-            } catch (error) {
-
-                console.error(
-                    "COURSES ERROR:",
-                    error
-                );
-
-                coursesList.innerHTML =
-                    `
-                    <div class="page-message show error">
-                        حدث خطأ أثناء تحميل الكورسات.
-                    </div>
-                    `;
-            }
-        }
-
-
-        /* =========================================
-           Add Course
-        ========================================= */
-
-        window.addCourse = async function(event) {
-
-            event.preventDefault();
-
-
-            const form =
-                document.getElementById("courseForm");
-
-            const button =
-                form.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            const name =
-                document.getElementById("courseName")
-                    .value
-                    .trim();
-
-
-            const description =
-                document.getElementById("courseDescription")
-                    .value
-                    .trim();
-
-
-            if (!name) {
-
-                setMessage(
-                    "courseMessage",
-                    "اكتب اسم الكورس أولاً.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            try {
-
-                setButtonLoading(
-                    button,
-                    true,
-                    "جاري إنشاء الكورس..."
-                );
-
-
-                setMessage(
-                    "courseMessage",
-                    "جاري حفظ الكورس...",
-                    "success"
-                );
-
-
-                await addDoc(
-                    collection(db, "courses"),
-                    {
-                        name: name,
-                        description: description,
-                        createdAt: serverTimestamp()
-                    }
-                );
-
-
-                setMessage(
-                    "courseMessage",
-                    "تم إنشاء الكورس بنجاح ✅",
-                    "success"
-                );
-
-
-                form.reset();
-
-
-                await loadCourses();
-
-                await loadStatistics();
-
-            } catch (error) {
-
-                console.error(
-                    "ADD COURSE ERROR:",
-                    error
-                );
-
-                setMessage(
-                    "courseMessage",
-                    "حدث خطأ أثناء إنشاء الكورس. حاول مرة أخرى.",
-                    "error"
-                );
-
-            } finally {
-
-                setButtonLoading(
-                    button,
-                    false
-                );
-            }
-        };
-
-
-        /* =========================================
-           Exams
-        ========================================= */
-
-        async function loadExams() {
-
-            const examsList =
-                document.getElementById("examsList");
-
-            examsList.innerHTML =
-                loadingHTML("جاري تحميل الامتحانات...");
-
-
-            try {
-
-                const snapshot =
-                    await getDocs(
-                        collection(db, "exams")
-                    );
-
-
-                if (snapshot.empty) {
-
-                    examsList.innerHTML =
-                        emptyHTML(
-                            "📝",
-                            "لا توجد امتحانات حتى الآن."
-                        );
-
-                    return;
-                }
-
-
-                snapshot.forEach((examDoc) => {
-
-                    const exam =
-                        examDoc.data();
-
-
-                    const questionsCount =
-                        Array.isArray(exam.questions)
-                            ? exam.questions.length
-                            : 0;
-
-
-                    const div =
-                        document.createElement("article");
-
-                    div.className =
-                        "admin-item";
-
-
-                    div.innerHTML = `
-                        <div class="item-head">
-
-                            <div>
-
-                                <h4 class="item-title">
-                                    ${escapeHTML(
-                                        exam.title ||
-                                        "امتحان بدون عنوان"
-                                    )}
-                                </h4>
-
-                                <p class="item-description">
-                                    ${escapeHTML(
-                                        exam.description ||
-                                        "لا يوجد وصف لهذا الامتحان."
-                                    )}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="item-meta">
-
-                            <span class="meta-chip">
-                                📝 ${questionsCount} سؤال
-                            </span>
-
-                            ${
-                                exam.duration
-                                    ? `
-                                    <span class="meta-chip">
-                                        ⏱️ ${escapeHTML(
-                                            exam.duration
-                                        )} دقيقة
-                                    </span>
-                                    `
-                                    : ""
-                            }
-
-                            ${
-                                exam.courseName
-                                    ? `
-                                    <span class="meta-chip">
-                                        📚 ${escapeHTML(
-                                            exam.courseName
-                                        )}
-                                    </span>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                        <div class="item-actions">
-
-                            <button
-                                type="button"
-                                class="secondary-admin-btn"
-                                onclick="openQuestionForm('${examDoc.id}')"
-                            >
-                                ➕ إضافة سؤال
-                            </button>
-
-                        </div>
-                    `;
-
-
-                    examsList.appendChild(div);
-                });
-
-            } catch (error) {
-
-                console.error(
-                    "EXAMS ERROR:",
-                    error
-                );
-
-                examsList.innerHTML =
-                    `
-                    <div class="page-message show error">
-                        حدث خطأ أثناء تحميل الامتحانات.
-                    </div>
-                    `;
-            }
-        }
-
-
-        /* =========================================
-           Add Exam
-        ========================================= */
-
-        window.addExam = async function(event) {
-
-            event.preventDefault();
-
-
-            const form =
-                document.getElementById("examForm");
-
-            const button =
-                form.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            const title =
-                document.getElementById("examTitle")
-                    .value
-                    .trim();
-
-
-            const description =
-                document.getElementById("examDescription")
-                    .value
-                    .trim();
-
-
-            if (!title) {
-
-                setMessage(
-                    "examMessage",
-                    "اكتب اسم الامتحان أولاً.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            try {
-
-                setButtonLoading(
-                    button,
-                    true,
-                    "جاري إنشاء الامتحان..."
-                );
-
-
-                await addDoc(
-                    collection(db, "exams"),
-                    {
-                        title: title,
-                        description: description,
-                        questions: [],
-                        createdAt: serverTimestamp()
-                    }
-                );
-
-
-                setMessage(
-                    "examMessage",
-                    "تم إنشاء الامتحان بنجاح ✅",
-                    "success"
-                );
-
-
-                form.reset();
-
-
-                await loadExams();
-
-                await loadStatistics();
-
-            } catch (error) {
-
-                console.error(
-                    "ADD EXAM ERROR:",
-                    error
-                );
-
-                setMessage(
-                    "examMessage",
-                    "حدث خطأ أثناء إنشاء الامتحان.",
-                    "error"
-                );
-
-            } finally {
-
-                setButtonLoading(
-                    button,
-                    false
-                );
-            }
-        };
-
-
-        /* =========================================
-           Question Form
-        ========================================= */
-
-        window.openQuestionForm = function(examId) {
-
-            document.getElementById(
-                "questionExamId"
-            ).value = examId;
-
-
-            document.getElementById(
-                "questionArea"
-            ).style.display = "block";
-
-
-            document.getElementById(
-                "questionArea"
-            ).scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-
-            window.setTimeout(() => {
-
-                document.getElementById(
-                    "questionText"
-                ).focus();
-
-            }, 400);
-        };
-
-
-        window.closeQuestionForm = function() {
-
-            const area =
-                document.getElementById(
-                    "questionArea"
-                );
-
-
-            area.style.display = "none";
-
-
-            document.getElementById(
-                "questionForm"
-            ).reset();
-
-
-            setMessage(
-                "questionMessage",
-                "",
-                ""
-            );
-        };
-
-
-        /* =========================================
-           Add Question
-        ========================================= */
-
-        window.addQuestion = async function(event) {
-
-            event.preventDefault();
-
-
-            const form =
-                document.getElementById("questionForm");
-
-            const button =
-                form.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            const examId =
-                document.getElementById(
-                    "questionExamId"
-                ).value;
-
-
-            const question =
-                document.getElementById(
-                    "questionText"
-                ).value.trim();
-
-
-            const option1 =
-                document.getElementById(
-                    "option1"
-                ).value.trim();
-
-
-            const option2 =
-                document.getElementById(
-                    "option2"
-                ).value.trim();
-
-
-            const option3 =
-                document.getElementById(
-                    "option3"
-                ).value.trim();
-
-
-            const option4 =
-                document.getElementById(
-                    "option4"
-                ).value.trim();
-
-
-            const correctAnswer =
-                Number(
-                    document.getElementById(
-                        "correctAnswer"
-                    ).value
-                );
-
-
-            if (
-                !examId ||
-                !question ||
-                !option1 ||
-                !option2 ||
-                !option3 ||
-                !option4
-            ) {
-
-                setMessage(
-                    "questionMessage",
-                    "أكمل جميع بيانات السؤال قبل الحفظ.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            try {
-
-                setButtonLoading(
-                    button,
-                    true,
-                    "جاري إضافة السؤال..."
-                );
-
-
-                const examRef =
-                    doc(
-                        db,
-                        "exams",
-                        examId
-                    );
-
-
-                const examSnapshot =
-                    await getDoc(examRef);
-
-
-                if (!examSnapshot.exists()) {
-
-                    setMessage(
-                        "questionMessage",
-                        "الامتحان غير موجود.",
-                        "error"
+                    showMessage(
+                        "من فضلك أدخل البريد الإلكتروني وكلمة المرور."
                     );
 
                     return;
                 }
 
 
-                const examData =
-                    examSnapshot.data();
-
-
-                const questions =
-                    Array.isArray(
-                        examData.questions
-                    )
-                        ? [...examData.questions]
-                        : [];
-
-
-                questions.push({
-
-                    question: question,
-
-                    options: [
-                        option1,
-                        option2,
-                        option3,
-                        option4
-                    ],
-
-                    correctAnswer:
-                        correctAnswer
-                });
-
-
-                await updateDoc(
-                    examRef,
-                    {
-                        questions: questions
-                    }
-                );
-
-
-                setMessage(
-                    "questionMessage",
-                    "تم إضافة السؤال بنجاح ✅",
-                    "success"
-                );
-
-
-                form.reset();
-
-
-                document.getElementById(
-                    "questionExamId"
-                ).value = examId;
-
-
-                await loadExams();
-
-            } catch (error) {
-
-                console.error(
-                    "ADD QUESTION ERROR:",
-                    error
-                );
-
-                setMessage(
-                    "questionMessage",
-                    "حدث خطأ أثناء إضافة السؤال.",
-                    "error"
-                );
-
-            } finally {
-
-                setButtonLoading(
-                    button,
-                    false
-                );
-            }
-        };
-
-
-        /* =========================================
-           Results
-        ========================================= */
-
-        async function loadResults() {
-
-            const resultsList =
-                document.getElementById(
-                    "resultsList"
-                );
-
-
-            resultsList.innerHTML =
-                loadingHTML("جاري تحميل النتائج...");
-
-
-            try {
-
-                const resultsSnapshot =
-                    await getDocs(
-                        collection(db, "results")
-                    );
-
-
-                const usersSnapshot =
-                    await getDocs(
-                        collection(db, "users")
-                    );
-
-
-                const examsSnapshot =
-                    await getDocs(
-                        collection(db, "exams")
-                    );
-
-
-                const users = {};
-                const exams = {};
-
-
-                usersSnapshot.forEach((userDoc) => {
-
-                    users[userDoc.id] =
-                        userDoc.data();
-                });
-
-
-                examsSnapshot.forEach((examDoc) => {
-
-                    exams[examDoc.id] =
-                        examDoc.data();
-                });
-
-
-                if (resultsSnapshot.empty) {
-
-                    resultsList.innerHTML =
-                        emptyHTML(
-                            "📊",
-                            "لا توجد نتائج حتى الآن."
-                        );
-
-                    return;
-                }
-
-
-                const results = [];
-
-
-                resultsSnapshot.forEach((resultDoc) => {
-
-                    results.push({
-                        id: resultDoc.id,
-                        data: resultDoc.data()
-                    });
-
-                });
-
-
-                results.sort((a, b) => {
-
-                    const aTime =
-                        a.data.createdAt?.toMillis?.() || 0;
-
-                    const bTime =
-                        b.data.createdAt?.toMillis?.() || 0;
-
-                    return bTime - aTime;
-                });
-
-
-                results.forEach((resultItem) => {
-
-                    const result =
-                        resultItem.data;
-
-
-                    const student =
-                        users[result.studentId] || {};
-
-
-                    const exam =
-                        exams[result.examId] || {};
-
-
-                    const div =
-                        document.createElement("article");
-
-
-                    div.className =
-                        "admin-item";
-
-
-                    const score =
-                        Number(result.score) || 0;
-
-
-                    const total =
-                        Number(result.total) || 0;
-
-
-                    const percentage =
-                        Number(result.percentage) || 0;
-
-
-                    div.innerHTML = `
-                        <div class="item-head">
-
-                            <div>
-
-                                <h4 class="item-title">
-                                    👨‍🎓
-                                    ${escapeHTML(
-                                        student.name ||
-                                        result.studentName ||
-                                        "طالب غير معروف"
-                                    )}
-                                </h4>
-
-                                <p class="item-description">
-                                    📝
-                                    ${escapeHTML(
-                                        exam.title ||
-                                        result.examTitle ||
-                                        "امتحان غير معروف"
-                                    )}
-                                </p>
-
-                            </div>
-
-                            <span class="role-chip role-student">
-                                ${percentage}%
-                            </span>
-
-                        </div>
-
-                        <div class="item-meta">
-
-                            <span class="meta-chip">
-                                🎯
-                                <span class="result-score">
-                                    ${score}
-                                </span>
-                                / ${total}
-                            </span>
-
-                            <span class="meta-chip">
-                                📈
-                                <span class="result-percentage">
-                                    ${percentage}%
-                                </span>
-                            </span>
-
-                            <span class="meta-chip">
-                                🕒
-                                ${escapeHTML(
-                                    formatDate(
-                                        result.createdAt
-                                    )
-                                )}
-                            </span>
-
-                        </div>
-                    `;
-
-
-                    resultsList.appendChild(div);
-                });
-
-            } catch (error) {
-
-                console.error(
-                    "RESULTS ERROR:",
-                    error
-                );
-
-                resultsList.innerHTML =
-                    `
-                    <div class="page-message show error">
-                        حدث خطأ أثناء تحميل النتائج.
-                    </div>
-                    `;
-            }
-        }
-
-
-        /* =========================================
-           Auth Guard
-        ========================================= */
-
-        onAuthStateChanged(
-            auth,
-            async (user) => {
-
-                if (!user) {
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-                }
+                setLoading(true);
 
 
                 try {
+
+                    const userCredential =
+                        await signInWithEmailAndPassword(
+                            auth,
+                            email,
+                            password
+                        );
+
+
+                    const user =
+                        userCredential.user;
+
 
                     const userDoc =
                         await getDoc(
@@ -2197,10 +1245,11 @@
 
                     if (!userDoc.exists()) {
 
-                        await signOut(auth);
+                        showMessage(
+                            "تم تسجيل الدخول، لكن بيانات الحساب غير موجودة. تواصل مع إدارة المنصة."
+                        );
 
-                        window.location.href =
-                            "login.html";
+                        setLoading(false);
 
                         return;
                     }
@@ -2210,942 +1259,130 @@
                         userDoc.data();
 
 
-                    if (
-                        userData.role !== "admin"
-                    ) {
+                    if (userData.role === "student") {
 
-                        if (
-                            userData.role === "student"
-                        ) {
-
-                            window.location.href =
-                                "student.html";
-
-                        } else if (
-                            userData.role === "teacher"
-                        ) {
-
-                            window.location.href =
-                                "teacher.html";
-
-                        } else {
-
-                            await signOut(auth);
-
-                            window.location.href =
-                                "login.html";
-                        }
+                        window.location.href =
+                            "student.html";
 
                         return;
+
                     }
 
 
-                    document.getElementById(
-                        "adminName"
-                    ).textContent =
-                        userData.name ||
-                        "الأدمن";
+                    if (userData.role === "teacher") {
+
+                        window.location.href =
+                            "teacher.html";
+
+                        return;
+
+                    }
 
 
-                    await Promise.all([
-                        loadStatistics(),
-                        loadUsers(),
-                        loadCourses(),
-                        loadExams(),
-                        loadResults()
-                    ]);
+                    if (userData.role === "admin") {
+
+                        window.location.href =
+                            "admin.html";
+
+                        return;
+
+                    }
+
+
+                    showMessage(
+                        "نوع الحساب غير معروف. تواصل مع إدارة المنصة."
+                    );
+
+                    setLoading(false);
 
                 } catch (error) {
 
                     console.error(
-                        "ADMIN INIT ERROR:",
+                        "LOGIN ERROR:",
                         error
                     );
 
-                    showPageMessage(
-                        "حدث خطأ أثناء تحميل لوحة الأدمن.",
+
+                    let message =
+                        "تعذر تسجيل الدخول. تأكد من بياناتك وحاول مرة أخرى.";
+
+
+                    if (
+                        error.code ===
+                        "auth/invalid-credential"
+                    ) {
+
+                        message =
+                            "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+                    } else if (
+                        error.code ===
+                        "auth/user-not-found"
+                    ) {
+
+                        message =
+                            "لا يوجد حساب بهذا البريد الإلكتروني.";
+
+                    } else if (
+                        error.code ===
+                        "auth/wrong-password"
+                    ) {
+
+                        message =
+                            "كلمة المرور غير صحيحة.";
+
+                    } else if (
+                        error.code ===
+                        "auth/invalid-email"
+                    ) {
+
+                        message =
+                            "البريد الإلكتروني غير صحيح.";
+
+                    } else if (
+                        error.code ===
+                        "auth/too-many-requests"
+                    ) {
+
+                        message =
+                            "تمت محاولات تسجيل دخول كثيرة. حاول مرة أخرى بعد قليل.";
+
+                    }
+
+
+                    showMessage(
+                        message,
                         "error"
                     );
+
+                    setLoading(false);
+
                 }
-            }
+
+            };
+
+
+        /* =========================================
+           CLEAR ERROR WHEN USER TYPES
+        ========================================= */
+
+        emailInput.addEventListener(
+            "input",
+            clearMessage
+        );
+
+        passwordInput.addEventListener(
+            "input",
+            clearMessage
         );
 
     </script>
-</head>
 
 
-<body>
-
-    <!-- Header -->
-
-    <header class="admin-header">
-
-        <div class="admin-header-inner">
-
-            <div class="brand">
-
-                <div
-                    class="brand-icon"
-                    aria-hidden="true"
-                >
-                    🚀
-                </div>
-
-                <div class="brand-text">
-
-                    <h1>
-                        Nova Future
-                    </h1>
-
-                    <span>
-                        لوحة تحكم الأدمن
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <nav
-                class="header-actions"
-                aria-label="روابط لوحة التحكم"
-            >
-
-                <a
-                    class="header-link"
-                    href="profile.html"
-                >
-                    👤 الملف الشخصي
-                </a>
-
-                <a
-                    class="header-link"
-                    href="settings.html"
-                >
-                    ⚙️ الإعدادات
-                </a>
-
-                <button
-                    type="button"
-                    class="logout-btn"
-                    onclick="logoutAdmin()"
-                >
-                    تسجيل الخروج
-                </button>
-
-            </nav>
-
-        </div>
-
-    </header>
-
-
-    <main class="admin-shell">
-
-        <!-- Welcome -->
-
-        <section class="welcome">
-
-            <div class="welcome-content">
-
-                <div class="welcome-badge">
-                    👑 حساب الأدمن
-                </div>
-
-                <h2>
-                    أهلاً بك يا
-                    <span id="adminName">...</span>
-                </h2>
-
-                <p>
-                    من هنا تقدر تدير المستخدمين والكورسات
-                    والامتحانات وتتابع نتائج الطلاب في مكان واحد.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- Global message -->
-
-        <div
-            id="pageMessage"
-            class="page-message"
-            role="status"
-            aria-live="polite"
-        ></div>
-
-
-        <!-- Statistics -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        📊
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            إحصائيات المنصة
-                        </h3>
-
-                        <p>
-                            نظرة سريعة على حالة المنصة الحالية.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <span class="stat-label">
-                            الطلاب
-                        </span>
-
-                        <span
-                            class="stat-icon"
-                            aria-hidden="true"
-                        >
-                            👨‍🎓
-                        </span>
-
-                    </div>
-
-                    <strong
-                        class="stat-number"
-                        id="studentsCount"
-                    >
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <span class="stat-label">
-                            المدرسين
-                        </span>
-
-                        <span
-                            class="stat-icon"
-                            aria-hidden="true"
-                        >
-                            👨‍🏫
-                        </span>
-
-                    </div>
-
-                    <strong
-                        class="stat-number"
-                        id="teachersCount"
-                    >
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <span class="stat-label">
-                            الكورسات
-                        </span>
-
-                        <span
-                            class="stat-icon"
-                            aria-hidden="true"
-                        >
-                            📚
-                        </span>
-
-                    </div>
-
-                    <strong
-                        class="stat-number"
-                        id="coursesCount"
-                    >
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <span class="stat-label">
-                            الامتحانات
-                        </span>
-
-                        <span
-                            class="stat-icon"
-                            aria-hidden="true"
-                        >
-                            📝
-                        </span>
-
-                    </div>
-
-                    <strong
-                        class="stat-number"
-                        id="examsCount"
-                    >
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <span class="stat-label">
-                            النتائج
-                        </span>
-
-                        <span
-                            class="stat-icon"
-                            aria-hidden="true"
-                        >
-                            📈
-                        </span>
-
-                    </div>
-
-                    <strong
-                        class="stat-number"
-                        id="resultsCount"
-                    >
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Users -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        👥
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            إدارة المستخدمين
-                        </h3>
-
-                        <p>
-                            راجع الحسابات وقم بتغيير دور الطالب أو المدرس.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="usersList"
-                class="items-list"
-            >
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    جاري تحميل المستخدمين...
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- Add Course -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        ➕
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            إضافة كورس
-                        </h3>
-
-                        <p>
-                            أنشئ كورس جديد ليظهر ضمن محتوى المنصة.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <form
-                id="courseForm"
-                class="admin-form"
-                onsubmit="addCourse(event)"
-            >
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-
-                        <label for="courseName">
-                            اسم الكورس
-                        </label>
-
-                        <input
-                            type="text"
-                            id="courseName"
-                            placeholder="مثال: الرياضيات"
-                            maxlength="120"
-                            autocomplete="off"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="courseDescription">
-                            وصف الكورس
-                        </label>
-
-                        <input
-                            type="text"
-                            id="courseDescription"
-                            placeholder="وصف مختصر للكورس"
-                            maxlength="300"
-                            autocomplete="off"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        type="submit"
-                        class="primary-admin-btn"
-                    >
-                        إنشاء الكورس 📚
-                    </button>
-
-                </div>
-
-
-                <p
-                    id="courseMessage"
-                    aria-live="polite"
-                ></p>
-
-            </form>
-
-        </section>
-
-
-        <!-- Courses -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        📚
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            الكورسات الموجودة
-                        </h3>
-
-                        <p>
-                            جميع الكورسات المسجلة حاليًا على المنصة.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="coursesList"
-                class="items-list"
-            >
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    جاري تحميل الكورسات...
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- Add Exam -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        📝
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            إنشاء امتحان
-                        </h3>
-
-                        <p>
-                            أنشئ الامتحان أولاً، وبعد ذلك أضف الأسئلة إليه.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <form
-                id="examForm"
-                class="admin-form"
-                onsubmit="addExam(event)"
-            >
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-
-                        <label for="examTitle">
-                            اسم الامتحان
-                        </label>
-
-                        <input
-                            type="text"
-                            id="examTitle"
-                            placeholder="مثال: امتحان الوحدة الأولى"
-                            maxlength="150"
-                            autocomplete="off"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="examDescription">
-                            وصف الامتحان
-                        </label>
-
-                        <input
-                            type="text"
-                            id="examDescription"
-                            placeholder="وصف مختصر للامتحان"
-                            maxlength="300"
-                            autocomplete="off"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        type="submit"
-                        class="primary-admin-btn"
-                    >
-                        إنشاء الامتحان 📝
-                    </button>
-
-                </div>
-
-
-                <p
-                    id="examMessage"
-                    aria-live="polite"
-                ></p>
-
-            </form>
-
-        </section>
-
-
-        <!-- Exams -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        📝
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            الامتحانات الموجودة
-                        </h3>
-
-                        <p>
-                            اختر أي امتحان لإضافة أسئلة جديدة إليه.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="examsList"
-                class="items-list"
-            >
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    جاري تحميل الامتحانات...
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- Add Question -->
-
-        <section
-            class="admin-section question-area"
-            id="questionArea"
-            style="display: none;"
-        >
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        ❓
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            إضافة سؤال للامتحان
-                        </h3>
-
-                        <p>
-                            أضف السؤال والاختيارات وحدد الإجابة الصحيحة.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <p class="question-intro">
-                بعد حفظ السؤال سيتم إضافته مباشرة إلى الامتحان المحدد.
-            </p>
-
-
-            <form
-                id="questionForm"
-                class="admin-form"
-                onsubmit="addQuestion(event)"
-            >
-
-                <input
-                    type="hidden"
-                    id="questionExamId"
-                >
-
-
-                <div class="form-group">
-
-                    <label for="questionText">
-                        نص السؤال
-                    </label>
-
-                    <textarea
-                        id="questionText"
-                        placeholder="اكتب السؤال هنا..."
-                        maxlength="1000"
-                        required
-                    ></textarea>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-
-                        <label for="option1">
-                            الاختيار الأول
-                        </label>
-
-                        <input
-                            type="text"
-                            id="option1"
-                            placeholder="الاختيار الأول"
-                            maxlength="500"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="option2">
-                            الاختيار الثاني
-                        </label>
-
-                        <input
-                            type="text"
-                            id="option2"
-                            placeholder="الاختيار الثاني"
-                            maxlength="500"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="option3">
-                            الاختيار الثالث
-                        </label>
-
-                        <input
-                            type="text"
-                            id="option3"
-                            placeholder="الاختيار الثالث"
-                            maxlength="500"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="option4">
-                            الاختيار الرابع
-                        </label>
-
-                        <input
-                            type="text"
-                            id="option4"
-                            placeholder="الاختيار الرابع"
-                            maxlength="500"
-                            required
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="correctAnswer">
-                        الإجابة الصحيحة
-                    </label>
-
-                    <select
-                        id="correctAnswer"
-                        class="answer-select"
-                        required
-                    >
-
-                        <option value="0">
-                            الاختيار الأول
-                        </option>
-
-                        <option value="1">
-                            الاختيار الثاني
-                        </option>
-
-                        <option value="2">
-                            الاختيار الثالث
-                        </option>
-
-                        <option value="3">
-                            الاختيار الرابع
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        type="submit"
-                        class="primary-admin-btn"
-                    >
-                        إضافة السؤال ✅
-                    </button>
-
-                    <button
-                        type="button"
-                        class="danger-admin-btn"
-                        onclick="closeQuestionForm()"
-                    >
-                        إغلاق
-                    </button>
-
-                </div>
-
-
-                <p
-                    id="questionMessage"
-                    aria-live="polite"
-                ></p>
-
-            </form>
-
-        </section>
-
-
-        <!-- Results -->
-
-        <section class="admin-section">
-
-            <div class="section-heading">
-
-                <div class="section-title-wrap">
-
-                    <div
-                        class="section-icon"
-                        aria-hidden="true"
-                    >
-                        📈
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            نتائج الطلاب
-                        </h3>
-
-                        <p>
-                            تابع درجات الطلاب ونتائج الامتحانات.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="resultsList"
-                class="items-list"
-            >
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    جاري تحميل النتائج...
-                </div>
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <footer class="admin-footer">
-
-        <p>
-            © 2026 Nova Future — لوحة تحكم الأدمن
-        </p>
-
-    </footer>
-
+    <!-- GLOBAL APP -->
 
     <script src="../js/app.js"></script>
 
 </body>
 
 </html>
-:::
