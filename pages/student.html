@@ -2912,7 +2912,27 @@ window.addEventListener(
 
     }
 );
+/* =====================================================
+   PREVENT ACCIDENTAL PAGE LEAVE
+===================================================== */
 
+window.addEventListener(
+    "beforeunload",
+    (event) => {
+
+        if (!examMonitoringActive) {
+            return;
+        }
+
+        event.preventDefault();
+
+        /*
+           المتصفح سيعرض رسالة التحذير
+           الخاصة به تلقائيًا.
+        */
+        event.returnValue = "";
+    }
+);
 
     /* =====================================================
        LOAD DASHBOARD
