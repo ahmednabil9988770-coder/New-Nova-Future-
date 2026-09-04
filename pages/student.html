@@ -3948,18 +3948,15 @@ window.addEventListener(
         }
 
 
-        activeExam =
-            exam;
+        activeExam = exam;
+currentQuestionIndex = 0;
+selectedAnswers = Array(questions.length).fill(null);
 
-
-        currentQuestionIndex =
-            0;
-
-
-        selectedAnswers =
-            new Array(
-                questions.length
-            ).fill(null);
+/* بدء مراقبة الامتحان */
+examViolationCount = 0;
+examMonitoringActive = true;
+examViolationSaving = false;
+lastViolationTime = 0;
 
 
         const duration =
