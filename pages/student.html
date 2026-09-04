@@ -8,21 +8,30 @@
 
 <style>
     /* =========================================================
-       NOVA FUTURE - STUDENT PAGE
-       Old Nova Future visual identity
+       NOVA FUTURE - STUDENT PAGE (DARK LUXURY IDENTITY)
     ========================================================= */
 
     :root {
-        --student-blue: var(--primary-color, #2563eb);
-        --student-dark-blue: var(--primary-dark, #1d4ed8);
-        --student-soft: var(--primary-light, #eff6ff);
+        --student-blue: #3b82f6;
+        --student-dark-blue: #1d4ed8;
+        --student-soft: rgba(59, 130, 246, 0.12);
+        --bg-color: #0b0f19;
+        --surface-color: #111827;
+        --border-color: #1f293d;
+        --text-color: #f3f4f6;
+        --muted-color: #9ca3af;
+        --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+        --danger-color: #ef4444;
     }
 
     body {
         background:
-            radial-gradient(circle at 10% 0%, rgba(37, 99, 235, .08), transparent 28%),
-            radial-gradient(circle at 90% 10%, rgba(37, 99, 235, .06), transparent 25%),
+            radial-gradient(circle at 10% 0%, rgba(59, 130, 246, .12), transparent 28%),
+            radial-gradient(circle at 90% 10%, rgba(30, 58, 138, .1), transparent 25%),
             var(--bg-color);
+        color: var(--text-color);
+        font-family: system-ui, -apple-system, sans-serif;
     }
 
     /* =========================
@@ -33,9 +42,9 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        background: rgba(255, 255, 255, .94);
+        background: rgba(17, 24, 39, .88);
         border-bottom: 1px solid var(--border-color);
-        box-shadow: 0 5px 25px rgba(15, 23, 42, .06);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, .4);
         backdrop-filter: blur(14px);
     }
 
@@ -68,10 +77,10 @@
         font-weight: 900;
         background: linear-gradient(
             135deg,
-            var(--student-blue),
+            #60a5fa,
             var(--student-dark-blue)
         );
-        box-shadow: 0 8px 22px rgba(37, 99, 235, .24);
+        box-shadow: 0 8px 22px rgba(59, 130, 246, .35);
     }
 
     .nova-brand-text {
@@ -84,6 +93,7 @@
         font-size: 19px;
         font-weight: 900;
         letter-spacing: .4px;
+        color: #ffffff;
     }
 
     .nova-brand-tagline {
@@ -118,7 +128,7 @@
     .student-nav a:hover,
     .student-nav button:hover {
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
     }
 
     .nav-user {
@@ -139,7 +149,7 @@
         display: grid;
         place-items: center;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-weight: 900;
     }
 
@@ -165,14 +175,15 @@
         border-radius: 24px;
         color: white;
         background:
-            radial-gradient(circle at 85% 20%, rgba(255,255,255,.18), transparent 25%),
-            radial-gradient(circle at 10% 90%, rgba(255,255,255,.10), transparent 30%),
+            radial-gradient(circle at 85% 20%, rgba(96, 165, 250, .2), transparent 25%),
+            radial-gradient(circle at 10% 90%, rgba(30, 58, 138, .3), transparent 30%),
             linear-gradient(
                 135deg,
-                var(--student-dark-blue),
-                var(--student-blue)
+                #1e3a8a,
+                #1d4ed8
             );
-        box-shadow: 0 18px 45px rgba(37, 99, 235, .20);
+        box-shadow: 0 18px 45px rgba(29, 78, 216, .3);
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .welcome-panel::after {
@@ -199,11 +210,12 @@
         gap: 7px;
         padding: 7px 12px;
         border-radius: 999px;
-        background: rgba(255,255,255,.14);
-        border: 1px solid rgba(255,255,255,.16);
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.15);
         font-size: 12px;
         font-weight: 800;
         margin-bottom: 16px;
+        color: #93c5fd;
     }
 
     .welcome-title {
@@ -211,17 +223,18 @@
         font-size: clamp(26px, 4vw, 39px);
         line-height: 1.25;
         font-weight: 950;
+        color: #ffffff;
     }
 
     .welcome-title span {
-        color: #dbeafe;
+        color: #93c5fd;
     }
 
     .welcome-description {
         margin: 13px 0 0;
         max-width: 680px;
         line-height: 1.9;
-        color: rgba(255,255,255,.84);
+        color: rgba(255,255,255,.85);
         font-size: 15px;
     }
 
@@ -236,8 +249,8 @@
         border: 0;
         padding: 11px 17px;
         border-radius: 11px;
-        background: white;
-        color: var(--student-dark-blue);
+        background: #ffffff;
+        color: #1e3a8a;
         font-weight: 900;
         cursor: pointer;
         text-decoration: none;
@@ -246,13 +259,18 @@
 
     .welcome-action:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0,0,0,.12);
+        box-shadow: 0 10px 25px rgba(0,0,0,.3);
+        background: #f8fafc;
     }
 
     .welcome-action.secondary {
-        background: rgba(255,255,255,.12);
+        background: rgba(255,255,255,.1);
         color: white;
-        border: 1px solid rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.2);
+    }
+
+    .welcome-action.secondary:hover {
+        background: rgba(255,255,255,.2);
     }
 
     /* =========================
@@ -285,14 +303,16 @@
         place-items: center;
         border-radius: 12px;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 19px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .section-title {
         margin: 0;
         font-size: 22px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .section-subtitle {
@@ -302,7 +322,7 @@
     }
 
     .section-count {
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 13px;
         font-weight: 800;
     }
@@ -332,6 +352,7 @@
     .stat-card:hover {
         transform: translateY(-3px);
         box-shadow: var(--shadow-md);
+        border-color: rgba(96, 165, 250, 0.3);
     }
 
     .stat-card::after {
@@ -352,9 +373,10 @@
         display: grid;
         place-items: center;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 18px;
         margin-bottom: 15px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .stat-label {
@@ -395,12 +417,14 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+        background: rgba(17, 24, 39, 0.6);
     }
 
     .nova-card-title {
         margin: 0;
         font-size: 16px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .nova-card-body {
@@ -429,7 +453,7 @@
         width: 30px;
         height: 30px;
         border: 3px solid var(--border-color);
-        border-top-color: var(--student-blue);
+        border-top-color: #60a5fa;
         border-radius: 50%;
         animation: novaSpin .8s linear infinite;
     }
@@ -441,7 +465,7 @@
     }
 
     .error-state {
-        color: var(--danger-color, #dc2626);
+        color: var(--danger-color);
     }
 
     /* =========================
@@ -462,7 +486,7 @@
     }
 
     .course-item:hover {
-        border-color: var(--student-blue);
+        border-color: #60a5fa;
         transform: translateY(-2px);
     }
 
@@ -477,6 +501,7 @@
         margin: 0;
         font-size: 15px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .course-teacher {
@@ -497,9 +522,10 @@
         padding: 5px 9px;
         border-radius: 999px;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 11px;
         font-weight: 800;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     /* =========================
@@ -522,11 +548,12 @@
         margin: 0;
         font-size: 14px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .lesson-course {
         margin-top: 5px;
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 12px;
         font-weight: 700;
     }
@@ -545,10 +572,11 @@
         padding: 7px 10px;
         border-radius: 8px;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         text-decoration: none;
         font-size: 12px;
         font-weight: 800;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     /* =========================
@@ -569,8 +597,8 @@
     }
 
     .exam-card:hover {
-        border-color: var(--student-blue);
-        box-shadow: 0 7px 20px rgba(37,99,235,.08);
+        border-color: #60a5fa;
+        box-shadow: 0 7px 20px rgba(59, 99, 235, .15);
     }
 
     .exam-top {
@@ -584,11 +612,12 @@
         margin: 0;
         font-size: 16px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .exam-course {
         margin-top: 5px;
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 12px;
         font-weight: 800;
     }
@@ -629,6 +658,7 @@
         font-weight: 900;
         cursor: pointer;
         transition: .2s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .exam-start-btn:hover {
@@ -640,6 +670,7 @@
         opacity: .55;
         cursor: not-allowed;
         transform: none;
+        box-shadow: none;
     }
 
     .availability-badge {
@@ -651,18 +682,21 @@
     }
 
     .availability-badge.available {
-        background: #dcfce7;
-        color: #15803d;
+        background: rgba(34,197,94,.15);
+        color: #4ade80;
+        border: 1px solid rgba(34,197,94,0.3);
     }
 
     .availability-badge.upcoming {
-        background: #fef3c7;
-        color: #a16207;
+        background: rgba(234,179,8,.15);
+        color: #facc15;
+        border: 1px solid rgba(234,179,8,0.3);
     }
 
     .availability-badge.ended {
-        background: #fee2e2;
-        color: #b91c1c;
+        background: rgba(239,68,68,.15);
+        color: #f87171;
+        border: 1px solid rgba(239,68,68,0.3);
     }
 
     /* =========================
@@ -686,7 +720,7 @@
         color: white;
         background: linear-gradient(
             135deg,
-            var(--student-dark-blue),
+            #1e3a8a,
             var(--student-blue)
         );
     }
@@ -706,7 +740,7 @@
 
     .solver-counter {
         margin-top: 7px;
-        color: rgba(255,255,255,.78);
+        color: rgba(255,255,255,.8);
         font-size: 13px;
     }
 
@@ -715,14 +749,14 @@
         padding: 10px 14px;
         border-radius: 12px;
         text-align: center;
-        background: rgba(255,255,255,.13);
-        border: 1px solid rgba(255,255,255,.16);
+        background: rgba(0,0,0,.2);
+        border: 1px solid rgba(255,255,255,.2);
     }
 
     .timer-label {
         display: block;
         font-size: 10px;
-        color: rgba(255,255,255,.75);
+        color: rgba(255,255,255,.8);
     }
 
     #examTimer {
@@ -731,6 +765,7 @@
         font-size: 21px;
         font-weight: 950;
         direction: ltr;
+        color: #ffffff;
     }
 
     .solver-progress {
@@ -738,13 +773,13 @@
         margin-top: 16px;
         overflow: hidden;
         border-radius: 999px;
-        background: rgba(255,255,255,.16);
+        background: rgba(0,0,0,.2);
     }
 
     #examProgress {
         height: 100%;
         width: 0;
-        background: white;
+        background: #ffffff;
         border-radius: inherit;
         transition: width .25s ease;
     }
@@ -754,7 +789,7 @@
     }
 
     .question-number {
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 12px;
         font-weight: 900;
     }
@@ -764,6 +799,7 @@
         font-size: 19px;
         line-height: 1.8;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .options-list {
@@ -784,12 +820,12 @@
     }
 
     .option-label:hover {
-        border-color: var(--student-blue);
+        border-color: #60a5fa;
         background: var(--student-soft);
     }
 
     .option-label.selected {
-        border-color: var(--student-blue);
+        border-color: #60a5fa;
         background: var(--student-soft);
     }
 
@@ -797,13 +833,14 @@
         width: 18px;
         height: 18px;
         margin: 0;
-        accent-color: var(--student-blue);
+        accent-color: #60a5fa;
     }
 
     .option-text {
         font-size: 14px;
         font-weight: 700;
         line-height: 1.6;
+        color: var(--text-color);
     }
 
     .solver-actions {
@@ -827,6 +864,7 @@
     .solver-btn.primary {
         color: white;
         background: var(--student-blue);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .solver-btn.primary:hover {
@@ -834,9 +872,14 @@
     }
 
     .solver-btn.secondary {
-        background: var(--surface-color);
+        background: var(--bg-color);
         color: var(--text-color);
         border: 1px solid var(--border-color);
+    }
+
+    .solver-btn.secondary:hover {
+        background: var(--surface-color);
+        border-color: var(--muted-color);
     }
 
     /* =========================
@@ -863,6 +906,7 @@
         margin: 0;
         font-size: 14px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .result-date {
@@ -877,9 +921,10 @@
         padding: 8px 10px;
         border-radius: 10px;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 15px;
         font-weight: 950;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     /* =========================
@@ -909,14 +954,16 @@
         place-items: center;
         border-radius: 9px;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-weight: 950;
         font-size: 12px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .leader-name {
         font-size: 13px;
         font-weight: 900;
+        color: var(--text-color);
     }
 
     .leader-exams {
@@ -926,7 +973,7 @@
     }
 
     .leader-score {
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 14px;
         font-weight: 950;
     }
@@ -952,7 +999,7 @@
     .performance-number {
         font-size: 24px;
         font-weight: 950;
-        color: var(--student-blue);
+        color: #60a5fa;
     }
 
     .performance-label {
@@ -975,7 +1022,7 @@
         align-items: center;
         justify-content: center;
         padding: 20px;
-        background: rgba(15, 23, 42, .58);
+        background: rgba(0, 0, 0, .75);
         backdrop-filter: blur(5px);
     }
 
@@ -986,7 +1033,7 @@
         border-radius: 22px;
         background: var(--surface-color);
         border: 1px solid var(--border-color);
-        box-shadow: 0 25px 70px rgba(0,0,0,.25);
+        box-shadow: 0 25px 70px rgba(0,0,0,.5);
         text-align: center;
         animation: modalIn .2s ease;
     }
@@ -1010,8 +1057,9 @@
         place-items: center;
         border-radius: 50%;
         background: var(--student-soft);
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 30px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .result-modal h2,
@@ -1019,6 +1067,7 @@
         margin: 0;
         font-size: 22px;
         font-weight: 950;
+        color: var(--text-color);
     }
 
     .result-modal p,
@@ -1034,11 +1083,12 @@
         padding: 18px;
         border-radius: 15px;
         background: var(--student-soft);
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .result-score-big strong {
         display: block;
-        color: var(--student-blue);
+        color: #60a5fa;
         font-size: 32px;
         font-weight: 950;
     }
@@ -1078,6 +1128,7 @@
 
     .wrong-answer strong {
         font-size: 13px;
+        color: var(--text-color);
     }
 
     .wrong-answer p {
@@ -1100,35 +1151,8 @@
     }
 
     .footer-brand {
-        color: var(--student-blue);
+        color: #60a5fa;
         font-weight: 950;
-    }
-
-    /* =========================
-       DARK MODE
-    ========================= */
-
-    body.dark .student-header {
-        background: rgba(15, 23, 42, .92);
-    }
-
-    body.dark .welcome-panel {
-        box-shadow: 0 18px 45px rgba(0,0,0,.28);
-    }
-
-    body.dark .availability-badge.available {
-        background: rgba(34,197,94,.15);
-        color: #4ade80;
-    }
-
-    body.dark .availability-badge.upcoming {
-        background: rgba(234,179,8,.15);
-        color: #facc15;
-    }
-
-    body.dark .availability-badge.ended {
-        background: rgba(239,68,68,.15);
-        color: #f87171;
     }
 
     /* =========================
@@ -3766,6 +3790,7 @@
                         font-size:13px;
                         font-weight:900;
                         margin-bottom:3px;
+                        color: var(--text-color);
                     ">
                         مراجعة الإجابات
                     </div>
