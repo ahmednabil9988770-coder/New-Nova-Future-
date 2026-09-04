@@ -4424,7 +4424,8 @@ examMonitoringActive = false;
     async function finishExam(
         autoSubmitted
     ) {
-
+/* إيقاف مراقبة الامتحان قبل إنهائه */
+examMonitoringActive = false;
         if (!activeExam) {
             return;
         }
