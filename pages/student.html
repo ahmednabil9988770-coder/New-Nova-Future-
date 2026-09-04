@@ -3144,142 +3144,198 @@
        LEADERBOARD
     ====================================================== */
 
-    async function loadLeaderboard() {
+    
+            async function loadLeaderboard() {
 
-        try {
+    try {
 
-            const snapshot =
-                await getDocs(
-                    collection(db, "results")
-                );
+        const snapshot =
+            await getDocs(
+                collection(db, "leaderboard")
+            );
 
-            const map =
-                new Map();
+        // تجميع النتائج حسب الامتحان
+        const examsMap = new Map();
 
-            snapshot.docs.forEach(docSnap => {
+        snapshot.docs.forEach(docSnap => {
 
-                const result =
-                    docSnap.data();
+            const result =
+                docSnap.data();
 
-                const studentId =
-                    result.studentId;
+            const studentId =
+                result.studentId;
 
-                if (!studentId) {
-                    return;
-                }
+            const examId =
+                result.examId;
 
-                const percentage =
-                    Number(result.percentage) || 0;
-
-                if (!map.has(studentId)) {
-
-                    map.set(studentId, {
-                        id: studentId,
-                        name:
-                            result.studentName ||
-                            "طالب",
-                        total: 0,
-                        sum: 0,
-                        best: 0
-                    });
-
-                }
-
-                const student =
-                    map.get(studentId);
-
-                student.total += 1;
-                student.sum += percentage;
-                student.best =
-                    Math.max(
-                        student.best,
-                        percentage
-                    );
-
-            });
-
-
-            const leaderboard =
-                Array.from(map.values())
-                    .map(student => ({
-                        ...student,
-                        average:
-                            student.total
-                                ? student.sum /
-                                  student.total
-                                : 0
-                    }))
-                    .sort(
-                        (a, b) =>
-                            b.average -
-                            a.average
-                    )
-                    .slice(0, 10);
-
-
-            if (!leaderboard.length) {
-
-                setEmpty(
-                    leaderboardContainer,
-                    "لا توجد نتائج كافية لعرض المتصدرين."
-                );
-
+            if (!studentId || !examId) {
                 return;
             }
 
+            const percentage =
+                Number(result.percentage) || 0;
 
-            leaderboardContainer.innerHTML =
-                leaderboard.map(
-                    (student, index) => {
+            if (!examsMap.has(examId)) {
 
-                        const rank =
-                            index + 1;
+                examsMap.set(examId, {
+                    examId,
+                    examTitle:
+                        result.examTitle ||
+                        "امتحان",
+                    students: new Map()
+                });
 
-                        return `
-                            <article class="leaderboard-item">
+            }
 
-                                <div class="rank">
-                                    ${rank}
-                                </div>
+            const exam =
+                examsMap.get(examId);
 
-                                <div>
+            // لو الطالب له أكثر من محاولة،
+            // نحتفظ بأعلى نتيجة
+            if (!exam.students.has(studentId)) {
 
-                                    <div class="leader-name">
-                                        ${escapeHTML(
-                                            student.name
-                                        )}
-                                    </div>
+                exam.students.set(studentId, {
+                    id: studentId,
+                    name:
+                        result.studentName ||
+                        "طالب",
+                    percentage
+                });
 
-                                    <div class="leader-exams">
-                                        ${student.total} امتحان
-                                    </div>
+            } else {
 
-                                </div>
+                const student =
+                    exam.students.get(studentId);
 
-                                <div class="leader-score">
-                                    ${Math.round(student.average)}%
-                                </div>
+                student.percentage =
+                    Math.max(
+                        student.percentage,
+                        percentage
+                    );
+            }
 
-                            </article>
-                        `;
+        });
 
-                    }
-                ).join("");
 
-        } catch (error) {
+        // تحويل البيانات وترتيب الطلاب داخل كل امتحان
+        const leaderboard =
+            Array.from(examsMap.values())
+                .map(exam => {
 
-            console.error(
-                "Leaderboard error:",
-                error
-            );
+                    const students =
+                        Array.from(
+                            exam.students.values()
+                        )
+                        .sort(
+                            (a, b) =>
+                                b.percentage -
+                                a.percentage
+                        );
 
-            setError(
+                    return {
+                        ...exam,
+                        students
+                    };
+
+                })
+                .filter(
+                    exam =>
+                        exam.students.length > 0
+                );
+
+
+        if (!leaderboard.length) {
+
+            setEmpty(
                 leaderboardContainer,
-                "تعذر تحميل لوحة المتصدرين."
+                "لا توجد نتائج لعرض لوحة المتصدرين."
             );
+
+            return;
         }
 
+
+        // عرض كل امتحان في قسم مستقل
+        leaderboardContainer.innerHTML =
+            leaderboard.map(exam => {
+
+                return `
+                    <div class="leaderboard-exam">
+
+                        <div class="leaderboard-exam-title">
+                            🏆 ${escapeHTML(
+                                exam.examTitle
+                            )}
+                        </div>
+
+                        <div class="leaderboard-exam-list">
+
+                            ${exam.students.map(
+                                (student, index) => {
+
+                                    const rank =
+                                        index + 1;
+
+                                    return `
+                                        <article class="leaderboard-item">
+
+                                            <div class="rank">
+                                                ${rank}
+                                            </div>
+
+                                            <div>
+
+                                                <div class="leader-name">
+                                                    ${escapeHTML(
+                                                        student.name
+                                                    )}
+                                                </div>
+
+                                                <div class="leader-exams">
+                                                    المركز ${rank}
+                                                </div>
+
+                                            </div>
+
+                                            <div class="leader-score">
+                                                ${Math.round(
+                                                    student.percentage
+                                                )}%
+                                            </div>
+
+                                        </article>
+                                    `;
+
+                                }
+                            ).join("")}
+
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("");
+
+
+    } catch (error) {
+
+        console.error(
+            "Leaderboard error:",
+            error
+        );
+
+        setError(
+            leaderboardContainer,
+            "تعذر تحميل لوحة المتصدرين."
+        );
     }
+
+}
+
+                
+
+
+            
 
 
     /* =====================================================
