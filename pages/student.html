@@ -2690,7 +2690,18 @@ async function recordExamViolation(reason) {
     examViolationCount++;
     const violationCounter =
     document.getElementById("examViolationCount");
+if (examViolationCount >= MAX_EXAM_VIOLATIONS) {
 
+    examMonitoringActive = false;
+
+    alert(
+        "تم إنهاء الامتحان تلقائيًا بسبب تجاوز الحد المسموح من مخالفات مغادرة الامتحان."
+    );
+
+    await finishExam(true);
+
+    return;
+}
 if (violationCounter) {
     violationCounter.textContent =
         examViolationCount;
