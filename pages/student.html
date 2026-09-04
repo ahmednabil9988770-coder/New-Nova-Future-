@@ -2693,6 +2693,16 @@ async function recordExamViolation(reason) {
     lastViolationTime = now;
 
     examViolationCount++;
+    const lastViolationElement =
+    document.getElementById("lastExamViolation");
+
+if (lastViolationElement) {
+    lastViolationElement.textContent =
+        `⚠️ آخر مخالفة: ${reason}`;
+
+    lastViolationElement.style.display =
+        "block";
+}
     const violationCounter =
     document.getElementById("examViolationCount");
 if (examViolationCount >= MAX_EXAM_VIOLATIONS) {
