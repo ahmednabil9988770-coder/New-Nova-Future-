@@ -2691,9 +2691,9 @@ async function recordExamViolation(reason) {
     }
 
     lastViolationTime = now;
+examViolationCount++;
 
-    examViolationCount++;
-    const lastViolationElement =
+const lastViolationElement =
     document.getElementById("lastExamViolation");
 
 if (lastViolationElement) {
@@ -2703,92 +2703,100 @@ if (lastViolationElement) {
     lastViolationElement.style.display =
         "block";
 }
-    const violationCounter =
+
+const violationCounter =
     document.getElementById("examViolationCount");
-if (examViolationCount >= MAX_EXAM_VIOLATIONS) {
 
-    examMonitoringActive = false;
-
-    alert(
-        "تم إنهاء الامتحان تلقائيًا بسبب تجاوز الحد المسموح من مخالفات مغادرة الامتحان."
-    );
-
-    await finishExam(true);
-
-    return;
-}
 if (violationCounter) {
     violationCounter.textContent =
         examViolationCount;
 }
 
-    console.warn(
-        "Exam violation detected:",
-        reason
+console.warn(
+    "Exam violation detected:",
+    reason
+);
+
+/*
+   محاولة تسجيل المخالفة في Firestore
+*/
+
+if (
+    !currentUser ||
+    !activeExam ||
+    examViolationSaving
+) {
+    return;
+}
+
+examViolationSaving = true;
+
+try {
+
+    await addDoc(
+        collection(
+            db,
+            "examViolations"
+        ),
+        {
+            studentId:
+                currentUser.uid,
+
+            studentName:
+                currentStudent?.name ||
+                currentUser.displayName ||
+                "طالب",
+
+            examId:
+                activeExam.id,
+
+            examTitle:
+                activeExam.title ||
+                "امتحان",
+
+            reason,
+
+            violationNumber:
+                examViolationCount,
+
+            createdAt:
+                serverTimestamp()
+        }
     );
 
     /*
-       محاولة تسجيل المخالفة في Firestore.
-       إذا كانت قواعد Firestore لا تسمح بذلك،
-       لن يتوقف الامتحان بسبب خطأ التسجيل.
+       بعد حفظ المخالفة بنجاح،
+       نتحقق من الحد الأقصى.
     */
 
     if (
-        !currentUser ||
-        !activeExam ||
-        examViolationSaving
+        examViolationCount >=
+        MAX_EXAM_VIOLATIONS
     ) {
+
+        examMonitoringActive = false;
+
+        alert(
+            "تم إنهاء الامتحان تلقائيًا بسبب تجاوز الحد المسموح من مخالفات مغادرة الامتحان."
+        );
+
+        await finishExam(true);
+
         return;
     }
 
-    examViolationSaving = true;
+} catch (error) {
 
-    try {
+    console.error(
+        "Saving exam violation error:",
+        error
+    );
 
-        await addDoc(
-            collection(
-                db,
-                "examViolations"
-            ),
-            {
-                studentId:
-                    currentUser.uid,
+} finally {
 
-                studentName:
-                    currentStudent?.name ||
-                    currentUser.displayName ||
-                    "طالب",
-
-                examId:
-                    activeExam.id,
-
-                examTitle:
-                    activeExam.title ||
-                    "امتحان",
-
-                reason,
-
-                violationNumber:
-                    examViolationCount,
-
-                createdAt:
-                    serverTimestamp()
-            }
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Saving exam violation error:",
-            error
-        );
-
-    } finally {
-
-        examViolationSaving = false;
-    }
-
+    examViolationSaving = false;
 }
+
 
     /* =====================================================
        AUTH
