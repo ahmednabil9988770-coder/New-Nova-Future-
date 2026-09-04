@@ -3769,7 +3769,29 @@
                 collection(db, "results"),
                 resultData
             );
+            
+await addDoc(
+    collection(db, "leaderboard"),
+    {
+        studentId: currentUser.uid,
 
+        studentName:
+            currentStudent?.name ||
+            currentUser.displayName ||
+            "طالب",
+
+        examId: activeExam.id,
+
+        examTitle:
+            activeExam.title ||
+            "امتحان",
+
+        percentage,
+
+        createdAt:
+            serverTimestamp()
+    }
+);
 
             finalScore.textContent =
                 `${percentage}%`;
