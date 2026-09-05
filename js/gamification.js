@@ -892,6 +892,7 @@ function showGamificationMessage(message) {
 ========================================================= */
 
 onAuthStateChanged(
+onAuthStateChanged(
     auth,
     async user => {
 
@@ -899,12 +900,20 @@ onAuthStateChanged(
             return;
         }
 
-
         currentUser =
             user;
 
-
         await loadGamification();
+
+        // تحديث الشارات بعد تحميل المستخدم
+        try {
+            await updateBadgesUI();
+        } catch (error) {
+            console.error(
+                "Nova Future Badges Load Error:",
+                error
+            );
+        }
 
     }
 );
