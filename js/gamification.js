@@ -1490,67 +1490,95 @@ if (gamification && gamification.parentNode) {
    UPDATE BADGES UI
 ========================================================= */
 
+
 async function updateBadgesUI() {
+
+    console.log("NOVA: updateBadgesUI START");
 
     createBadgesUI();
 
     const grid =
-        document.getElementById(
-            "novaBadgesGrid"
-        );
+        document.getElementById("novaBadgesGrid");
 
     if (!grid) {
+
+        console.error(
+            "NOVA: novaBadgesGrid NOT FOUND"
+        );
+
         return;
     }
 
-    const earned =
-        await getStudentBadges();
+    console.log(
+        "NOVA: novaBadgesGrid FOUND"
+    );
 
-    grid.innerHTML =
-        Object.values(NOVA_BADGES)
-            .map(badge => {
+    grid.innerHTML = `
+        <div class="nova-badge">
+            <div class="nova-badge-icon">🔥</div>
 
-                const unlocked =
-                    earned.includes(
-                        badge.id
-                    );
+            <div class="nova-badge-name">
+                شرارة البداية
+            </div>
 
-                return `
+            <div class="nova-badge-description">
+                أول شارة في Nova Future
+            </div>
+        </div>
 
-                    <div class="
-                        nova-badge
-                        ${unlocked
-                            ? ""
-                            : "locked"}
-                    ">
+        <div class="nova-badge locked">
+            <div class="nova-badge-icon">📚</div>
 
-                        <div class="
-                            nova-badge-icon
-                        ">
-                            ${badge.icon}
-                        </div>
+            <div class="nova-badge-name">
+                صانع المعرفة
+            </div>
 
-                        <div class="
-                            nova-badge-name
-                        ">
-                            ${badge.name}
-                        </div>
+            <div class="nova-badge-description">
+                أكمل 5 دروس
+            </div>
+        </div>
 
-                        <div class="
-                            nova-badge-description
-                        ">
-                            ${badge.description}
-                        </div>
+        <div class="nova-badge locked">
+            <div class="nova-badge-icon">⚔️</div>
 
-                    </div>
+            <div class="nova-badge-name">
+                كاسر التحديات
+            </div>
 
-                `;
+            <div class="nova-badge-description">
+                أكمل أول امتحان
+            </div>
+        </div>
 
-            })
-            .join("");
+        <div class="nova-badge locked">
+            <div class="nova-badge-icon">👑</div>
 
+            <div class="nova-badge-name">
+                نجم النخبة
+            </div>
+
+            <div class="nova-badge-description">
+                حقق 90% أو أكثر
+            </div>
+        </div>
+
+        <div class="nova-badge locked">
+            <div class="nova-badge-icon">🌌</div>
+
+            <div class="nova-badge-name">
+                أسطورة نوفا
+            </div>
+
+            <div class="nova-badge-description">
+                وصل للمستوى 5
+            </div>
+        </div>
+    `;
+
+    console.log(
+        "NOVA: Badges rendered successfully"
+    );
 }
-
 
 /* =========================================================
    GLOBAL BADGES API
