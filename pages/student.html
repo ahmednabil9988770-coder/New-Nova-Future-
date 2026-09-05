@@ -1204,6 +1204,136 @@
 
 
     /* =========================
+       CHARACTER SYSTEM STYLES
+    ========================= */
+    .character-choice {
+        position: fixed;
+        inset: 0;
+        z-index: 3000;
+        background: rgba(11, 15, 25, 0.85);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .character-choice-box {
+        width: min(420px, 100%);
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+    }
+
+    .character-choice-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .character-choice-box h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 950;
+        color: var(--text-color);
+    }
+
+    .character-choice-box p {
+        margin: 8px 0 20px;
+        font-size: 14px;
+        color: var(--muted-color);
+    }
+
+    .character-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .character-option {
+        background: var(--bg-color);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 18px 10px;
+        cursor: pointer;
+        transition: 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .character-option:hover {
+        border-color: #60a5fa;
+        background: var(--student-soft);
+        transform: translateY(-2px);
+    }
+
+    .character-image {
+        font-size: 36px;
+    }
+
+    .character-option strong {
+        font-size: 14px;
+        color: var(--text-color);
+    }
+
+    .character-option small {
+        font-size: 11px;
+        color: var(--muted-color);
+    }
+
+    .student-character {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 1500;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        pointer-events: none;
+    }
+
+    .character-message {
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        padding: 10px 14px;
+        border-radius: 14px;
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--text-color);
+        box-shadow: var(--shadow-sm);
+        animation: floatMsg 3s ease-in-out infinite;
+    }
+
+    .character-avatar {
+        width: 55px;
+        height: 55px;
+        background: var(--surface-color);
+        border: 2px solid #60a5fa;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+        box-shadow: var(--shadow-md);
+        pointer-events: auto;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .character-avatar:hover {
+        transform: scale(1.1);
+    }
+
+    @keyframes floatMsg {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+    }
+
+
+    /* =========================
        RESPONSIVE
     ========================= */
 
@@ -1306,8 +1436,6 @@
             font-size: 16px;
         }
 
-        /* أزرار الامتحان على الموبايل */
-
         .solver-actions {
             grid-template-columns: 1fr;
             gap: 10px;
@@ -1359,9 +1487,10 @@
 </style>
 
 </head><body>
+
     <!-- =========================================================
      NOVA FUTURE - STUDENT CHARACTER SYSTEM
-     الخطوة 1: اختيار شخصية الطالب
+     اختيار شخصية الطالب
 ========================================================= -->
 
 <div id="characterChoice" class="character-choice">
@@ -1402,9 +1531,7 @@
 
 </div>
 
-
 <!-- الشخصية التي تظهر بعد الاختيار -->
-
 <div id="studentCharacter" class="student-character" hidden>
 
     <div id="characterMessage" class="character-message">
@@ -1416,6 +1543,8 @@
     </div>
 
 </div>
+
+
     <!-- =========================================================
      HEADER
 ========================================================== --><header class="student-header"><div class="student-header-inner">
@@ -3033,11 +3162,6 @@ window.addEventListener(
         }
 
         event.preventDefault();
-
-        /*
-           المتصفح سيعرض رسالة التحذير
-           الخاصة به تلقائيًا.
-        */
         event.returnValue = "";
     }
 );
@@ -3352,11 +3476,6 @@ window.addEventListener(
             );
 
 
-            /*
-               نتحقق من الامتحانات التي أداها الطالب مباشرة من Firebase.
-               لا نعتمد على allResults هنا لأن loadExams و loadResults
-               يعملان معًا عند فتح لوحة الطالب.
-            */
             const studentResultsQuery =
                 query(
                     collection(db, "results"),
@@ -4077,7 +4196,6 @@ window.addEventListener(
             return;
         }
 
-        /* منع إعادة أداء الامتحان مع فحص مباشر من Firebase */
         try {
             const studentResultsQuery =
                 query(
@@ -4140,7 +4258,6 @@ window.addEventListener(
 currentQuestionIndex = 0;
 selectedAnswers = Array(questions.length).fill(null);
 
-/* بدء مراقبة الامتحان */
 examViolationCount = 0;
         const violationCounter =
     document.getElementById("examViolationCount");
@@ -4331,13 +4448,9 @@ lastViolationTime = 0;
             });
 
 
-        /* زر السابق */
-
         previousQuestionBtn.disabled =
             currentQuestionIndex === 0;
 
-
-        /* زر التالي */
 
         nextQuestionBtn.disabled =
             false;
@@ -4345,8 +4458,6 @@ lastViolationTime = 0;
         nextQuestionBtn.textContent =
             "السؤال التالي ←";
 
-
-        /* زر التسليم */
 
         submitExamBtn.disabled =
             false;
@@ -4554,18 +4665,11 @@ lastViolationTime = 0;
 
 
     /* =====================================================
-       CANCEL EXAM
+       STOP EXAM
     ====================================================== */
 
-    /*
-       ملاحظة:
-       زر إلغاء الامتحان لم يعد موجودًا في الواجهة،
-       لكن نترك الدالة موجودة للتوافق مع أي كود قديم.
-    */
-
     function stopExam() {
-        /* إيقاف مراقبة الامتحان */
-examMonitoringActive = false;
+        examMonitoringActive = false;
 
         clearInterval(
             examTimerInterval
@@ -4598,8 +4702,7 @@ examMonitoringActive = false;
     async function finishExam(
         autoSubmitted
     ) {
-/* إيقاف مراقبة الامتحان قبل إنهائه */
-examMonitoringActive = false;
+        examMonitoringActive = false;
         if (!activeExam) {
             return;
         }
@@ -4710,7 +4813,6 @@ const resultData = {
 
     wrongAnswers,
 
-    /* سبب انتهاء الامتحان */
     submissionReason:
         examViolationCount >= MAX_EXAM_VIOLATIONS
             ? "انتهى بسبب مخالفات مغادرة الامتحان"
@@ -5051,36 +5153,37 @@ const resultData = {
 
         }
     );
-/* =========================================================
-   NOVA FUTURE - CHARACTER SELECTOR
-   الخطوة 2
-========================================================= */
 
-const characterChoice = document.getElementById("characterChoice");
-const studentCharacter = document.getElementById("studentCharacter");
-const characterAvatar = document.getElementById("characterAvatar");
-const characterMessage = document.getElementById("characterMessage");
+    /* =========================================================
+       NOVA FUTURE - CHARACTER SELECTOR LOGIC
+    ========================================================= */
 
-document.querySelectorAll(".character-option").forEach(button => {
+    const characterChoice = document.getElementById("characterChoice");
+    const studentCharacter = document.getElementById("studentCharacter");
+    const characterAvatar = document.getElementById("characterAvatar");
+    const characterMessage = document.getElementById("characterMessage");
 
-    button.addEventListener("click", () => {
+    document.querySelectorAll(".character-option").forEach(button => {
 
-        const character = button.dataset.character;
+        button.addEventListener("click", () => {
 
-        if (character === "chick") {
-            characterAvatar.textContent = "🐣";
-            characterMessage.textContent = "يلا يا بطل! خلينا نتعلم 🐣";
-        }
+            const character = button.dataset.character;
 
-        if (character === "lion") {
-            characterAvatar.textContent = "🦁";
-            characterMessage.textContent = "جاهز للتحدي يا بطل؟ 🦁";
-        }
+            if (character === "chick") {
+                characterAvatar.textContent = "🐣";
+                characterMessage.textContent = "يلا يا بطل! خلينا نتعلم 🐣";
+            }
 
-        characterChoice.hidden = true;
-        studentCharacter.hidden = false;
+            if (character === "lion") {
+                characterAvatar.textContent = "🦁";
+                characterMessage.textContent = "جاهز للتحدي يا بطل؟ 🦁";
+            }
+
+            characterChoice.hidden = true;
+            studentCharacter.hidden = false;
+
+        });
 
     });
 
-});
 </script><script src="../js/app.js"></script></body></html>
