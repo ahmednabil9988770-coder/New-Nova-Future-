@@ -932,43 +932,115 @@ window.NovaGamification = {
 
 };
 
-// =========================================================
-// COMPLETE LESSON → +10 XP
-// =========================================================
+/* =========================================================
+   COMPLETE EXAM → XP
+========================================================= */
 
-window.NovaGamification.completeLesson = async function (
-    lessonId = "",
-    lessonTitle = "درس"
+window.NovaGamification.completeExam = async function (
+    examId = "",
+    examTitle = "امتحان",
+    percentage = 0
 ) {
 
-    const key =
-        `nova_lesson_xp_${lessonId}`;
-
-    // منع حصول الطالب على XP لنفس الدرس أكثر من مرة
-    if (localStorage.getItem(key)) {
-        console.log(
-            "Nova Future: XP already awarded for this lesson."
-        );
+    if (!examId) {
         return false;
     }
 
-    const result =
+    /*
+       منع الحصول على XP لنفس الامتحان أكثر من مرة
+    */
+
+    const key =
+        `nova_exam_xp_${examId}`;
+
+    if (localStorage.getItem(key)) {
+
+        console.log(
+            "Nova Future: XP already awarded for this exam."
+        );
+
+        return false;
+    }
+
+
+    /*
+       إكمال الامتحان
+       +10 XP
+    */
+
+    const completed =
         await addXP(
             10,
-            `إكمال الدرس: ${lessonTitle}`
+            `إكمال الامتحان: ${examTitle}`
         );
 
-    if (!result) {
+
+    if (!completed) {
         return false;
     }
+
+
+    /*
+       النجاح
+       +10 XP
+    */
+
+    if (Number(percentage) >= 50) {
+
+        await addXP(
+            10,
+            "النجاح في الامتحان"
+        );
+
+    }
+
+
+    /*
+       درجة 90% أو أكثر
+       +5 XP
+    */
+
+    if (Number(percentage) >= 90) {
+
+        await addXP(
+            5,
+            "درجة ممتازة ⭐"
+        );
+
+    }
+
+
+    /*
+       تسجيل أن الامتحان أخذ XP
+    */
 
     localStorage.setItem(
         key,
         "true"
     );
 
+
     return true;
+
 };
-console.log(
-    "🚀 Nova Future Gamification System Loaded"
-);
+
+
+/* =========================================================
+   GLOBAL API
+========================================================= */
+
+window.NovaGamification = {
+
+    addXP,
+
+    loadGamification,
+
+    getLevelFromXP,
+
+    getProgressPercent,
+
+    getCharacterEvolution,
+
+    completeExam
+
+};
