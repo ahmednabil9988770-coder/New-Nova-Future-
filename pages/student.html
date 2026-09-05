@@ -7185,6 +7185,23 @@ document
 
                     }
                 );
+                                /* =================================================
+                   EXAM → GAMIFICATION XP
+                ================================================= */
+
+                if (
+                    window.NovaGamification &&
+                    typeof window.NovaGamification.completeExam ===
+                        "function"
+                ) {
+
+                    await window.NovaGamification.completeExam(
+                        activeExam.id,
+                        activeExam.title || "امتحان",
+                        percentage
+                    );
+
+                }
 
 
                 finalScore.textContent =
