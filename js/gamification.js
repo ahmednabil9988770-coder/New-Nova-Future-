@@ -1201,11 +1201,8 @@ async function unlockBadge(badgeId) {
         /* الشارة موجودة بالفعل */
 
         if (badges.includes(badgeId)) {
-
-            await updateBadgesUI();
-
-            return true;
-        }
+    return true;
+}
 
         /* إضافة الشارة */
 
@@ -1230,7 +1227,7 @@ async function unlockBadge(badgeId) {
             `${badge.icon} حصلت على شارة "${badge.name}"!`
         );
 
-        await updateBadgesUI();
+        
 
         return true;
 
