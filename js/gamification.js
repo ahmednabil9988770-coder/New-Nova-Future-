@@ -1091,10 +1091,10 @@ const NOVA_BADGES = {
 /* =========================================================
    SAVE BADGE
 ========================================================= */
-
 async function unlockBadge(badgeId) {
 
     if (!currentUser || !db) {
+        console.warn("Nova Future: User not ready for badge.");
         return false;
     }
 
@@ -1103,6 +1103,7 @@ async function unlockBadge(badgeId) {
             .find(item => item.id === badgeId);
 
     if (!badge) {
+        console.warn("Nova Future: Badge not found:", badgeId);
         return false;
     }
 
@@ -1118,19 +1119,28 @@ async function unlockBadge(badgeId) {
         const userSnap =
             await getDoc(userRef);
 
+        if (!userSnap.exists()) {
+            return false;
+        }
+
         const data =
-            userSnap.exists()
-                ? userSnap.data()
-                : {};
+            userSnap.data();
 
         const badges =
             Array.isArray(data.badges)
                 ? data.badges
                 : [];
 
+        /* الشارة موجودة بالفعل */
+
         if (badges.includes(badgeId)) {
-            return false;
+
+            await updateBadgesUI();
+
+            return true;
         }
+
+        /* إضافة الشارة */
 
         await updateDoc(
             userRef,
@@ -1144,9 +1154,16 @@ async function unlockBadge(badgeId) {
             }
         );
 
+        console.log(
+            "Nova Future: Badge unlocked:",
+            badge.name
+        );
+
         showGamificationMessage(
             `${badge.icon} حصلت على شارة "${badge.name}"!`
         );
+
+        await updateBadgesUI();
 
         return true;
 
@@ -1160,6 +1177,8 @@ async function unlockBadge(badgeId) {
         return false;
     }
 }
+
+
 
 
 /* =========================================================
