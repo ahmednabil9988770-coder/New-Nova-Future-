@@ -12,8 +12,8 @@ import {
 import {
     doc,
     getDoc,
-    updateDoc,
     setDoc,
+    updateDoc,
     increment,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
@@ -33,49 +33,17 @@ const XP_PER_LEVEL = 100;
 const CHARACTER_EVOLUTION = {
 
     chick: [
-        {
-            minLevel: 1,
-            emoji: "🐣",
-            name: "الكتكوت"
-        },
-        {
-            minLevel: 3,
-            emoji: "🐥",
-            name: "الكتكوت المتطور"
-        },
-        {
-            minLevel: 5,
-            emoji: "🐔",
-            name: "الدجاجة المقاتلة"
-        },
-        {
-            minLevel: 10,
-            emoji: "🦅",
-            name: "النسر"
-        }
+        { minLevel: 1, emoji: "🐣", name: "الكتكوت" },
+        { minLevel: 3, emoji: "🐥", name: "الكتكوت المتطور" },
+        { minLevel: 5, emoji: "🐔", name: "الدجاجة المقاتلة" },
+        { minLevel: 10, emoji: "🦅", name: "النسر" }
     ],
 
     lion: [
-        {
-            minLevel: 1,
-            emoji: "🦁",
-            name: "الأسد"
-        },
-        {
-            minLevel: 3,
-            emoji: "🦁⭐",
-            name: "الأسد المقاتل"
-        },
-        {
-            minLevel: 5,
-            emoji: "🦁🔥",
-            name: "الأسد الناري"
-        },
-        {
-            minLevel: 10,
-            emoji: "👑🦁",
-            name: "ملك الأسود"
-        }
+        { minLevel: 1, emoji: "🦁", name: "الأسد" },
+        { minLevel: 3, emoji: "🦁⭐", name: "الأسد المقاتل" },
+        { minLevel: 5, emoji: "🦁🔥", name: "الأسد الناري" },
+        { minLevel: 10, emoji: "👑🦁", name: "ملك الأسود" }
     ]
 
 };
@@ -130,11 +98,10 @@ const NOVA_BADGES = {
 ========================================================= */
 
 let currentUser = null;
-let currentStudent = null;
 
 
 /* =========================================================
-   HELPERS
+   LEVEL FUNCTIONS
 ========================================================= */
 
 function getLevelFromXP(xp) {
@@ -144,6 +111,7 @@ function getLevelFromXP(xp) {
     return Math.floor(
         xp / XP_PER_LEVEL
     ) + 1;
+
 }
 
 
@@ -152,6 +120,7 @@ function getCurrentLevelXP(xp) {
     xp = Number(xp) || 0;
 
     return xp % XP_PER_LEVEL;
+
 }
 
 
@@ -166,6 +135,7 @@ function getProgressPercent(xp) {
             (currentXP / XP_PER_LEVEL) * 100
         )
     );
+
 }
 
 
@@ -186,17 +156,20 @@ function getCharacterEvolution(
             Number(level) >=
             item.minLevel
         ) {
+
             evolution = item;
+
         }
 
     }
 
     return evolution;
+
 }
 
 
 /* =========================================================
-   GAMIFICATION CSS
+   GAMIFICATION STYLE
 ========================================================= */
 
 function createGamificationStyle() {
@@ -219,7 +192,7 @@ function createGamificationStyle() {
 
         #novaGamification {
             width: 100%;
-            margin: 25px 0;
+            margin: 20px 0;
         }
 
         .nova-gamification-card {
@@ -245,91 +218,62 @@ function createGamificationStyle() {
 
         .nova-gamification-header {
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
             gap: 20px;
-
             margin-bottom: 20px;
         }
 
         .nova-gamification-title {
             color: white;
-
             font-size: 20px;
-
             font-weight: 900;
         }
 
         .nova-character-name {
             margin-top: 6px;
-
             color: #94a3b8;
-
             font-size: 14px;
         }
 
         .nova-character-emoji {
             width: 70px;
             height: 70px;
-
             display: flex;
-
             align-items: center;
             justify-content: center;
-
             font-size: 42px;
-
-            background:
-                rgba(255,255,255,.06);
-
+            background: rgba(255,255,255,.06);
             border-radius: 20px;
         }
 
         .nova-level-row {
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             color: #cbd5e1;
-
             font-size: 14px;
-
             margin-bottom: 10px;
         }
 
         .nova-level-row strong {
             color: white;
-
             font-size: 20px;
-
             margin-right: 5px;
         }
 
         .nova-progress-container {
             width: 100%;
-
             height: 14px;
-
             overflow: hidden;
-
-            background:
-                rgba(255,255,255,.08);
-
+            background: rgba(255,255,255,.08);
             border-radius: 999px;
         }
 
         .nova-progress-bar {
             height: 100%;
-
             width: 0%;
-
             border-radius: 999px;
-
             background:
                 linear-gradient(
                     90deg,
@@ -337,41 +281,30 @@ function createGamificationStyle() {
                     #06b6d4,
                     #8b5cf6
                 );
-
-            transition:
-                width .8s ease;
+            transition: width .8s ease;
         }
 
         .nova-progress-text {
             margin-top: 8px;
-
             color: #94a3b8;
-
             font-size: 12px;
-
             text-align: center;
         }
 
         .nova-evolution-text {
             margin-top: 18px;
-
             padding: 12px;
-
             text-align: center;
-
-            background:
-                rgba(255,255,255,.05);
-
+            background: rgba(255,255,255,.05);
             border-radius: 14px;
-
             color: #e2e8f0;
-
             font-size: 14px;
         }
 
     `;
 
     document.head.appendChild(style);
+
 }
 
 
@@ -427,35 +360,21 @@ function createGamificationUI() {
 
             </div>
 
-
             <div class="nova-level-row">
 
                 <div>
                     المستوى
-
-                    <strong id="novaLevel">
-                        1
-                    </strong>
+                    <strong id="novaLevel">1</strong>
                 </div>
 
                 <div>
-
-                    <span id="novaCurrentXP">
-                        0
-                    </span>
-
+                    <span id="novaCurrentXP">0</span>
                     /
-
-                    <span id="novaNextLevelXP">
-                        100
-                    </span>
-
+                    <span id="novaNextLevelXP">100</span>
                     XP
-
                 </div>
 
             </div>
-
 
             <div class="nova-progress-container">
 
@@ -466,14 +385,12 @@ function createGamificationUI() {
 
             </div>
 
-
             <div
                 id="novaProgressText"
                 class="nova-progress-text"
             >
                 0% للمستوى التالي
             </div>
-
 
             <div
                 id="novaEvolutionText"
@@ -486,12 +403,10 @@ function createGamificationUI() {
 
     `;
 
-
     const dashboard =
         document.getElementById(
             "dashboard"
         );
-
 
     if (dashboard) {
 
@@ -515,7 +430,9 @@ function createGamificationUI() {
    UPDATE GAMIFICATION UI
 ========================================================= */
 
-function updateGamificationUI(data = {}) {
+function updateGamificationUI(
+    data = {}
+) {
 
     createGamificationUI();
 
@@ -542,7 +459,6 @@ function updateGamificationUI(data = {}) {
             level
         );
 
-
     const levelElement =
         document.getElementById(
             "novaLevel"
@@ -551,11 +467,6 @@ function updateGamificationUI(data = {}) {
     const currentXPElement =
         document.getElementById(
             "novaCurrentXP"
-        );
-
-    const nextLevelXPElement =
-        document.getElementById(
-            "novaNextLevelXP"
         );
 
     const progressBar =
@@ -583,48 +494,27 @@ function updateGamificationUI(data = {}) {
             "novaEvolutionText"
         );
 
-
     if (levelElement) {
-
         levelElement.textContent =
             level;
-
     }
-
 
     if (currentXPElement) {
-
         currentXPElement.textContent =
             currentXP;
-
     }
-
-
-    if (nextLevelXPElement) {
-
-        nextLevelXPElement.textContent =
-            XP_PER_LEVEL;
-
-    }
-
 
     if (progressBar) {
-
         progressBar.style.width =
             `${progress}%`;
-
     }
-
 
     if (progressText) {
 
         progressText.textContent =
-            progress >= 100
-                ? "جاهز للمستوى التالي! 🔥"
-                : `${progress}% للمستوى التالي`;
+            `${progress}% للمستوى التالي`;
 
     }
-
 
     if (characterEmoji) {
 
@@ -633,14 +523,12 @@ function updateGamificationUI(data = {}) {
 
     }
 
-
     if (characterName) {
 
         characterName.textContent =
             evolution.name;
 
     }
-
 
     if (evolutionText) {
 
@@ -654,15 +542,14 @@ function updateGamificationUI(data = {}) {
 
 
 /* =========================================================
-   LOAD GAMIFICATION
+   LOAD GAMIFICATION FROM FIREBASE
 ========================================================= */
 
 async function loadGamification() {
 
-    if (!currentUser || !db) {
+    if (!currentUser) {
         return;
     }
-
 
     try {
 
@@ -673,67 +560,49 @@ async function loadGamification() {
                 currentUser.uid
             );
 
-
         const userSnap =
             await getDoc(userRef);
 
-
         if (!userSnap.exists()) {
+
+            console.warn(
+                "Nova Future: User document not found."
+            );
+
             return;
+
         }
 
-
-        currentStudent =
+        const data =
             userSnap.data();
 
-
         const xp =
-            Number(currentStudent.xp) || 0;
-
+            Number(data.xp) || 0;
 
         const character =
-            currentStudent.character === "lion"
+            data.character === "lion"
                 ? "lion"
                 : "chick";
 
-
-        if (
-            typeof currentStudent.xp !== "number" ||
-            !currentStudent.character
-        ) {
-
-            await setDoc(
-                userRef,
-                {
-                    xp: xp,
-
-                    level:
-                        getLevelFromXP(xp),
-
-                    character:
-                        character,
-
-                    updatedAt:
-                        serverTimestamp()
-                },
-                {
-                    merge: true
-                }
-            );
-
-        }
-
+        console.log(
+            "Nova Future Gamification:",
+            {
+                xp,
+                character,
+                level:
+                    getLevelFromXP(xp)
+            }
+        );
 
         updateGamificationUI({
-            xp: xp,
-            character: character
+            xp,
+            character
         });
-
 
     } catch (error) {
 
         console.error(
-            "Nova Future Gamification Load Error:",
+            "Nova Future Gamification Error:",
             error
         );
 
@@ -743,109 +612,14 @@ async function loadGamification() {
 
 
 /* =========================================================
-   SHOW MESSAGE
-========================================================= */
-
-function showGamificationMessage(
-    message
-) {
-
-    const oldMessage =
-        document.getElementById(
-            "novaXPMessage"
-        );
-
-
-    if (oldMessage) {
-        oldMessage.remove();
-    }
-
-
-    const element =
-        document.createElement("div");
-
-
-    element.id =
-        "novaXPMessage";
-
-
-    element.textContent =
-        message;
-
-
-    element.style.cssText = `
-
-        position: fixed;
-
-        left: 50%;
-
-        bottom: 30px;
-
-        transform:
-            translateX(-50%);
-
-        z-index: 99999;
-
-        padding:
-            14px 22px;
-
-        border-radius:
-            999px;
-
-        background:
-            rgba(15,23,42,.96);
-
-        color:
-            white;
-
-        font-weight:
-            700;
-
-        font-size:
-            14px;
-
-        box-shadow:
-            0 10px 30px
-            rgba(0,0,0,.3);
-
-    `;
-
-
-    document.body.appendChild(
-        element
-    );
-
-
-    setTimeout(() => {
-
-        element.style.opacity =
-            "0";
-
-        element.style.transition =
-            "opacity .4s ease";
-
-    }, 2200);
-
-
-    setTimeout(() => {
-
-        element.remove();
-
-    }, 2700);
-
-}
-
-
-/* =========================================================
-   GET STUDENT BADGES
+   GET BADGES
 ========================================================= */
 
 async function getStudentBadges() {
 
-    if (!currentUser || !db) {
+    if (!currentUser) {
         return [];
     }
-
 
     try {
 
@@ -856,29 +630,24 @@ async function getStudentBadges() {
                 currentUser.uid
             );
 
-
         const snap =
             await getDoc(userRef);
-
 
         if (!snap.exists()) {
             return [];
         }
 
-
         const badges =
             snap.data().badges;
-
 
         return Array.isArray(badges)
             ? badges
             : [];
 
-
     } catch (error) {
 
         console.error(
-            "Nova Future Get Badges Error:",
+            "Nova Future Badges Error:",
             error
         );
 
@@ -890,7 +659,7 @@ async function getStudentBadges() {
 
 
 /* =========================================================
-   BADGES CSS
+   BADGES STYLE
 ========================================================= */
 
 function createBadgesStyle() {
@@ -903,14 +672,11 @@ function createBadgesStyle() {
         return;
     }
 
-
     const style =
         document.createElement("style");
 
-
     style.id =
         "novaBadgesStyle";
-
 
     style.textContent = `
 
@@ -938,79 +704,56 @@ function createBadgesStyle() {
 
         .nova-badges-title {
             color: white;
-
             font-size: 20px;
-
             font-weight: 900;
-
             margin-bottom: 18px;
         }
 
         .nova-badges-grid {
             display: grid;
-
             grid-template-columns:
                 repeat(
                     auto-fit,
                     minmax(120px, 1fr)
                 );
-
             gap: 12px;
         }
 
         .nova-badge {
             padding: 15px 10px;
-
             text-align: center;
-
             border-radius: 18px;
-
-            background:
-                rgba(255,255,255,.06);
-
+            background: rgba(255,255,255,.06);
             border:
                 1px solid
                 rgba(255,255,255,.08);
-
-            transition:
-                .3s ease;
         }
 
         .nova-badge.locked {
             opacity: .35;
-
-            filter:
-                grayscale(1);
+            filter: grayscale(1);
         }
 
         .nova-badge-icon {
             font-size: 35px;
-
             margin-bottom: 8px;
         }
 
         .nova-badge-name {
             color: white;
-
             font-size: 13px;
-
             font-weight: 800;
         }
 
         .nova-badge-description {
             color: #94a3b8;
-
             font-size: 10px;
-
             margin-top: 5px;
         }
 
     `;
 
-
-    document.head.appendChild(
-        style
-    );
+    document.head.appendChild(style);
 
 }
 
@@ -1023,34 +766,19 @@ function createBadgesUI() {
 
     createBadgesStyle();
 
-
-    /*
-       لو القسم موجود بالفعل في student.html
-       نستخدمه كما هو.
-    */
-
-    const existing =
+    if (
         document.getElementById(
             "novaBadges"
-        );
-
-
-    if (existing) {
+        )
+    ) {
         return;
     }
-
-
-    /*
-       لو مش موجود، ننشئه تلقائيًا.
-    */
 
     const section =
         document.createElement("section");
 
-
     section.id =
         "novaBadges";
-
 
     section.innerHTML = `
 
@@ -1071,38 +799,16 @@ function createBadgesUI() {
 
     `;
 
-
     const dashboard =
         document.getElementById(
             "dashboard"
         );
 
-
     if (dashboard) {
 
-        const gamification =
-            document.getElementById(
-                "novaGamification"
-            );
-
-
-        if (
-            gamification &&
-            gamification.parentNode
-        ) {
-
-            gamification.parentNode.insertBefore(
-                section,
-                gamification.nextSibling
-            );
-
-        } else {
-
-            dashboard.appendChild(
-                section
-            );
-
-        }
+        dashboard.appendChild(
+            section
+        );
 
     } else {
 
@@ -1123,27 +829,17 @@ async function updateBadgesUI() {
 
     createBadgesUI();
 
-
     const grid =
         document.getElementById(
             "novaBadgesGrid"
         );
 
-
     if (!grid) {
-
-        console.warn(
-            "Nova Future: novaBadgesGrid not found."
-        );
-
         return;
-
     }
-
 
     const earned =
         await getStudentBadges();
-
 
     grid.innerHTML =
         Object.values(
@@ -1156,7 +852,6 @@ async function updateBadgesUI() {
                     badge.id
                 );
 
-
             return `
 
                 <div class="
@@ -1164,21 +859,15 @@ async function updateBadgesUI() {
                     ${unlocked ? "" : "locked"}
                 ">
 
-                    <div
-                        class="nova-badge-icon"
-                    >
+                    <div class="nova-badge-icon">
                         ${badge.icon}
                     </div>
 
-                    <div
-                        class="nova-badge-name"
-                    >
+                    <div class="nova-badge-name">
                         ${badge.name}
                     </div>
 
-                    <div
-                        class="nova-badge-description"
-                    >
+                    <div class="nova-badge-description">
                         ${badge.description}
                     </div>
 
@@ -1193,6 +882,45 @@ async function updateBadgesUI() {
 
 
 /* =========================================================
+   SHOW XP MESSAGE
+========================================================= */
+
+function showGamificationMessage(
+    message
+) {
+
+    const element =
+        document.createElement("div");
+
+    element.textContent =
+        message;
+
+    element.style.cssText = `
+        position:fixed;
+        left:50%;
+        bottom:30px;
+        transform:translateX(-50%);
+        z-index:99999;
+        padding:14px 22px;
+        border-radius:999px;
+        background:rgba(15,23,42,.96);
+        color:white;
+        font-weight:700;
+        font-size:14px;
+    `;
+
+    document.body.appendChild(
+        element
+    );
+
+    setTimeout(() => {
+        element.remove();
+    }, 2700);
+
+}
+
+
+/* =========================================================
    UNLOCK BADGE
 ========================================================= */
 
@@ -1200,16 +928,9 @@ async function unlockBadge(
     badgeId
 ) {
 
-    if (!currentUser || !db) {
-
-        console.warn(
-            "Nova Future: User not ready for badge."
-        );
-
+    if (!currentUser) {
         return false;
-
     }
-
 
     const badge =
         Object.values(
@@ -1220,18 +941,9 @@ async function unlockBadge(
                 item.id === badgeId
         );
 
-
     if (!badge) {
-
-        console.warn(
-            "Nova Future: Badge not found:",
-            badgeId
-        );
-
         return false;
-
     }
-
 
     try {
 
@@ -1242,99 +954,58 @@ async function unlockBadge(
                 currentUser.uid
             );
 
-
         const snap =
-            await getDoc(
-                userRef
-            );
-
-
-        if (!snap.exists()) {
-            return false;
-        }
-
+            await getDoc(userRef);
 
         const data =
-            snap.data();
-
+            snap.exists()
+                ? snap.data()
+                : {};
 
         const badges =
             Array.isArray(data.badges)
                 ? data.badges
                 : [];
 
-
         if (
             badges.includes(
                 badgeId
             )
         ) {
-
             return true;
-
         }
 
-
-        await updateDoc(
+        await setDoc(
             userRef,
             {
                 badges: [
                     ...badges,
                     badgeId
                 ],
-
                 updatedAt:
                     serverTimestamp()
+            },
+            {
+                merge: true
             }
         );
-
-
-        console.log(
-            "Nova Future: Badge unlocked:",
-            badge.name
-        );
-
 
         showGamificationMessage(
             `${badge.icon} حصلت على شارة "${badge.name}"!`
         );
 
-
         await updateBadgesUI();
 
-
         return true;
-
 
     } catch (error) {
 
         console.error(
-            "Nova Future Badge Error:",
+            "Nova Future Unlock Badge Error:",
             error
         );
 
         return false;
-
-    }
-
-}
-
-
-/* =========================================================
-   LEVEL BADGES
-========================================================= */
-
-async function checkLevelBadges(
-    level
-) {
-
-    if (
-        Number(level) >= 5
-    ) {
-
-        await unlockBadge(
-            "novaLegend"
-        );
 
     }
 
@@ -1350,25 +1021,16 @@ async function addXP(
     reason = "إنجاز"
 ) {
 
-    if (!currentUser || !db) {
-
-        console.warn(
-            "Nova Future: User not ready."
-        );
-
+    if (!currentUser) {
         return null;
-
     }
-
 
     amount =
         Number(amount) || 0;
 
-
     if (amount <= 0) {
         return null;
     }
-
 
     try {
 
@@ -1379,40 +1041,26 @@ async function addXP(
                 currentUser.uid
             );
 
-
-        const oldSnap =
-            await getDoc(
-                userRef
-            );
-
+        const snap =
+            await getDoc(userRef);
 
         const oldData =
-            oldSnap.exists()
-                ? oldSnap.data()
+            snap.exists()
+                ? snap.data()
                 : {};
-
 
         const oldXP =
             Number(oldData.xp) || 0;
 
-
-        const oldLevel =
-            getLevelFromXP(
-                oldXP
-            );
-
-
         const newXP =
             oldXP + amount;
-
 
         const newLevel =
             getLevelFromXP(
                 newXP
             );
 
-
-        await updateDoc(
+        await setDoc(
             userRef,
             {
                 xp:
@@ -1423,72 +1071,31 @@ async function addXP(
 
                 updatedAt:
                     serverTimestamp()
+            },
+            {
+                merge: true
             }
         );
-
-
-        currentStudent =
-            currentStudent || {};
-
-
-        currentStudent.xp =
-            newXP;
-
-
-        currentStudent.level =
-            newLevel;
-
-
-        currentStudent.character =
-            currentStudent.character === "lion"
-                ? "lion"
-                : "chick";
-
 
         updateGamificationUI({
             xp:
                 newXP,
 
             character:
-                currentStudent.character
+                oldData.character === "lion"
+                    ? "lion"
+                    : "chick"
         });
 
-
-        await checkLevelBadges(
-            newLevel
+        showGamificationMessage(
+            `+${amount} XP 🚀 — ${reason}`
         );
 
-
-        if (
-            newLevel > oldLevel
-        ) {
-
-            showGamificationMessage(
-                `🎉 مبروك! وصلت للمستوى ${newLevel}!`
-            );
-
-        } else {
-
-            showGamificationMessage(
-                `+${amount} XP 🚀 — ${reason}`
-            );
-
-        }
-
-
         return {
-
-            xp:
-                newXP,
-
-            level:
-                newLevel,
-
-            gained:
-                amount
-
+            xp: newXP,
+            level: newLevel,
+            gained: amount
         };
-
 
     } catch (error) {
 
@@ -1509,7 +1116,7 @@ async function addXP(
 ========================================================= */
 
 async function completeLesson(
-    lessonId = "",
+    lessonId,
     lessonTitle = "درس"
 ) {
 
@@ -1517,25 +1124,14 @@ async function completeLesson(
         return false;
     }
 
-
     const key =
         `nova_lesson_xp_${lessonId}`;
 
-
     if (
-        localStorage.getItem(
-            key
-        )
+        localStorage.getItem(key)
     ) {
-
-        console.log(
-            "Nova Future: Lesson XP already awarded."
-        );
-
         return false;
-
     }
-
 
     const result =
         await addXP(
@@ -1543,49 +1139,34 @@ async function completeLesson(
             `إكمال الدرس: ${lessonTitle}`
         );
 
-
     if (!result) {
         return false;
     }
-
 
     localStorage.setItem(
         key,
         "true"
     );
 
-
     await unlockBadge(
         "firstLesson"
     );
 
+    const lessons =
+        Object.keys(localStorage)
+        .filter(key =>
+            key.startsWith(
+                "nova_lesson_xp_"
+            )
+        );
 
-    const completedLessons =
-        Object.keys(
-            localStorage
-        )
-        .filter(
-            key =>
-                key.startsWith(
-                    "nova_lesson_xp_"
-                )
-        )
-        .length;
-
-
-    if (
-        completedLessons >= 5
-    ) {
+    if (lessons.length >= 5) {
 
         await unlockBadge(
             "fiveLessons"
         );
 
     }
-
-
-    await updateBadgesUI();
-
 
     return true;
 
@@ -1597,7 +1178,7 @@ async function completeLesson(
 ========================================================= */
 
 async function completeExam(
-    examId = "",
+    examId,
     examTitle = "امتحان",
     percentage = 0
 ) {
@@ -1606,57 +1187,16 @@ async function completeExam(
         return false;
     }
 
-
     const key =
         `nova_exam_xp_${examId}`;
 
-
-    /*
-       منع إعطاء XP لنفس الامتحان مرتين.
-    */
-
     if (
-        localStorage.getItem(
-            key
-        )
+        localStorage.getItem(key)
     ) {
-
-        console.log(
-            "Nova Future: Exam XP already awarded."
-        );
-
-
-        /*
-           نتأكد من الشارات.
-        */
-
-        await unlockBadge(
-            "firstExam"
-        );
-
-
-        if (
-            Number(percentage) >= 90
-        ) {
-
-            await unlockBadge(
-                "topScholar"
-            );
-
-        }
-
-
-        await updateBadgesUI();
-
 
         return false;
 
     }
-
-
-    /*
-       +10 XP لإكمال الامتحان
-    */
 
     const completed =
         await addXP(
@@ -1664,24 +1204,13 @@ async function completeExam(
             `إكمال الامتحان: ${examTitle}`
         );
 
-
     if (!completed) {
         return false;
     }
 
-
-    /*
-       أول امتحان
-    */
-
     await unlockBadge(
         "firstExam"
     );
-
-
-    /*
-       النجاح 50% أو أكثر
-    */
 
     if (
         Number(percentage) >= 50
@@ -1694,11 +1223,6 @@ async function completeExam(
 
     }
 
-
-    /*
-       90% أو أكثر
-    */
-
     if (
         Number(percentage) >= 90
     ) {
@@ -1708,26 +1232,16 @@ async function completeExam(
             "درجة ممتازة ⭐"
         );
 
-
         await unlockBadge(
             "topScholar"
         );
 
     }
 
-
-    /*
-       تسجيل الامتحان
-    */
-
     localStorage.setItem(
         key,
         "true"
     );
-
-
-    await updateBadgesUI();
-
 
     return true;
 
@@ -1741,32 +1255,21 @@ async function completeExam(
 window.NovaGamification = {
 
     addXP,
-
     loadGamification,
-
     getLevelFromXP,
-
     getProgressPercent,
-
     getCharacterEvolution,
-
     completeExam,
-
     completeLesson,
-
     unlockBadge,
-
     getStudentBadges,
-
-    updateBadgesUI,
-
-    checkLevelBadges
+    updateBadgesUI
 
 };
 
 
 /* =========================================================
-   FIREBASE AUTH
+   AUTH
 ========================================================= */
 
 onAuthStateChanged(
@@ -1775,76 +1278,34 @@ onAuthStateChanged(
 
         if (!user) {
 
-            currentUser =
-                null;
+            currentUser = null;
 
             return;
 
         }
 
-
         currentUser =
             user;
 
-
         await loadGamification();
 
-
-        /*
-           تحميل الشارات بعد التأكد
-           أن المستخدم معروف.
-        */
-
-        try {
-
-            await updateBadgesUI();
-
-        } catch (error) {
-
-            console.error(
-                "Nova Future Badges Load Error:",
-                error
-            );
-
-        }
+        await updateBadgesUI();
 
     }
 );
 
 
 /* =========================================================
-   INITIAL UI
+   START UI
 ========================================================= */
 
-setTimeout(
-    async () => {
+createGamificationUI();
 
-        try {
+createBadgesUI();
 
-            createGamificationUI();
+if (currentUser) {
 
-            createBadgesUI();
+    loadGamification();
+    updateBadgesUI();
 
-            /*
-               لو Firebase لسه بيحمّل المستخدم
-               هيتعمل تحديث مرة أخرى بعد تسجيل الدخول.
-            */
-
-            if (currentUser) {
-
-                await updateBadgesUI();
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Nova Future Initial UI Error:",
-                error
-            );
-
-        }
-
-    },
-    1000
-);
+}
