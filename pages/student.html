@@ -4924,4 +4924,2411 @@
         ====================================================== */
 
         document.addEventListener(
-            "visibilitychange
+            "visibilitychange",
+            () => {
+
+                if (
+                    !examMonitoringActive
+                ) {
+                    return;
+                }
+
+
+                if (
+                    document.visibilityState ===
+                    "hidden"
+                ) {
+
+                    recordExamViolation(
+                        "مغادرة صفحة الامتحان أو الانتقال إلى تبويب آخر"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           WINDOW BLUR MONITOR
+        ====================================================== */
+
+        window.addEventListener(
+            "blur",
+            () => {
+
+                if (
+                    !examMonitoringActive
+                ) {
+                    return;
+                }
+
+
+                recordExamViolation(
+                    "فقدان تركيز نافذة الامتحان"
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           PREVENT ACCIDENTAL PAGE LEAVE
+        ====================================================== */
+
+        window.addEventListener(
+            "beforeunload",
+            event => {
+
+                if (
+                    !examMonitoringActive
+                ) {
+                    return;
+                }
+
+
+                event.preventDefault();
+
+                event.returnValue = "";
+            }
+        );
+
+
+        /* =====================================================
+           LOAD DASHBOARD
+        ====================================================== */
+
+        async function loadDashboard() {
+
+            await Promise.allSettled([
+
+                loadCourses(),
+
+                loadLessons(),
+
+                loadExams(),
+
+                loadResults()
+
+            ]);
+
+        }
+
+
+        /* =====================================================
+           COURSES
+        ====================================================== */
+
+        async function loadCourses() {
+
+            setLoading(
+                coursesContainer,
+                "جاري تحميل الكورسات..."
+            );
+
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "courses"
+                        )
+                    );
+
+
+                allCourses =
+                    snapshot.docs.map(
+                        docSnap => ({
+
+                            id:
+                                docSnap.id,
+
+                            ...docSnap.data()
+
+                        })
+                    );
+
+
+                coursesCount.textContent =
+                    `${allCourses.length} كورسات`;
+
+
+                if (
+                    !allCourses.length
+                ) {
+
+                    setEmpty(
+                        coursesContainer,
+                        "لا توجد كورسات متاحة حالياً."
+                    );
+
+
+                    return;
+                }
+
+
+                coursesContainer.innerHTML =
+                    allCourses
+                        .map(
+                            course => {
+
+                                const title =
+                                    getCourseName(
+                                        course
+                                    );
+
+
+                                const teacher =
+                                    course.teacherName ||
+                                    "مدرس المنصة";
+
+
+                                const description =
+                                    course.description ||
+                                    "لا يوجد وصف لهذا الكورس حالياً.";
+
+
+                                return `
+
+                                    <article class="course-item">
+
+                                        <div class="course-item-top">
+
+                                            <div>
+
+                                                <h3 class="course-name">
+                                                    ${escapeHTML(title)}
+                                                </h3>
+
+                                                <div class="course-teacher">
+                                                    👨‍🏫 ${escapeHTML(teacher)}
+                                                </div>
+
+                                            </div>
+
+
+                                            <span class="course-badge">
+                                                كورس
+                                            </span>
+
+                                        </div>
+
+
+                                        <p class="course-description">
+                                            ${escapeHTML(description)}
+                                        </p>
+
+                                    </article>
+
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+            } catch (error) {
+
+                console.error(
+                    "Courses loading error:",
+                    error
+                );
+
+
+                setError(
+                    coursesContainer,
+                    "حدث خطأ أثناء تحميل الكورسات."
+                );
+            }
+
+        }
+
+
+        /* =====================================================
+           LESSONS
+        ====================================================== */
+
+        async function loadLessons() {
+
+            setLoading(
+                lessonsContainer,
+                "جاري تحميل الدروس..."
+            );
+
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "lessons"
+                        )
+                    );
+
+
+                allLessons =
+                    snapshot.docs.map(
+                        docSnap => ({
+
+                            id:
+                                docSnap.id,
+
+                            ...docSnap.data()
+
+                        })
+                    );
+
+
+                allLessons.sort(
+                    (a, b) => {
+
+                        const dateA =
+                            getDate(
+                                a.createdAt
+                            )?.getTime() || 0;
+
+
+                        const dateB =
+                            getDate(
+                                b.createdAt
+                            )?.getTime() || 0;
+
+
+                        return dateB - dateA;
+                    }
+                );
+
+
+                if (
+                    !allLessons.length
+                ) {
+
+                    setEmpty(
+                        lessonsContainer,
+                        "لا توجد دروس متاحة حالياً."
+                    );
+
+
+                    return;
+                }
+
+
+                lessonsContainer.innerHTML =
+                    allLessons
+                        .slice(0, 10)
+                        .map(
+                            lesson => {
+
+                                const title =
+                                    lesson.title ||
+                                    "درس بدون عنوان";
+
+
+                                const course =
+                                    lesson.courseName ||
+                                    "كورس";
+
+
+                                const content =
+                                    lesson.content ||
+                                    "لا يوجد محتوى نصي لهذا الدرس.";
+
+
+                                const fileHTML =
+                                    lesson.fileUrl
+                                        ? `
+
+                                            <a
+                                                class="lesson-file"
+                                                href="${escapeHTML(lesson.fileUrl)}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                📎 فتح الملف
+                                            </a>
+
+                                        `
+                                        : "";
+
+
+                                return `
+
+                                    <article class="lesson-item">
+
+                                        <h3 class="lesson-title">
+                                            ${escapeHTML(title)}
+                                        </h3>
+
+
+                                        <div class="lesson-course">
+                                            📚 ${escapeHTML(course)}
+                                        </div>
+
+
+                                        <div class="lesson-content">
+                                            ${escapeHTML(content)}
+                                        </div>
+
+
+                                        ${fileHTML}
+
+                                    </article>
+
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+            } catch (error) {
+
+                console.error(
+                    "Lessons loading error:",
+                    error
+                );
+
+
+                setError(
+                    lessonsContainer,
+                    "حدث خطأ أثناء تحميل الدروس."
+                );
+            }
+
+        }
+
+
+        /* =====================================================
+           EXAMS
+        ====================================================== */
+
+        async function loadExams() {
+
+            setLoading(
+                examsContainer,
+                "جاري تحميل الامتحانات..."
+            );
+
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "exams"
+                        )
+                    );
+
+
+                allExams =
+                    snapshot.docs.map(
+                        docSnap => ({
+
+                            id:
+                                docSnap.id,
+
+                            ...docSnap.data()
+
+                        })
+                    );
+
+
+                allExams.sort(
+                    (a, b) => {
+
+                        const dateA =
+                            getDate(
+                                a.createdAt
+                            )?.getTime() || 0;
+
+
+                        const dateB =
+                            getDate(
+                                b.createdAt
+                            )?.getTime() || 0;
+
+
+                        return dateB - dateA;
+                    }
+                );
+
+
+                const studentResultsQuery =
+                    query(
+                        collection(
+                            db,
+                            "results"
+                        ),
+                        where(
+                            "studentId",
+                            "==",
+                            currentUser.uid
+                        )
+                    );
+
+
+                const studentResultsSnapshot =
+                    await getDocs(
+                        studentResultsQuery
+                    );
+
+
+                const completedExamIds =
+                    new Set(
+                        studentResultsSnapshot.docs
+                            .map(
+                                resultDoc =>
+                                    resultDoc.data()
+                                        .examId
+                            )
+                            .filter(Boolean)
+                    );
+
+
+                const availableExams =
+                    allExams.filter(
+                        exam =>
+                            isExamAvailable(
+                                exam
+                            ) &&
+                            !completedExamIds.has(
+                                exam.id
+                            )
+                    );
+
+
+                availableExamsCount.textContent =
+                    availableExams.length;
+
+
+                examsSectionCount.textContent =
+                    `${availableExams.length} امتحان`;
+
+
+                if (
+                    !allExams.length
+                ) {
+
+                    setEmpty(
+                        examsContainer,
+                        "لا توجد امتحانات متاحة حالياً."
+                    );
+
+
+                    return;
+                }
+
+
+                examsContainer.innerHTML =
+                    allExams
+                        .map(
+                            exam => {
+
+                                const status =
+                                    getExamStatus(
+                                        exam
+                                    );
+
+
+                                const questions =
+                                    getQuestions(
+                                        exam
+                                    );
+
+
+                                const duration =
+                                    getDurationMinutes(
+                                        exam
+                                    );
+
+
+                                const title =
+                                    exam.title ||
+                                    "امتحان بدون عنوان";
+
+
+                                const course =
+                                    exam.courseName ||
+                                    "عام";
+
+
+                                const examAlreadyTaken =
+                                    completedExamIds.has(
+                                        exam.id
+                                    );
+
+
+                                const description =
+                                    exam.description ||
+                                    "لا يوجد وصف لهذا الامتحان.";
+
+
+                                const startText =
+                                    exam.startAt
+                                        ? `يبدأ: ${formatDateTime(exam.startAt)}`
+                                        : "موعد البداية: مفتوح";
+
+
+                                const endText =
+                                    exam.endAt
+                                        ? `ينتهي: ${formatDateTime(exam.endAt)}`
+                                        : "موعد النهاية: مفتوح";
+
+
+                                const durationText =
+                                    duration > 0
+                                        ? `${duration} دقيقة`
+                                        : "بدون وقت محدد";
+
+
+                                const disabled =
+                                    status.type !==
+                                        "available" ||
+                                    questions.length ===
+                                        0 ||
+                                    examAlreadyTaken;
+
+
+                                let buttonText =
+                                    "🚀 ابدأ الامتحان";
+
+
+                                if (
+                                    status.type ===
+                                    "upcoming"
+                                ) {
+
+                                    buttonText =
+                                        "⏳ لم يبدأ بعد";
+                                }
+
+
+                                if (
+                                    status.type ===
+                                    "ended"
+                                ) {
+
+                                    buttonText =
+                                        "🔒 انتهى الامتحان";
+                                }
+
+
+                                if (
+                                    questions.length ===
+                                    0
+                                ) {
+
+                                    buttonText =
+                                        "⚠️ لا توجد أسئلة";
+                                }
+
+
+                                if (
+                                    examAlreadyTaken
+                                ) {
+
+                                    buttonText =
+                                        "✅ تم أداء الامتحان";
+                                }
+
+
+                                return `
+
+                                    <article class="exam-card">
+
+                                        <div class="exam-top">
+
+                                            <div>
+
+                                                <h3 class="exam-title">
+                                                    ${escapeHTML(title)}
+                                                </h3>
+
+
+                                                <div class="exam-course">
+                                                    📚 ${escapeHTML(course)}
+                                                </div>
+
+                                            </div>
+
+
+                                            <span
+                                                class="availability-badge ${status.type}"
+                                            >
+                                                ${escapeHTML(status.text)}
+                                            </span>
+
+                                        </div>
+
+
+                                        <p class="exam-description">
+                                            ${escapeHTML(description)}
+                                        </p>
+
+
+                                        <div class="exam-meta">
+
+                                            <span class="exam-meta-item">
+                                                ⏱️ ${escapeHTML(durationText)}
+                                            </span>
+
+
+                                            <span class="exam-meta-item">
+                                                📝 ${questions.length} سؤال
+                                            </span>
+
+
+                                            <span class="exam-meta-item">
+                                                📅 ${escapeHTML(startText)}
+                                            </span>
+
+
+                                            <span class="exam-meta-item">
+                                                🕐 ${escapeHTML(endText)}
+                                            </span>
+
+                                        </div>
+
+
+                                        <button
+                                            type="button"
+                                            class="exam-start-btn"
+                                            data-exam-id="${escapeHTML(exam.id)}"
+                                            ${disabled ? "disabled" : ""}
+                                        >
+                                            ${buttonText}
+                                        </button>
+
+                                    </article>
+
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+                document
+                    .querySelectorAll(
+                        "[data-exam-id]"
+                    )
+                    .forEach(
+                        button => {
+
+                            button.addEventListener(
+                                "click",
+                                () => {
+
+                                    const examId =
+                                        button.dataset
+                                            .examId;
+
+
+                                    startExam(
+                                        examId
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Exams loading error:",
+                    error
+                );
+
+
+                setError(
+                    examsContainer,
+                    "حدث خطأ أثناء تحميل الامتحانات."
+                );
+            }
+
+        }
+
+
+        /* =====================================================
+           RESULTS
+        ====================================================== */
+
+        async function loadResults() {
+
+            setLoading(
+                resultsContainer,
+                "جاري تحميل النتائج..."
+            );
+
+
+            setLoading(
+                leaderboardContainer,
+                "جاري تحميل المتصدرين..."
+            );
+
+
+            try {
+
+                const resultsQuery =
+                    query(
+                        collection(
+                            db,
+                            "results"
+                        ),
+                        where(
+                            "studentId",
+                            "==",
+                            currentUser.uid
+                        )
+                    );
+
+
+                const snapshot =
+                    await getDocs(
+                        resultsQuery
+                    );
+
+
+                allResults =
+                    snapshot.docs.map(
+                        docSnap => ({
+
+                            id:
+                                docSnap.id,
+
+                            ...docSnap.data()
+
+                        })
+                    );
+
+
+                allResults.sort(
+                    (a, b) => {
+
+                        const dateA =
+                            getDate(
+                                a.createdAt
+                            )?.getTime() || 0;
+
+
+                        const dateB =
+                            getDate(
+                                b.createdAt
+                            )?.getTime() || 0;
+
+
+                        return dateB - dateA;
+                    }
+                );
+
+
+                updatePerformance();
+
+
+                if (
+                    !allResults.length
+                ) {
+
+                    setEmpty(
+                        resultsContainer,
+                        "لم تدخل أي امتحان حتى الآن."
+                    );
+
+                } else {
+
+                    resultsContainer.innerHTML =
+                        allResults
+                            .slice(0, 10)
+                            .map(
+                                result => {
+
+                                    const percentage =
+                                        Number(
+                                            result.percentage
+                                        ) || 0;
+
+
+                                    const title =
+                                        result.examTitle ||
+                                        "امتحان";
+
+
+                                    return `
+
+                                        <article class="result-item">
+
+                                            <div>
+
+                                                <h3 class="result-title">
+                                                    ${escapeHTML(title)}
+                                                </h3>
+
+
+                                                <div class="result-date">
+                                                    ${escapeHTML(
+                                                        formatDate(
+                                                            result.createdAt
+                                                        )
+                                                    )}
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="result-score">
+                                                ${percentage}%
+                                            </div>
+
+                                        </article>
+
+                                    `;
+
+                                }
+                            )
+                            .join("");
+                }
+
+
+                await loadLeaderboard();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Results loading error:",
+                    error
+                );
+
+
+                setError(
+                    resultsContainer,
+                    "حدث خطأ أثناء تحميل النتائج."
+                );
+
+
+                setError(
+                    leaderboardContainer,
+                    "تعذر تحميل لوحة المتصدرين."
+                );
+            }
+
+        }
+
+
+        /* =====================================================
+           PERFORMANCE
+        ====================================================== */
+
+        function updatePerformance() {
+
+            const total =
+                allResults.length;
+
+
+            totalStudentExams.textContent =
+                total;
+
+
+            if (!total) {
+
+                passedExams.textContent =
+                    "0";
+
+
+                averageScore.textContent =
+                    "0%";
+
+
+                bestScore.textContent =
+                    "0%";
+
+
+                successRate.textContent =
+                    "0%";
+
+
+                highestScore.textContent =
+                    "0%";
+
+
+                return;
+            }
+
+
+            const percentages =
+                allResults.map(
+                    result =>
+                        Number(
+                            result.percentage
+                        ) || 0
+                );
+
+
+            const average =
+                percentages.reduce(
+                    (
+                        sum,
+                        value
+                    ) =>
+                        sum + value,
+                    0
+                ) /
+                percentages.length;
+
+
+            const best =
+                Math.max(
+                    ...percentages
+                );
+
+
+            const passed =
+                percentages.filter(
+                    value =>
+                        value >= 50
+                ).length;
+
+
+            const success =
+                (passed / total) *
+                100;
+
+
+            passedExams.textContent =
+                passed;
+
+
+            averageScore.textContent =
+                `${Math.round(average)}%`;
+
+
+            bestScore.textContent =
+                `${Math.round(best)}%`;
+
+
+            successRate.textContent =
+                `${Math.round(success)}%`;
+
+
+            highestScore.textContent =
+                `${Math.round(best)}%`;
+        }
+
+
+        /* =====================================================
+           LEADERBOARD
+        ====================================================== */
+
+        async function loadLeaderboard() {
+
+            try {
+
+                const snapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "leaderboard"
+                        )
+                    );
+
+
+                const examsMap =
+                    new Map();
+
+
+                snapshot.docs.forEach(
+                    docSnap => {
+
+                        const result =
+                            docSnap.data();
+
+
+                        const studentId =
+                            result.studentId;
+
+
+                        const examId =
+                            result.examId;
+
+
+                        if (
+                            !studentId ||
+                            !examId
+                        ) {
+                            return;
+                        }
+
+
+                        const percentage =
+                            Number(
+                                result.percentage
+                            ) || 0;
+
+
+                        if (
+                            !examsMap.has(
+                                examId
+                            )
+                        ) {
+
+                            examsMap.set(
+                                examId,
+                                {
+
+                                    examId,
+
+                                    examTitle:
+                                        result.examTitle ||
+                                        "امتحان",
+
+                                    students:
+                                        new Map()
+
+                                }
+                            );
+                        }
+
+
+                        const exam =
+                            examsMap.get(
+                                examId
+                            );
+
+
+                        if (
+                            !exam.students.has(
+                                studentId
+                            )
+                        ) {
+
+                            exam.students.set(
+                                studentId,
+                                {
+
+                                    id:
+                                        studentId,
+
+                                    name:
+                                        result.studentName ||
+                                        "طالب",
+
+                                    percentage
+
+                                }
+                            );
+
+                        } else {
+
+                            const student =
+                                exam.students.get(
+                                    studentId
+                                );
+
+
+                            student.percentage =
+                                Math.max(
+                                    student.percentage,
+                                    percentage
+                                );
+                        }
+
+                    }
+                );
+
+
+                const leaderboard =
+                    Array.from(
+                        examsMap.values()
+                    )
+                    .map(
+                        exam => {
+
+                            const students =
+                                Array.from(
+                                    exam.students.values()
+                                )
+                                .sort(
+                                    (a, b) =>
+                                        b.percentage -
+                                        a.percentage
+                                );
+
+
+                            return {
+                                ...exam,
+                                students
+                            };
+
+                        }
+                    )
+                    .filter(
+                        exam =>
+                            exam.students.length >
+                            0
+                    );
+
+
+                if (
+                    !leaderboard.length
+                ) {
+
+                    setEmpty(
+                        leaderboardContainer,
+                        "لا توجد نتائج لعرض لوحة المتصدرين."
+                    );
+
+
+                    return;
+                }
+
+
+                leaderboardContainer.innerHTML =
+                    leaderboard
+                        .map(
+                            exam => {
+
+                                return `
+
+                                    <div class="leaderboard-exam">
+
+                                        <div class="leaderboard-exam-title">
+                                            🏆 ${escapeHTML(
+                                                exam.examTitle
+                                            )}
+                                        </div>
+
+
+                                        <div class="leaderboard-exam-list">
+
+                                            ${exam.students
+                                                .map(
+                                                    (
+                                                        student,
+                                                        index
+                                                    ) => {
+
+                                                        const rank =
+                                                            index + 1;
+
+
+                                                        return `
+
+                                                            <article class="leaderboard-item">
+
+                                                                <div class="rank">
+                                                                    ${rank}
+                                                                </div>
+
+
+                                                                <div>
+
+                                                                    <div class="leader-name">
+                                                                        ${escapeHTML(
+                                                                            student.name
+                                                                        )}
+                                                                    </div>
+
+
+                                                                    <div class="leader-exams">
+                                                                        المركز ${rank}
+                                                                    </div>
+
+                                                                </div>
+
+
+                                                                <div class="leader-score">
+                                                                    ${Math.round(
+                                                                        student.percentage
+                                                                    )}%
+                                                                </div>
+
+                                                            </article>
+
+                                                        `;
+
+                                                    }
+                                                )
+                                                .join("")}
+
+                                        </div>
+
+                                    </div>
+
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+            } catch (error) {
+
+                console.error(
+                    "Leaderboard error:",
+                    error
+                );
+
+
+                setError(
+                    leaderboardContainer,
+                    "تعذر تحميل لوحة المتصدرين."
+                );
+            }
+
+        }
+
+
+        /* =====================================================
+           START EXAM
+        ====================================================== */
+
+        async function startExam(
+            examId
+        ) {
+
+            const exam =
+                allExams.find(
+                    item =>
+                        item.id === examId
+                );
+
+
+            if (!exam) {
+
+                alert(
+                    "لم يتم العثور على الامتحان."
+                );
+
+
+                return;
+            }
+
+
+            try {
+
+                const studentResultsQuery =
+                    query(
+                        collection(
+                            db,
+                            "results"
+                        ),
+                        where(
+                            "studentId",
+                            "==",
+                            currentUser.uid
+                        )
+                    );
+
+
+                const studentResultsSnapshot =
+                    await getDocs(
+                        studentResultsQuery
+                    );
+
+
+                const alreadyTaken =
+                    studentResultsSnapshot.docs.some(
+                        resultDoc =>
+                            resultDoc.data()
+                                .examId ===
+                            examId
+                    );
+
+
+                if (alreadyTaken) {
+
+                    alert(
+                        "لا يمكنك دخول هذا الامتحان مرة أخرى. لقد قمت بأدائه من قبل."
+                    );
+
+
+                    await loadResults();
+
+                    await loadExams();
+
+
+                    return;
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Exam repeat check error:",
+                    error
+                );
+
+
+                alert(
+                    "تعذر التحقق من حالة الامتحان. لم يتم بدء الامتحان، حاول مرة أخرى."
+                );
+
+
+                return;
+            }
+
+
+            if (
+                !isExamAvailable(
+                    exam
+                )
+            ) {
+
+                alert(
+                    "هذا الامتحان غير متاح للدخول حالياً."
+                );
+
+
+                return;
+            }
+
+
+            const questions =
+                getQuestions(
+                    exam
+                );
+
+
+            if (!questions.length) {
+
+                alert(
+                    "هذا الامتحان لا يحتوي على أسئلة حالياً."
+                );
+
+
+                return;
+            }
+
+
+            activeExam =
+                exam;
+
+
+            currentQuestionIndex =
+                0;
+
+
+            selectedAnswers =
+                Array(
+                    questions.length
+                ).fill(null);
+
+
+            examViolationCount =
+                0;
+
+
+            const violationCounter =
+                document.getElementById(
+                    "examViolationCount"
+                );
+
+
+            if (violationCounter) {
+
+                violationCounter.textContent =
+                    "0";
+            }
+
+
+            const lastViolation =
+                document.getElementById(
+                    "lastExamViolation"
+                );
+
+
+            if (lastViolation) {
+
+                lastViolation.textContent =
+                    "";
+
+                lastViolation.style.display =
+                    "none";
+            }
+
+
+            examMonitoringActive =
+                true;
+
+
+            examViolationSaving =
+                false;
+
+
+            lastViolationTime =
+                0;
+
+
+            const duration =
+                getDurationMinutes(
+                    exam
+                );
+
+
+            const safeDuration =
+                duration > 0
+                    ? duration
+                    : 30;
+
+
+            examEndTime =
+                Date.now() +
+                safeDuration *
+                60 *
+                1000;
+
+
+            solverExamTitle.textContent =
+                exam.title ||
+                "الامتحان";
+
+
+            examSection.style.display =
+                "block";
+
+
+            renderQuestion();
+
+
+            startExamTimer();
+
+
+            scrollToSection(
+                "examSection"
+            );
+
+        }
+
+
+        /* =====================================================
+           RENDER QUESTION
+        ====================================================== */
+
+        function renderQuestion() {
+
+            if (!activeExam) {
+                return;
+            }
+
+
+            const questions =
+                getQuestions(
+                    activeExam
+                );
+
+
+            const total =
+                questions.length;
+
+
+            const question =
+                questions[
+                    currentQuestionIndex
+                ];
+
+
+            if (!question) {
+                return;
+            }
+
+
+            const number =
+                currentQuestionIndex + 1;
+
+
+            questionCounter.textContent =
+                `السؤال ${number} من ${total}`;
+
+
+            questionNumber.textContent =
+                `السؤال ${number}`;
+
+
+            questionText.textContent =
+                question.question ||
+                "نص السؤال غير متوفر";
+
+
+            const progress =
+                (number / total) *
+                100;
+
+
+            examProgress.style.width =
+                `${progress}%`;
+
+
+            const options =
+                Array.isArray(
+                    question.options
+                )
+                    ? question.options
+                    : [];
+
+
+            optionsContainer.innerHTML =
+                options
+                    .map(
+                        (
+                            option,
+                            index
+                        ) => {
+
+                            const selected =
+                                selectedAnswers[
+                                    currentQuestionIndex
+                                ] === index;
+
+
+                            return `
+
+                                <label
+                                    class="option-label ${selected ? "selected" : ""}"
+                                >
+
+                                    <input
+                                        type="radio"
+                                        name="currentAnswer"
+                                        value="${index}"
+                                        ${selected ? "checked" : ""}
+                                    >
+
+
+                                    <span class="option-text">
+                                        ${escapeHTML(option)}
+                                    </span>
+
+                                </label>
+
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+
+            optionsContainer
+                .querySelectorAll(
+                    'input[name="currentAnswer"]'
+                )
+                .forEach(
+                    input => {
+
+                        input.addEventListener(
+                            "change",
+                            () => {
+
+                                selectedAnswers[
+                                    currentQuestionIndex
+                                ] =
+                                    Number(
+                                        input.value
+                                    );
+
+
+                                optionsContainer
+                                    .querySelectorAll(
+                                        ".option-label"
+                                    )
+                                    .forEach(
+                                        label =>
+                                            label.classList.remove(
+                                                "selected"
+                                            )
+                                    );
+
+
+                                input
+                                    .closest(
+                                        ".option-label"
+                                    )
+                                    ?.classList.add(
+                                        "selected"
+                                    );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            previousQuestionBtn.disabled =
+                currentQuestionIndex ===
+                0;
+
+
+            nextQuestionBtn.disabled =
+                false;
+
+
+            nextQuestionBtn.textContent =
+                "السؤال التالي ←";
+
+
+            submitExamBtn.disabled =
+                false;
+        }
+
+
+        /* =====================================================
+           TIMER
+        ====================================================== */
+
+        function startExamTimer() {
+
+            clearInterval(
+                examTimerInterval
+            );
+
+
+            updateTimerDisplay();
+
+
+            examTimerInterval =
+                setInterval(
+                    updateTimerDisplay,
+                    1000
+                );
+        }
+
+
+        function updateTimerDisplay() {
+
+            if (!examEndTime) {
+                return;
+            }
+
+
+            const remaining =
+                Math.max(
+                    0,
+                    examEndTime -
+                    Date.now()
+                );
+
+
+            const totalSeconds =
+                Math.floor(
+                    remaining / 1000
+                );
+
+
+            const minutes =
+                Math.floor(
+                    totalSeconds / 60
+                );
+
+
+            const seconds =
+                totalSeconds % 60;
+
+
+            examTimer.textContent =
+                `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+
+            if (
+                remaining <= 0
+            ) {
+
+                clearInterval(
+                    examTimerInterval
+                );
+
+
+                finishExam(
+                    true
+                );
+            }
+
+        }
+
+
+        /* =====================================================
+           PREVIOUS QUESTION
+        ====================================================== */
+
+        previousQuestionBtn.addEventListener(
+            "click",
+            () => {
+
+                if (!activeExam) {
+                    return;
+                }
+
+
+                if (
+                    currentQuestionIndex >
+                    0
+                ) {
+
+                    currentQuestionIndex--;
+
+
+                    renderQuestion();
+
+
+                    scrollToSection(
+                        "examSection"
+                    );
+
+
+                    return;
+                }
+
+
+                alert(
+                    "أنت بالفعل في أول سؤال."
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           NEXT QUESTION
+        ====================================================== */
+
+        nextQuestionBtn.addEventListener(
+            "click",
+            () => {
+
+                if (!activeExam) {
+                    return;
+                }
+
+
+                const questions =
+                    getQuestions(
+                        activeExam
+                    );
+
+
+                if (
+                    selectedAnswers[
+                        currentQuestionIndex
+                    ] === null ||
+                    selectedAnswers[
+                        currentQuestionIndex
+                    ] === undefined
+                ) {
+
+                    alert(
+                        "من فضلك اختر إجابة أولاً."
+                    );
+
+
+                    return;
+                }
+
+
+                if (
+                    currentQuestionIndex <
+                    questions.length - 1
+                ) {
+
+                    currentQuestionIndex++;
+
+
+                    renderQuestion();
+
+
+                    scrollToSection(
+                        "examSection"
+                    );
+
+
+                    return;
+                }
+
+
+                alert(
+                    "أنت في آخر سؤال. اضغط «تسليم الامتحان» لإنهاء الامتحان."
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           SUBMIT EXAM
+        ====================================================== */
+
+        submitExamBtn.addEventListener(
+            "click",
+            () => {
+
+                if (!activeExam) {
+                    return;
+                }
+
+
+                const confirmed =
+                    confirm(
+                        "هل أنت متأكد أنك تريد تسليم الامتحان؟"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                finishExam(
+                    false
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           STOP EXAM
+        ====================================================== */
+
+        function stopExam() {
+
+            examMonitoringActive =
+                false;
+
+
+            clearInterval(
+                examTimerInterval
+            );
+
+
+            examTimerInterval =
+                null;
+
+
+            examEndTime =
+                null;
+
+
+            activeExam =
+                null;
+
+
+            currentQuestionIndex =
+                0;
+
+
+            selectedAnswers =
+                [];
+
+
+            examSection.style.display =
+                "none";
+        }
+
+
+        /* =====================================================
+           FINISH EXAM
+        ====================================================== */
+
+        async function finishExam(
+            autoSubmitted
+        ) {
+
+            examMonitoringActive =
+                false;
+
+
+            if (!activeExam) {
+                return;
+            }
+
+
+            clearInterval(
+                examTimerInterval
+            );
+
+
+            const questions =
+                getQuestions(
+                    activeExam
+                );
+
+
+            let score =
+                0;
+
+
+            const wrongAnswers =
+                [];
+
+
+            questions.forEach(
+                (
+                    question,
+                    index
+                ) => {
+
+                    const selected =
+                        selectedAnswers[
+                            index
+                        ];
+
+
+                    const correct =
+                        Number(
+                            question.correctAnswer
+                        );
+
+
+                    if (
+                        selected !== null &&
+                        Number(selected) ===
+                            correct
+                    ) {
+
+                        score++;
+
+                    } else {
+
+                        wrongAnswers.push({
+
+                            question:
+                                question.question ||
+                                "السؤال",
+
+                            selected:
+                                selected !== null &&
+                                question.options
+                                    ? question.options[
+                                        selected
+                                    ]
+                                    : "لم يتم اختيار إجابة",
+
+                            correct:
+                                question.options
+                                    ? question.options[
+                                        correct
+                                    ]
+                                    : "غير محددة"
+
+                        });
+
+                    }
+
+                }
+            );
+
+
+            const total =
+                questions.length;
+
+
+            const percentage =
+                total > 0
+                    ? Math.round(
+                        (score / total) *
+                        100
+                    )
+                    : 0;
+
+
+            const resultData = {
+
+                studentId:
+                    currentUser.uid,
+
+                studentName:
+                    currentStudent?.name ||
+                    currentUser.displayName ||
+                    "طالب",
+
+                examId:
+                    activeExam.id,
+
+                examTitle:
+                    activeExam.title ||
+                    "امتحان",
+
+                score,
+
+                total,
+
+                percentage,
+
+                wrongAnswers,
+
+                submissionReason:
+                    examViolationCount >=
+                    MAX_EXAM_VIOLATIONS
+
+                        ? "انتهى بسبب مخالفات مغادرة الامتحان"
+
+                        : autoSubmitted
+
+                            ? "انتهى تلقائيًا بسبب انتهاء الوقت"
+
+                            : "تم التسليم بواسطة الطالب",
+
+                violationCount:
+                    examViolationCount,
+
+                createdAt:
+                    serverTimestamp()
+
+            };
+
+
+            try {
+
+                await addDoc(
+                    collection(
+                        db,
+                        "results"
+                    ),
+                    resultData
+                );
+
+
+                await addDoc(
+                    collection(
+                        db,
+                        "leaderboard"
+                    ),
+                    {
+
+                        studentId:
+                            currentUser.uid,
+
+                        studentName:
+                            currentStudent?.name ||
+                            currentUser.displayName ||
+                            "طالب",
+
+                        examId:
+                            activeExam.id,
+
+                        examTitle:
+                            activeExam.title ||
+                            "امتحان",
+
+                        percentage,
+
+                        createdAt:
+                            serverTimestamp()
+
+                    }
+                );
+
+
+                finalScore.textContent =
+                    `${percentage}%`;
+
+
+                finalScoreDetails.textContent =
+                    `${score} من ${total}`;
+
+
+                if (
+                    wrongAnswers.length
+                ) {
+
+                    wrongAnswersContainer.style.display =
+                        "grid";
+
+
+                    wrongAnswersContainer.innerHTML = `
+
+                        <div style="
+                            font-size:13px;
+                            font-weight:900;
+                            margin-bottom:3px;
+                            color: var(--text-color);
+                        ">
+                            مراجعة الإجابات
+                        </div>
+
+
+                        ${wrongAnswers
+                            .slice(0, 8)
+                            .map(
+                                (
+                                    item,
+                                    index
+                                ) => `
+
+                                    <div class="wrong-answer">
+
+                                        <strong>
+
+                                            ${index + 1}.
+
+                                            ${escapeHTML(
+                                                item.question
+                                            )}
+
+                                        </strong>
+
+
+                                        <p>
+
+                                            إجابتك:
+
+                                            ${escapeHTML(
+                                                item.selected
+                                            )}
+
+                                            <br>
+
+                                            الإجابة الصحيحة:
+
+                                            ${escapeHTML(
+                                                item.correct
+                                            )}
+
+                                        </p>
+
+                                    </div>
+
+                                `
+                            )
+                            .join("")
+                        }
+
+                    `;
+
+                } else {
+
+                    wrongAnswersContainer.style.display =
+                        "none";
+
+
+                    wrongAnswersContainer.innerHTML =
+                        "";
+
+                }
+
+
+                resultOverlay.style.display =
+                    "flex";
+
+
+                stopExam();
+
+
+                await Promise.allSettled([
+
+                    loadExams(),
+
+                    loadResults()
+
+                ]);
+
+
+                if (
+                    autoSubmitted
+                ) {
+
+                    console.log(
+                        "Exam submitted automatically."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Saving result error:",
+                    error
+                );
+
+
+                alert(
+                    "انتهى الامتحان، لكن حدث خطأ أثناء حفظ النتيجة. حاول مرة أخرى."
+                );
+
+
+                stopExam();
+            }
+
+        }
+
+
+        /* =====================================================
+           RESULT MODAL
+        ====================================================== */
+
+        closeResultBtn.addEventListener(
+            "click",
+            () => {
+
+                resultOverlay.style.display =
+                    "none";
+
+
+                scrollToSection(
+                    "resultsSection"
+                );
+
+            }
+        );
+
+
+        resultOverlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    resultOverlay
+                ) {
+
+                    resultOverlay.style.display =
+                        "none";
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           LOGOUT
+        ====================================================== */
+
+        logoutBtn.addEventListener(
+            "click",
+            () => {
+
+                logoutOverlay.style.display =
+                    "flex";
+
+            }
+        );
+
+
+        cancelLogoutBtn.addEventListener(
+            "click",
+            () => {
+
+                logoutOverlay.style.display =
+                    "none";
+
+            }
+        );
+
+
+        confirmLogoutBtn.addEventListener(
+            "click",
+            async () => {
+
+                confirmLogoutBtn.disabled =
+                    true;
+
+
+                confirmLogoutBtn.textContent =
+                    "جاري تسجيل الخروج...";
+
+
+                try {
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    window.location.href =
+                        "login.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Logout error:",
+                        error
+                    );
+
+
+                    confirmLogoutBtn.disabled =
+                        false;
+
+
+                    confirmLogoutBtn.textContent =
+                        "نعم، تسجيل الخروج";
+
+
+                    alert(
+                        "حدث خطأ أثناء تسجيل الخروج."
+                    );
+                }
+
+            }
+        );
+
+
+        logoutOverlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    logoutOverlay
+                ) {
+
+                    logoutOverlay.style.display =
+                        "none";
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ESC KEY FOR MODALS
+        ====================================================== */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key !==
+                    "Escape"
+                ) {
+                    return;
+                }
+
+
+                if (
+                    resultOverlay.style.display ===
+                    "flex"
+                ) {
+
+                    resultOverlay.style.display =
+                        "none";
+                }
+
+
+                if (
+                    logoutOverlay.style.display ===
+                    "flex"
+                ) {
+
+                    logoutOverlay.style.display =
+                        "none";
+                }
+
+            }
+        );
+
+    </script>
+
+
+    <script src="../js/app.js"></script>
+
+</body>
+
+</html>
