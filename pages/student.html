@@ -2673,7 +2673,6 @@ const EXAM_VIOLATION_COOLDOWN = 1500;
 /* =====================================================
    EXAM LEAVE / TAB SWITCH MONITOR
 ===================================================== */
-
 async function recordExamViolation(reason) {
 
     if (!activeExam || !examMonitoringActive) {
@@ -2682,7 +2681,7 @@ async function recordExamViolation(reason) {
 
     const now = Date.now();
 
-    /* منع تسجيل نفس الحدث عدة مرات بسرعة */
+    /* منع تكرار نفس المخالفة بسرعة */
     if (
         now - lastViolationTime <
         EXAM_VIOLATION_COOLDOWN
@@ -2691,83 +2690,46 @@ async function recordExamViolation(reason) {
     }
 
     lastViolationTime = now;
-examViolationCount++;
 
-const lastViolationElement =
-    document.getElementById("lastExamViolation");
+    /* زيادة عدد المخالفات */
+    examViolationCount++;
 
-if (lastViolationElement) {
-    lastViolationElement.textContent =
-        `⚠️ آخر مخالفة: ${reason}`;
+    /* تحديث العداد أمام الطالب */
+    const violationCounter =
+        document.getElementById(
+            "examViolationCount"
+        );
 
-    lastViolationElement.style.display =
-        "block";
-}
+    if (violationCounter) {
+        violationCounter.textContent =
+            examViolationCount;
+    }
 
-const violationCounter =
-    document.getElementById("examViolationCount");
+    /* عرض آخر مخالفة */
+    const lastViolationElement =
+        document.getElementById(
+            "lastExamViolation"
+        );
 
-if (violationCounter) {
-    violationCounter.textContent =
-        examViolationCount;
-}
+    if (lastViolationElement) {
 
-console.warn(
-    "Exam violation detected:",
-    reason
-);
+        lastViolationElement.textContent =
+            `⚠️ آخر مخالفة: ${reason}`;
 
-/*
-   محاولة تسجيل المخالفة في Firestore
-*/
+        lastViolationElement.style.display =
+            "block";
+    }
 
-if (
-    !currentUser ||
-    !activeExam ||
-    examViolationSaving
-) {
-    return;
-}
-
-examViolationSaving = true;
-
-try {
-
-    await addDoc(
-        collection(
-            db,
-            "examViolations"
-        ),
-        {
-            studentId:
-                currentUser.uid,
-
-            studentName:
-                currentStudent?.name ||
-                currentUser.displayName ||
-                "طالب",
-
-            examId:
-                activeExam.id,
-
-            examTitle:
-                activeExam.title ||
-                "امتحان",
-
-            reason,
-
-            violationNumber:
-                examViolationCount,
-
-            createdAt:
-                serverTimestamp()
-        }
+    console.warn(
+        "Exam violation detected:",
+        reason
     );
 
-    /*
-       بعد حفظ المخالفة بنجاح،
-       نتحقق من الحد الأقصى.
-    */
+
+    /* =====================================================
+       عند المخالفة الثالثة:
+       إيقاف الامتحان فورًا وتسليمه تلقائيًا
+    ===================================================== */
 
     if (
         examViolationCount >=
@@ -2777,212 +2739,76 @@ try {
         examMonitoringActive = false;
 
         alert(
-            "تم إنهاء الامتحان تلقائيًا بسبب تجاوز الحد المسموح من مخالفات مغادرة الامتحان."
+            "تم إنهاء الامتحان وتسليمه تلقائيًا بسبب وصول عدد مخالفات مغادرة الامتحان إلى 3 مخالفات."
         );
 
-        await finishExam(true);
+        /*
+           التسليم لا يعتمد على نجاح حفظ المخالفة
+        */
+        finishExam(true);
 
         return;
     }
 
-} catch (error) {
-
-    console.error(
-        "Saving exam violation error:",
-        error
-    );
-
-} finally {
-
-    examViolationSaving = false;
-}
-}
 
     /* =====================================================
-       AUTH
-    ====================================================== */
+       حفظ المخالفة في Firestore
+    ===================================================== */
 
-    onAuthStateChanged(
-        auth,
-        async (user) => {
-
-            if (!user) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-            }
-
-            currentUser = user;
-
-            try {
-
-                const userRef =
-                    doc(
-                        db,
-                        "users",
-                        user.uid
-                    );
-
-                const userSnap =
-                    await getDoc(userRef);
-
-
-                if (!userSnap.exists()) {
-
-                    await signOut(auth);
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-                }
-
-
-                currentStudent = {
-                    id: user.uid,
-                    ...userSnap.data()
-                };
-
-
-                if (
-                    currentStudent.role !==
-                    "student"
-                ) {
-
-                    if (
-                        currentStudent.role ===
-                        "teacher"
-                    ) {
-
-                        window.location.href =
-                            "teacher.html";
-
-                        return;
-                    }
-
-
-                    if (
-                        currentStudent.role ===
-                        "admin"
-                    ) {
-
-                        window.location.href =
-                            "admin.html";
-
-                        return;
-                    }
-
-
-                    await signOut(auth);
-
-                    window.location.href =
-                        "login.html";
-
-                    return;
-                }
-
-
-                const studentName =
-                    currentStudent.name ||
-                    user.displayName ||
-                    "الطالب";
-
-
-                welcomeStudentName.textContent =
-                    studentName;
-
-                navStudentName.textContent =
-                    studentName;
-
-                navAvatar.textContent =
-                    studentName
-                        .charAt(0)
-                        .toUpperCase();
-
-
-                await loadDashboard();
-
-            } catch (error) {
-
-                console.error(
-                    "Student authentication error:",
-                    error
-                );
-
-                window.location.href =
-                    "login.html";
-            }
-
-        }
-    );
-    /* =====================================================
-   VISIBILITY CHANGE MONITOR
-===================================================== */
-
-document.addEventListener(
-    "visibilitychange",
-    () => {
-
-        if (!examMonitoringActive) {
-            return;
-        }
-
-        if (
-            document.visibilityState ===
-            "hidden"
-        ) {
-
-            recordExamViolation(
-                "مغادرة صفحة الامتحان أو الانتقال إلى تبويب آخر"
-            );
-
-        }
-
+    if (
+        !currentUser ||
+        !activeExam
+    ) {
+        return;
     }
-);
 
+    try {
 
-/* =====================================================
-   WINDOW BLUR MONITOR
-===================================================== */
+        await addDoc(
+            collection(
+                db,
+                "examViolations"
+            ),
+            {
+                studentId:
+                    currentUser.uid,
 
-window.addEventListener(
-    "blur",
-    () => {
+                studentName:
+                    currentStudent?.name ||
+                    currentUser.displayName ||
+                    "طالب",
 
-        if (!examMonitoringActive) {
-            return;
-        }
+                examId:
+                    activeExam.id,
 
-        recordExamViolation(
-            "فقدان تركيز نافذة الامتحان"
+                examTitle:
+                    activeExam.title ||
+                    "امتحان",
+
+                reason,
+
+                violationNumber:
+                    examViolationCount,
+
+                createdAt:
+                    serverTimestamp()
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Saving exam violation error:",
+            error
         );
 
     }
-);
-/* =====================================================
-   PREVENT ACCIDENTAL PAGE LEAVE
-===================================================== */
 
-window.addEventListener(
-    "beforeunload",
-    (event) => {
+}
 
-        if (!examMonitoringActive) {
-            return;
-        }
 
-        event.preventDefault();
+                
 
-        /*
-           المتصفح سيعرض رسالة التحذير
-           الخاصة به تلقائيًا.
-        */
-        event.returnValue = "";
-    }
-);
 
     /* =====================================================
        LOAD DASHBOARD
