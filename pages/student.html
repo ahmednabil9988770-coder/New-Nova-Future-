@@ -1358,7 +1358,65 @@
 
 </style>
 
-</head><body><!-- =========================================================
+</head><body>
+    <!-- =========================================================
+     NOVA FUTURE - STUDENT CHARACTER SYSTEM
+     الخطوة 1: اختيار شخصية الطالب
+========================================================= -->
+
+<div id="characterChoice" class="character-choice">
+
+    <div class="character-choice-box">
+
+        <div class="character-choice-icon">🏆</div>
+
+        <h2>اختار شخصيتك</h2>
+
+        <p>اختار الشخصية اللي هترافقك في رحلتك التعليمية 🚀</p>
+
+        <div class="character-options">
+
+            <button
+                type="button"
+                class="character-option"
+                data-character="chick"
+            >
+                <span class="character-image">🐣</span>
+                <strong>الكتكوت</strong>
+                <small>رفيقك الذكي</small>
+            </button>
+
+            <button
+                type="button"
+                class="character-option"
+                data-character="lion"
+            >
+                <span class="character-image">🦁</span>
+                <strong>الأسد</strong>
+                <small>بطل التحديات</small>
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- الشخصية التي تظهر بعد الاختيار -->
+
+<div id="studentCharacter" class="student-character" hidden>
+
+    <div id="characterMessage" class="character-message">
+        أهلاً يا بطل! 👋
+    </div>
+
+    <div id="characterAvatar" class="character-avatar">
+        🐣
+    </div>
+
+</div>
+    <!-- =========================================================
      HEADER
 ========================================================== --><header class="student-header"><div class="student-header-inner">
 
