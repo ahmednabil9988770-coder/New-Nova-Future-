@@ -1669,16 +1669,20 @@ window.NovaGamification.completeLesson =
    LOAD BADGES
 ========================================================= */
 
-setTimeout(() => {
+setTimeout(async () => {
 
     try {
 
+        console.log(
+            "Nova Future: Starting Badges UI..."
+        );
+
         createBadgesUI();
 
-        updateBadgesUI();
+        await updateBadgesUI();
 
         console.log(
-            "Nova Future: Badges UI loaded successfully."
+            "Nova Future: Badges UI updated successfully."
         );
 
     } catch (error) {
