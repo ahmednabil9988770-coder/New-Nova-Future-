@@ -1143,6 +1143,48 @@ async function completeLesson(
         return false;
     }
 
+    /* =========================================
+       🦁 CHARACTER REACTION
+    ========================================= */
+
+    const character =
+        document.getElementById(
+            "novaCharacterEmoji"
+        );
+
+    const bubble =
+        document.getElementById(
+            "novaCharacterBubble"
+        );
+
+    const mood =
+        document.getElementById(
+            "novaCharacterMood"
+        );
+
+    if (
+        character &&
+        bubble &&
+        mood
+    ) {
+
+        bubble.textContent =
+            `أحسنت! خلصت ${lessonTitle} 🔥 +10 XP`;
+
+        mood.textContent =
+            "🏆 فخور بيك";
+
+        character.classList.remove(
+            "nova-character-jump"
+        );
+
+        void character.offsetWidth;
+
+        character.classList.add(
+            "nova-character-jump"
+        );
+    }
+
     localStorage.setItem(
         key,
         "true"
