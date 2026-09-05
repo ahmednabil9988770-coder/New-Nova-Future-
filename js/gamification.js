@@ -1235,10 +1235,11 @@ async function completeExam(
     if (
         localStorage.getItem(key)
     ) {
-
         return false;
-
     }
+
+    const score =
+        Number(percentage) || 0;
 
     const completed =
         await addXP(
@@ -1250,12 +1251,69 @@ async function completeExam(
         return false;
     }
 
+    /* =========================================
+       🦁🐣 CHARACTER REACTION
+    ========================================= */
+
+    const character =
+        document.getElementById(
+            "novaCharacterEmoji"
+        );
+
+    const bubble =
+        document.getElementById(
+            "novaCharacterBubble"
+        );
+
+    const mood =
+        document.getElementById(
+            "novaCharacterMood"
+        );
+
+    function characterReact(
+        message,
+        moodText
+    ) {
+
+        if (
+            !character ||
+            !bubble ||
+            !mood
+        ) {
+            return;
+        }
+
+        bubble.textContent =
+            message;
+
+        mood.textContent =
+            moodText;
+
+        character.classList.remove(
+            "nova-character-jump"
+        );
+
+        void character.offsetWidth;
+
+        character.classList.add(
+            "nova-character-jump"
+        );
+    }
+
+    /* =========================================
+       🏆 FIRST EXAM
+    ========================================= */
+
     await unlockBadge(
         "firstExam"
     );
 
+    /* =========================================
+       💪 PASS
+    ========================================= */
+
     if (
-        Number(percentage) >= 50
+        score >= 50
     ) {
 
         await addXP(
@@ -1263,10 +1321,26 @@ async function completeExam(
             "النجاح في الامتحان"
         );
 
+        characterReact(
+            `برافو! نجحت في ${examTitle} 🎉 +10 XP`,
+            "💪 فخور بيك"
+        );
+
+    } else {
+
+        characterReact(
+            `متستسلمش! حاول تاني 💪`,
+            "🔥 متحمس ليك"
+        );
+
     }
 
+    /* =========================================
+       👑 90%+
+    ========================================= */
+
     if (
-        Number(percentage) >= 90
+        score >= 90
     ) {
 
         await addXP(
@@ -1278,7 +1352,16 @@ async function completeExam(
             "topScholar"
         );
 
+        characterReact(
+            `واو! ${score}% 👑 أنت من النخبة!`,
+            "🏆 فخور بيك جدًا"
+        );
+
     }
+
+    /* =========================================
+       💾 SAVE
+    ========================================= */
 
     localStorage.setItem(
         key,
@@ -1288,6 +1371,7 @@ async function completeExam(
     return true;
 
 }
+        
 
 
 /* =========================================================
