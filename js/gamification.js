@@ -1451,23 +1451,28 @@ function createBadgesUI() {
     document.head.appendChild(style);
 
     const dashboard =
-        document.getElementById(
-            "dashboard"
-        );
+    document.getElementById("dashboard");
 
-    if (dashboard) {
+const gamification =
+    document.getElementById("novaGamification");
 
-        dashboard.appendChild(
-            section
-        );
+if (gamification && gamification.parentNode) {
 
-    } else {
+    gamification.parentNode.insertBefore(
+        section,
+        gamification.nextSibling
+    );
 
-        document.body.appendChild(
-            section
-        );
+} else if (dashboard) {
 
-    }
+    dashboard.insertBefore(
+        section,
+        dashboard.firstElementChild
+    );
+
+} else {
+
+    document.body.appendChild(section);
 
 }
 
