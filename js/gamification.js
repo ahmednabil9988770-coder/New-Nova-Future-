@@ -739,9 +739,9 @@ async function addXP(amount, reason = "إنجاز") {
         currentStudent.xp =
             newXP;
 
-        currentStudent.level =
-            newLevel;
-
+       currentStudent.level =
+    newLevel;
+        await checkLevelBadges(newLevel);
 
         updateGamificationUI({
             xp: newXP,
