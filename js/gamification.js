@@ -1662,11 +1662,23 @@ window.NovaGamification.completeLesson =
 
 setTimeout(() => {
 
-    if (window.NovaGamification) {
+    try {
 
         createBadgesUI();
+
         updateBadgesUI();
+
+        console.log(
+            "Nova Future: Badges UI loaded successfully."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Nova Future Badges UI Error:",
+            error
+        );
 
     }
 
-}, 1500);
+}, 2000);
