@@ -1471,7 +1471,96 @@ window.NovaGamification.updateBadgesUI =
 window.NovaGamification.checkLevelBadges =
     checkLevelBadges;
 
+/* =========================================================
+   COMPLETE LESSON → XP + BADGES
+========================================================= */
 
+window.NovaGamification.completeLesson =
+async function (
+    lessonId = "",
+    lessonTitle = "درس"
+) {
+
+    if (!lessonId) {
+        return false;
+    }
+
+    const key =
+        `nova_lesson_xp_${lessonId}`;
+
+    /* منع تكرار XP */
+
+    if (localStorage.getItem(key)) {
+
+        console.log(
+            "Nova Future: Lesson XP already awarded."
+        );
+
+        return false;
+    }
+
+
+    /* +10 XP */
+
+    const result =
+        await addXP(
+            10,
+            `إكمال الدرس: ${lessonTitle}`
+        );
+
+    if (!result) {
+        return false;
+    }
+
+
+    /* تسجيل إكمال الدرس */
+
+    localStorage.setItem(
+        key,
+        "true"
+    );
+
+
+    /* 🔥 أول درس */
+
+    await unlockBadge(
+        "firstLesson"
+    );
+
+
+    /* حساب الدروس المكتملة */
+
+    const completedLessons =
+        Object.keys(localStorage)
+            .filter(key =>
+                key.startsWith(
+                    "nova_lesson_xp_"
+                )
+            )
+            .length;
+
+
+    /* 📚 خمسة دروس */
+
+    if (
+        completedLessons >= 5
+    ) {
+
+        await unlockBadge(
+            "fiveLessons"
+        );
+
+    }
+
+
+    /* تحديث الشارات */
+
+    await updateBadgesUI();
+
+
+    return true;
+
+};
 /* =========================================================
    LOAD BADGES
 ========================================================= */
