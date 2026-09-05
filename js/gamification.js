@@ -1044,3 +1044,446 @@ window.NovaGamification = {
     completeExam
 
 };
+/* =========================================================
+   NOVA FUTURE - BADGES SYSTEM 🏆
+========================================================= */
+
+const NOVA_BADGES = {
+
+    firstLesson: {
+        id: "firstLesson",
+        icon: "🔥",
+        name: "شرارة البداية",
+        description: "أكملت أول درس"
+    },
+
+    fiveLessons: {
+        id: "fiveLessons",
+        icon: "📚",
+        name: "صانع المعرفة",
+        description: "أكملت 5 دروس"
+    },
+
+    firstExam: {
+        id: "firstExam",
+        icon: "⚔️",
+        name: "كاسر التحديات",
+        description: "أكملت أول امتحان"
+    },
+
+    topScholar: {
+        id: "topScholar",
+        icon: "👑",
+        name: "نجم النخبة",
+        description: "حققت 90% أو أكثر في امتحان"
+    },
+
+    novaLegend: {
+        id: "novaLegend",
+        icon: "🌌",
+        name: "أسطورة نوفا",
+        description: "وصلت إلى المستوى 5"
+    }
+
+};
+
+
+/* =========================================================
+   SAVE BADGE
+========================================================= */
+
+async function unlockBadge(badgeId) {
+
+    if (!currentUser || !db) {
+        return false;
+    }
+
+    const badge =
+        Object.values(NOVA_BADGES)
+            .find(item => item.id === badgeId);
+
+    if (!badge) {
+        return false;
+    }
+
+    try {
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
+        const userSnap =
+            await getDoc(userRef);
+
+        const data =
+            userSnap.exists()
+                ? userSnap.data()
+                : {};
+
+        const badges =
+            Array.isArray(data.badges)
+                ? data.badges
+                : [];
+
+        if (badges.includes(badgeId)) {
+            return false;
+        }
+
+        await updateDoc(
+            userRef,
+            {
+                badges: [
+                    ...badges,
+                    badgeId
+                ],
+                updatedAt:
+                    serverTimestamp()
+            }
+        );
+
+        showGamificationMessage(
+            `${badge.icon} حصلت على شارة "${badge.name}"!`
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Nova Future Badge Error:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   CHECK LEVEL BADGE
+========================================================= */
+
+async function checkLevelBadges(level) {
+
+    if (Number(level) >= 5) {
+
+        await unlockBadge(
+            "novaLegend"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GET BADGES
+========================================================= */
+
+async function getStudentBadges() {
+
+    if (!currentUser || !db) {
+        return [];
+    }
+
+    try {
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
+        const snap =
+            await getDoc(userRef);
+
+        if (!snap.exists()) {
+            return [];
+        }
+
+        const badges =
+            snap.data().badges;
+
+        return Array.isArray(badges)
+            ? badges
+            : [];
+
+    } catch (error) {
+
+        console.error(
+            "Nova Future Get Badges Error:",
+            error
+        );
+
+        return [];
+    }
+
+}
+
+
+/* =========================================================
+   BADGES UI
+========================================================= */
+
+function createBadgesUI() {
+
+    if (
+        document.getElementById(
+            "novaBadges"
+        )
+    ) {
+        return;
+    }
+
+    const section =
+        document.createElement("section");
+
+    section.id =
+        "novaBadges";
+
+    section.innerHTML = `
+
+        <div class="nova-badges-card">
+
+            <div class="nova-badges-title">
+                🏆 إنجازاتك
+            </div>
+
+            <div
+                id="novaBadgesGrid"
+                class="nova-badges-grid"
+            >
+                جاري تحميل الشارات...
+            </div>
+
+        </div>
+
+    `;
+
+    const style =
+        document.createElement("style");
+
+    style.textContent = `
+
+        #novaBadges {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .nova-badges-card {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(30,41,59,.95),
+                    rgba(15,23,42,.98)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius: 24px;
+
+            padding: 25px;
+        }
+
+        .nova-badges-title {
+            color: white;
+
+            font-size: 20px;
+
+            font-weight: 900;
+
+            margin-bottom: 18px;
+        }
+
+        .nova-badges-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(
+                        120px,
+                        1fr
+                    )
+                );
+
+            gap: 12px;
+        }
+
+        .nova-badge {
+            padding: 15px 10px;
+
+            text-align: center;
+
+            border-radius: 18px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            transition:
+                .3s ease;
+        }
+
+        .nova-badge.locked {
+            opacity: .35;
+
+            filter:
+                grayscale(1);
+        }
+
+        .nova-badge-icon {
+            font-size: 35px;
+
+            margin-bottom: 8px;
+        }
+
+        .nova-badge-name {
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .nova-badge-description {
+            color: #94a3b8;
+
+            font-size: 10px;
+
+            margin-top: 5px;
+        }
+
+    `;
+
+    document.head.appendChild(style);
+
+    const dashboard =
+        document.getElementById(
+            "dashboard"
+        );
+
+    if (dashboard) {
+
+        dashboard.appendChild(
+            section
+        );
+
+    } else {
+
+        document.body.appendChild(
+            section
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE BADGES UI
+========================================================= */
+
+async function updateBadgesUI() {
+
+    createBadgesUI();
+
+    const grid =
+        document.getElementById(
+            "novaBadgesGrid"
+        );
+
+    if (!grid) {
+        return;
+    }
+
+    const earned =
+        await getStudentBadges();
+
+    grid.innerHTML =
+        Object.values(NOVA_BADGES)
+            .map(badge => {
+
+                const unlocked =
+                    earned.includes(
+                        badge.id
+                    );
+
+                return `
+
+                    <div class="
+                        nova-badge
+                        ${unlocked
+                            ? ""
+                            : "locked"}
+                    ">
+
+                        <div class="
+                            nova-badge-icon
+                        ">
+                            ${badge.icon}
+                        </div>
+
+                        <div class="
+                            nova-badge-name
+                        ">
+                            ${badge.name}
+                        </div>
+
+                        <div class="
+                            nova-badge-description
+                        ">
+                            ${badge.description}
+                        </div>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+
+}
+
+
+/* =========================================================
+   GLOBAL BADGES API
+========================================================= */
+
+window.NovaGamification.unlockBadge =
+    unlockBadge;
+
+window.NovaGamification.getStudentBadges =
+    getStudentBadges;
+
+window.NovaGamification.updateBadgesUI =
+    updateBadgesUI;
+
+window.NovaGamification.checkLevelBadges =
+    checkLevelBadges;
+
+
+/* =========================================================
+   LOAD BADGES
+========================================================= */
+
+setTimeout(() => {
+
+    if (
+        window.NovaGamification
+    ) {
+
+        updateBadgesUI();
+
+    }
+
+}, 1500);
