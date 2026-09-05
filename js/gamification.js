@@ -1657,10 +1657,9 @@ window.NovaGamification.completeLesson =
 
 setTimeout(() => {
 
-    if (
-        window.NovaGamification
-    ) {
+    if (window.NovaGamification) {
 
+        createBadgesUI();
         updateBadgesUI();
 
     }
