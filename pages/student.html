@@ -5181,107 +5181,270 @@
                         })
                     );
 
+allLessons.sort(
+    (a, b) => {
 
-                allLessons.sort(
-                    (a, b) => {
+        const dateA =
+            getDate(a.createdAt)?.getTime() || 0;
 
-                        const dateA =
-                            getDate(
-                                a.createdAt
-                            )?.getTime() || 0;
+        const dateB =
+            getDate(b.createdAt)?.getTime() || 0;
 
-
-                        const dateB =
-                            getDate(
-                                b.createdAt
-                            )?.getTime() || 0;
+        return dateB - dateA;
+    }
+);
 
 
-                        return dateB - dateA;
-                    }
-                );
+if (!allLessons.length) {
+
+    setEmpty(
+        lessonsContainer,
+        "لا توجد دروس متاحة حالياً."
+    );
+
+    return;
+}
 
 
-                if (
-                    !allLessons.length
-                ) {
+lessonsContainer.innerHTML =
+    allLessons
+        .slice(0, 10)
+        .map(
+            lesson => {
 
-                    setEmpty(
-                        lessonsContainer,
-                        "لا توجد دروس متاحة حالياً."
+                const title =
+                    lesson.title ||
+                    "درس بدون عنوان";
+
+
+                const course =
+                    lesson.courseName ||
+                    "كورس";
+
+
+                const content =
+                    lesson.content ||
+                    "لا يوجد محتوى نصي لهذا الدرس.";
+
+
+                /*
+                   معرف ثابت للدرس
+                */
+
+                const lessonId =
+                    lesson.id ||
+                    `${title}-${course}`;
+
+
+                /*
+                   هل الطالب أخذ XP لهذا الدرس؟
+                */
+
+                const completed =
+                    localStorage.getItem(
+                        `nova_lesson_xp_${lessonId}`
                     );
 
 
-                    return;
+                const fileHTML =
+                    lesson.fileUrl
+                        ? `
+
+                            <a
+                                class="lesson-file"
+                                href="${escapeHTML(lesson.fileUrl)}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                📎 فتح الملف
+                            </a>
+
+                        `
+                        : "";
+
+
+                return `
+
+                    <article class="lesson-item">
+
+                        <h3 class="lesson-title">
+                            ${escapeHTML(title)}
+                        </h3>
+
+
+                        <div class="lesson-course">
+                            📚 ${escapeHTML(course)}
+                        </div>
+
+
+                        <div class="lesson-content">
+                            ${escapeHTML(content)}
+                        </div>
+
+
+                        ${fileHTML}
+
+
+                        <div
+                            class="lesson-complete-area"
+                            style="
+                                margin-top:15px;
+                                display:flex;
+                                justify-content:center;
+                            "
+                        >
+
+                            ${
+                                completed
+                                    ? `
+
+                                        <button
+                                            type="button"
+                                            disabled
+                                            style="
+                                                width:100%;
+                                                padding:12px;
+                                                border:none;
+                                                border-radius:12px;
+                                                background:#166534;
+                                                color:white;
+                                                font-weight:700;
+                                                cursor:not-allowed;
+                                            "
+                                        >
+                                            ✅ تم إكمال الدرس
+                                        </button>
+
+                                    `
+                                    : `
+
+                                        <button
+                                            type="button"
+                                            class="complete-lesson-btn"
+                                            data-lesson-id="${escapeHTML(String(lessonId))}"
+                                            data-lesson-title="${escapeHTML(title)}"
+                                            style="
+                                                width:100%;
+                                                padding:12px;
+                                                border:none;
+                                                border-radius:12px;
+                                                background:linear-gradient(
+                                                    135deg,
+                                                    #22c55e,
+                                                    #06b6d4
+                                                );
+                                                color:white;
+                                                font-weight:800;
+                                                cursor:pointer;
+                                            "
+                                        >
+                                            ✅ إكمال الدرس +10 XP
+                                        </button>
+
+                                    `
+                            }
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            }
+        )
+        .join("");
+
+
+/* =========================================================
+   COMPLETE LESSON BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(".complete-lesson-btn")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            async () => {
+
+                const lessonId =
+                    button.dataset.lessonId;
+
+                const lessonTitle =
+                    button.dataset.lessonTitle ||
+                    "درس";
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "⏳ جاري إضافة XP...";
+
+
+                try {
+
+                    if (
+                        window.NovaGamification &&
+                        typeof
+                        window.NovaGamification.completeLesson ===
+                        "function"
+                    ) {
+
+                        const success =
+                            await window.NovaGamification.completeLesson(
+                                lessonId,
+                                lessonTitle
+                            );
+
+
+                        if (success) {
+
+                            button.textContent =
+                                "✅ تم إكمال الدرس";
+
+                            button.style.background =
+                                "#166534";
+
+                        } else {
+
+                            button.disabled = false;
+
+                            button.textContent =
+                                "✅ إكمال الدرس +10 XP";
+
+                        }
+
+                    } else {
+
+                        console.error(
+                            "NovaGamification is not loaded."
+                        );
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "❌ حاول مرة أخرى";
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Complete lesson error:",
+                        error
+                    );
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "❌ حاول مرة أخرى";
+
                 }
 
+            }
+        );
 
-                lessonsContainer.innerHTML =
-                    allLessons
-                        .slice(0, 10)
-                        .map(
-                            lesson => {
-
-                                const title =
-                                    lesson.title ||
-                                    "درس بدون عنوان";
-
-
-                                const course =
-                                    lesson.courseName ||
-                                    "كورس";
-
-
-                                const content =
-                                    lesson.content ||
-                                    "لا يوجد محتوى نصي لهذا الدرس.";
-
-
-                                const fileHTML =
-                                    lesson.fileUrl
-                                        ? `
-
-                                            <a
-                                                class="lesson-file"
-                                                href="${escapeHTML(lesson.fileUrl)}"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                📎 فتح الملف
-                                            </a>
-
-                                        `
-                                        : "";
-
-
-                                return `
-
-                                    <article class="lesson-item">
-
-                                        <h3 class="lesson-title">
-                                            ${escapeHTML(title)}
-                                        </h3>
-
-
-                                        <div class="lesson-course">
-                                            📚 ${escapeHTML(course)}
-                                        </div>
-
-
-                                        <div class="lesson-content">
-                                            ${escapeHTML(content)}
-                                        </div>
-
-
-                                        ${fileHTML}
-
-                                    </article>
-
-                                `;
-
-                            }
-                        )
-                        .join("");
+    });
 
 
             } catch (error) {
