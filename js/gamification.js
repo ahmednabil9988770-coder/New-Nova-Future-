@@ -447,6 +447,7 @@ function createGamificationUI() {
             dashboard.appendChild(section);
 
         }
+    }
 
     } else {
 
@@ -891,7 +892,7 @@ function showGamificationMessage(message) {
    READY
 ========================================================= */
 
-onAuthStateChanged(
+
 onAuthStateChanged(
     auth,
     async user => {
