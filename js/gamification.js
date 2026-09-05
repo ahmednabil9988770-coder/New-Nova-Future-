@@ -937,6 +937,8 @@ window.NovaGamification = {
    COMPLETE EXAM → XP + BADGES
 ========================================================= */
 
+
+
 window.NovaGamification.completeExam = async function (
     examId = "",
     examTitle = "امتحان",
@@ -947,10 +949,11 @@ window.NovaGamification.completeExam = async function (
         return false;
     }
 
-    const key =
-        `nova_exam_xp_${examId}`;
+    const key = `nova_exam_xp_${examId}`;
 
-    /* منع تكرار XP لنفس الامتحان */
+    /* =================================================
+       الامتحان اتاخد له XP قبل كده
+    ================================================= */
 
     if (localStorage.getItem(key)) {
 
@@ -958,51 +961,65 @@ window.NovaGamification.completeExam = async function (
             "Nova Future: Exam XP already awarded."
         );
 
-        /* نفتح الشارات حتى لو الـXP اتاخد قبل كده */
+        /* الشارات لا تمنع استمرار النظام */
 
-        await unlockBadge(
-            "firstExam"
-        );
+        try {
+            await unlockBadge("firstExam");
 
-        if (Number(percentage) >= 90) {
+            if (Number(percentage) >= 90) {
+                await unlockBadge("topScholar");
+            }
 
-            await unlockBadge(
-                "topScholar"
+            await updateBadgesUI();
+
+        } catch (badgeError) {
+
+            console.error(
+                "Nova Future Badge Error:",
+                badgeError
             );
 
         }
-
-        await updateBadgesUI();
 
         return false;
     }
 
 
-    /* =========================================
-       إكمال الامتحان → +10 XP
-    ========================================= */
+    /* =================================================
+       XP إكمال الامتحان
+    ================================================= */
 
-    const completed =
-        await addXP(
-            10,
-            `إكمال الامتحان: ${examTitle}`
-        );
+    const completed = await addXP(
+        10,
+        `إكمال الامتحان: ${examTitle}`
+    );
 
     if (!completed) {
         return false;
     }
 
 
-    /* ⚔️ كاسر التحديات */
+    /* =================================================
+       الشارة الأولى
+    ================================================= */
 
-    await unlockBadge(
-        "firstExam"
-    );
+    try {
+
+        await unlockBadge("firstExam");
+
+    } catch (error) {
+
+        console.error(
+            "First Exam Badge Error:",
+            error
+        );
+
+    }
 
 
-    /* =========================================
-       النجاح → +10 XP
-    ========================================= */
+    /* =================================================
+       النجاح >= 50%
+    ================================================= */
 
     if (Number(percentage) >= 50) {
 
@@ -1014,9 +1031,9 @@ window.NovaGamification.completeExam = async function (
     }
 
 
-    /* =========================================
-       90% أو أكثر → +5 XP
-    ========================================= */
+    /* =================================================
+       ممتاز >= 90%
+    ================================================= */
 
     if (Number(percentage) >= 90) {
 
@@ -1025,16 +1042,25 @@ window.NovaGamification.completeExam = async function (
             "درجة ممتازة ⭐"
         );
 
-        /* 👑 نجم النخبة */
+        try {
 
-        await unlockBadge(
-            "topScholar"
-        );
+            await unlockBadge("topScholar");
+
+        } catch (error) {
+
+            console.error(
+                "Top Scholar Badge Error:",
+                error
+            );
+
+        }
 
     }
 
 
-    /* تسجيل الامتحان */
+    /* =================================================
+       تسجيل أن الامتحان أخذ XP
+    ================================================= */
 
     localStorage.setItem(
         key,
@@ -1042,14 +1068,27 @@ window.NovaGamification.completeExam = async function (
     );
 
 
-    /* تحديث الشارات */
+    /* =================================================
+       تحديث الشارات
+    ================================================= */
 
-    await updateBadgesUI();
+    try {
+
+        await updateBadgesUI();
+
+    } catch (error) {
+
+        console.error(
+            "Badges UI Error:",
+            error
+        );
+
+    }
 
 
     return true;
-
 };
+    
 
 
 
