@@ -932,7 +932,43 @@ window.NovaGamification = {
 
 };
 
+// =========================================================
+// COMPLETE LESSON → +10 XP
+// =========================================================
 
+window.NovaGamification.completeLesson = async function (
+    lessonId = "",
+    lessonTitle = "درس"
+) {
+
+    const key =
+        `nova_lesson_xp_${lessonId}`;
+
+    // منع حصول الطالب على XP لنفس الدرس أكثر من مرة
+    if (localStorage.getItem(key)) {
+        console.log(
+            "Nova Future: XP already awarded for this lesson."
+        );
+        return false;
+    }
+
+    const result =
+        await addXP(
+            10,
+            `إكمال الدرس: ${lessonTitle}`
+        );
+
+    if (!result) {
+        return false;
+    }
+
+    localStorage.setItem(
+        key,
+        "true"
+    );
+
+    return true;
+};
 console.log(
     "🚀 Nova Future Gamification System Loaded"
 );
