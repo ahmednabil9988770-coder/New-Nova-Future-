@@ -932,8 +932,9 @@ window.NovaGamification = {
 
 };
 
+
 /* =========================================================
-   COMPLETE EXAM → XP
+   COMPLETE EXAM → XP + BADGES
 ========================================================= */
 
 window.NovaGamification.completeExam = async function (
@@ -946,27 +947,40 @@ window.NovaGamification.completeExam = async function (
         return false;
     }
 
-    /*
-       منع الحصول على XP لنفس الامتحان أكثر من مرة
-    */
-
     const key =
         `nova_exam_xp_${examId}`;
+
+    /* منع تكرار XP لنفس الامتحان */
 
     if (localStorage.getItem(key)) {
 
         console.log(
-            "Nova Future: XP already awarded for this exam."
+            "Nova Future: Exam XP already awarded."
         );
+
+        /* نفتح الشارات حتى لو الـXP اتاخد قبل كده */
+
+        await unlockBadge(
+            "firstExam"
+        );
+
+        if (Number(percentage) >= 90) {
+
+            await unlockBadge(
+                "topScholar"
+            );
+
+        }
+
+        await updateBadgesUI();
 
         return false;
     }
 
 
-    /*
-       إكمال الامتحان
-       +10 XP
-    */
+    /* =========================================
+       إكمال الامتحان → +10 XP
+    ========================================= */
 
     const completed =
         await addXP(
@@ -974,16 +988,21 @@ window.NovaGamification.completeExam = async function (
             `إكمال الامتحان: ${examTitle}`
         );
 
-
     if (!completed) {
         return false;
     }
 
 
-    /*
-       النجاح
-       +10 XP
-    */
+    /* ⚔️ كاسر التحديات */
+
+    await unlockBadge(
+        "firstExam"
+    );
+
+
+    /* =========================================
+       النجاح → +10 XP
+    ========================================= */
 
     if (Number(percentage) >= 50) {
 
@@ -995,10 +1014,9 @@ window.NovaGamification.completeExam = async function (
     }
 
 
-    /*
-       درجة 90% أو أكثر
-       +5 XP
-    */
+    /* =========================================
+       90% أو أكثر → +5 XP
+    ========================================= */
 
     if (Number(percentage) >= 90) {
 
@@ -1007,12 +1025,16 @@ window.NovaGamification.completeExam = async function (
             "درجة ممتازة ⭐"
         );
 
+        /* 👑 نجم النخبة */
+
+        await unlockBadge(
+            "topScholar"
+        );
+
     }
 
 
-    /*
-       تسجيل أن الامتحان أخذ XP
-    */
+    /* تسجيل الامتحان */
 
     localStorage.setItem(
         key,
@@ -1020,9 +1042,15 @@ window.NovaGamification.completeExam = async function (
     );
 
 
+    /* تحديث الشارات */
+
+    await updateBadgesUI();
+
+
     return true;
 
 };
+
 
 
 /* =========================================================
