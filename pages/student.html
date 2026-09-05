@@ -5051,5 +5051,36 @@ const resultData = {
 
         }
     );
+/* =========================================================
+   NOVA FUTURE - CHARACTER SELECTOR
+   الخطوة 2
+========================================================= */
 
+const characterChoice = document.getElementById("characterChoice");
+const studentCharacter = document.getElementById("studentCharacter");
+const characterAvatar = document.getElementById("characterAvatar");
+const characterMessage = document.getElementById("characterMessage");
+
+document.querySelectorAll(".character-option").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const character = button.dataset.character;
+
+        if (character === "chick") {
+            characterAvatar.textContent = "🐣";
+            characterMessage.textContent = "يلا يا بطل! خلينا نتعلم 🐣";
+        }
+
+        if (character === "lion") {
+            characterAvatar.textContent = "🦁";
+            characterMessage.textContent = "جاهز للتحدي يا بطل؟ 🦁";
+        }
+
+        characterChoice.hidden = true;
+        studentCharacter.hidden = false;
+
+    });
+
+});
 </script><script src="../js/app.js"></script></body></html>
