@@ -1309,3 +1309,65 @@ if (currentUser) {
     updateBadgesUI();
 
 }
+
+/* =========================================================
+   NOVA CHARACTER 2.0
+   Interactive Character
+========================================================= */
+
+function initNovaCharacter() {
+
+    const character = document.getElementById("novaCharacterEmoji");
+    const bubble = document.getElementById("novaCharacterBubble");
+    const mood = document.getElementById("novaCharacterMood");
+
+    if (!character || !bubble || !mood) {
+        console.warn("Nova Character: UI not found.");
+        return;
+    }
+
+    const messages = [
+        "جاهز نكمل الرحلة؟ 🚀",
+        "يلا يا بطل، مستقبلك مستنيك! 🔥",
+        "مستوى جديد قريب جدًا 👀",
+        "أنا واثق إنك تقدر! 💪",
+        "ركز شوية وهتكسر الامتحان! ⚔️",
+        "كل درس بتخلصه بيقربك من هدفك! 📚",
+        "استمر... أنت بتتطور! ⚡",
+        "Nova Future معاك في كل خطوة 🌌"
+    ];
+
+    const moods = [
+        "🔥 متحمس",
+        "💪 جاهز للتحدي",
+        "🚀 في وضع التطور",
+        "🏆 فخور بيك"
+    ];
+
+    function interact() {
+
+        const randomMessage =
+            messages[Math.floor(Math.random() * messages.length)];
+
+        const randomMood =
+            moods[Math.floor(Math.random() * moods.length)];
+
+        bubble.textContent = randomMessage;
+        mood.textContent = randomMood;
+
+        character.classList.remove("nova-character-jump");
+
+        void character.offsetWidth;
+
+        character.classList.add("nova-character-jump");
+    }
+
+    character.addEventListener("click", interact);
+
+    // تفاعل تلقائي عند فتح الصفحة
+    setTimeout(() => {
+        interact();
+    }, 1200);
+
+    console.log("Nova Character 2.0 initialized.");
+}
