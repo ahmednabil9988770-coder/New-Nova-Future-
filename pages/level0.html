@@ -4,25 +4,19 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>LEVEL 0 — CLASSIFIED</title>
+    <title>Nova Future - Level 0</title>
 
-    <link
-        rel="stylesheet"
-        href="../css/level0.css"
-    >
+    <link rel="stylesheet" href="../css/level0.css">
 </head>
 
 <body>
 
-    <div id="level0App">
+    <main id="level0App">
 
-        <!-- STORY -->
-        <section id="level0Story" hidden>
+        <section id="level0Story">
 
             <div class="level0-card">
 
@@ -42,10 +36,7 @@
                     جاري تحميل المهمة...
                 </p>
 
-                <button
-                    id="level0NextBtn"
-                    type="button"
-                >
+                <button id="level0NextBtn" type="button">
                     التالي →
                 </button>
 
@@ -54,7 +45,6 @@
         </section>
 
 
-        <!-- INVESTIGATION -->
         <section id="level0Investigation" hidden>
 
             <div class="level0-card">
@@ -80,34 +70,29 @@
 
                 <div id="level0Locations">
 
-                    <button
-                        class="level0-location"
-                        data-location="dashboard"
-                        type="button"
-                    >
-                        <span class="location-icon">💻</span>
+                    <button class="level0-location"
+                            data-location="dashboard"
+                            type="button">
+                        💻
                         <span>لوحة الطالب</span>
                     </button>
 
-                    <button
-                        class="level0-location"
-                        data-location="library"
-                        type="button"
-                    >
-                        <span class="location-icon">📚</span>
+                    <button class="level0-location"
+                            data-location="library"
+                            type="button">
+                        📚
                         <span>المكتبة</span>
                     </button>
 
-                    <button
-                        class="level0-location"
-                        data-location="terminal"
-                        type="button"
-                    >
-                        <span class="location-icon">🖥️</span>
+                    <button class="level0-location"
+                            data-location="terminal"
+                            type="button">
+                        🖥️
                         <span>المحطة السرية</span>
                     </button>
 
                 </div>
+
 
                 <div id="level0Puzzle" hidden>
 
@@ -123,24 +108,15 @@
 
                     <div id="level0PuzzleOptions">
 
-                        <button
-                            type="button"
-                            data-answer="47-NF"
-                        >
+                        <button type="button" data-answer="47-NF">
                             47-NF
                         </button>
 
-                        <button
-                            type="button"
-                            data-answer="NF-07"
-                        >
+                        <button type="button" data-answer="NF-07">
                             NF-07
                         </button>
 
-                        <button
-                            type="button"
-                            data-answer="11-07"
-                        >
+                        <button type="button" data-answer="11-07">
                             11-07
                         </button>
 
@@ -155,7 +131,6 @@
         </section>
 
 
-        <!-- COMPLETE -->
         <section id="level0Complete" hidden>
 
             <div class="level0-card">
@@ -178,10 +153,7 @@
                     ⭐ +50 XP
                 </div>
 
-                <button
-                    id="level0BackBtn"
-                    type="button"
-                >
+                <button id="level0BackBtn" type="button">
                     العودة إلى المنصة
                 </button>
 
@@ -189,13 +161,10 @@
 
         </section>
 
-    </div>
+    </main>
 
 
-    <script
-        type="module"
-        src="../js/level0.js"
-    ></script>
+    <script type="module" src="../js/level0.js"></script>
 
 </body>
 
