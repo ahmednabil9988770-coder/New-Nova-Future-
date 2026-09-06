@@ -1,1 +1,291 @@
+/* =========================================================
+   NOVA FUTURE — LEVEL 0
+   CLASSIFIED MISSION
+========================================================= */
 
+#level0App {
+    min-height: 100vh;
+    padding: 30px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.level0-screen {
+    width: 100%;
+    max-width: 850px;
+    animation: level0Fade 0.4s ease;
+}
+
+.level0-card {
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 28px;
+    padding: 40px 25px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.level0-scene-number {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    opacity: 0.55;
+    margin-bottom: 20px;
+}
+
+.level0-story-icon {
+    font-size: 70px;
+    line-height: 1;
+    margin-bottom: 25px;
+}
+
+.level0-card h1 {
+    margin: 0 0 18px;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.level0-card h2 {
+    margin: 0 0 15px;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.level0-card p {
+    margin: 0 auto 25px;
+    max-width: 650px;
+    font-size: 18px;
+    line-height: 2;
+    opacity: 0.85;
+}
+
+.level0-actions {
+    margin-top: 25px;
+}
+
+#level0NextBtn,
+#level0BackBtn {
+    border: none;
+    padding: 14px 30px;
+    border-radius: 16px;
+    background: var(--primary-color, #2563eb);
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#level0NextBtn:hover,
+#level0BackBtn:hover {
+    transform: translateY(-2px);
+}
+
+#level0NextBtn:active,
+#level0BackBtn:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   INVESTIGATION
+========================================================= */
+
+.level0-clues {
+    margin: 20px auto 30px;
+    padding: 15px;
+    border-radius: 16px;
+    background: rgba(37, 99, 235, 0.08);
+    font-size: 17px;
+}
+
+.level0-locations {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.level0-location {
+    min-height: 130px;
+    border: 2px solid rgba(37, 99, 235, 0.15);
+    border-radius: 20px;
+    background: rgba(37, 99, 235, 0.05);
+    font-family: inherit;
+    font-size: 40px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.level0-location span {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.level0-location:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-color, #2563eb);
+}
+
+.level0-location:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+}
+
+
+/* =========================================================
+   PUZZLE
+========================================================= */
+
+.level0-puzzle {
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 22px;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.level0-puzzle-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.level0-puzzle-options button {
+    border: 2px solid rgba(37, 99, 235, 0.2);
+    background: white;
+    padding: 15px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.level0-puzzle-options button:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-color, #2563eb);
+}
+
+.level0-message {
+    margin-top: 20px;
+    min-height: 25px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+.level0-success {
+    border: 2px solid rgba(34, 197, 94, 0.25);
+}
+
+.level0-reward {
+    margin: 25px auto;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(34, 197, 94, 0.08);
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 2;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark .level0-card {
+    background: rgba(25, 25, 35, 0.96);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark .level0-puzzle {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+body.dark .level0-puzzle-options button {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dark .level0-location {
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes level0Fade {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    #level0App {
+        padding: 15px;
+    }
+
+    .level0-card {
+        padding: 30px 18px;
+        border-radius: 22px;
+    }
+
+    .level0-story-icon {
+        font-size: 55px;
+    }
+
+    .level0-card h1 {
+        font-size: 24px;
+    }
+
+    .level0-card p {
+        font-size: 16px;
+    }
+
+    .level0-locations {
+        grid-template-columns: 1fr;
+    }
+
+    .level0-location {
+        min-height: 90px;
+        flex-direction: row;
+        font-size: 32px;
+    }
+
+    .level0-puzzle-options {
+        grid-template-columns: 1fr;
+    }
+
+}
