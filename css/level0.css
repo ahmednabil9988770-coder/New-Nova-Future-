@@ -1,30 +1,34 @@
 /* =========================================================
    NOVA FUTURE — LEVEL 0
-   CLASSIFIED — FIXED UI
+   ISOLATED DESIGN
 ========================================================= */
 
-#level0App {
-    min-height: 100vh;
-    width: 100%;
+* {
     box-sizing: border-box;
+}
 
-    padding: 30px 16px;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-family:
+        Arial,
+        "Tahoma",
+        sans-serif;
+}
+
+body {
+    min-height: 100vh;
 
     background:
         radial-gradient(
             circle at top,
-            rgba(37, 99, 235, 0.18),
-            transparent 45%
-        ),
-        linear-gradient(
-            135deg,
-            #070b18,
-            #111827,
-            #050816
+            #1e3a8a 0%,
+            #0f172a 45%,
+            #020617 100%
         );
 
     color: #ffffff;
@@ -32,68 +36,85 @@
 
 
 /* =========================================================
-   SCREEN
+   APP
 ========================================================= */
 
-.level0-screen {
+#level0App {
     width: 100%;
-    max-width: 900px;
-    box-sizing: border-box;
+    min-height: 100vh;
 
-    animation: level0Fade 0.45s ease;
+    padding: 25px 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
 /* =========================================================
-   MAIN CARD
+   SCREENS
+========================================================= */
+
+#level0Story,
+#level0Investigation,
+#level0Complete {
+    width: 100%;
+    max-width: 850px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================================
+   CARD
 ========================================================= */
 
 .level0-card {
     width: 100%;
-    box-sizing: border-box;
 
-    padding: 40px 30px;
+    padding: 35px 25px;
 
-    background: rgba(15, 23, 42, 0.96);
+    background: #111827;
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid #334155;
 
-    border-radius: 28px;
-
-    box-shadow:
-        0 25px 80px rgba(0, 0, 0, 0.55),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
 
     text-align: center;
 
-    color: #ffffff;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.55);
 }
 
 
 /* =========================================================
-   STORY
+   TEXT
 ========================================================= */
 
-.level0-scene-number {
-    margin-bottom: 22px;
-
-    font-size: 13px;
-    font-weight: 900;
-
-    letter-spacing: 2px;
+#level0SceneNumber {
+    margin-bottom: 20px;
 
     color: #93c5fd;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
 }
 
-.level0-story-icon {
-    margin-bottom: 25px;
+#level0StoryIcon,
+.level0-icon {
+    margin-bottom: 20px;
 
-    font-size: 72px;
+    font-size: 65px;
+
     line-height: 1;
 }
 
 .level0-card h1 {
-    margin: 0 0 18px;
+    margin: 0 0 20px;
 
     color: #ffffff;
 
@@ -109,94 +130,72 @@
     color: #ffffff;
 
     font-size: 24px;
-    font-weight: 900;
 }
 
 .level0-card p {
-    max-width: 700px;
-
-    margin: 0 auto 28px;
+    margin: 0 auto 25px;
 
     color: #e5e7eb;
 
     font-size: 18px;
-    font-weight: 500;
 
     line-height: 2;
 }
 
 
 /* =========================================================
-   BUTTONS
+   MAIN BUTTON
 ========================================================= */
 
 #level0NextBtn,
 #level0BackBtn {
-    border: none;
+    border: 0;
 
-    padding: 14px 32px;
+    padding: 14px 30px;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
+    background: #2563eb;
 
     color: #ffffff;
 
-    font-family: inherit;
-
     font-size: 16px;
-    font-weight: 900;
+    font-weight: bold;
 
     cursor: pointer;
 
-    box-shadow:
-        0 10px 25px rgba(37, 99, 235, 0.25);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: 0.2s;
 }
 
 #level0NextBtn:hover,
 #level0BackBtn:hover {
-    transform: translateY(-3px);
+    background: #1d4ed8;
 
-    box-shadow:
-        0 15px 30px rgba(37, 99, 235, 0.35);
-}
-
-#level0NextBtn:active,
-#level0BackBtn:active {
-    transform: scale(0.97);
+    transform: translateY(-2px);
 }
 
 
 /* =========================================================
-   INVESTIGATION
+   CLUES
 ========================================================= */
 
-.level0-clues {
-    margin: 20px auto 30px;
+#level0Clues {
+    margin: 20px 0 25px;
 
-    padding: 16px;
+    padding: 15px;
 
-    border-radius: 16px;
+    background: #172554;
 
-    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid #1e40af;
 
-    border: 1px solid rgba(96, 165, 250, 0.18);
+    border-radius: 14px;
 
     color: #dbeafe;
 
     font-size: 17px;
-    font-weight: 700;
 }
 
-.level0-clues strong {
+#level0ClueCount {
     color: #60a5fa;
 
     font-size: 20px;
@@ -207,33 +206,31 @@
    LOCATIONS
 ========================================================= */
 
-.level0-locations {
+#level0Locations {
     display: grid;
 
     grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        repeat(3, 1fr);
 
-    gap: 16px;
+    gap: 15px;
 
-    margin-top: 25px;
+    margin-bottom: 25px;
 }
 
 .level0-location {
-    min-height: 135px;
+    min-height: 130px;
 
-    padding: 18px;
+    padding: 15px;
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid #334155;
 
-    border-radius: 20px;
+    border-radius: 18px;
 
-    background: rgba(255, 255, 255, 0.06);
+    background: #1e293b;
 
     color: #ffffff;
 
     font-family: inherit;
-
-    font-size: 40px;
 
     cursor: pointer;
 
@@ -247,22 +244,13 @@
 
     gap: 10px;
 
-    transition: 0.2s ease;
-}
-
-.level0-location span {
-    color: #f3f4f6;
-
-    font-size: 15px;
-    font-weight: 800;
+    transition: 0.2s;
 }
 
 .level0-location:hover {
-    transform: translateY(-5px);
+    background: #1e40af;
 
-    border-color: #60a5fa;
-
-    background: rgba(37, 99, 235, 0.14);
+    transform: translateY(-3px);
 }
 
 .level0-location:disabled {
@@ -273,69 +261,83 @@
     transform: none;
 }
 
+.location-icon {
+    font-size: 40px;
+}
+
+.level0-location span:last-child {
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: bold;
+}
+
 
 /* =========================================================
    PUZZLE
 ========================================================= */
 
-.level0-puzzle {
-    margin-top: 30px;
+#level0Puzzle {
+    margin-top: 25px;
 
     padding: 25px;
 
-    border-radius: 22px;
+    background: #0f172a;
 
-    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #334155;
 
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 18px;
 }
 
-.level0-puzzle p {
-    margin-bottom: 20px;
-}
-
-.level0-puzzle-options {
+#level0PuzzleOptions {
     display: grid;
 
     grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        repeat(3, 1fr);
 
     gap: 12px;
 
     margin-top: 20px;
 }
 
-.level0-puzzle-options button {
+#level0PuzzleOptions button {
     min-height: 55px;
 
-    border: 1px solid rgba(96, 165, 250, 0.25);
+    padding: 12px;
 
-    border-radius: 14px;
+    border: 1px solid #475569;
 
-    background: rgba(37, 99, 235, 0.10);
+    border-radius: 12px;
+
+    background: #1e293b;
 
     color: #ffffff;
 
     font-family: inherit;
 
-    font-size: 17px;
-    font-weight: 900;
+    font-size: 16px;
+    font-weight: bold;
 
     cursor: pointer;
 
-    transition: 0.2s ease;
+    transition: 0.2s;
 }
 
-.level0-puzzle-options button:hover {
-    transform: translateY(-3px);
-
-    background: rgba(37, 99, 235, 0.22);
+#level0PuzzleOptions button:hover {
+    background: #2563eb;
 
     border-color: #60a5fa;
+
+    transform: translateY(-2px);
 }
 
-.level0-message {
-    min-height: 28px;
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+#level0InvestigationMessage {
+    min-height: 30px;
 
     margin-top: 20px;
 
@@ -343,61 +345,32 @@
 
     font-size: 16px;
 
-    font-weight: 800;
+    font-weight: bold;
 }
 
 
 /* =========================================================
-   SUCCESS
+   REWARD
 ========================================================= */
 
-.level0-success {
-    border-color:
-        rgba(34, 197, 94, 0.35);
-}
-
-.level0-reward {
+#level0Reward {
     margin: 25px auto;
 
     padding: 20px;
 
-    border-radius: 18px;
+    background: #14532d;
 
-    background:
-        rgba(34, 197, 94, 0.10);
+    border: 1px solid #22c55e;
 
-    border:
-        1px solid rgba(34, 197, 94, 0.20);
+    border-radius: 16px;
 
     color: #ffffff;
 
     font-size: 20px;
-    font-weight: 900;
+
+    font-weight: bold;
 
     line-height: 2;
-}
-
-
-/* =========================================================
-   ANIMATION
-========================================================= */
-
-@keyframes level0Fade {
-
-    from {
-        opacity: 0;
-
-        transform:
-            translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
-
 }
 
 
@@ -414,13 +387,14 @@
     }
 
     .level0-card {
-        padding: 30px 17px;
+        padding: 28px 16px;
 
-        border-radius: 22px;
+        border-radius: 20px;
     }
 
-    .level0-story-icon {
-        font-size: 58px;
+    #level0StoryIcon,
+    .level0-icon {
+        font-size: 55px;
     }
 
     .level0-card h1 {
@@ -434,10 +408,10 @@
     .level0-card p {
         font-size: 16px;
 
-        line-height: 1.9;
+        line-height: 1.8;
     }
 
-    .level0-locations {
+    #level0Locations {
         grid-template-columns: 1fr;
     }
 
@@ -445,105 +419,10 @@
         min-height: 85px;
 
         flex-direction: row;
-
-        font-size: 32px;
     }
 
-    .level0-puzzle-options {
+    #level0PuzzleOptions {
         grid-template-columns: 1fr;
-    }
-
-}
-
-/* =========================================================
-   LEVEL 0 — FORCE FIX
-========================================================= */
-
-/* منع أي شاشة عليها hidden من الظهور */
-#level0App [hidden] {
-    display: none !important;
-}
-
-/* منع style.css من تغيير شكل شاشات LEVEL 0 */
-#level0App,
-#level0App * {
-    box-sizing: border-box;
-}
-
-/* الشاشة الرئيسية */
-#level0Story,
-#level0Investigation,
-#level0Complete {
-    width: 100%;
-    max-width: 900px;
-}
-
-/* كارت التحقيق */
-#level0Investigation .level0-card {
-    background: #0f172a !important;
-    color: #ffffff !important;
-}
-
-/* العناوين */
-#level0Investigation h1,
-#level0Investigation h2 {
-    color: #ffffff !important;
-    font-family: inherit !important;
-    font-weight: 900 !important;
-    margin: 0 0 18px !important;
-}
-
-/* النص */
-#level0Investigation p {
-    color: #e5e7eb !important;
-    font-family: inherit !important;
-    font-size: 18px !important;
-    line-height: 2 !important;
-}
-
-/* الأدلة */
-#level0Investigation .level0-clues {
-    color: #dbeafe !important;
-}
-
-/* الأماكن */
-#level0Investigation .level0-location {
-    background: rgba(255,255,255,0.06) !important;
-    color: #ffffff !important;
-}
-
-#level0Investigation .level0-location span {
-    color: #ffffff !important;
-}
-
-/* أزرار اللغز */
-#level0Investigation
-.level0-puzzle-options button {
-    background: rgba(37,99,235,0.12) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(96,165,250,0.3) !important;
-}
-
-/* الرسالة */
-#level0Investigation .level0-message {
-    color: #fbbf24 !important;
-}
-
-/* منع أي تنسيق من student.css/style.css */
-#level0App button {
-    font-family: inherit !important;
-    text-transform: none !important;
-}
-
-/* موبايل */
-@media (max-width: 700px) {
-
-    #level0Investigation .level0-card {
-        padding: 25px 15px !important;
-    }
-
-    #level0Investigation p {
-        font-size: 16px !important;
     }
 
 }
