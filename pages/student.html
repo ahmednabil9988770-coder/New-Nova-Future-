@@ -2910,6 +2910,11 @@
                     </span>
 
                 </div>
+                <div id="novaSecretChallenge" class="nova-secret-challenge">
+    <button id="novaChallengeBtn" type="button">
+        جاهز للتحدي 🚀
+    </button>
+</div>
 
 
                 <button
@@ -7950,51 +7955,6 @@ document
         </button>
     </div>
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const button = document.getElementById("novaChallengeBtn");
-    const levelZero = document.getElementById("novaLevelZero");
-    const closeButton = document.getElementById("novaLevelZeroClose");
-
-    if (!button || !levelZero) return;
-
-    let lastClick = 0;
-
-    button.addEventListener("click", function () {
-
-        const now = Date.now();
-
-        if (now - lastClick <= 600) {
-
-            levelZero.style.display = "flex";
-
-            // إخفاء الشخصية لو موجودة
-            const character =
-                document.getElementById("studentCharacter");
-
-            if (character) {
-                character.style.transition = "0.5s ease";
-                character.style.opacity = "0";
-                character.style.transform = "scale(0.5)";
-            }
-
-            lastClick = 0;
-            return;
-        }
-
-        lastClick = now;
-    });
-
-    if (closeButton) {
-        closeButton.addEventListener("click", function () {
-            levelZero.style.display = "none";
-        });
-    }
-
-});
-</script>
     
 </body>
 
