@@ -7853,45 +7853,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const secretButton = document.getElementById("characterMessage");
 
-    if (!secretButton) {
-        console.log("LEVEL 0: characterMessage not found");
-        return;
-    }
-
-    let lastClick = 0;
+    if (!secretButton) return;
 
     secretButton.addEventListener("click", function () {
-
-        const now = Date.now();
-
-        if (now - lastClick < 600) {
-            startLevelZero();
-        }
-
-        lastClick = now;
+        secretButton.textContent = "🔥 الزر اشتغل!";
     });
-
-    function startLevelZero() {
-
-        const character = document.getElementById("studentCharacter");
-
-        if (character) {
-            character.style.transition = "0.5s ease";
-            character.style.opacity = "0";
-            character.style.transform = "scale(0.5)";
-        }
-
-        secretButton.disabled = true;
-
-        setTimeout(function () {
-
-            secretButton.textContent =
-                "🚨 تم اختطاف شخصيتك! حاول ترجعها تاني";
-
-            secretButton.disabled = false;
-
-        }, 600);
-    }
 
 });
 </script>
