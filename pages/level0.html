@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Nova Future - Level 0 Classified Mission"
+    >
+
+    <title>LEVEL 0 — CLASSIFIED | Nova Future</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/level0.css"
+    >
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NOVA FUTURE - LEVEL 0
+         CLASSIFIED MISSION
+    ====================================================== -->
+
+    <main id="level0App">
+
+        <!-- STORY -->
+        <section
+            id="level0Story"
+            class="level0-screen"
+        >
+
+            <div class="level0-card">
+
+                <div
+                    id="level0SceneNumber"
+                    class="level0-scene-number"
+                >
+                    LEVEL 0
+                </div>
+
+                <div
+                    id="level0StoryIcon"
+                    class="level0-story-icon"
+                >
+                    🌙
+                </div>
+
+                <h1 id="level0StoryTitle">
+                    LEVEL 0 — CLASSIFIED
+                </h1>
+
+                <p id="level0StoryText">
+                    جاري تحميل المهمة...
+                </p>
+
+                <div class="level0-actions">
+
+                    <button
+                        id="level0NextBtn"
+                        type="button"
+                    >
+                        التالي →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- INVESTIGATION -->
+        <section
+            id="level0Investigation"
+            class="level0-screen"
+            hidden
+        >
+
+            <div class="level0-card">
+
+                <div class="level0-story-icon">
+                    🕵️
+                </div>
+
+                <h1>
+                    عملية استعادة الشخصية
+                </h1>
+
+                <p>
+                    شخصيتك اختفت...
+                    <br>
+                    دورك الآن أن تعرف أين ذهبت.
+                </p>
+
+                <div
+                    id="level0Clues"
+                    class="level0-clues"
+                >
+                    <div>
+                        🔎 الأدلة المكتشفة:
+                        <strong id="level0ClueCount">0</strong>
+                    </div>
+                </div>
+
+                <div
+                    id="level0Locations"
+                    class="level0-locations"
+                >
+
+                    <button
+                        class="level0-location"
+                        data-location="dashboard"
+                        type="button"
+                    >
+                        💻
+                        <span>لوحة الطالب</span>
+                    </button>
+
+                    <button
+                        class="level0-location"
+                        data-location="library"
+                        type="button"
+                    >
+                        📚
+                        <span>المكتبة</span>
+                    </button>
+
+                    <button
+                        class="level0-location"
+                        data-location="terminal"
+                        type="button"
+                    >
+                        🖥️
+                        <span>المحطة السرية</span>
+                    </button>
+
+                </div>
+
+                <div
+                    id="level0Puzzle"
+                    class="level0-puzzle"
+                    hidden
+                >
+
+                    <h2>
+                        🔐 الملف السري
+                    </h2>
+
+                    <p>
+                        لديك ثلاثة أدلة.
+                        <br>
+                        ما هو الرمز الصحيح؟
+                    </p>
+
+                    <div class="level0-puzzle-options">
+
+                        <button
+                            type="button"
+                            data-answer="47-NF"
+                        >
+                            47-NF
+                        </button>
+
+                        <button
+                            type="button"
+                            data-answer="NF-07"
+                        >
+                            NF-07
+                        </button>
+
+                        <button
+                            type="button"
+                            data-answer="11-07"
+                        >
+                            11-07
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="level0InvestigationMessage"
+                    class="level0-message"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- COMPLETED -->
+        <section
+            id="level0Complete"
+            class="level0-screen"
+            hidden
+        >
+
+            <div class="level0-card level0-success">
+
+                <div class="level0-story-icon">
+                    🏆
+                </div>
+
+                <h1>
+                    المهمة اكتملت!
+                </h1>
+
+                <p>
+                    لقد نجحت في استعادة شخصيتك.
+                </p>
+
+                <div class="level0-reward">
+
+                    <div>
+                        🏆 محقق نوفا
+                    </div>
+
+                    <div>
+                        ⭐ +50 XP
+                    </div>
+
+                </div>
+
+                <button
+                    id="level0BackBtn"
+                    type="button"
+                >
+                    العودة إلى المنصة
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- LEVEL 0 JAVASCRIPT -->
+    <script
+        type="module"
+        src="../js/level0.js"
+    ></script>
+
+</body>
+
+</html>
