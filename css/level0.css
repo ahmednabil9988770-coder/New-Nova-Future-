@@ -454,3 +454,96 @@
     }
 
 }
+
+/* =========================================================
+   LEVEL 0 — FORCE FIX
+========================================================= */
+
+/* منع أي شاشة عليها hidden من الظهور */
+#level0App [hidden] {
+    display: none !important;
+}
+
+/* منع style.css من تغيير شكل شاشات LEVEL 0 */
+#level0App,
+#level0App * {
+    box-sizing: border-box;
+}
+
+/* الشاشة الرئيسية */
+#level0Story,
+#level0Investigation,
+#level0Complete {
+    width: 100%;
+    max-width: 900px;
+}
+
+/* كارت التحقيق */
+#level0Investigation .level0-card {
+    background: #0f172a !important;
+    color: #ffffff !important;
+}
+
+/* العناوين */
+#level0Investigation h1,
+#level0Investigation h2 {
+    color: #ffffff !important;
+    font-family: inherit !important;
+    font-weight: 900 !important;
+    margin: 0 0 18px !important;
+}
+
+/* النص */
+#level0Investigation p {
+    color: #e5e7eb !important;
+    font-family: inherit !important;
+    font-size: 18px !important;
+    line-height: 2 !important;
+}
+
+/* الأدلة */
+#level0Investigation .level0-clues {
+    color: #dbeafe !important;
+}
+
+/* الأماكن */
+#level0Investigation .level0-location {
+    background: rgba(255,255,255,0.06) !important;
+    color: #ffffff !important;
+}
+
+#level0Investigation .level0-location span {
+    color: #ffffff !important;
+}
+
+/* أزرار اللغز */
+#level0Investigation
+.level0-puzzle-options button {
+    background: rgba(37,99,235,0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(96,165,250,0.3) !important;
+}
+
+/* الرسالة */
+#level0Investigation .level0-message {
+    color: #fbbf24 !important;
+}
+
+/* منع أي تنسيق من student.css/style.css */
+#level0App button {
+    font-family: inherit !important;
+    text-transform: none !important;
+}
+
+/* موبايل */
+@media (max-width: 700px) {
+
+    #level0Investigation .level0-card {
+        padding: 25px 15px !important;
+    }
+
+    #level0Investigation p {
+        font-size: 16px !important;
+    }
+
+}
