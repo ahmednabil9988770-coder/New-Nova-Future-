@@ -7849,15 +7849,141 @@ document
 <script type="module" src="../js/gamification.js"></script>
 
 <script>
+<!-- NOVA FUTURE - SECRET LEVEL 0 -->
+<div id="novaSecretChallenge" class="nova-secret-challenge">
+    <button id="novaChallengeBtn" type="button">
+        جاهز للتحدي 🚀
+    </button>
+</div>
+
+<style>
+.nova-secret-challenge {
+    display: flex;
+    justify-content: flex-start;
+    margin: 20px 0;
+}
+
+#novaChallengeBtn {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 14px;
+    background: var(--primary-color, #2563eb);
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+#novaChallengeBtn:hover {
+    transform: translateY(-2px);
+}
+
+#novaChallengeBtn:active {
+    transform: scale(0.97);
+}
+
+/* Secret overlay */
+#novaLevelZero {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.88);
+}
+
+.nova-level-zero-card {
+    width: min(420px, 100%);
+    padding: 30px 22px;
+    border-radius: 24px;
+    text-align: center;
+    background: #111827;
+    color: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.nova-level-zero-card h2 {
+    margin: 0 0 15px;
+    font-size: 25px;
+}
+
+.nova-level-zero-card p {
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+#novaLevelZeroClose {
+    border: none;
+    padding: 11px 25px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+}
+</style>
+
+<div id="novaLevelZero">
+    <div class="nova-level-zero-card">
+        <h2>🚨 تم اختطاف شخصيتك!</h2>
+
+        <p>
+            لقد اختفت شخصيتك من المنصة...
+            <br>
+            وفي مكان ما، هناك من ينتظر منك أن تجدها.
+        </p>
+
+        <button id="novaLevelZeroClose" type="button">
+            🔎 أبدأ البحث
+        </button>
+    </div>
+</div>
+
+<script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const secretButton = document.getElementById("characterMessage");
+    const button = document.getElementById("novaChallengeBtn");
+    const levelZero = document.getElementById("novaLevelZero");
+    const closeButton = document.getElementById("novaLevelZeroClose");
 
-    if (!secretButton) return;
+    if (!button || !levelZero) return;
 
-    secretButton.addEventListener("click", function () {
-        secretButton.textContent = "🔥 الزر اشتغل!";
+    let lastClick = 0;
+
+    button.addEventListener("click", function () {
+
+        const now = Date.now();
+
+        if (now - lastClick <= 600) {
+
+            levelZero.style.display = "flex";
+
+            // إخفاء الشخصية لو موجودة
+            const character =
+                document.getElementById("studentCharacter");
+
+            if (character) {
+                character.style.transition = "0.5s ease";
+                character.style.opacity = "0";
+                character.style.transform = "scale(0.5)";
+            }
+
+            lastClick = 0;
+            return;
+        }
+
+        lastClick = now;
     });
+
+    if (closeButton) {
+        closeButton.addEventListener("click", function () {
+            levelZero.style.display = "none";
+        });
+    }
 
 });
 </script>
