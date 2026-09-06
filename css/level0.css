@@ -1,37 +1,128 @@
 /* =========================================================
    NOVA FUTURE — LEVEL 0
-   ISOLATED DESIGN
+   CLASSIFIED INVESTIGATION
+   PREMIUM ISOLATED DESIGN
+========================================================= */
+
+
+/* =========================================================
+   RESET
 ========================================================= */
 
 * {
     box-sizing: border-box;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
+html {
     width: 100%;
     min-height: 100%;
-
-    font-family:
-        Arial,
-        "Tahoma",
-        sans-serif;
+    background: #020617;
 }
 
 body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
     min-height: 100vh;
+
+    font-family:
+        "Cairo",
+        "Tahoma",
+        "Arial",
+        sans-serif;
+
+    color: #f8fafc;
+
+    overflow-x: hidden;
 
     background:
         radial-gradient(
-            circle at top,
-            #1e3a8a 0%,
-            #0f172a 45%,
+            circle at 50% -10%,
+            rgba(37, 99, 235, 0.35),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 10% 90%,
+            rgba(124, 58, 237, 0.18),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(14, 165, 233, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #020617 0%,
+            #071129 45%,
             #020617 100%
         );
+}
 
-    color: #ffffff;
+
+/* =========================================================
+   BACKGROUND GRID
+========================================================= */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.16;
+
+    background-image:
+        linear-gradient(
+            rgba(96, 165, 250, 0.12) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(96, 165, 250, 0.12) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 90%
+        );
+}
+
+
+/* =========================================================
+   AMBIENT LIGHT
+========================================================= */
+
+body::after {
+    content: "";
+
+    position: fixed;
+
+    width: 420px;
+    height: 420px;
+
+    top: -220px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        rgba(37, 99, 235, 0.12);
+
+    filter: blur(70px);
+
+    pointer-events: none;
 }
 
 
@@ -40,27 +131,42 @@ body {
 ========================================================= */
 
 #level0App {
+    position: relative;
+
+    z-index: 2;
+
     width: 100%;
     min-height: 100vh;
 
-    padding: 25px 15px;
+    padding:
+        35px
+        20px
+        50px;
 
     display: flex;
-    justify-content: center;
+
     align-items: center;
+    justify-content: center;
 }
 
 
 /* =========================================================
-   SCREENS
+   SECTIONS
 ========================================================= */
 
 #level0Story,
 #level0Investigation,
 #level0Complete {
     width: 100%;
-    max-width: 850px;
+    max-width: 900px;
+
+    animation:
+        level0Appear
+        0.55s
+        ease
+        both;
 }
+
 
 [hidden] {
     display: none !important;
@@ -68,137 +174,390 @@ body {
 
 
 /* =========================================================
-   CARD
+   MAIN CARD
 ========================================================= */
 
 .level0-card {
+    position: relative;
+
     width: 100%;
 
-    padding: 35px 25px;
+    padding:
+        48px
+        45px;
 
-    background: #111827;
+    border-radius: 30px;
 
-    border: 1px solid #334155;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 23, 42, 0.96),
+            rgba(8, 15, 32, 0.94)
+        );
 
-    border-radius: 24px;
-
-    text-align: center;
+    border:
+        1px solid
+        rgba(96, 165, 250, 0.22);
 
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.55);
+        0 35px 100px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    overflow: hidden;
 }
 
 
 /* =========================================================
-   TEXT
+   CARD TOP LIGHT
+========================================================= */
+
+.level0-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+
+    width: 80%;
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #60a5fa,
+            #a78bfa,
+            #60a5fa,
+            transparent
+        );
+
+    opacity: 0.8;
+
+    box-shadow:
+        0 0 20px
+        rgba(96, 165, 250, 0.7);
+}
+
+
+/* =========================================================
+   CARD GLOW
+========================================================= */
+
+.level0-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    right: -150px;
+    bottom: -150px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(37, 99, 235, 0.12);
+
+    filter: blur(50px);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   SCENE NUMBER
 ========================================================= */
 
 #level0SceneNumber {
-    margin-bottom: 20px;
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 34px;
+
+    padding:
+        7px
+        15px;
+
+    margin-bottom: 30px;
+
+    border:
+        1px solid
+        rgba(96, 165, 250, 0.3);
+
+    border-radius: 999px;
+
+    background:
+        rgba(37, 99, 235, 0.09);
 
     color: #93c5fd;
 
-    font-size: 13px;
-    font-weight: bold;
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 12px;
+
+    font-weight: 800;
 
     letter-spacing: 2px;
-}
 
-#level0StoryIcon,
-.level0-icon {
-    margin-bottom: 20px;
-
-    font-size: 65px;
-
-    line-height: 1;
-}
-
-.level0-card h1 {
-    margin: 0 0 20px;
-
-    color: #ffffff;
-
-    font-size: 30px;
-    font-weight: 900;
-
-    line-height: 1.4;
-}
-
-.level0-card h2 {
-    margin: 0 0 15px;
-
-    color: #ffffff;
-
-    font-size: 24px;
-}
-
-.level0-card p {
-    margin: 0 auto 25px;
-
-    color: #e5e7eb;
-
-    font-size: 18px;
-
-    line-height: 2;
+    text-transform: uppercase;
 }
 
 
 /* =========================================================
-   MAIN BUTTON
+   ICON
+========================================================= */
+
+#level0StoryIcon,
+.level0-icon {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 110px;
+    height: 110px;
+
+    margin:
+        0
+        auto
+        28px;
+
+    border-radius: 30px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(59, 130, 246, 0.22),
+            rgba(30, 41, 59, 0.4)
+        );
+
+    border:
+        1px solid
+        rgba(96, 165, 250, 0.25);
+
+    box-shadow:
+        0 0 45px
+        rgba(37, 99, 235, 0.2);
+
+    font-size: 58px;
+
+    line-height: 1;
+
+    animation:
+        iconFloat
+        3.5s
+        ease-in-out
+        infinite;
+}
+
+
+/* =========================================================
+   HEADINGS
+========================================================= */
+
+.level0-card h1 {
+    position: relative;
+
+    margin:
+        0
+        auto
+        22px;
+
+    max-width: 760px;
+
+    color: #ffffff;
+
+    font-size: clamp(
+        26px,
+        4vw,
+        42px
+    );
+
+    font-weight: 900;
+
+    line-height: 1.4;
+
+    letter-spacing: -0.5px;
+}
+
+.level0-card h2 {
+    margin:
+        0
+        0
+        18px;
+
+    color: #f8fafc;
+
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   STORY TEXT
+========================================================= */
+
+.level0-card p {
+    position: relative;
+
+    max-width: 720px;
+
+    margin:
+        0
+        auto
+        32px;
+
+    color: #cbd5e1;
+
+    font-size: 18px;
+
+    font-weight: 500;
+
+    line-height: 2.05;
+}
+
+
+/* =========================================================
+   NEXT / BACK BUTTONS
 ========================================================= */
 
 #level0NextBtn,
 #level0BackBtn {
-    border: 0;
+    position: relative;
 
-    padding: 14px 30px;
+    min-width: 190px;
 
-    border-radius: 14px;
+    padding:
+        15px
+        28px;
 
-    background: #2563eb;
+    border: none;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
 
     color: #ffffff;
 
+    font-family: inherit;
+
     font-size: 16px;
-    font-weight: bold;
+
+    font-weight: 900;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    box-shadow:
+        0 12px 30px
+        rgba(37, 99, 235, 0.3);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
 }
 
 #level0NextBtn:hover,
 #level0BackBtn:hover {
-    background: #1d4ed8;
+    transform:
+        translateY(-4px);
 
-    transform: translateY(-2px);
+    filter:
+        brightness(1.08);
+
+    box-shadow:
+        0 18px 40px
+        rgba(37, 99, 235, 0.42);
+}
+
+#level0NextBtn:active,
+#level0BackBtn:active {
+    transform:
+        translateY(-1px)
+        scale(0.98);
 }
 
 
 /* =========================================================
-   CLUES
+   INVESTIGATION HEADER
+========================================================= */
+
+#level0Investigation .level0-card > .level0-icon {
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   CLUES COUNTER
 ========================================================= */
 
 #level0Clues {
-    margin: 20px 0 25px;
+    position: relative;
 
-    padding: 15px;
+    display: flex;
 
-    background: #172554;
+    align-items: center;
+    justify-content: center;
 
-    border: 1px solid #1e40af;
+    gap: 8px;
 
-    border-radius: 14px;
+    margin:
+        25px
+        auto
+        30px;
 
-    color: #dbeafe;
+    width: fit-content;
 
-    font-size: 17px;
+    padding:
+        11px
+        20px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(30, 41, 59, 0.75);
+
+    border:
+        1px solid
+        rgba(96, 165, 250, 0.22);
+
+    color: #cbd5e1;
+
+    font-size: 15px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.04);
 }
 
 #level0ClueCount {
+    min-width: 30px;
+
     color: #60a5fa;
 
     font-size: 20px;
+
+    font-weight: 900;
 }
 
 
@@ -212,25 +571,48 @@ body {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 15px;
+    gap: 18px;
 
-    margin-bottom: 25px;
+    width: 100%;
+
+    margin:
+        0
+        0
+        28px;
 }
 
+
+/* =========================================================
+   LOCATION BUTTON
+========================================================= */
+
 .level0-location {
-    min-height: 130px;
+    position: relative;
 
-    padding: 15px;
+    min-height: 165px;
 
-    border: 1px solid #334155;
+    padding: 25px 18px;
 
-    border-radius: 18px;
+    border:
+        1px solid
+        rgba(71, 85, 105, 0.7);
 
-    background: #1e293b;
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 41, 59, 0.9),
+            rgba(15, 23, 42, 0.9)
+        );
 
     color: #ffffff;
 
     font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 800;
 
     cursor: pointer;
 
@@ -242,34 +624,136 @@ body {
 
     justify-content: center;
 
-    gap: 10px;
+    gap: 14px;
 
-    transition: 0.2s;
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
 }
+
+
+/* Location shine */
+
+.level0-location::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 30%,
+            rgba(255,255,255,0.05) 50%,
+            transparent 70%
+        );
+
+    transform:
+        translateX(120%);
+
+    transition:
+        transform 0.6s ease;
+}
+
+.level0-location:hover::before {
+    transform:
+        translateX(-120%);
+}
+
+
+/* Location hover */
 
 .level0-location:hover {
-    background: #1e40af;
+    transform:
+        translateY(-6px);
 
-    transform: translateY(-3px);
+    border-color:
+        rgba(96, 165, 250, 0.65);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 64, 175, 0.42),
+            rgba(15, 23, 42, 0.95)
+        );
+
+    box-shadow:
+        0 18px 40px
+        rgba(15, 23, 42, 0.5),
+        0 0 25px
+        rgba(37, 99, 235, 0.12);
 }
 
+
+/* Disabled / found */
+
 .level0-location:disabled {
-    opacity: 0.35;
+    opacity: 0.45;
 
     cursor: default;
 
     transform: none;
+
+    border-color:
+        rgba(71, 85, 105, 0.35);
+
+    box-shadow: none;
 }
 
+.level0-location.found {
+    border-color:
+        rgba(34, 197, 94, 0.35);
+
+    background:
+        rgba(20, 83, 45, 0.2);
+}
+
+
+/* =========================================================
+   LOCATION ICON
+========================================================= */
+
 .location-icon {
-    font-size: 40px;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 65px;
+    height: 65px;
+
+    border-radius: 19px;
+
+    background:
+        rgba(37, 99, 235, 0.13);
+
+    border:
+        1px solid
+        rgba(96, 165, 250, 0.2);
+
+    font-size: 34px;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.level0-location:hover .location-icon {
+    transform:
+        scale(1.1)
+        rotate(-3deg);
 }
 
 .level0-location span:last-child {
-    color: #ffffff;
+    color: #f8fafc;
 
     font-size: 15px;
-    font-weight: bold;
+
+    font-weight: 800;
 }
 
 
@@ -278,16 +762,76 @@ body {
 ========================================================= */
 
 #level0Puzzle {
-    margin-top: 25px;
+    position: relative;
 
-    padding: 25px;
+    margin-top: 30px;
 
-    background: #0f172a;
+    padding: 30px;
 
-    border: 1px solid #334155;
+    border-radius: 24px;
 
-    border-radius: 18px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(2, 6, 23, 0.92),
+            rgba(15, 23, 42, 0.85)
+        );
+
+    border:
+        1px solid
+        rgba(167, 139, 250, 0.3);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0, 0, 0, 0.3);
+
+    animation:
+        puzzleAppear
+        0.45s
+        ease
+        both;
 }
+
+#level0Puzzle::before {
+    content: "CLASSIFIED";
+
+    position: absolute;
+
+    top: 14px;
+    left: 20px;
+
+    color:
+        rgba(167, 139, 250, 0.4);
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+}
+
+#level0Puzzle h2 {
+    margin-top: 5px;
+
+    color: #ddd6fe;
+
+    font-size: 26px;
+}
+
+#level0Puzzle p {
+    margin-bottom: 25px;
+
+    color: #94a3b8;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   PUZZLE OPTIONS
+========================================================= */
 
 #level0PuzzleOptions {
     display: grid;
@@ -295,57 +839,95 @@ body {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 12px;
-
-    margin-top: 20px;
+    gap: 14px;
 }
 
 #level0PuzzleOptions button {
-    min-height: 55px;
+    min-height: 62px;
 
-    padding: 12px;
+    padding: 12px 18px;
 
-    border: 1px solid #475569;
+    border:
+        1px solid
+        rgba(71, 85, 105, 0.8);
 
-    border-radius: 12px;
+    border-radius: 15px;
 
-    background: #1e293b;
+    background:
+        rgba(30, 41, 59, 0.9);
 
-    color: #ffffff;
+    color: #f8fafc;
 
-    font-family: inherit;
+    font-family:
+        "Courier New",
+        monospace;
 
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 17px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 #level0PuzzleOptions button:hover {
-    background: #2563eb;
+    transform:
+        translateY(-3px);
 
-    border-color: #60a5fa;
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4338ca
+        );
 
-    transform: translateY(-2px);
+    border-color:
+        #60a5fa;
+
+    box-shadow:
+        0 12px 25px
+        rgba(37, 99, 235, 0.25);
+}
+
+#level0PuzzleOptions button:active {
+    transform:
+        scale(0.97);
 }
 
 
 /* =========================================================
-   MESSAGE
+   INVESTIGATION MESSAGE
 ========================================================= */
 
 #level0InvestigationMessage {
     min-height: 30px;
 
-    margin-top: 20px;
+    margin-top: 22px;
+
+    padding:
+        0
+        10px;
 
     color: #fbbf24;
 
-    font-size: 16px;
+    font-size: 15px;
 
-    font-weight: bold;
+    font-weight: 800;
+
+    line-height: 1.8;
+
+    animation:
+        messageAppear
+        0.3s
+        ease
+        both;
 }
 
 
@@ -354,23 +936,179 @@ body {
 ========================================================= */
 
 #level0Reward {
-    margin: 25px auto;
+    position: relative;
 
-    padding: 20px;
+    width: 100%;
 
-    background: #14532d;
+    max-width: 420px;
 
-    border: 1px solid #22c55e;
+    margin:
+        30px
+        auto
+        32px;
 
-    border-radius: 16px;
+    padding:
+        25px
+        20px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 83, 45, 0.55),
+            rgba(6, 78, 59, 0.3)
+        );
+
+    border:
+        1px solid
+        rgba(74, 222, 128, 0.35);
 
     color: #ffffff;
 
     font-size: 20px;
 
-    font-weight: bold;
+    font-weight: 900;
 
     line-height: 2;
+
+    box-shadow:
+        0 0 40px
+        rgba(34, 197, 94, 0.12);
+}
+
+#level0Reward::before {
+    content: "REWARD UNLOCKED";
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #86efac;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes level0Appear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+@keyframes iconFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0);
+    }
+
+    50% {
+        transform:
+            translateY(-7px);
+    }
+
+}
+
+
+@keyframes puzzleAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+@keyframes messageAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+    #level0App {
+        padding:
+            25px
+            15px
+            40px;
+    }
+
+    .level0-card {
+        padding:
+            38px
+            25px;
+    }
+
+    #level0Locations {
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 12px;
+    }
+
+    .level0-location {
+        min-height: 145px;
+
+        padding:
+            18px
+            10px;
+    }
+
 }
 
 
@@ -378,51 +1116,248 @@ body {
    MOBILE
 ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
 
-    #level0App {
-        padding: 15px 10px;
-
-        align-items: flex-start;
+    body {
+        background:
+            radial-gradient(
+                circle at 50% 0%,
+                rgba(37, 99, 235, 0.25),
+                transparent 35%
+            ),
+            linear-gradient(
+                160deg,
+                #020617,
+                #071129,
+                #020617
+            );
     }
 
-    .level0-card {
-        padding: 28px 16px;
 
-        border-radius: 20px;
+    #level0App {
+        min-height: 100vh;
+
+        padding:
+            14px
+            10px
+            30px;
+
+        align-items:
+            flex-start;
+    }
+
+
+    #level0Story,
+    #level0Investigation,
+    #level0Complete {
+        margin-top: 10px;
+    }
+
+
+    .level0-card {
+        padding:
+            30px
+            16px;
+
+        border-radius: 24px;
+    }
+
+
+    #level0SceneNumber {
+        margin-bottom: 24px;
+
+        font-size: 10px;
+
+        letter-spacing: 1.5px;
+    }
+
+
+    #level0StoryIcon,
+    .level0-icon {
+        width: 88px;
+        height: 88px;
+
+        margin-bottom: 23px;
+
+        border-radius: 25px;
+
+        font-size: 46px;
+    }
+
+
+    .level0-card h1 {
+        font-size: 25px;
+
+        line-height: 1.45;
+    }
+
+
+    .level0-card h2 {
+        font-size: 22px;
+    }
+
+
+    .level0-card p {
+        font-size: 15.5px;
+
+        line-height: 1.95;
+    }
+
+
+    #level0NextBtn,
+    #level0BackBtn {
+        width: 100%;
+
+        min-height: 54px;
+
+        padding:
+            14px
+            18px;
+    }
+
+
+    #level0Clues {
+        width: 100%;
+
+        margin:
+            20px
+            0
+            25px;
+
+        font-size: 14px;
+    }
+
+
+    #level0Locations {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+    }
+
+
+    .level0-location {
+        min-height: 82px;
+
+        padding:
+            12px
+            16px;
+
+        border-radius: 17px;
+
+        flex-direction: row;
+
+        justify-content:
+            flex-start;
+
+        text-align: right;
+
+        gap: 14px;
+    }
+
+
+    .location-icon {
+        flex: 0 0 auto;
+
+        width: 53px;
+        height: 53px;
+
+        border-radius: 15px;
+
+        font-size: 27px;
+    }
+
+
+    .level0-location span:last-child {
+        font-size: 14px;
+    }
+
+
+    #level0Puzzle {
+        padding:
+            24px
+            15px;
+
+        border-radius: 19px;
+    }
+
+
+    #level0PuzzleOptions {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    #level0PuzzleOptions button {
+        min-height: 56px;
+
+        font-size: 16px;
+    }
+
+
+    #level0InvestigationMessage {
+        font-size: 14px;
+    }
+
+
+    #level0Reward {
+        padding:
+            20px
+            15px;
+
+        font-size: 18px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .level0-card {
+        padding:
+            25px
+            12px;
+    }
+
+    .level0-card h1 {
+        font-size: 22px;
+    }
+
+    .level0-card p {
+        font-size: 14px;
     }
 
     #level0StoryIcon,
     .level0-icon {
-        font-size: 55px;
+        width: 78px;
+        height: 78px;
+
+        font-size: 40px;
     }
 
-    .level0-card h1 {
-        font-size: 24px;
-    }
+}
 
-    .level0-card h2 {
-        font-size: 21px;
-    }
 
-    .level0-card p {
-        font-size: 16px;
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
 
-        line-height: 1.8;
-    }
+@media (prefers-reduced-motion: reduce) {
 
-    #level0Locations {
-        grid-template-columns: 1fr;
-    }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
 
-    .level0-location {
-        min-height: 85px;
+        animation-iteration-count: 1 !important;
 
-        flex-direction: row;
-    }
+        scroll-behavior: auto !important;
 
-    #level0PuzzleOptions {
-        grid-template-columns: 1fr;
+        transition-duration: 0.01ms !important;
     }
 
 }
