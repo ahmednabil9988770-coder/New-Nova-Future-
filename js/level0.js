@@ -1,8 +1,3 @@
-/* =========================================================
-   NOVA FUTURE — LEVEL 0
-   CLASSIFIED INVESTIGATION
-========================================================= */
-
 import { auth, db } from "./firebase-config.js";
 
 import {
@@ -18,40 +13,54 @@ import {
 
 
 /* =========================================================
-   ELEMENTS
-========================================================= */
-
-const storyScreen = document.getElementById("level0Story");
-const investigationScreen = document.getElementById("level0Investigation");
-const completeScreen = document.getElementById("level0Complete");
-
-const sceneNumber = document.getElementById("level0SceneNumber");
-const storyIcon = document.getElementById("level0StoryIcon");
-const storyTitle = document.getElementById("level0StoryTitle");
-const storyText = document.getElementById("level0StoryText");
-
-const nextBtn = document.getElementById("level0NextBtn");
-const backBtn = document.getElementById("level0BackBtn");
-
-const clueCount = document.getElementById("level0ClueCount");
-const puzzle = document.getElementById("level0Puzzle");
-const investigationMessage =
-    document.getElementById("level0InvestigationMessage");
-
-const locationButtons =
-    document.querySelectorAll(".level0-location");
-
-const puzzleButtons =
-    document.querySelectorAll(
-        ".level0-puzzle-options button"
-    );
-
-
-/* =========================================================
-   USER
+   NOVA FUTURE — LEVEL 0
+   CLASSIFIED INVESTIGATION
 ========================================================= */
 
 let currentUser = null;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const storySection =
+    document.getElementById("level0Story");
+
+const investigationSection =
+    document.getElementById("level0Investigation");
+
+const completeSection =
+    document.getElementById("level0Complete");
+
+const sceneNumber =
+    document.getElementById("level0SceneNumber");
+
+const storyIcon =
+    document.getElementById("level0StoryIcon");
+
+const storyTitle =
+    document.getElementById("level0StoryTitle");
+
+const storyText =
+    document.getElementById("level0StoryText");
+
+const nextButton =
+    document.getElementById("level0NextBtn");
+
+const clueCount =
+    document.getElementById("level0ClueCount");
+
+const puzzle =
+    document.getElementById("level0Puzzle");
+
+const investigationMessage =
+    document.getElementById(
+        "level0InvestigationMessage"
+    );
+
+const backButton =
+    document.getElementById("level0BackBtn");
 
 
 /* =========================================================
@@ -64,71 +73,67 @@ const scenes = [
         icon: "🌙",
         title: "الساعة 11:47 مساءً",
         text:
-            "كانت شخصيتك داخل Nova Future تستعد لإنهاء آخر مهمة لها..."
+            "كانت شخصية الطالب داخل Nova Future تستعد لإنهاء آخر مهمة في هذا اليوم..."
     },
 
     {
         icon: "⚡",
         title: "انطفأت الأنوار",
         text:
-            "فجأة انطفأت الأنوار. ساد الصمت... ثم ظهرت خطوات تقترب."
+            "فجأة انطفأت جميع الأنوار. ساد الصمت المكان... ثم بدأت خطوات تقترب ببطء."
     },
 
     {
         icon: "📺",
         title: "الرسالة الغامضة",
         text:
-            "اشتعلت إحدى الشاشات وظهرت رسالة غريبة: لقد اخترت الشخص الخطأ."
+            "ظهرت رسالة غريبة على الشاشة تقول: «لقد اخترت الشخص الخطأ.»"
     },
 
     {
         icon: "🚪",
         title: "الباب المغلق",
         text:
-            "أُغلق الباب فجأة، وظهر عد تنازلي على الشاشة."
+            "أُغلق الباب فجأة. ظهر عد تنازلي على الشاشة... 10... 9... 8..."
     },
 
     {
         icon: "💨",
         title: "الاختفاء",
         text:
-            "وصل العد إلى الصفر... وفي لحظة واحدة اختفت الشخصية."
+            "وصل العد إلى الصفر... وفي لحظة واحدة اختفت الشخصية تمامًا."
     },
 
     {
         icon: "🔐",
         title: "الرمز",
         text:
-            "وجدت على الأرض قطعة صغيرة تحمل رمزًا غامضًا."
+            "على الأرض ظهرت قطعة صغيرة تحمل رمزًا غامضًا... لكن لا أحد يعرف ماذا يعني."
     },
 
     {
         icon: "👁️",
         title: "شخص ما يراقب",
         text:
-            "ظهرت رسالة جديدة: إذا كنت تريد استعادتها... ابدأ بالبحث."
+            "ظهرت رسالة أخيرة: «إذا كنت تريد استعادتها... ابدأ بالبحث.»"
     },
 
     {
         icon: "🕵️",
         title: "بداية المطاردة",
         text:
-            "من هذه اللحظة أصبحت أنت المحقق. عليك جمع الأدلة."
+            "من هذه اللحظة أصبحت أنت المحقق. أمامك ثلاث أماكن... وثلاثة أدلة."
     },
 
     {
         icon: "❓",
         title: "من خطف الشخصية؟",
         text:
-            "وصلت إلى بداية التحقيق الحقيقي. ابحث عن الأدلة الثلاثة."
+            "قبل أن تبدأ التحقيق، تذكر جيدًا: كل دليل يمكن أن يقودك إلى الحقيقة."
     }
 
 ];
 
-
-/* =========================================================
-   PROGRESS
-========================================================= */
 
 let progress = {
 
@@ -154,7 +159,7 @@ let progress = {
 
 
 /* =========================================================
-   FIREBASE SAVE
+   SAVE
 ========================================================= */
 
 async function saveProgress() {
@@ -166,26 +171,34 @@ async function saveProgress() {
     try {
 
         await setDoc(
+
             doc(
                 db,
                 "users",
                 currentUser.uid
             ),
+
             {
                 level0: {
+
                     ...progress,
-                    lastPlayed: serverTimestamp()
+
+                    lastPlayed:
+                        serverTimestamp()
+
                 }
             },
+
             {
                 merge: true
             }
+
         );
 
     } catch (error) {
 
         console.error(
-            "LEVEL 0 Firebase Save Error:",
+            "LEVEL 0 SAVE ERROR:",
             error
         );
 
@@ -195,7 +208,7 @@ async function saveProgress() {
 
 
 /* =========================================================
-   LOAD FIREBASE
+   LOAD
 ========================================================= */
 
 async function loadProgress() {
@@ -206,22 +219,30 @@ async function loadProgress() {
 
     try {
 
-        const userRef = doc(
-            db,
-            "users",
-            currentUser.uid
-        );
+        const snapshot =
+            await getDoc(
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid
+                )
+            );
 
-        const snapshot = await getDoc(userRef);
+        if (!snapshot.exists()) {
+            return;
+        }
 
-        if (
-            snapshot.exists() &&
-            snapshot.data().level0
-        ) {
+        const data =
+            snapshot.data();
+
+        if (data.level0) {
 
             progress = {
+
                 ...progress,
-                ...snapshot.data().level0
+
+                ...data.level0
+
             };
 
         }
@@ -229,7 +250,7 @@ async function loadProgress() {
     } catch (error) {
 
         console.error(
-            "LEVEL 0 Firebase Load Error:",
+            "LEVEL 0 LOAD ERROR:",
             error
         );
 
@@ -252,8 +273,15 @@ function renderScene() {
         return;
     }
 
+    storySection.hidden = false;
+
+    investigationSection.hidden = true;
+
+    completeSection.hidden = true;
+
+
     sceneNumber.textContent =
-        `LEVEL 0 • ${progress.currentScene + 1}/${scenes.length}`;
+        `LEVEL 0 • SCENE ${progress.currentScene + 1}/9`;
 
     storyIcon.textContent =
         scene.icon;
@@ -264,16 +292,32 @@ function renderScene() {
     storyText.textContent =
         scene.text;
 
+
+    if (
+        progress.currentScene ===
+        scenes.length - 1
+    ) {
+
+        nextButton.textContent =
+            "🔎 ابدأ التحقيق";
+
+    } else {
+
+        nextButton.textContent =
+            "التالي →";
+
+    }
+
 }
 
 
 /* =========================================================
-   NEXT STORY
+   NEXT SCENE
 ========================================================= */
 
-nextBtn.addEventListener(
+nextButton.addEventListener(
     "click",
-    async () => {
+    async function () {
 
         if (
             progress.currentScene <
@@ -286,48 +330,50 @@ nextBtn.addEventListener(
 
             renderScene();
 
-        } else {
-
-            progress.investigationStarted = true;
-
-            await saveProgress();
-
-            startInvestigation();
+            return;
 
         }
+
+        progress.investigationStarted =
+            true;
+
+        await saveProgress();
+
+        startInvestigation();
 
     }
 );
 
 
 /* =========================================================
-   START INVESTIGATION
+   INVESTIGATION
 ========================================================= */
 
-function startInvestigation() {
+const clueTexts = {
 
-    storyScreen.hidden = true;
+    dashboard:
+        "وجدت في لوحة الطالب أثرًا غريبًا... الساعة تشير إلى 11:47.",
 
-    completeScreen.hidden = true;
+    library:
+        "وجدت في المكتبة رسالة صغيرة تقول: البداية ليست حيث تعتقد.",
 
-    investigationScreen.hidden = false;
+    terminal:
+        "وجدت في المحطة السرية الرمز: NF-07"
 
-    updateInvestigation();
-
-}
+};
 
 
-/* =========================================================
-   UPDATE INVESTIGATION
-========================================================= */
-
-function updateInvestigation() {
+function updateInvestigationUI() {
 
     clueCount.textContent =
         progress.cluesFound.length;
 
-    locationButtons.forEach(
-        button => {
+
+    document
+        .querySelectorAll(
+            ".level0-location"
+        )
+        .forEach(button => {
 
             const location =
                 button.dataset.location;
@@ -339,12 +385,14 @@ function updateInvestigation() {
 
                 button.disabled = true;
 
-                button.style.opacity = "0.5";
+                button.classList.add(
+                    "found"
+                );
 
             }
 
-        }
-    );
+        });
+
 
     if (
         progress.cluesFound.length >= 3
@@ -358,87 +406,90 @@ function updateInvestigation() {
 
 
 /* =========================================================
-   LOCATION CLUES
+   START INVESTIGATION
 ========================================================= */
 
-const clues = {
+function startInvestigation() {
 
-    dashboard: {
-        text: "وجدت دليلًا على لوحة الطالب: 11-47"
-    },
+    storySection.hidden = true;
 
-    library: {
-        text:
-            "وجدت في المكتبة رسالة: البداية ليست حيث تعتقد."
-    },
+    investigationSection.hidden = false;
 
-    terminal: {
-        text:
-            "وجدت في المحطة السرية الرمز: NF-07"
-    }
+    completeSection.hidden = true;
 
-};
+    updateInvestigationUI();
+
+}
 
 
-locationButtons.forEach(
-    button => {
+/* =========================================================
+   LOCATION CLICK
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".level0-location"
+    )
+    .forEach(button => {
 
         button.addEventListener(
             "click",
-            async () => {
+            async function () {
 
                 const location =
-                    button.dataset.location;
+                    this.dataset.location;
+
 
                 if (
                     progress.locationsVisited
                         .includes(location)
                 ) {
+
                     return;
-                }
-
-                progress.locationsVisited.push(
-                    location
-                );
-
-                if (
-                    !progress.cluesFound
-                        .includes(location)
-                ) {
-
-                    progress.cluesFound.push(
-                        location
-                    );
 
                 }
+
+
+                progress.locationsVisited
+                    .push(location);
+
+
+                progress.cluesFound
+                    .push(location);
+
 
                 investigationMessage.textContent =
-                    `🔎 ${clues[location].text}`;
+                    "🔎 " +
+                    clueTexts[location];
+
 
                 await saveProgress();
 
-                updateInvestigation();
+                updateInvestigationUI();
 
             }
         );
 
-    }
-);
+    });
 
 
 /* =========================================================
    PUZZLE
 ========================================================= */
 
-puzzleButtons.forEach(
-    button => {
+document
+    .querySelectorAll(
+        "#level0PuzzleOptions button"
+    )
+    .forEach(button => {
 
         button.addEventListener(
             "click",
-            async () => {
+            async function () {
 
                 const answer =
-                    button.dataset.answer;
+                    this.dataset.answer;
+
 
                 if (
                     answer === "NF-07"
@@ -446,22 +497,28 @@ puzzleButtons.forEach(
 
                     if (
                         !progress.puzzlesSolved
-                            .includes("firstPuzzle")
+                            .includes(
+                                "firstPuzzle"
+                            )
                     ) {
 
-                        progress.puzzlesSolved.push(
-                            "firstPuzzle"
-                        );
+                        progress.puzzlesSolved
+                            .push(
+                                "firstPuzzle"
+                            );
 
-                        progress.finalScore += 100;
+                        progress.finalScore +=
+                            100;
 
                     }
+
+
+                    progress.completed =
+                        true;
 
                     progress.investigationCompleted =
                         true;
 
-                    progress.completed =
-                        true;
 
                     await saveProgress();
 
@@ -472,15 +529,14 @@ puzzleButtons.forEach(
                 } else {
 
                     investigationMessage.textContent =
-                        "❌ الرمز غير صحيح... حاول مرة أخرى.";
+                        "❌ الرمز غير صحيح... ارجع للأدلة وحاول مرة أخرى.";
 
                 }
 
             }
         );
 
-    }
-);
+    });
 
 
 /* =========================================================
@@ -502,58 +558,80 @@ async function giveReward() {
                 currentUser.uid
             );
 
+
         const snapshot =
             await getDoc(userRef);
 
-        const userData =
+
+        const data =
             snapshot.exists()
                 ? snapshot.data()
                 : {};
 
-        let xp =
-            Number(userData.xp || 0);
 
         const badges =
-            Array.isArray(userData.badges)
-                ? [...userData.badges]
+            Array.isArray(data.badges)
+                ? [...data.badges]
                 : [];
 
-        /*
-         * المكافأة مرة واحدة فقط
-         */
 
         if (
-            !badges.includes("novaInvestigator")
+            badges.includes(
+                "novaInvestigator"
+            )
         ) {
 
-            xp += 50;
-
-            badges.push(
-                "novaInvestigator"
-            );
+            return;
 
         }
 
-        const level =
-            Math.floor(xp / 100) + 1;
+
+        const oldXP =
+            Number(data.xp || 0);
+
+
+        const newXP =
+            oldXP + 50;
+
+
+        const newLevel =
+            Math.floor(
+                newXP / 100
+            ) + 1;
+
+
+        badges.push(
+            "novaInvestigator"
+        );
+
 
         await setDoc(
+
             userRef,
+
             {
-                xp: xp,
-                level: level,
+
+                xp: newXP,
+
+                level: newLevel,
+
                 badges: badges,
-                updatedAt: serverTimestamp()
+
+                updatedAt:
+                    serverTimestamp()
+
             },
+
             {
                 merge: true
             }
+
         );
 
     } catch (error) {
 
         console.error(
-            "LEVEL 0 Reward Error:",
+            "LEVEL 0 REWARD ERROR:",
             error
         );
 
@@ -563,33 +641,37 @@ async function giveReward() {
 
 
 /* =========================================================
-   COMPLETE SCREEN
+   COMPLETE
 ========================================================= */
 
 function showComplete() {
 
-    storyScreen.hidden = true;
+    storySection.hidden = true;
 
-    investigationScreen.hidden = true;
+    investigationSection.hidden = true;
 
-    completeScreen.hidden = false;
+    completeSection.hidden = false;
 
 }
 
 
 /* =========================================================
-   BACK TO PLATFORM
+   BACK
 ========================================================= */
 
-backBtn.addEventListener(
-    "click",
-    () => {
+if (backButton) {
 
-        window.location.href =
-            "./student.html";
+    backButton.addEventListener(
+        "click",
+        function () {
 
-    }
-);
+            window.location.href =
+                "./student.html";
+
+        }
+    );
+
+}
 
 
 /* =========================================================
@@ -598,9 +680,7 @@ backBtn.addEventListener(
 
 onAuthStateChanged(
     auth,
-    async user => {
-
-        currentUser = user;
+    async function (user) {
 
         if (!user) {
 
@@ -611,7 +691,12 @@ onAuthStateChanged(
 
         }
 
+
+        currentUser = user;
+
+
         await loadProgress();
+
 
         if (
             progress.completed &&
@@ -620,18 +705,23 @@ onAuthStateChanged(
 
             showComplete();
 
-        } else if (
-            progress.investigationStarted &&
-            progress.currentScene >= scenes.length - 1
+            return;
+
+        }
+
+
+        if (
+            progress.investigationStarted
         ) {
 
             startInvestigation();
 
-        } else {
-
-            renderScene();
+            return;
 
         }
+
+
+        renderScene();
 
     }
 );
