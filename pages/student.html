@@ -2606,6 +2606,111 @@
     }
 
 }
+/* =========================================================
+   NOVA LEVEL UP CELEBRATION
+========================================================= */
+
+#novaLevelUpEffect {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+}
+
+#novaLevelUpEffect.nova-levelup-show {
+    opacity: 1;
+}
+
+.nova-levelup-box {
+    width: min(90%, 360px);
+    padding: 30px 22px;
+    border-radius: 28px;
+    text-align: center;
+    background: rgba(20, 20, 30, 0.96);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.35),
+        0 0 40px rgba(255,255,255,0.12);
+    transform: scale(0.7);
+    animation: novaLevelUpBox 0.6s cubic-bezier(.17,.67,.35,1.35) forwards;
+}
+
+@keyframes novaLevelUpBox {
+
+    0% {
+        transform: scale(0.7) rotate(-3deg);
+    }
+
+    60% {
+        transform: scale(1.08) rotate(2deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0);
+    }
+
+}
+
+.nova-levelup-stars {
+    font-size: 28px;
+    margin-bottom: 10px;
+    animation: novaStars 1s ease-in-out infinite;
+}
+
+@keyframes novaStars {
+
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+}
+
+.nova-levelup-title {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.nova-levelup-level {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.nova-levelup-subtitle {
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+
+    .nova-levelup-box {
+        width: 86%;
+        padding: 26px 18px;
+    }
+
+    .nova-levelup-title {
+        font-size: 30px;
+    }
+
+    .nova-levelup-level {
+        font-size: 21px;
+    }
+
+}
+        
     </style>
 
 </head>
