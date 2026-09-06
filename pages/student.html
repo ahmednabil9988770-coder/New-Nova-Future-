@@ -8008,15 +8008,33 @@ document.addEventListener("DOMContentLoaded", function () {
     <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const button = document.getElementById("novaChallengeBtn");
-    const levelZero = document.getElementById("novaLevelZero");
-    const closeButton = document.getElementById("novaLevelZeroClose");
+    /* =====================================================
+       NOVA FUTURE - LEVEL 0
+       STORY + SAVE PROGRESS
+    ===================================================== */
 
-    if (!button || !levelZero) return;
+    const challengeButton =
+        document.getElementById("novaChallengeBtn");
+
+    const levelZero =
+        document.getElementById("novaLevelZero");
+
+    const startButton =
+        document.getElementById("novaLevelZeroClose");
+
+    if (!challengeButton || !levelZero || !startButton) {
+        return;
+    }
+
+    /* ===============================
+       SECRET BUTTON
+    =============================== */
 
     let lastClick = 0;
 
-    button.addEventListener("click", function () {
+    challengeButton.addEventListener("click", function (event) {
+
+        event.preventDefault();
 
         const now = Date.now();
 
@@ -8043,14 +8061,473 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    if (closeButton) {
-        closeButton.addEventListener("click", function () {
-            levelZero.style.display = "none";
-        });
+
+    /* ===============================
+       STORY DATA
+    =============================== */
+
+    const storyScenes = [
+
+        {
+            title: "🌙 الساعة 11:47 مساءً",
+            text:
+                "كانت شخصيتك داخل Nova Future، " +
+                "تستعد لإنهاء آخر مهمة لها قبل أن تغادر المنصة."
+        },
+
+        {
+            title: "⚡ انطفأت الأنوار",
+            text:
+                "فجأة... انطفأت جميع الأنوار. " +
+                "توقفت الشاشة للحظات، وظهر صوت خطوات يقترب ببطء."
+        },
+
+        {
+            title: "📺 الرسالة الغامضة",
+            text:
+                "عادت الشاشة للعمل، لكن بدلًا من لوحة Nova Future " +
+                "ظهرت رسالة غريبة تقول: " +
+                "\"لقد اخترت الشخص الخطأ.\""
+        },
+
+        {
+            title: "🚪 الباب المغلق",
+            text:
+                "حاولت شخصيتك الخروج، لكن الباب أُغلق أمامها. " +
+                "ثم ظهر عدّ تنازلي غريب على الشاشة."
+        },
+
+        {
+            title: "💨 الاختفاء",
+            text:
+                "وصل العد إلى الصفر... واختفت الشخصية تمامًا. " +
+                "لم يبقَ في مكانها سوى أثر غريب."
+        },
+
+        {
+            title: "🔐 الرمز",
+            text:
+                "على الأرض وجدت شيئًا لم يكن موجودًا من قبل: " +
+                "قطعة صغيرة تحمل رمزًا غامضًا."
+        },
+
+        {
+            title: "👁️ شخص ما يراقب",
+            text:
+                "وقبل أن تلتقط الرمز، ظهرت رسالة جديدة: " +
+                "\"إذا كنت تريد استعادتها... ابدأ بالبحث.\""
+        },
+
+        {
+            title: "🕵️ بداية المطاردة",
+            text:
+                "الآن أصبحت أنت المحقق. " +
+                "الشخصية اختفت، والخاطف ترك خلفه أدلة. " +
+                "لكن السؤال الحقيقي هو..."
+        },
+
+        {
+            title: "❓ من خطف الشخصية؟",
+            text:
+                "وهل كان اختطافها مجرد صدفة؟ " +
+                "أم أن هناك شيئًا أكبر يحدث داخل Nova Future؟"
+        }
+
+    ];
+
+
+    /* ===============================
+       SAVE KEY
+    =============================== */
+
+    const saveKey =
+        "nova_level0_progress";
+
+
+    /* ===============================
+       LOAD PROGRESS
+    =============================== */
+
+    function loadProgress() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(saveKey);
+
+            if (!saved) {
+                return 0;
+            }
+
+            const data =
+                JSON.parse(saved);
+
+            if (
+                data &&
+                typeof data.scene === "number"
+            ) {
+                return data.scene;
+            }
+
+        } catch (error) {
+
+            console.log(
+                "Nova Level 0 save error:",
+                error
+            );
+
+        }
+
+        return 0;
     }
 
+
+    /* ===============================
+       SAVE PROGRESS
+    =============================== */
+
+    function saveProgress(scene) {
+
+        localStorage.setItem(
+            saveKey,
+            JSON.stringify({
+                scene: scene,
+                updatedAt: Date.now()
+            })
+        );
+
+    }
+
+
+    /* ===============================
+       STORY SCREEN
+    =============================== */
+
+    let storyScreen = null;
+
+    let currentScene =
+        loadProgress();
+
+
+    function createStoryScreen() {
+
+        if (storyScreen) {
+            return;
+        }
+
+        storyScreen =
+            document.createElement("div");
+
+        storyScreen.id =
+            "novaStoryScreen";
+
+        storyScreen.innerHTML = `
+
+            <div class="nova-story-card">
+
+                <div class="nova-story-label">
+                    LEVEL 0 · CLASSIFIED
+                </div>
+
+                <h2 id="novaStoryTitle">
+                    القصة
+                </h2>
+
+                <p id="novaStoryText">
+                    ...
+                </p>
+
+                <div class="nova-story-progress">
+                    <span id="novaStorySceneNumber">
+                        1
+                    </span>
+                    /
+                    <span>
+                        ${storyScenes.length}
+                    </span>
+                </div>
+
+                <div class="nova-story-actions">
+
+                    <button
+                        id="novaStoryNext"
+                        type="button"
+                    >
+                        التالي →
+                    </button>
+
+                    <button
+                        id="novaStoryExit"
+                        type="button"
+                    >
+                        خروج
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+        document.body.appendChild(
+            storyScreen
+        );
+
+
+        /* ===============================
+           STORY CSS
+        =============================== */
+
+        const style =
+            document.createElement("style");
+
+        style.textContent = `
+
+            #novaStoryScreen {
+                position: fixed;
+                inset: 0;
+                z-index: 100000;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background:
+                    rgba(3, 7, 18, 0.96);
+                color: white;
+                direction: rtl;
+            }
+
+            .nova-story-card {
+                width: min(650px, 100%);
+                padding: 35px 25px;
+                border-radius: 28px;
+                background:
+                    linear-gradient(
+                        145deg,
+                        #111827,
+                        #1e293b
+                    );
+                box-shadow:
+                    0 25px 80px
+                    rgba(0,0,0,0.55);
+                text-align: center;
+                animation:
+                    novaStoryAppear
+                    0.35s ease;
+            }
+
+            .nova-story-label {
+                font-size: 12px;
+                letter-spacing: 2px;
+                opacity: 0.6;
+                margin-bottom: 18px;
+            }
+
+            #novaStoryTitle {
+                margin: 0 0 20px;
+                font-size: 30px;
+            }
+
+            #novaStoryText {
+                font-size: 18px;
+                line-height: 2;
+                min-height: 120px;
+                margin: 0 0 20px;
+            }
+
+            .nova-story-progress {
+                opacity: 0.6;
+                margin-bottom: 22px;
+            }
+
+            .nova-story-actions {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .nova-story-actions button {
+                border: none;
+                border-radius: 13px;
+                padding: 12px 25px;
+                font-family: inherit;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            #novaStoryNext {
+                background:
+                    var(
+                        --primary-color,
+                        #2563eb
+                    );
+                color: white;
+                min-width: 130px;
+            }
+
+            #novaStoryExit {
+                background: #374151;
+                color: white;
+            }
+
+            @keyframes novaStoryAppear {
+
+                from {
+                    opacity: 0;
+                    transform: scale(0.95)
+                    translateY(15px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1)
+                    translateY(0);
+                }
+
+            }
+
+        `;
+
+        document.head.appendChild(
+            style
+        );
+
+
+        /* ===============================
+           BUTTONS
+        =============================== */
+
+        const nextButton =
+            document.getElementById(
+                "novaStoryNext"
+            );
+
+        const exitButton =
+            document.getElementById(
+                "novaStoryExit"
+            );
+
+
+        nextButton.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    currentScene <
+                    storyScenes.length - 1
+                ) {
+
+                    currentScene++;
+
+                    saveProgress(
+                        currentScene
+                    );
+
+                    renderStory();
+
+                } else {
+
+                    saveProgress(
+                        currentScene
+                    );
+
+                    nextButton.textContent =
+                        "🔎 متابعة التحقيق";
+
+                    nextButton.onclick =
+                        function () {
+
+                            alert(
+                                "🕵️ المرحلة التالية ستبدأ هنا..."
+                            );
+
+                        };
+
+                }
+
+            }
+        );
+
+
+        exitButton.addEventListener(
+            "click",
+            function () {
+
+                storyScreen.style.display =
+                    "none";
+
+            }
+        );
+
+    }
+
+
+    /* ===============================
+       RENDER STORY
+    =============================== */
+
+    function renderStory() {
+
+        if (!storyScreen) {
+            return;
+        }
+
+        const scene =
+            storyScenes[currentScene];
+
+        if (!scene) {
+            currentScene = 0;
+            saveProgress(0);
+            return;
+        }
+
+        document.getElementById(
+            "novaStoryTitle"
+        ).textContent =
+            scene.title;
+
+        document.getElementById(
+            "novaStoryText"
+        ).textContent =
+            scene.text;
+
+        document.getElementById(
+            "novaStorySceneNumber"
+        ).textContent =
+            currentScene + 1;
+
+    }
+
+
+    /* ===============================
+       START STORY
+    =============================== */
+
+    startButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            levelZero.style.display =
+                "none";
+
+            createStoryScreen();
+
+            currentScene =
+                loadProgress();
+
+            renderStory();
+
+            storyScreen.style.display =
+                "flex";
+
+        }
+    );
+
 });
-</script>
+    </script>
 </body>
 
 </html>
