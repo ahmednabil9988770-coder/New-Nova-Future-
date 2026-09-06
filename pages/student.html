@@ -8006,291 +8006,390 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-        
-        <script type="module">
+   <script type="module">
+
+/* =========================================================
+   NOVA FUTURE
+   LEVEL 0 — CLASSIFIED INVESTIGATION
+========================================================= */
+
+import { auth, db } from "../js/firebase-config.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+import {
+    doc,
+    getDoc,
+    setDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
-       NOVA FUTURE - LEVEL 0
-       STORY + FIREBASE SAVE
+       ELEMENTS
     ===================================================== */
 
-    import { auth, db } from "../js/firebase-config.js";
+    const challengeButton =
+        document.getElementById("novaChallengeBtn");
 
-    import {
-        onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    const levelZero =
+        document.getElementById("novaLevelZero");
 
-    import {
-        doc,
-        getDoc,
-        setDoc,
-        serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    const startButton =
+        document.getElementById("novaLevelZeroClose");
+
+    if (!challengeButton || !levelZero || !startButton) {
+        return;
+    }
 
 
-    document.addEventListener("DOMContentLoaded", function () {
+    /* =====================================================
+       USER
+    ===================================================== */
 
-        /* =====================================================
-           ELEMENTS
-        ===================================================== */
+    let currentUser = null;
 
-        const challengeButton =
-            document.getElementById("novaChallengeBtn");
+    onAuthStateChanged(auth, function (user) {
+        currentUser = user;
+    });
 
-        const levelZero =
-            document.getElementById("novaLevelZero");
 
-        const startButton =
-            document.getElementById("novaLevelZeroClose");
+    /* =====================================================
+       SECRET BUTTON
+    ===================================================== */
 
-        if (!challengeButton || !levelZero || !startButton) {
-            return;
+    let lastClick = 0;
+
+    challengeButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            const now = Date.now();
+
+            if (now - lastClick <= 800) {
+
+                levelZero.style.display = "flex";
+
+                const character =
+                    document.getElementById(
+                        "studentCharacter"
+                    );
+
+                if (character) {
+
+                    character.style.transition =
+                        "0.5s ease";
+
+                    character.style.opacity = "0";
+
+                    character.style.transform =
+                        "scale(0.5)";
+                }
+
+                lastClick = 0;
+
+            } else {
+
+                lastClick = now;
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       STORY
+    ===================================================== */
+
+    const storyScenes = [
+
+        {
+            title: "🌙 الساعة 11:47 مساءً",
+            text:
+                "كانت شخصيتك داخل Nova Future، " +
+                "تستعد لإنهاء آخر مهمة لها قبل أن تغادر المنصة."
+        },
+
+        {
+            title: "⚡ انطفأت الأنوار",
+            text:
+                "فجأة... انطفأت جميع الأنوار. " +
+                "توقفت الشاشة للحظات، وظهر صوت خطوات يقترب ببطء."
+        },
+
+        {
+            title: "📺 الرسالة الغامضة",
+            text:
+                "عادت الشاشة للعمل، لكن بدلًا من لوحة Nova Future " +
+                "ظهرت رسالة غريبة تقول: " +
+                "\"لقد اخترت الشخص الخطأ.\""
+        },
+
+        {
+            title: "🚪 الباب المغلق",
+            text:
+                "حاولت شخصيتك الخروج، لكن الباب أُغلق أمامها. " +
+                "ثم ظهر عدّ تنازلي غريب على الشاشة."
+        },
+
+        {
+            title: "💨 الاختفاء",
+            text:
+                "وصل العد إلى الصفر... واختفت الشخصية تمامًا. " +
+                "لم يبقَ في مكانها سوى أثر غريب."
+        },
+
+        {
+            title: "🔐 الرمز",
+            text:
+                "على الأرض وجدت شيئًا لم يكن موجودًا من قبل: " +
+                "قطعة صغيرة تحمل رمزًا غامضًا."
+        },
+
+        {
+            title: "👁️ شخص ما يراقب",
+            text:
+                "وقبل أن تلتقط الرمز، ظهرت رسالة جديدة: " +
+                "\"إذا كنت تريد استعادتها... ابدأ بالبحث.\""
+        },
+
+        {
+            title: "🕵️ بداية المطاردة",
+            text:
+                "الآن أصبحت أنت المحقق. " +
+                "الشخصية اختفت، والخاطف ترك خلفه أدلة. " +
+                "لكن السؤال الحقيقي هو..."
+        },
+
+        {
+            title: "❓ من خطف الشخصية؟",
+            text:
+                "وهل كان اختطافها مجرد صدفة؟ " +
+                "أم أن هناك شيئًا أكبر يحدث داخل Nova Future؟"
         }
 
+    ];
 
-        /* =====================================================
-           CURRENT USER
-        ===================================================== */
 
-        let currentUser = null;
+    /* =====================================================
+       INVESTIGATION DATA
+    ===================================================== */
 
-        onAuthStateChanged(auth, function (user) {
-            currentUser = user;
-        });
+    const investigationPlaces = [
 
+        {
+            id: "dashboard",
+            icon: "💻",
+            title: "لوحة الطالب",
+            description:
+                "هناك شيء غريب ظهر على لوحة الطالب..."
+        },
 
-        /* =====================================================
-           SECRET BUTTON
-        ===================================================== */
+        {
+            id: "library",
+            icon: "📚",
+            title: "المكتبة",
+            description:
+                "بين صفحات أحد الكتب يوجد أثر غير طبيعي."
+        },
 
-        let lastClick = 0;
+        {
+            id: "terminal",
+            icon: "🖥️",
+            title: "المحطة السرية",
+            description:
+                "جهاز مجهول ما زال يعمل رغم إغلاق المنصة."
+        }
 
-        challengeButton.addEventListener(
-            "click",
-            function (event) {
+    ];
 
-                event.preventDefault();
 
-                const now = Date.now();
+    /* =====================================================
+       PROGRESS
+    ===================================================== */
 
-                if (now - lastClick <= 800) {
+    const saveKey =
+        "nova_level0_progress";
 
-                    levelZero.style.display = "flex";
 
-                    const character =
-                        document.getElementById(
-                            "studentCharacter"
-                        );
+    let progress = {
 
-                    if (character) {
+        started: false,
 
-                        character.style.transition =
-                            "0.5s ease";
+        currentScene: 0,
 
-                        character.style.opacity = "0";
+        cluesFound: [],
 
-                        character.style.transform =
-                            "scale(0.5)";
-                    }
+        puzzlesSolved: [],
 
-                    lastClick = 0;
+        locationsVisited: [],
 
-                } else {
+        completed: false,
 
-                    lastClick = now;
+        investigationStarted: false,
 
-                }
+        finalScore: 0,
 
-            }
-        );
+        investigationCompleted: false
 
+    };
 
-        /* =====================================================
-           STORY DATA
-        ===================================================== */
 
-        const storyScenes = [
+    let currentScene = 0;
 
-            {
-                title: "🌙 الساعة 11:47 مساءً",
-                text:
-                    "كانت شخصيتك داخل Nova Future، " +
-                    "تستعد لإنهاء آخر مهمة لها قبل أن تغادر المنصة."
-            },
 
-            {
-                title: "⚡ انطفأت الأنوار",
-                text:
-                    "فجأة... انطفأت جميع الأنوار. " +
-                    "توقفت الشاشة للحظات، وظهر صوت خطوات يقترب ببطء."
-            },
+    /* =====================================================
+       LOCAL LOAD
+    ===================================================== */
 
-            {
-                title: "📺 الرسالة الغامضة",
-                text:
-                    "عادت الشاشة للعمل، لكن بدلًا من لوحة Nova Future " +
-                    "ظهرت رسالة غريبة تقول: " +
-                    "\"لقد اخترت الشخص الخطأ.\""
-            },
+    function loadLocalProgress() {
 
-            {
-                title: "🚪 الباب المغلق",
-                text:
-                    "حاولت شخصيتك الخروج، لكن الباب أُغلق أمامها. " +
-                    "ثم ظهر عدّ تنازلي غريب على الشاشة."
-            },
+        try {
 
-            {
-                title: "💨 الاختفاء",
-                text:
-                    "وصل العد إلى الصفر... واختفت الشخصية تمامًا. " +
-                    "لم يبقَ في مكانها سوى أثر غريب."
-            },
+            const saved =
+                localStorage.getItem(saveKey);
 
-            {
-                title: "🔐 الرمز",
-                text:
-                    "على الأرض وجدت شيئًا لم يكن موجودًا من قبل: " +
-                    "قطعة صغيرة تحمل رمزًا غامضًا."
-            },
-
-            {
-                title: "👁️ شخص ما يراقب",
-                text:
-                    "وقبل أن تلتقط الرمز، ظهرت رسالة جديدة: " +
-                    "\"إذا كنت تريد استعادتها... ابدأ بالبحث.\""
-            },
-
-            {
-                title: "🕵️ بداية المطاردة",
-                text:
-                    "الآن أصبحت أنت المحقق. " +
-                    "الشخصية اختفت، والخاطف ترك خلفه أدلة. " +
-                    "لكن السؤال الحقيقي هو..."
-            },
-
-            {
-                title: "❓ من خطف الشخصية؟",
-                text:
-                    "وهل كان اختطافها مجرد صدفة؟ " +
-                    "أم أن هناك شيئًا أكبر يحدث داخل Nova Future؟"
-            }
-
-        ];
-
-
-        /* =====================================================
-           LOCAL BACKUP
-        ===================================================== */
-
-        const saveKey =
-            "nova_level0_progress";
-
-
-        /* =====================================================
-           PROGRESS OBJECT
-        ===================================================== */
-
-        let progress = {
-
-            started: false,
-
-            currentScene: 0,
-
-            cluesFound: [],
-
-            puzzlesSolved: [],
-
-            locationsVisited: [],
-
-            completed: false
-
-        };
-
-
-        let currentScene = 0;
-
-
-        /* =====================================================
-           LOCAL STORAGE LOAD
-        ===================================================== */
-
-        function loadLocalProgress() {
-
-            try {
-
-                const saved =
-                    localStorage.getItem(saveKey);
-
-                if (!saved) {
-                    return null;
-                }
-
-                const data =
-                    JSON.parse(saved);
-
-                if (!data) {
-                    return null;
-                }
-
-                return {
-
-                    started:
-                        data.started === true,
-
-                    currentScene:
-                        typeof data.currentScene === "number"
-                            ? data.currentScene
-                            : typeof data.scene === "number"
-                                ? data.scene
-                                : 0,
-
-                    cluesFound:
-                        Array.isArray(data.cluesFound)
-                            ? data.cluesFound
-                            : [],
-
-                    puzzlesSolved:
-                        Array.isArray(data.puzzlesSolved)
-                            ? data.puzzlesSolved
-                            : [],
-
-                    locationsVisited:
-                        Array.isArray(data.locationsVisited)
-                            ? data.locationsVisited
-                            : [],
-
-                    completed:
-                        data.completed === true
-
-                };
-
-            } catch (error) {
-
-                console.log(
-                    "Nova Level 0 local load error:",
-                    error
-                );
-
+            if (!saved) {
                 return null;
             }
 
+            const data =
+                JSON.parse(saved);
+
+            if (!data) {
+                return null;
+            }
+
+            return {
+
+                started:
+                    data.started === true,
+
+                currentScene:
+                    typeof data.currentScene === "number"
+                        ? data.currentScene
+                        : typeof data.scene === "number"
+                            ? data.scene
+                            : 0,
+
+                cluesFound:
+                    Array.isArray(data.cluesFound)
+                        ? data.cluesFound
+                        : [],
+
+                puzzlesSolved:
+                    Array.isArray(data.puzzlesSolved)
+                        ? data.puzzlesSolved
+                        : [],
+
+                locationsVisited:
+                    Array.isArray(data.locationsVisited)
+                        ? data.locationsVisited
+                        : [],
+
+                completed:
+                    data.completed === true,
+
+                investigationStarted:
+                    data.investigationStarted === true,
+
+                finalScore:
+                    typeof data.finalScore === "number"
+                        ? data.finalScore
+                        : 0,
+
+                investigationCompleted:
+                    data.investigationCompleted === true
+
+            };
+
+        } catch (error) {
+
+            console.log(
+                "Level 0 local load error:",
+                error
+            );
+
+            return null;
         }
 
+    }
 
-        /* =====================================================
-           LOCAL STORAGE SAVE
-        ===================================================== */
 
-        function saveLocalProgress() {
+    /* =====================================================
+       LOCAL SAVE
+    ===================================================== */
 
-            try {
+    function saveLocalProgress() {
 
-                localStorage.setItem(
+        try {
 
-                    saveKey,
+            localStorage.setItem(
 
-                    JSON.stringify({
+                saveKey,
+
+                JSON.stringify({
+
+                    ...progress,
+
+                    updatedAt:
+                        Date.now()
+
+                })
+
+            );
+
+        } catch (error) {
+
+            console.log(
+                "Level 0 local save error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FIREBASE SAVE
+    ===================================================== */
+
+    async function saveFirebaseProgress() {
+
+        if (!currentUser) {
+
+            console.log(
+                "Level 0: user not ready."
+            );
+
+            return false;
+        }
+
+        try {
+
+            const userRef =
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid
+                );
+
+
+            await setDoc(
+
+                userRef,
+
+                {
+
+                    level0: {
 
                         started:
                             progress.started,
@@ -8310,689 +8409,549 @@ document.addEventListener("DOMContentLoaded", function () {
                         completed:
                             progress.completed,
 
-                        updatedAt:
-                            Date.now()
+                        investigationStarted:
+                            progress.investigationStarted,
 
-                    })
+                        finalScore:
+                            progress.finalScore,
 
-                );
+                        investigationCompleted:
+                            progress.investigationCompleted,
 
-            } catch (error) {
+                        lastPlayed:
+                            serverTimestamp()
 
-                console.log(
-                    "Nova Level 0 local save error:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        /* =====================================================
-           FIREBASE SAVE
-        ===================================================== */
-
-        async function saveFirebaseProgress() {
-
-            if (!currentUser) {
-
-                console.log(
-                    "Nova Level 0: no logged-in user."
-                );
-
-                return false;
-            }
-
-            try {
-
-                const userRef =
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid
-                    );
-
-
-                await setDoc(
-
-                    userRef,
-
-                    {
-
-                        level0: {
-
-                            started:
-                                progress.started,
-
-                            currentScene:
-                                progress.currentScene,
-
-                            cluesFound:
-                                progress.cluesFound,
-
-                            puzzlesSolved:
-                                progress.puzzlesSolved,
-
-                            locationsVisited:
-                                progress.locationsVisited,
-
-                            completed:
-                                progress.completed,
-
-                            lastPlayed:
-                                serverTimestamp()
-
-                        }
-
-                    },
-
-                    {
-                        merge: true
                     }
 
-                );
+                },
+
+                {
+                    merge: true
+                }
+
+            );
 
 
-                console.log(
-                    "Nova Level 0 Firebase saved."
-                );
+            console.log(
+                "Level 0 saved to Firebase."
+            );
 
-                return true;
+            return true;
 
-            } catch (error) {
+        } catch (error) {
 
-                console.error(
-                    "Nova Level 0 Firebase save error:",
-                    error
-                );
+            console.error(
+                "Level 0 Firebase save error:",
+                error
+            );
 
-                return false;
-            }
-
+            return false;
         }
 
+    }
 
-        /* =====================================================
-           SAVE EVERYWHERE
-        ===================================================== */
 
-        async function saveProgress() {
+    async function saveProgress() {
 
-            saveLocalProgress();
+        saveLocalProgress();
 
-            await saveFirebaseProgress();
+        await saveFirebaseProgress();
 
+    }
+
+
+    /* =====================================================
+       FIREBASE LOAD
+    ===================================================== */
+
+    async function loadFirebaseProgress() {
+
+        if (!currentUser) {
+            return null;
         }
 
+        try {
 
-        /* =====================================================
-           FIREBASE LOAD
-        ===================================================== */
+            const userRef =
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid
+                );
 
-        async function loadFirebaseProgress() {
 
-            if (!currentUser) {
+            const snapshot =
+                await getDoc(userRef);
+
+
+            if (!snapshot.exists()) {
                 return null;
             }
 
-            try {
 
-                const userRef =
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid
-                    );
+            const userData =
+                snapshot.data();
 
 
-                const snapshot =
-                    await getDoc(userRef);
-
-
-                if (!snapshot.exists()) {
-                    return null;
-                }
-
-
-                const userData =
-                    snapshot.data();
-
-
-                if (
-                    !userData.level0 ||
-                    typeof userData.level0 !== "object"
-                ) {
-
-                    return null;
-                }
-
-
-                const data =
-                    userData.level0;
-
-
-                return {
-
-                    started:
-                        data.started === true,
-
-                    currentScene:
-                        typeof data.currentScene === "number"
-                            ? data.currentScene
-                            : 0,
-
-                    cluesFound:
-                        Array.isArray(data.cluesFound)
-                            ? data.cluesFound
-                            : [],
-
-                    puzzlesSolved:
-                        Array.isArray(data.puzzlesSolved)
-                            ? data.puzzlesSolved
-                            : [],
-
-                    locationsVisited:
-                        Array.isArray(data.locationsVisited)
-                            ? data.locationsVisited
-                            : [],
-
-                    completed:
-                        data.completed === true
-
-                };
-
-            } catch (error) {
-
-                console.error(
-                    "Nova Level 0 Firebase load error:",
-                    error
-                );
-
+            if (!userData.level0) {
                 return null;
             }
 
-        }
+
+            const data =
+                userData.level0;
 
 
-        /* =====================================================
-           LOAD COMPLETE PROGRESS
-        ===================================================== */
+            return {
 
-        async function loadProgress() {
+                started:
+                    data.started === true,
 
-            const localData =
-                loadLocalProgress();
+                currentScene:
+                    typeof data.currentScene === "number"
+                        ? data.currentScene
+                        : 0,
 
+                cluesFound:
+                    Array.isArray(data.cluesFound)
+                        ? data.cluesFound
+                        : [],
 
-            /* ---------------------------------------------
-               Firebase first
-            --------------------------------------------- */
+                puzzlesSolved:
+                    Array.isArray(data.puzzlesSolved)
+                        ? data.puzzlesSolved
+                        : [],
 
-            const firebaseData =
-                await loadFirebaseProgress();
+                locationsVisited:
+                    Array.isArray(data.locationsVisited)
+                        ? data.locationsVisited
+                        : [],
 
+                completed:
+                    data.completed === true,
 
-            if (firebaseData) {
+                investigationStarted:
+                    data.investigationStarted === true,
 
-                progress =
-                    firebaseData;
+                finalScore:
+                    typeof data.finalScore === "number"
+                        ? data.finalScore
+                        : 0,
 
-                currentScene =
-                    progress.currentScene;
-
-                saveLocalProgress();
-
-                console.log(
-                    "Nova Level 0 loaded from Firebase."
-                );
-
-                return;
-            }
-
-
-            /* ---------------------------------------------
-               Migrate old local progress to Firebase
-            --------------------------------------------- */
-
-            if (localData) {
-
-                progress =
-                    localData;
-
-                currentScene =
-                    progress.currentScene;
-
-
-                if (currentUser) {
-
-                    await saveFirebaseProgress();
-
-                    console.log(
-                        "Nova Level 0 local progress migrated to Firebase."
-                    );
-
-                }
-
-                return;
-            }
-
-
-            /* ---------------------------------------------
-               New player
-            --------------------------------------------- */
-
-            progress = {
-
-                started: false,
-
-                currentScene: 0,
-
-                cluesFound: [],
-
-                puzzlesSolved: [],
-
-                locationsVisited: [],
-
-                completed: false
+                investigationCompleted:
+                    data.investigationCompleted === true
 
             };
 
-            currentScene = 0;
+        } catch (error) {
 
+            console.error(
+                "Level 0 Firebase load error:",
+                error
+            );
+
+            return null;
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD PROGRESS
+    ===================================================== */
+
+    async function loadProgress() {
+
+        const localData =
+            loadLocalProgress();
+
+
+        const firebaseData =
+            await loadFirebaseProgress();
+
+
+        if (firebaseData) {
+
+            progress =
+                firebaseData;
+
+            currentScene =
+                progress.currentScene;
+
+            saveLocalProgress();
+
+            return;
         }
 
 
-        /* =====================================================
-           STORY SCREEN
-        ===================================================== */
+        if (localData) {
 
-        let storyScreen = null;
+            progress =
+                localData;
+
+            currentScene =
+                progress.currentScene;
 
 
-        function createStoryScreen() {
-
-            if (storyScreen) {
-                return;
+            if (currentUser) {
+                await saveFirebaseProgress();
             }
 
-
-            storyScreen =
-                document.createElement("div");
-
-
-            storyScreen.id =
-                "novaStoryScreen";
+            return;
+        }
 
 
-            storyScreen.innerHTML = `
+        progress = {
 
-                <div class="nova-story-card">
+            started: false,
 
-                    <div class="nova-story-label">
-                        LEVEL 0 · CLASSIFIED
-                    </div>
+            currentScene: 0,
 
-                    <h2 id="novaStoryTitle">
-                        القصة
-                    </h2>
+            cluesFound: [],
 
-                    <p id="novaStoryText">
-                        ...
-                    </p>
+            puzzlesSolved: [],
 
-                    <div class="nova-story-progress">
+            locationsVisited: [],
 
-                        <span id="novaStorySceneNumber">
-                            1
-                        </span>
+            completed: false,
 
-                        /
+            investigationStarted: false,
 
-                        <span>
-                            ${storyScenes.length}
-                        </span>
+            finalScore: 0,
 
-                    </div>
+            investigationCompleted: false
 
-                    <div class="nova-story-actions">
+        };
 
-                        <button
-                            id="novaStoryNext"
-                            type="button"
-                        >
-                            التالي →
-                        </button>
+        currentScene = 0;
 
-                        <button
-                            id="novaStoryExit"
-                            type="button"
-                        >
-                            خروج
-                        </button>
+    }
 
-                    </div>
+
+    /* =====================================================
+       STORY SCREEN
+    ===================================================== */
+
+    let storyScreen = null;
+
+
+    function createStoryScreen() {
+
+        if (storyScreen) {
+            return;
+        }
+
+
+        storyScreen =
+            document.createElement("div");
+
+
+        storyScreen.id =
+            "novaStoryScreen";
+
+
+        storyScreen.innerHTML = `
+
+            <div class="nova-story-card">
+
+                <div class="nova-story-label">
+                    LEVEL 0 · CLASSIFIED
+                </div>
+
+                <h2 id="novaStoryTitle">
+                    القصة
+                </h2>
+
+                <p id="novaStoryText">
+                    ...
+                </p>
+
+                <div class="nova-story-progress">
+
+                    <span id="novaStorySceneNumber">
+                        1
+                    </span>
+
+                    /
+
+                    <span>
+                        ${storyScenes.length}
+                    </span>
 
                 </div>
 
-            `;
+                <div class="nova-story-actions">
+
+                    <button
+                        id="novaStoryNext"
+                        type="button"
+                    >
+                        التالي →
+                    </button>
+
+                    <button
+                        id="novaStoryExit"
+                        type="button"
+                    >
+                        خروج
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
 
 
-            document.body.appendChild(
-                storyScreen
-            );
+        document.body.appendChild(
+            storyScreen
+        );
 
 
-            /* =================================================
-               STORY CSS
-            ================================================= */
+        /* =================================================
+           STORY CSS
+        ================================================= */
 
-            const style =
-                document.createElement("style");
-
-
-            style.textContent = `
-
-                #novaStoryScreen {
-
-                    position: fixed;
-
-                    inset: 0;
-
-                    z-index: 100000;
-
-                    display: none;
-
-                    align-items: center;
-
-                    justify-content: center;
-
-                    padding: 20px;
-
-                    background:
-                        rgba(3, 7, 18, 0.96);
-
-                    color: white;
-
-                    direction: rtl;
-
-                }
+        const style =
+            document.createElement("style");
 
 
-                .nova-story-card {
+        style.textContent = `
 
-                    width:
-                        min(650px, 100%);
+            #novaStoryScreen {
 
-                    padding:
-                        35px 25px;
+                position: fixed;
 
-                    border-radius:
-                        28px;
+                inset: 0;
 
-                    background:
-                        linear-gradient(
-                            145deg,
-                            #111827,
-                            #1e293b
-                        );
+                z-index: 100000;
 
-                    box-shadow:
-                        0 25px 80px
-                        rgba(0,0,0,0.55);
+                display: none;
 
-                    text-align:
-                        center;
+                align-items: center;
 
-                    animation:
-                        novaStoryAppear
-                        0.35s ease;
+                justify-content: center;
 
-                }
+                padding: 20px;
+
+                background:
+                    rgba(3, 7, 18, 0.96);
+
+                color: white;
+
+                direction: rtl;
+
+            }
 
 
-                .nova-story-label {
+            .nova-story-card {
 
-                    font-size:
-                        12px;
+                width:
+                    min(650px, 100%);
 
-                    letter-spacing:
-                        2px;
+                padding:
+                    35px 25px;
+
+                border-radius:
+                    28px;
+
+                background:
+                    linear-gradient(
+                        145deg,
+                        #111827,
+                        #1e293b
+                    );
+
+                box-shadow:
+                    0 25px 80px
+                    rgba(0,0,0,0.55);
+
+                text-align:
+                    center;
+
+            }
+
+
+            .nova-story-label {
+
+                font-size:
+                    12px;
+
+                letter-spacing:
+                    2px;
+
+                opacity:
+                    0.6;
+
+                margin-bottom:
+                    18px;
+
+            }
+
+
+            #novaStoryTitle {
+
+                margin:
+                    0 0 20px;
+
+                font-size:
+                    30px;
+
+            }
+
+
+            #novaStoryText {
+
+                font-size:
+                    18px;
+
+                line-height:
+                    2;
+
+                min-height:
+                    120px;
+
+                margin:
+                    0 0 20px;
+
+            }
+
+
+            .nova-story-progress {
+
+                opacity:
+                    0.6;
+
+                margin-bottom:
+                    22px;
+
+            }
+
+
+            .nova-story-actions {
+
+                display:
+                    flex;
+
+                justify-content:
+                    center;
+
+                gap:
+                    10px;
+
+                flex-wrap:
+                    wrap;
+
+            }
+
+
+            .nova-story-actions button {
+
+                border:
+                    none;
+
+                border-radius:
+                    13px;
+
+                padding:
+                    12px 25px;
+
+                font-family:
+                    inherit;
+
+                font-weight:
+                    700;
+
+                cursor:
+                    pointer;
+
+            }
+
+
+            #novaStoryNext {
+
+                background:
+                    var(
+                        --primary-color,
+                        #2563eb
+                    );
+
+                color:
+                    white;
+
+                min-width:
+                    130px;
+
+            }
+
+
+            #novaStoryExit {
+
+                background:
+                    #374151;
+
+                color:
+                    white;
+
+            }
+
+
+            @keyframes novaStoryAppear {
+
+                from {
 
                     opacity:
-                        0.6;
+                        0;
 
-                    margin-bottom:
-                        18px;
-
-                }
-
-
-                #novaStoryTitle {
-
-                    margin:
-                        0 0 20px;
-
-                    font-size:
-                        30px;
+                    transform:
+                        scale(0.95)
+                        translateY(15px);
 
                 }
 
-
-                #novaStoryText {
-
-                    font-size:
-                        18px;
-
-                    line-height:
-                        2;
-
-                    min-height:
-                        120px;
-
-                    margin:
-                        0 0 20px;
-
-                }
-
-
-                .nova-story-progress {
+                to {
 
                     opacity:
-                        0.6;
+                        1;
 
-                    margin-bottom:
-                        22px;
-
-                }
-
-
-                .nova-story-actions {
-
-                    display:
-                        flex;
-
-                    justify-content:
-                        center;
-
-                    gap:
-                        10px;
-
-                    flex-wrap:
-                        wrap;
+                    transform:
+                        scale(1)
+                        translateY(0);
 
                 }
 
+            }
 
-                .nova-story-actions button {
-
-                    border:
-                        none;
-
-                    border-radius:
-                        13px;
-
-                    padding:
-                        12px 25px;
-
-                    font-family:
-                        inherit;
-
-                    font-weight:
-                        700;
-
-                    cursor:
-                        pointer;
-
-                }
+        `;
 
 
-                #novaStoryNext {
-
-                    background:
-                        var(
-                            --primary-color,
-                            #2563eb
-                        );
-
-                    color:
-                        white;
-
-                    min-width:
-                        130px;
-
-                }
+        document.head.appendChild(
+            style
+        );
 
 
-                #novaStoryExit {
-
-                    background:
-                        #374151;
-
-                    color:
-                        white;
-
-                }
-
-
-                @keyframes novaStoryAppear {
-
-                    from {
-
-                        opacity:
-                            0;
-
-                        transform:
-                            scale(0.95)
-                            translateY(15px);
-
-                    }
-
-                    to {
-
-                        opacity:
-                            1;
-
-                        transform:
-                            scale(1)
-                            translateY(0);
-
-                    }
-
-                }
-
-            `;
-
-
-            document.head.appendChild(
-                style
+        const nextButton =
+            document.getElementById(
+                "novaStoryNext"
             );
 
 
-            /* =================================================
-               BUTTONS
-            ================================================= */
-
-            const nextButton =
-                document.getElementById(
-                    "novaStoryNext"
-                );
-
-
-            const exitButton =
-                document.getElementById(
-                    "novaStoryExit"
-                );
-
-
-            /* =================================================
-               NEXT
-            ================================================= */
-
-            nextButton.addEventListener(
-                "click",
-                async function () {
-
-                    if (
-                        currentScene <
-                        storyScenes.length - 1
-                    ) {
-
-                        currentScene++;
-
-                        progress.started =
-                            true;
-
-                        progress.currentScene =
-                            currentScene;
-
-
-                        await saveProgress();
-
-
-                        renderStory();
-
-                    } else {
-
-                        progress.started =
-                            true;
-
-                        progress.currentScene =
-                            currentScene;
-
-                        progress.completed =
-                            true;
-
-
-                        await saveProgress();
-
-
-                        nextButton.textContent =
-                            "🔎 متابعة التحقيق";
-
-
-                        nextButton.onclick =
-                            function () {
-
-                                alert(
-                                    "🕵️ المرحلة التالية ستبدأ هنا..."
-                                );
-
-                            };
-
-                    }
-
-                }
+        const exitButton =
+            document.getElementById(
+                "novaStoryExit"
             );
 
 
-            /* =================================================
-               EXIT
-            ================================================= */
+        nextButton.addEventListener(
+            "click",
+            async function () {
 
-            exitButton.addEventListener(
-                "click",
-                async function () {
+                if (
+                    currentScene <
+                    storyScenes.length - 1
+                ) {
+
+                    currentScene++;
 
                     progress.started =
                         true;
@@ -9000,126 +8959,1072 @@ document.addEventListener("DOMContentLoaded", function () {
                     progress.currentScene =
                         currentScene;
 
+                    await saveProgress();
+
+                    renderStory();
+
+                } else {
+
+                    progress.started =
+                        true;
+
+                    progress.currentScene =
+                        currentScene;
+
+                    progress.completed =
+                        true;
 
                     await saveProgress();
 
 
-                    storyScreen.style.display =
-                        "none";
+                    startInvestigation();
 
                 }
-            );
-
-        }
-
-
-        /* =====================================================
-           RENDER STORY
-        ===================================================== */
-
-        function renderStory() {
-
-            if (!storyScreen) {
-                return;
-            }
-
-
-            if (
-                currentScene < 0 ||
-                currentScene >= storyScenes.length
-            ) {
-
-                currentScene =
-                    0;
-
-                progress.currentScene =
-                    0;
-
-                saveProgress();
-
-            }
-
-
-            const scene =
-                storyScenes[currentScene];
-
-
-            if (!scene) {
-                return;
-            }
-
-
-            document.getElementById(
-                "novaStoryTitle"
-            ).textContent =
-                scene.title;
-
-
-            document.getElementById(
-                "novaStoryText"
-            ).textContent =
-                scene.text;
-
-
-            document.getElementById(
-                "novaStorySceneNumber"
-            ).textContent =
-                currentScene + 1;
-
-        }
-
-
-        /* =====================================================
-           START STORY
-        ===================================================== */
-
-        startButton.addEventListener(
-            "click",
-            async function (event) {
-
-                event.preventDefault();
-
-
-                levelZero.style.display =
-                    "none";
-
-
-                /* Load latest Firebase progress */
-
-                await loadProgress();
-
-
-                progress.started =
-                    true;
-
-
-                progress.currentScene =
-                    currentScene;
-
-
-                await saveProgress();
-
-
-                createStoryScreen();
-
-
-                renderStory();
-
-
-                storyScreen.style.display =
-                    "flex";
 
             }
         );
 
 
-    });
+        exitButton.addEventListener(
+            "click",
+            async function () {
 
-</script>                                                    }
+                progress.started =
+                    true;
+
+                progress.currentScene =
+                    currentScene;
+
+                await saveProgress();
+
+                storyScreen.style.display =
+                    "none";
+
+            }
+        );
+
+    }
 
 
-    
-    </script>
+    /* =====================================================
+       RENDER STORY
+    ===================================================== */
+
+    function renderStory() {
+
+        if (!storyScreen) {
+            return;
+        }
+
+
+        const scene =
+            storyScenes[currentScene];
+
+
+        if (!scene) {
+
+            currentScene = 0;
+
+            progress.currentScene = 0;
+
+            saveProgress();
+
+            return;
+        }
+
+
+        document.getElementById(
+            "novaStoryTitle"
+        ).textContent =
+            scene.title;
+
+
+        document.getElementById(
+            "novaStoryText"
+        ).textContent =
+            scene.text;
+
+
+        document.getElementById(
+            "novaStorySceneNumber"
+        ).textContent =
+            currentScene + 1;
+
+    }
+
+
+    /* =====================================================
+       INVESTIGATION SCREEN
+    ===================================================== */
+
+    let investigationScreen = null;
+
+
+    function createInvestigationScreen() {
+
+        if (investigationScreen) {
+            return;
+        }
+
+
+        investigationScreen =
+            document.createElement("div");
+
+
+        investigationScreen.id =
+            "novaInvestigationScreen";
+
+
+        investigationScreen.innerHTML = `
+
+            <div class="nova-investigation-card">
+
+                <div class="nova-investigation-label">
+                    LEVEL 0 · THE INVESTIGATION
+                </div>
+
+                <h2>
+                    🕵️ عملية استعادة الشخصية
+                </h2>
+
+                <p class="nova-investigation-intro">
+                    الشخصية اختفت...
+                    والخاطف ترك خلفه آثارًا.
+                    <br>
+                    ابحث في الأماكن الثلاثة واكتشف الحقيقة.
+                </p>
+
+                <div
+                    id="novaInvestigationPlaces"
+                    class="nova-investigation-places"
+                ></div>
+
+                <div
+                    id="novaInvestigationClues"
+                    class="nova-investigation-clues"
+                ></div>
+
+                <div
+                    id="novaInvestigationPuzzle"
+                    class="nova-investigation-puzzle"
+                ></div>
+
+                <button
+                    id="novaInvestigationExit"
+                    type="button"
+                >
+                    خروج
+                </button>
+
+            </div>
+
+        `;
+
+
+        document.body.appendChild(
+            investigationScreen
+        );
+
+
+        /* =================================================
+           INVESTIGATION CSS
+        ================================================= */
+
+        const style =
+            document.createElement("style");
+
+
+        style.textContent = `
+
+            #novaInvestigationScreen {
+
+                position: fixed;
+
+                inset: 0;
+
+                z-index: 100001;
+
+                display: none;
+
+                overflow-y: auto;
+
+                padding: 25px;
+
+                background:
+                    radial-gradient(
+                        circle at top,
+                        #172554,
+                        #020617 65%
+                    );
+
+                color: white;
+
+                direction: rtl;
+
+            }
+
+
+            .nova-investigation-card {
+
+                width:
+                    min(850px, 100%);
+
+                margin:
+                    30px auto;
+
+                padding:
+                    30px;
+
+                border-radius:
+                    28px;
+
+                background:
+                    rgba(15,23,42,0.94);
+
+                box-shadow:
+                    0 30px 100px
+                    rgba(0,0,0,0.55);
+
+                text-align:
+                    center;
+
+            }
+
+
+            .nova-investigation-label {
+
+                font-size:
+                    12px;
+
+                letter-spacing:
+                    3px;
+
+                opacity:
+                    0.55;
+
+                margin-bottom:
+                    15px;
+
+            }
+
+
+            .nova-investigation-card h2 {
+
+                font-size:
+                    30px;
+
+                margin:
+                    0 0 15px;
+
+            }
+
+
+            .nova-investigation-intro {
+
+                line-height:
+                    1.9;
+
+                opacity:
+                    0.8;
+
+                margin-bottom:
+                    25px;
+
+            }
+
+
+            .nova-investigation-places {
+
+                display:
+                    grid;
+
+                grid-template-columns:
+                    repeat(
+                        auto-fit,
+                        minmax(200px,1fr)
+                    );
+
+                gap:
+                    15px;
+
+                margin-bottom:
+                    25px;
+
+            }
+
+
+            .nova-investigation-place {
+
+                border:
+                    1px solid
+                    rgba(255,255,255,0.1);
+
+                background:
+                    rgba(30,41,59,0.9);
+
+                color:
+                    white;
+
+                border-radius:
+                    20px;
+
+                padding:
+                    22px 15px;
+
+                cursor:
+                    pointer;
+
+                font-family:
+                    inherit;
+
+                transition:
+                    0.25s ease;
+
+            }
+
+
+            .nova-investigation-place:hover {
+
+                transform:
+                    translateY(-4px);
+
+                background:
+                    rgba(37,99,235,0.25);
+
+            }
+
+
+            .nova-investigation-place.found {
+
+                border-color:
+                    #22c55e;
+
+                background:
+                    rgba(34,197,94,0.12);
+
+            }
+
+
+            .nova-place-icon {
+
+                display:
+                    block;
+
+                font-size:
+                    42px;
+
+                margin-bottom:
+                    10px;
+
+            }
+
+
+            .nova-place-title {
+
+                display:
+                    block;
+
+                font-size:
+                    17px;
+
+                font-weight:
+                    800;
+
+                margin-bottom:
+                    7px;
+
+            }
+
+
+            .nova-place-description {
+
+                display:
+                    block;
+
+                font-size:
+                    13px;
+
+                opacity:
+                    0.65;
+
+            }
+
+
+            .nova-investigation-clues {
+
+                display:
+                    grid;
+
+                gap:
+                    10px;
+
+                margin:
+                    20px 0;
+
+            }
+
+
+            .nova-clue {
+
+                padding:
+                    15px;
+
+                border-radius:
+                    15px;
+
+                background:
+                    rgba(2,6,23,0.7);
+
+                border:
+                    1px solid
+                    rgba(255,255,255,0.08);
+
+                text-align:
+                    right;
+
+            }
+
+
+            .nova-investigation-puzzle {
+
+                margin-top:
+                    25px;
+
+                padding:
+                    25px;
+
+                border-radius:
+                    22px;
+
+                background:
+                    rgba(30,41,59,0.8);
+
+            }
+
+
+            .nova-puzzle-options {
+
+                display:
+                    grid;
+
+                gap:
+                    10px;
+
+                margin-top:
+                    18px;
+
+            }
+
+
+            .nova-puzzle-options button {
+
+                border:
+                    none;
+
+                border-radius:
+                    13px;
+
+                padding:
+                    13px;
+
+                background:
+                    #2563eb;
+
+                color:
+                    white;
+
+                font-family:
+                    inherit;
+
+                font-weight:
+                    700;
+
+                cursor:
+                    pointer;
+
+            }
+
+
+            .nova-puzzle-options button:hover {
+
+                filter:
+                    brightness(1.15);
+
+            }
+
+
+            #novaInvestigationExit {
+
+                border:
+                    none;
+
+                border-radius:
+                    13px;
+
+                padding:
+                    12px 25px;
+
+                background:
+                    #374151;
+
+                color:
+                    white;
+
+                font-family:
+                    inherit;
+
+                font-weight:
+                    700;
+
+                cursor:
+                    pointer;
+
+                margin-top:
+                    20px;
+
+            }
+
+        `;
+
+
+        document.head.appendChild(
+            style
+        );
+
+
+        renderInvestigation();
+
+        renderClues();
+
+        renderPuzzle();
+
+
+        document.getElementById(
+            "novaInvestigationExit"
+        ).addEventListener(
+            "click",
+            async function () {
+
+                await saveProgress();
+
+                investigationScreen.style.display =
+                    "none";
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       RENDER INVESTIGATION
+    ===================================================== */
+
+    function renderInvestigation() {
+
+        const container =
+            document.getElementById(
+                "novaInvestigationPlaces"
+            );
+
+
+        if (!container) {
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        investigationPlaces.forEach(
+            function (place) {
+
+                const button =
+                    document.createElement("button");
+
+
+                button.type =
+                    "button";
+
+
+                button.className =
+                    "nova-investigation-place";
+
+
+                if (
+                    progress.locationsVisited
+                        .includes(place.id)
+                ) {
+
+                    button.classList.add(
+                        "found"
+                    );
+
+                }
+
+
+                button.innerHTML = `
+
+                    <span class="nova-place-icon">
+                        ${place.icon}
+                    </span>
+
+                    <span class="nova-place-title">
+                        ${place.title}
+                    </span>
+
+                    <span class="nova-place-description">
+                        ${place.description}
+                    </span>
+
+                `;
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        if (
+                            !progress.locationsVisited
+                                .includes(place.id)
+                        ) {
+
+                            progress.locationsVisited
+                                .push(place.id);
+
+                        }
+
+
+                        discoverClue(place.id);
+
+                    }
+                );
+
+
+                container.appendChild(
+                    button
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       DISCOVER CLUE
+    ===================================================== */
+
+    function discoverClue(placeId) {
+
+        const clues = {
+
+            dashboard:
+                "🧩 وجدت رقمًا مكتوبًا على الشاشة: 11-47",
+
+            library:
+                "📄 وجدت ورقة تحمل الجملة: «البداية ليست حيث تعتقد.»",
+
+            terminal:
+                "💾 وجدت سجلًا مجهولًا يحتوي على الرمز: NF-07"
+
+        };
+
+
+        if (
+            !progress.cluesFound
+                .includes(placeId)
+        ) {
+
+            progress.cluesFound.push(
+                placeId
+            );
+
+            saveProgress();
+
+        }
+
+
+        alert(
+            clues[placeId] ||
+            "🔎 وجدت أثرًا غريبًا..."
+        );
+
+
+        renderInvestigation();
+
+        renderClues();
+
+        renderPuzzle();
+
+    }
+
+
+    /* =====================================================
+       CLUES
+    ===================================================== */
+
+    function renderClues() {
+
+        const container =
+            document.getElementById(
+                "novaInvestigationClues"
+            );
+
+
+        if (!container) {
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        if (
+            progress.cluesFound.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="nova-clue">
+                    🔎 لم تجد أي دليل بعد...
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        const clueTexts = {
+
+            dashboard:
+                "🧩 الدليل 1: الرقم 11-47",
+
+            library:
+                "📄 الدليل 2: «البداية ليست حيث تعتقد.»",
+
+            terminal:
+                "💾 الدليل 3: الرمز NF-07"
+
+        };
+
+
+        progress.cluesFound.forEach(
+            function (clueId, index) {
+
+                const clue =
+                    document.createElement("div");
+
+
+                clue.className =
+                    "nova-clue";
+
+
+                clue.textContent =
+                    `${index + 1}. ${
+                        clueTexts[clueId] ||
+                        "دليل مجهول"
+                    }`;
+
+
+                container.appendChild(
+                    clue
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       PUZZLE
+    ===================================================== */
+
+    function renderPuzzle() {
+
+        const container =
+            document.getElementById(
+                "novaInvestigationPuzzle"
+            );
+
+
+        if (!container) {
+            return;
+        }
+
+
+        if (
+            progress.puzzlesSolved
+                .includes("firstPuzzle")
+        ) {
+
+            container.innerHTML = `
+
+                <h3>
+                    ✅ اللغز الأول تم حله
+                </h3>
+
+                <p>
+                    ظهرت إشارة جديدة...
+                    التحقيق لم ينتهِ بعد.
+                </p>
+
+            `;
+
+            return;
+        }
+
+
+        if (
+            progress.cluesFound.length < 3
+        ) {
+
+            container.innerHTML = `
+
+                <h3>
+                    🔒 اللغز الأول
+                </h3>
+
+                <p>
+                    ابحث عن الأدلة الثلاثة أولًا.
+                </p>
+
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = `
+
+            <h3>
+                🧠 اللغز الأول
+            </h3>
+
+            <p>
+                لديك ثلاثة أدلة:
+                <br><br>
+
+                <strong>
+                    11-47
+                </strong>
+
+                <br>
+
+                <strong>
+                    البداية ليست حيث تعتقد
+                </strong>
+
+                <br>
+
+                <strong>
+                    NF-07
+                </strong>
+
+                <br><br>
+
+                ما الرمز الأقرب لفتح الملف السري؟
+            </p>
+
+            <div class="nova-puzzle-options">
+
+                <button
+                    type="button"
+                    data-answer="wrong1"
+                >
+                    47-NF
+                </button>
+
+                <button
+                    type="button"
+                    data-answer="correct"
+                >
+                    NF-07
+                </button>
+
+                <button
+                    type="button"
+                    data-answer="wrong2"
+                >
+                    11-07
+                </button>
+
+            </div>
+
+        `;
+
+
+        const options =
+            container.querySelectorAll(
+                ".nova-puzzle-options button"
+            );
+
+
+        options.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function () {
+
+                        const answer =
+                            button.dataset.answer;
+
+
+                        if (
+                            answer === "correct"
+                        ) {
+
+                            if (
+                                !progress.puzzlesSolved
+                                    .includes(
+                                        "firstPuzzle"
+                                    )
+                            ) {
+
+                                progress.puzzlesSolved
+                                    .push(
+                                        "firstPuzzle"
+                                    );
+
+                                progress.finalScore +=
+                                    100;
+
+                                await saveProgress();
+
+                            }
+
+
+                            alert(
+                                "🎉 صحيح! لقد فتحت أول ملف سري."
+                            );
+
+
+                            renderPuzzle();
+
+                        } else {
+
+                            alert(
+                                "❌ الإجابة خاطئة... ابحث في الأدلة مرة أخرى."
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       START INVESTIGATION
+    ===================================================== */
+
+    async function startInvestigation() {
+
+        if (storyScreen) {
+
+            storyScreen.style.display =
+                "none";
+
+        }
+
+
+        progress.investigationStarted =
+            true;
+
+        progress.completed =
+            true;
+
+
+        await saveProgress();
+
+
+        createInvestigationScreen();
+
+
+        renderInvestigation();
+
+        renderClues();
+
+        renderPuzzle();
+
+
+        investigationScreen.style.display =
+            "block";
+
+    }
+
+
+    /* =====================================================
+       START BUTTON
+    ===================================================== */
+
+    startButton.addEventListener(
+        "click",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            levelZero.style.display =
+                "none";
+
+
+            await loadProgress();
+
+
+            progress.started =
+                true;
+
+
+            progress.currentScene =
+                currentScene;
+
+
+            await saveProgress();
+
+
+            /*
+               لو القصة خلصت قبل كده
+               نرجع للتحقيق مباشرة
+            */
+
+            if (
+                progress.completed &&
+                progress.investigationStarted
+            ) {
+
+                startInvestigation();
+
+                return;
+
+            }
+
+
+            createStoryScreen();
+
+
+            renderStory();
+
+
+            storyScreen.style.display =
+                "flex";
+
+        }
+    );
+
+
+});
+
+</script>     
+        
+
 </body>
 
 </html>
