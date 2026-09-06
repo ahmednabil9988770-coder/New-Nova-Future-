@@ -676,7 +676,74 @@ function createLevelUpEffect(level) {
     }, 3000);
 }
     
+function createEvolutionEffect(
+    evolution
+) {
 
+    const oldEffect =
+        document.getElementById(
+            "novaEvolutionEffect"
+        );
+
+    if (oldEffect) {
+        oldEffect.remove();
+    }
+
+    const effect =
+        document.createElement("div");
+
+    effect.id =
+        "novaEvolutionEffect";
+
+    effect.innerHTML =
+        `
+        <div class="nova-evolution-box">
+
+            <div class="nova-evolution-sparkles">
+                ✨ ⭐ ✨
+            </div>
+
+            <div class="nova-evolution-emoji">
+                ${evolution.emoji}
+            </div>
+
+            <div class="nova-evolution-title">
+                🎉 تطورت شخصيتك!
+            </div>
+
+            <div class="nova-evolution-name">
+                ${evolution.name}
+            </div>
+
+            <div class="nova-evolution-text">
+                أصبحت أقوى! 🚀
+            </div>
+
+        </div>
+        `;
+
+    document.body.appendChild(
+        effect
+    );
+
+    setTimeout(() => {
+        effect.classList.add(
+            "nova-evolution-show"
+        );
+    }, 50);
+
+    setTimeout(() => {
+
+        effect.classList.remove(
+            "nova-evolution-show"
+        );
+
+        setTimeout(() => {
+            effect.remove();
+        }, 400);
+
+    }, 3500);
+}
 
 /* =========================================================
    LOAD GAMIFICATION FROM FIREBASE
