@@ -7857,11 +7857,19 @@ document
 </div>
 
 <style>
-.nova-secret-challenge {
+..nova-secret-challenge {
     display: flex;
-    justify-content: flex-start;
-    margin: 20px 0;
+    align-items: center;
+    margin-right: 15px;
+    margin-left: 15px;
 }
+
+/* يظهر على سطح المكتب فقط */
+@media (max-width: 768px) {
+    .nova-secret-challenge {
+        display: none !important;
+    }
+    }
 
 #novaChallengeBtn {
     border: none;
