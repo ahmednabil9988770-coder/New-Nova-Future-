@@ -430,6 +430,7 @@ function createGamificationUI() {
    UPDATE GAMIFICATION UI
 ========================================================= */
 
+
 function updateGamificationUI(
     data = {}
 ) {
@@ -469,6 +470,11 @@ function updateGamificationUI(
             "novaCurrentXP"
         );
 
+    const nextLevelXPElement =
+        document.getElementById(
+            "novaNextLevelXP"
+        );
+
     const progressBar =
         document.getElementById(
             "novaProgressBar"
@@ -494,6 +500,10 @@ function updateGamificationUI(
             "novaEvolutionText"
         );
 
+    /* =========================================
+       📊 UPDATE UI
+    ========================================= */
+
     if (levelElement) {
         levelElement.textContent =
             level;
@@ -504,41 +514,168 @@ function updateGamificationUI(
             currentXP;
     }
 
+    if (nextLevelXPElement) {
+        nextLevelXPElement.textContent =
+            100;
+    }
+
     if (progressBar) {
         progressBar.style.width =
             `${progress}%`;
     }
 
     if (progressText) {
-
         progressText.textContent =
             `${progress}% للمستوى التالي`;
-
     }
 
     if (characterEmoji) {
-
         characterEmoji.textContent =
             evolution.emoji;
-
     }
 
     if (characterName) {
-
         characterName.textContent =
             evolution.name;
-
     }
 
     if (evolutionText) {
-
         evolutionText.innerHTML =
             `المستوى ${level} • ${xp} XP<br>
              استمر في التعلم لتطور شخصيتك 🚀`;
-
     }
 
+    /* =========================================
+       🆙 LEVEL UP DETECTION
+    ========================================= */
+
+    const savedLevel =
+        Number(
+            localStorage.getItem(
+                "nova_last_level"
+            )
+        ) || level;
+
+    if (level > savedLevel) {
+
+        localStorage.setItem(
+            "nova_last_level",
+            String(level)
+        );
+
+        const bubble =
+            document.getElementById(
+                "novaCharacterBubble"
+            );
+
+        const mood =
+            document.getElementById(
+                "novaCharacterMood"
+            );
+
+        if (bubble) {
+
+            bubble.textContent =
+                `🎉 LEVEL UP! وصلت للمستوى ${level}! 🚀`;
+
+        }
+
+        if (mood) {
+
+            mood.textContent =
+                "👑 مستوى جديد!";
+
+        }
+
+        if (characterEmoji) {
+
+            characterEmoji.classList.remove(
+                "nova-character-jump"
+            );
+
+            void characterEmoji.offsetWidth;
+
+            characterEmoji.classList.add(
+                "nova-character-jump"
+            );
+
+        }
+
+        /* احتفال إضافي */
+        if (typeof createLevelUpEffect === "function") {
+            createLevelUpEffect(level);
+        }
+    }
 }
+
+
+/* =========================================
+   🎉 LEVEL UP EFFECT
+========================================= */
+
+function createLevelUpEffect(level) {
+
+    const oldEffect =
+        document.getElementById(
+            "novaLevelUpEffect"
+        );
+
+    if (oldEffect) {
+        oldEffect.remove();
+    }
+
+    const effect =
+        document.createElement("div");
+
+    effect.id =
+        "novaLevelUpEffect";
+
+    effect.innerHTML =
+        `
+        <div class="nova-levelup-box">
+            <div class="nova-levelup-stars">
+                ✨ ⭐ ✨
+            </div>
+
+            <div class="nova-levelup-title">
+                LEVEL UP!
+            </div>
+
+            <div class="nova-levelup-level">
+                المستوى ${level} 🚀
+            </div>
+
+            <div class="nova-levelup-subtitle">
+                شخصيتك أصبحت أقوى! 🔥
+            </div>
+        </div>
+        `;
+
+    document.body.appendChild(
+        effect
+    );
+
+    setTimeout(() => {
+
+        effect.classList.add(
+            "nova-levelup-show"
+        );
+
+    }, 50);
+
+    setTimeout(() => {
+
+        effect.classList.remove(
+            "nova-levelup-show"
+        );
+
+        setTimeout(() => {
+            effect.remove();
+        }, 400);
+
+    }, 3000);
+}
+    
 
 
 /* =========================================================
