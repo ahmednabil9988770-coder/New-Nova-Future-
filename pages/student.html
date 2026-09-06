@@ -7849,32 +7849,26 @@ document
 <script type="module" src="../js/gamification.js"></script>
 
 <script>
-(function () {
+document.addEventListener("DOMContentLoaded", function () {
+
     const secretButton = document.getElementById("characterMessage");
 
-    if (!secretButton) return;
+    if (!secretButton) {
+        console.log("LEVEL 0: characterMessage not found");
+        return;
+    }
 
-    let clickCount = 0;
-    let clickTimer = null;
+    let lastClick = 0;
 
     secretButton.addEventListener("click", function () {
 
-        clickCount++;
+        const now = Date.now();
 
-        if (clickCount === 1) {
-            clickTimer = setTimeout(function () {
-                clickCount = 0;
-            }, 500);
-
-            return;
-        }
-
-        if (clickCount === 2) {
-            clearTimeout(clickTimer);
-            clickCount = 0;
-
+        if (now - lastClick < 600) {
             startLevelZero();
         }
+
+        lastClick = now;
     });
 
     function startLevelZero() {
@@ -7899,7 +7893,7 @@ document
         }, 600);
     }
 
-})();
+});
 </script>
     
 </body>
