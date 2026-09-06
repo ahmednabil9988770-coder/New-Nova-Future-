@@ -7955,7 +7955,60 @@ document
         </button>
     </div>
 </div>
-    
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const button = document.getElementById("novaChallengeBtn");
+    const levelZero = document.getElementById("novaLevelZero");
+    const closeButton = document.getElementById("novaLevelZeroClose");
+
+    if (!button || !levelZero) return;
+
+    let clickCount = 0;
+    let clickTimer = null;
+
+    button.addEventListener("click", function () {
+
+        clickCount++;
+
+        if (clickCount === 1) {
+
+            clickTimer = setTimeout(function () {
+                clickCount = 0;
+            }, 600);
+
+            return;
+        }
+
+        if (clickCount === 2) {
+
+            clearTimeout(clickTimer);
+            clickCount = 0;
+
+            levelZero.style.display = "flex";
+
+            const character =
+                document.getElementById("studentCharacter");
+
+            if (character) {
+                character.style.transition = "0.5s ease";
+                character.style.opacity = "0";
+                character.style.transform = "scale(0.5)";
+            }
+        }
+
+    });
+
+    if (closeButton) {
+
+        closeButton.addEventListener("click", function () {
+            levelZero.style.display = "none";
+        });
+
+    }
+
+});
+</script>
 </body>
 
 </html>
