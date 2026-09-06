@@ -1,6 +1,7 @@
 /* =========================================================
    NOVA FUTURE - GAMIFICATION SYSTEM
-   XP + LEVELS + CHARACTER EVOLUTION + BADGES + FIREBASE
+   XP + LEVELS + CHARACTER EVOLUTION + BADGES
+   INTERACTIVE CHARACTER + FIREBASE
 ========================================================= */
 
 import { auth, db } from "./firebase-config.js";
@@ -13,7 +14,6 @@ import {
     doc,
     getDoc,
     setDoc,
-    updateDoc,
     increment,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
@@ -33,17 +33,49 @@ const XP_PER_LEVEL = 100;
 const CHARACTER_EVOLUTION = {
 
     chick: [
-        { minLevel: 1, emoji: "🐣", name: "الكتكوت" },
-        { minLevel: 3, emoji: "🐥", name: "الكتكوت المتطور" },
-        { minLevel: 5, emoji: "🐔", name: "الدجاجة المقاتلة" },
-        { minLevel: 10, emoji: "🦅", name: "النسر" }
+        {
+            minLevel: 1,
+            emoji: "🐣",
+            name: "الكتكوت"
+        },
+        {
+            minLevel: 3,
+            emoji: "🐥",
+            name: "الكتكوت المتطور"
+        },
+        {
+            minLevel: 5,
+            emoji: "🐔",
+            name: "الدجاجة المقاتلة"
+        },
+        {
+            minLevel: 10,
+            emoji: "🦅",
+            name: "النسر"
+        }
     ],
 
     lion: [
-        { minLevel: 1, emoji: "🦁", name: "الأسد" },
-        { minLevel: 3, emoji: "🦁⭐", name: "الأسد المقاتل" },
-        { minLevel: 5, emoji: "🦁🔥", name: "الأسد الناري" },
-        { minLevel: 10, emoji: "👑🦁", name: "ملك الأسود" }
+        {
+            minLevel: 1,
+            emoji: "🦁",
+            name: "الأسد"
+        },
+        {
+            minLevel: 3,
+            emoji: "🦁⭐",
+            name: "الأسد المقاتل"
+        },
+        {
+            minLevel: 5,
+            emoji: "🦁🔥",
+            name: "الأسد الناري"
+        },
+        {
+            minLevel: 10,
+            emoji: "👑🦁",
+            name: "ملك الأسود"
+        }
     ]
 
 };
@@ -106,7 +138,8 @@ let currentUser = null;
 
 function getLevelFromXP(xp) {
 
-    xp = Number(xp) || 0;
+    xp =
+        Number(xp) || 0;
 
     return Math.floor(
         xp / XP_PER_LEVEL
@@ -117,7 +150,8 @@ function getLevelFromXP(xp) {
 
 function getCurrentLevelXP(xp) {
 
-    xp = Number(xp) || 0;
+    xp =
+        Number(xp) || 0;
 
     return xp % XP_PER_LEVEL;
 
@@ -139,6 +173,10 @@ function getProgressPercent(xp) {
 }
 
 
+/* =========================================================
+   CHARACTER EVOLUTION FUNCTION
+========================================================= */
+
 function getCharacterEvolution(
     character,
     level
@@ -148,7 +186,8 @@ function getCharacterEvolution(
         CHARACTER_EVOLUTION[character] ||
         CHARACTER_EVOLUTION.chick;
 
-    let evolution = list[0];
+    let evolution =
+        list[0];
 
     for (const item of list) {
 
@@ -157,7 +196,8 @@ function getCharacterEvolution(
             item.minLevel
         ) {
 
-            evolution = item;
+            evolution =
+                item;
 
         }
 
@@ -236,23 +276,169 @@ function createGamificationStyle() {
             font-size: 14px;
         }
 
+        .nova-character-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
         .nova-character-emoji {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            min-height: 80px;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
+
+            border: none;
             background: rgba(255,255,255,.06);
+
             border-radius: 20px;
+
+            font-size: 46px;
+            line-height: 1;
+
+            cursor: pointer;
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
+
+            filter:
+                drop-shadow(
+                    0 8px 12px
+                    rgba(0,0,0,.18)
+                );
+
+            animation:
+                novaCharacterFloat
+                2.5s
+                ease-in-out
+                infinite;
+        }
+
+        .nova-character-emoji:hover {
+            transform: scale(1.08);
+        }
+
+        .nova-character-emoji:active {
+            transform: scale(.85);
+        }
+
+        @keyframes novaCharacterFloat {
+
+            0%, 100% {
+                transform:
+                    translateY(0)
+                    rotate(0deg);
+            }
+
+            50% {
+                transform:
+                    translateY(-7px)
+                    rotate(2deg);
+            }
+
+        }
+
+        .nova-character-jump {
+            animation:
+                novaCharacterJump
+                .7s
+                ease !important;
+        }
+
+        @keyframes novaCharacterJump {
+
+            0% {
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+            30% {
+                transform:
+                    translateY(-28px)
+                    scale(1.15);
+            }
+
+            60% {
+                transform:
+                    translateY(0)
+                    scale(.95);
+            }
+
+            100% {
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+        .nova-character-bubble {
+            max-width: 220px;
+
+            padding:
+                10px 14px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(255,255,255,.96);
+
+            color: #222;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            text-align: center;
+
+            box-shadow:
+                0 6px 20px
+                rgba(0,0,0,.15);
+
+            animation:
+                novaBubbleAppear
+                .35s
+                ease;
+        }
+
+        .nova-character-mood {
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        @keyframes novaBubbleAppear {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(8px)
+                    scale(.9);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
         }
 
         .nova-level-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             color: #cbd5e1;
             font-size: 14px;
+
             margin-bottom: 10px;
         }
 
@@ -265,15 +451,21 @@ function createGamificationStyle() {
         .nova-progress-container {
             width: 100%;
             height: 14px;
+
             overflow: hidden;
-            background: rgba(255,255,255,.08);
+
+            background:
+                rgba(255,255,255,.08);
+
             border-radius: 999px;
         }
 
         .nova-progress-bar {
             height: 100%;
             width: 0%;
+
             border-radius: 999px;
+
             background:
                 linear-gradient(
                     90deg,
@@ -281,24 +473,284 @@ function createGamificationStyle() {
                     #06b6d4,
                     #8b5cf6
                 );
-            transition: width .8s ease;
+
+            transition:
+                width .8s ease;
         }
 
         .nova-progress-text {
             margin-top: 8px;
+
             color: #94a3b8;
+
             font-size: 12px;
+
             text-align: center;
         }
 
         .nova-evolution-text {
             margin-top: 18px;
+
             padding: 12px;
+
             text-align: center;
-            background: rgba(255,255,255,.05);
+
+            background:
+                rgba(255,255,255,.05);
+
             border-radius: 14px;
+
             color: #e2e8f0;
+
             font-size: 14px;
+        }
+
+
+        /* =========================================
+           LEVEL UP
+        ========================================= */
+
+        #novaLevelUpEffect,
+        #novaEvolutionEffect {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 99999;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            pointer-events: none;
+
+            opacity: 0;
+
+            background:
+                rgba(0,0,0,.35);
+
+            backdrop-filter:
+                blur(5px);
+
+            transition:
+                opacity .4s ease;
+        }
+
+        #novaLevelUpEffect.nova-levelup-show,
+        #novaEvolutionEffect.nova-evolution-show {
+            opacity: 1;
+        }
+
+        .nova-levelup-box,
+        .nova-evolution-box {
+
+            width:
+                min(90%, 370px);
+
+            padding: 30px 22px;
+
+            border-radius: 28px;
+
+            text-align: center;
+
+            background:
+                rgba(20,20,30,.97);
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.4);
+
+            transform:
+                scale(.7);
+
+            animation:
+                novaLevelUpBox
+                .6s
+                cubic-bezier(
+                    .17,.67,.35,1.35
+                )
+                forwards;
+        }
+
+        @keyframes novaLevelUpBox {
+
+            0% {
+                transform:
+                    scale(.7)
+                    rotate(-3deg);
+            }
+
+            60% {
+                transform:
+                    scale(1.08)
+                    rotate(2deg);
+            }
+
+            100% {
+                transform:
+                    scale(1)
+                    rotate(0);
+            }
+
+        }
+
+        .nova-levelup-stars,
+        .nova-evolution-sparkles {
+
+            font-size: 28px;
+
+            margin-bottom: 10px;
+
+            animation:
+                novaStars
+                1s
+                ease-in-out
+                infinite;
+        }
+
+        @keyframes novaStars {
+
+            0%,100% {
+                transform:
+                    scale(1);
+            }
+
+            50% {
+                transform:
+                    scale(1.25);
+            }
+
+        }
+
+        .nova-levelup-title {
+
+            color: white;
+
+            font-size: 36px;
+
+            font-weight: 900;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 8px;
+        }
+
+        .nova-levelup-level {
+
+            color: #e2e8f0;
+
+            font-size: 24px;
+
+            font-weight: 800;
+
+            margin-bottom: 10px;
+        }
+
+        .nova-levelup-subtitle {
+
+            color: #cbd5e1;
+
+            font-size: 15px;
+
+            font-weight: 700;
+        }
+
+        .nova-evolution-emoji {
+
+            font-size: 75px;
+
+            margin-bottom: 12px;
+
+            animation:
+                novaEvolutionEmoji
+                1s
+                ease-in-out
+                infinite;
+        }
+
+        @keyframes novaEvolutionEmoji {
+
+            0%,100% {
+                transform:
+                    scale(1)
+                    rotate(-3deg);
+            }
+
+            50% {
+                transform:
+                    scale(1.15)
+                    rotate(3deg);
+            }
+
+        }
+
+        .nova-evolution-title {
+
+            color: white;
+
+            font-size: 28px;
+
+            font-weight: 900;
+
+            margin-bottom: 8px;
+        }
+
+        .nova-evolution-name {
+
+            color: #e2e8f0;
+
+            font-size: 23px;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+        .nova-evolution-text {
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 600px) {
+
+            .nova-gamification-card {
+                padding: 18px;
+            }
+
+            .nova-character-emoji {
+                width: 70px;
+                min-height: 70px;
+                font-size: 40px;
+            }
+
+            .nova-character-bubble {
+                max-width: 180px;
+                font-size: 12px;
+            }
+
+            .nova-levelup-title {
+                font-size: 30px;
+            }
+
+            .nova-levelup-level {
+                font-size: 21px;
+            }
+
+            .nova-evolution-title {
+                font-size: 24px;
+            }
+
         }
 
     `;
@@ -354,8 +806,30 @@ function createGamificationUI() {
                 <div
                     id="novaCharacterEmoji"
                     class="nova-character-emoji"
+                    role="button"
+                    tabindex="0"
                 >
                     🐣
+                </div>
+
+            </div>
+
+            <div
+                class="nova-character-area"
+            >
+
+                <div
+                    id="novaCharacterBubble"
+                    class="nova-character-bubble"
+                >
+                    جاهز نكمل الرحلة؟ 🚀
+                </div>
+
+                <div
+                    id="novaCharacterMood"
+                    class="nova-character-mood"
+                >
+                    🔥 متحمس
                 </div>
 
             </div>
@@ -364,14 +838,25 @@ function createGamificationUI() {
 
                 <div>
                     المستوى
-                    <strong id="novaLevel">1</strong>
+                    <strong id="novaLevel">
+                        1
+                    </strong>
                 </div>
 
                 <div>
-                    <span id="novaCurrentXP">0</span>
+
+                    <span id="novaCurrentXP">
+                        0
+                    </span>
+
                     /
-                    <span id="novaNextLevelXP">100</span>
+
+                    <span id="novaNextLevelXP">
+                        100
+                    </span>
+
                     XP
+
                 </div>
 
             </div>
@@ -429,7 +914,6 @@ function createGamificationUI() {
 /* =========================================================
    UPDATE GAMIFICATION UI
 ========================================================= */
-
 
 function updateGamificationUI(
     data = {}
@@ -500,8 +984,9 @@ function updateGamificationUI(
             "novaEvolutionText"
         );
 
+
     /* =========================================
-       📊 UPDATE UI
+       UPDATE DATA
     ========================================= */
 
     if (levelElement) {
@@ -516,7 +1001,7 @@ function updateGamificationUI(
 
     if (nextLevelXPElement) {
         nextLevelXPElement.textContent =
-            100;
+            XP_PER_LEVEL;
     }
 
     if (progressBar) {
@@ -540,21 +1025,48 @@ function updateGamificationUI(
     }
 
     if (evolutionText) {
+
         evolutionText.innerHTML =
-            `المستوى ${level} • ${xp} XP<br>
-             استمر في التعلم لتطور شخصيتك 🚀`;
+            `
+            المستوى ${level}
+            • ${xp} XP
+            <br>
+            ${evolution.name}
+            🚀
+            `;
+
     }
 
+
     /* =========================================
-       🆙 LEVEL UP DETECTION
+       LEVEL / EVOLUTION DETECTION
     ========================================= */
 
+    const storedLevel =
+        localStorage.getItem(
+            "nova_last_level"
+        );
+
+    /*
+       أول مرة:
+       نحفظ المستوى الحالي فقط
+       بدون إظهار احتفال.
+    */
+
+    if (storedLevel === null) {
+
+        localStorage.setItem(
+            "nova_last_level",
+            String(level)
+        );
+
+        return;
+
+    }
+
     const savedLevel =
-        Number(
-            localStorage.getItem(
-                "nova_last_level"
-            )
-        ) || level;
+        Number(storedLevel) || 1;
+
 
     if (level > savedLevel) {
 
@@ -562,6 +1074,11 @@ function updateGamificationUI(
             "nova_last_level",
             String(level)
         );
+
+
+        /* =====================================
+           LEVEL UP MESSAGE
+        ===================================== */
 
         const bubble =
             document.getElementById(
@@ -576,7 +1093,8 @@ function updateGamificationUI(
         if (bubble) {
 
             bubble.textContent =
-                `🎉 LEVEL UP! وصلت للمستوى ${level}! 🚀`;
+                `🎉 LEVEL UP!
+                 وصلت للمستوى ${level}! 🚀`;
 
         }
 
@@ -586,6 +1104,11 @@ function updateGamificationUI(
                 "👑 مستوى جديد!";
 
         }
+
+
+        /* =====================================
+           CHARACTER JUMP
+        ===================================== */
 
         if (characterEmoji) {
 
@@ -601,19 +1124,59 @@ function updateGamificationUI(
 
         }
 
-        /* احتفال إضافي */
-        if (typeof createLevelUpEffect === "function") {
-            createLevelUpEffect(level);
+
+        /* =====================================
+           LEVEL UP EFFECT
+        ===================================== */
+
+        createLevelUpEffect(
+            level
+        );
+
+
+        /* =====================================
+           EVOLUTION DETECTION
+        ===================================== */
+
+        const oldEvolution =
+            getCharacterEvolution(
+                character,
+                savedLevel
+            );
+
+        const newEvolution =
+            getCharacterEvolution(
+                character,
+                level
+            );
+
+        if (
+            oldEvolution.minLevel !==
+            newEvolution.minLevel
+        ) {
+
+            setTimeout(() => {
+
+                createEvolutionEffect(
+                    newEvolution
+                );
+
+            }, 700);
+
         }
+
     }
+
 }
 
 
-/* =========================================
-   🎉 LEVEL UP EFFECT
-========================================= */
+/* =========================================================
+   LEVEL UP EFFECT
+========================================================= */
 
-function createLevelUpEffect(level) {
+function createLevelUpEffect(
+    level
+) {
 
     const oldEffect =
         document.getElementById(
@@ -630,9 +1193,10 @@ function createLevelUpEffect(level) {
     effect.id =
         "novaLevelUpEffect";
 
-    effect.innerHTML =
-        `
+    effect.innerHTML = `
+
         <div class="nova-levelup-box">
+
             <div class="nova-levelup-stars">
                 ✨ ⭐ ✨
             </div>
@@ -648,8 +1212,10 @@ function createLevelUpEffect(level) {
             <div class="nova-levelup-subtitle">
                 شخصيتك أصبحت أقوى! 🔥
             </div>
+
         </div>
-        `;
+
+    `;
 
     document.body.appendChild(
         effect
@@ -670,12 +1236,20 @@ function createLevelUpEffect(level) {
         );
 
         setTimeout(() => {
+
             effect.remove();
+
         }, 400);
 
     }, 3000);
+
 }
-    
+
+
+/* =========================================================
+   EVOLUTION EFFECT
+========================================================= */
+
 function createEvolutionEffect(
     evolution
 ) {
@@ -695,8 +1269,8 @@ function createEvolutionEffect(
     effect.id =
         "novaEvolutionEffect";
 
-    effect.innerHTML =
-        `
+    effect.innerHTML = `
+
         <div class="nova-evolution-box">
 
             <div class="nova-evolution-sparkles">
@@ -720,16 +1294,19 @@ function createEvolutionEffect(
             </div>
 
         </div>
-        `;
+
+    `;
 
     document.body.appendChild(
         effect
     );
 
     setTimeout(() => {
+
         effect.classList.add(
             "nova-evolution-show"
         );
+
     }, 50);
 
     setTimeout(() => {
@@ -739,11 +1316,15 @@ function createEvolutionEffect(
         );
 
         setTimeout(() => {
+
             effect.remove();
+
         }, 400);
 
     }, 3500);
+
 }
+
 
 /* =========================================================
    LOAD GAMIFICATION FROM FIREBASE
@@ -765,7 +1346,9 @@ async function loadGamification() {
             );
 
         const userSnap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
         if (!userSnap.exists()) {
 
@@ -835,7 +1418,9 @@ async function getStudentBadges() {
             );
 
         const snap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
         if (!snap.exists()) {
             return [];
@@ -844,7 +1429,9 @@ async function getStudentBadges() {
         const badges =
             snap.data().badges;
 
-        return Array.isArray(badges)
+        return Array.isArray(
+            badges
+        )
             ? badges
             : [];
 
@@ -890,6 +1477,7 @@ function createBadgesStyle() {
         }
 
         .nova-badges-card {
+
             background:
                 linear-gradient(
                     135deg,
@@ -907,57 +1495,95 @@ function createBadgesStyle() {
         }
 
         .nova-badges-title {
+
             color: white;
+
             font-size: 20px;
+
             font-weight: 900;
+
             margin-bottom: 18px;
         }
 
         .nova-badges-grid {
+
             display: grid;
+
             grid-template-columns:
                 repeat(
                     auto-fit,
-                    minmax(120px, 1fr)
+                    minmax(120px,1fr)
                 );
+
             gap: 12px;
         }
 
         .nova-badge {
-            padding: 15px 10px;
+
+            padding:
+                15px 10px;
+
             text-align: center;
+
             border-radius: 18px;
-            background: rgba(255,255,255,.06);
+
+            background:
+                rgba(255,255,255,.06);
+
             border:
                 1px solid
                 rgba(255,255,255,.08);
+
+            transition:
+                transform .2s ease,
+                opacity .2s ease;
+        }
+
+        .nova-badge:not(.locked):hover {
+
+            transform:
+                translateY(-4px);
+
         }
 
         .nova-badge.locked {
+
             opacity: .35;
-            filter: grayscale(1);
+
+            filter:
+                grayscale(1);
         }
 
         .nova-badge-icon {
+
             font-size: 35px;
+
             margin-bottom: 8px;
         }
 
         .nova-badge-name {
+
             color: white;
+
             font-size: 13px;
+
             font-weight: 800;
         }
 
         .nova-badge-description {
+
             color: #94a3b8;
+
             font-size: 10px;
+
             margin-top: 5px;
         }
 
     `;
 
-    document.head.appendChild(style);
+    document.head.appendChild(
+        style
+    );
 
 }
 
@@ -1049,44 +1675,46 @@ async function updateBadgesUI() {
         Object.values(
             NOVA_BADGES
         )
-        .map(badge => {
+        .map(
+            badge => {
 
-            const unlocked =
-                earned.includes(
-                    badge.id
-                );
+                const unlocked =
+                    earned.includes(
+                        badge.id
+                    );
 
-            return `
+                return `
 
-                <div class="
-                    nova-badge
-                    ${unlocked ? "" : "locked"}
-                ">
+                    <div class="
+                        nova-badge
+                        ${unlocked ? "" : "locked"}
+                    ">
 
-                    <div class="nova-badge-icon">
-                        ${badge.icon}
+                        <div class="nova-badge-icon">
+                            ${badge.icon}
+                        </div>
+
+                        <div class="nova-badge-name">
+                            ${badge.name}
+                        </div>
+
+                        <div class="nova-badge-description">
+                            ${badge.description}
+                        </div>
+
                     </div>
 
-                    <div class="nova-badge-name">
-                        ${badge.name}
-                    </div>
+                `;
 
-                    <div class="nova-badge-description">
-                        ${badge.description}
-                    </div>
-
-                </div>
-
-            `;
-
-        })
+            }
+        )
         .join("");
 
 }
 
 
 /* =========================================================
-   SHOW XP MESSAGE
+   XP MESSAGE
 ========================================================= */
 
 function showGamificationMessage(
@@ -1094,23 +1722,45 @@ function showGamificationMessage(
 ) {
 
     const element =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     element.textContent =
         message;
 
     element.style.cssText = `
-        position:fixed;
-        left:50%;
-        bottom:30px;
-        transform:translateX(-50%);
-        z-index:99999;
-        padding:14px 22px;
-        border-radius:999px;
-        background:rgba(15,23,42,.96);
-        color:white;
-        font-weight:700;
-        font-size:14px;
+
+        position: fixed;
+
+        left: 50%;
+
+        bottom: 30px;
+
+        transform:
+            translateX(-50%);
+
+        z-index: 99999;
+
+        padding:
+            14px 22px;
+
+        border-radius:
+            999px;
+
+        background:
+            rgba(15,23,42,.96);
+
+        color: white;
+
+        font-weight: 700;
+
+        font-size: 14px;
+
+        max-width: 90%;
+
+        text-align: center;
+
     `;
 
     document.body.appendChild(
@@ -1118,7 +1768,9 @@ function showGamificationMessage(
     );
 
     setTimeout(() => {
+
         element.remove();
+
     }, 2700);
 
 }
@@ -1159,7 +1811,9 @@ async function unlockBadge(
             );
 
         const snap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
         const data =
             snap.exists()
@@ -1167,7 +1821,9 @@ async function unlockBadge(
                 : {};
 
         const badges =
-            Array.isArray(data.badges)
+            Array.isArray(
+                data.badges
+            )
                 ? data.badges
                 : [];
 
@@ -1186,6 +1842,7 @@ async function unlockBadge(
                     ...badges,
                     badgeId
                 ],
+
                 updatedAt:
                     serverTimestamp()
             },
@@ -1199,6 +1856,53 @@ async function unlockBadge(
         );
 
         await updateBadgesUI();
+
+        /* =====================================
+           CHARACTER BADGE REACTION
+        ===================================== */
+
+        const bubble =
+            document.getElementById(
+                "novaCharacterBubble"
+            );
+
+        const mood =
+            document.getElementById(
+                "novaCharacterMood"
+            );
+
+        const character =
+            document.getElementById(
+                "novaCharacterEmoji"
+            );
+
+        if (bubble) {
+
+            bubble.textContent =
+                `${badge.icon} حصلت على ${badge.name}! 🎉`;
+
+        }
+
+        if (mood) {
+
+            mood.textContent =
+                "🏆 فخور بيك!";
+
+        }
+
+        if (character) {
+
+            character.classList.remove(
+                "nova-character-jump"
+            );
+
+            void character.offsetWidth;
+
+            character.classList.add(
+                "nova-character-jump"
+            );
+
+        }
 
         return true;
 
@@ -1246,7 +1950,9 @@ async function addXP(
             );
 
         const snap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
         const oldData =
             snap.exists()
@@ -1255,6 +1961,11 @@ async function addXP(
 
         const oldXP =
             Number(oldData.xp) || 0;
+
+        const oldLevel =
+            getLevelFromXP(
+                oldXP
+            );
 
         const newXP =
             oldXP + amount;
@@ -1281,7 +1992,9 @@ async function addXP(
             }
         );
 
+
         updateGamificationUI({
+
             xp:
                 newXP,
 
@@ -1289,16 +2002,42 @@ async function addXP(
                 oldData.character === "lion"
                     ? "lion"
                     : "chick"
+
         });
+
 
         showGamificationMessage(
             `+${amount} XP 🚀 — ${reason}`
         );
 
+
+        /* =====================================
+           LEVEL 5 BADGE
+        ===================================== */
+
+        if (
+            newLevel >= 5 &&
+            oldLevel < 5
+        ) {
+
+            await unlockBadge(
+                "novaLegend"
+            );
+
+        }
+
+
         return {
-            xp: newXP,
-            level: newLevel,
-            gained: amount
+
+            xp:
+                newXP,
+
+            level:
+                newLevel,
+
+            gained:
+                amount
+
         };
 
     } catch (error) {
@@ -1332,10 +2071,15 @@ async function completeLesson(
         `nova_lesson_xp_${lessonId}`;
 
     if (
-        localStorage.getItem(key)
+        localStorage.getItem(
+            key
+        )
     ) {
+
         return false;
+
     }
+
 
     const result =
         await addXP(
@@ -1347,8 +2091,9 @@ async function completeLesson(
         return false;
     }
 
+
     /* =========================================
-       🦁 CHARACTER REACTION
+       CHARACTER REACTION
     ========================================= */
 
     const character =
@@ -1366,6 +2111,7 @@ async function completeLesson(
             "novaCharacterMood"
         );
 
+
     if (
         character &&
         bubble &&
@@ -1378,6 +2124,7 @@ async function completeLesson(
         mood.textContent =
             "🏆 فخور بيك";
 
+
         character.classList.remove(
             "nova-character-jump"
         );
@@ -1387,32 +2134,43 @@ async function completeLesson(
         character.classList.add(
             "nova-character-jump"
         );
+
     }
+
 
     localStorage.setItem(
         key,
         "true"
     );
 
+
     await unlockBadge(
         "firstLesson"
     );
 
+
     const lessons =
-        Object.keys(localStorage)
-        .filter(key =>
-            key.startsWith(
-                "nova_lesson_xp_"
-            )
+        Object.keys(
+            localStorage
+        )
+        .filter(
+            key =>
+                key.startsWith(
+                    "nova_lesson_xp_"
+                )
         );
 
-    if (lessons.length >= 5) {
+
+    if (
+        lessons.length >= 5
+    ) {
 
         await unlockBadge(
             "fiveLessons"
         );
 
     }
+
 
     return true;
 
@@ -1437,13 +2195,19 @@ async function completeExam(
         `nova_exam_xp_${examId}`;
 
     if (
-        localStorage.getItem(key)
+        localStorage.getItem(
+            key
+        )
     ) {
+
         return false;
+
     }
+
 
     const score =
         Number(percentage) || 0;
+
 
     const completed =
         await addXP(
@@ -1455,8 +2219,9 @@ async function completeExam(
         return false;
     }
 
+
     /* =========================================
-       🦁🐣 CHARACTER REACTION
+       CHARACTER REACTION
     ========================================= */
 
     const character =
@@ -1474,6 +2239,7 @@ async function completeExam(
             "novaCharacterMood"
         );
 
+
     function characterReact(
         message,
         moodText
@@ -1487,11 +2253,13 @@ async function completeExam(
             return;
         }
 
+
         bubble.textContent =
             message;
 
         mood.textContent =
             moodText;
+
 
         character.classList.remove(
             "nova-character-jump"
@@ -1502,18 +2270,21 @@ async function completeExam(
         character.classList.add(
             "nova-character-jump"
         );
+
     }
 
+
     /* =========================================
-       🏆 FIRST EXAM
+       FIRST EXAM
     ========================================= */
 
     await unlockBadge(
         "firstExam"
     );
 
+
     /* =========================================
-       💪 PASS
+       PASS
     ========================================= */
 
     if (
@@ -1533,14 +2304,15 @@ async function completeExam(
     } else {
 
         characterReact(
-            `متستسلمش! حاول تاني 💪`,
+            "متستسلمش! حاول تاني 💪",
             "🔥 متحمس ليك"
         );
 
     }
 
+
     /* =========================================
-       👑 90%+
+       90%+
     ========================================= */
 
     if (
@@ -1563,19 +2335,168 @@ async function completeExam(
 
     }
 
-    /* =========================================
-       💾 SAVE
-    ========================================= */
 
     localStorage.setItem(
         key,
         "true"
     );
 
+
     return true;
 
 }
-        
+
+
+/* =========================================================
+   NOVA CHARACTER 2.0
+========================================================= */
+
+function initNovaCharacter() {
+
+    const character =
+        document.getElementById(
+            "novaCharacterEmoji"
+        );
+
+    const bubble =
+        document.getElementById(
+            "novaCharacterBubble"
+        );
+
+    const mood =
+        document.getElementById(
+            "novaCharacterMood"
+        );
+
+
+    if (
+        !character ||
+        !bubble ||
+        !mood
+    ) {
+
+        console.warn(
+            "Nova Character: UI not found."
+        );
+
+        return;
+
+    }
+
+
+    const messages = [
+
+        "جاهز نكمل الرحلة؟ 🚀",
+
+        "يلا يا بطل، مستقبلك مستنيك! 🔥",
+
+        "مستوى جديد قريب جدًا 👀",
+
+        "أنا واثق إنك تقدر! 💪",
+
+        "ركز شوية وهتكسر الامتحان! ⚔️",
+
+        "كل درس بتخلصه بيقربك من هدفك! 📚",
+
+        "استمر... أنت بتتطور! ⚡",
+
+        "Nova Future معاك في كل خطوة 🌌"
+
+    ];
+
+
+    const moods = [
+
+        "🔥 متحمس",
+
+        "💪 جاهز للتحدي",
+
+        "🚀 في وضع التطور",
+
+        "🏆 فخور بيك"
+
+    ];
+
+
+    function interact() {
+
+        const randomMessage =
+            messages[
+                Math.floor(
+                    Math.random() *
+                    messages.length
+                )
+            ];
+
+        const randomMood =
+            moods[
+                Math.floor(
+                    Math.random() *
+                    moods.length
+                )
+            ];
+
+
+        bubble.textContent =
+            randomMessage;
+
+        mood.textContent =
+            randomMood;
+
+
+        character.classList.remove(
+            "nova-character-jump"
+        );
+
+        void character.offsetWidth;
+
+        character.classList.add(
+            "nova-character-jump"
+        );
+
+    }
+
+
+    character.addEventListener(
+        "click",
+        interact
+    );
+
+
+    character.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
+                interact();
+
+            }
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            interact();
+
+        },
+        1200
+    );
+
+
+    console.log(
+        "Nova Character 2.0 initialized."
+    );
+
+}
 
 
 /* =========================================================
@@ -1585,17 +2506,37 @@ async function completeExam(
 window.NovaGamification = {
 
     addXP,
+
     loadGamification,
+
     getLevelFromXP,
+
     getProgressPercent,
+
     getCharacterEvolution,
+
     completeExam,
+
     completeLesson,
+
     unlockBadge,
+
     getStudentBadges,
+
     updateBadgesUI
 
 };
+
+
+/* =========================================================
+   START UI
+========================================================= */
+
+createGamificationUI();
+
+createBadgesUI();
+
+initNovaCharacter();
 
 
 /* =========================================================
@@ -1614,8 +2555,10 @@ onAuthStateChanged(
 
         }
 
+
         currentUser =
             user;
+
 
         await loadGamification();
 
@@ -1623,81 +2566,3 @@ onAuthStateChanged(
 
     }
 );
-
-initNovaCharacter();
-/* =========================================================
-   START UI
-========================================================= */
-
-createGamificationUI();
-
-createBadgesUI();
-
-if (currentUser) {
-
-    loadGamification();
-    updateBadgesUI();
-
-}
-
-/* =========================================================
-   NOVA CHARACTER 2.0
-   Interactive Character
-========================================================= */
-
-function initNovaCharacter() {
-
-    const character = document.getElementById("novaCharacterEmoji");
-    const bubble = document.getElementById("novaCharacterBubble");
-    const mood = document.getElementById("novaCharacterMood");
-
-    if (!character || !bubble || !mood) {
-        console.warn("Nova Character: UI not found.");
-        return;
-    }
-
-    const messages = [
-        "جاهز نكمل الرحلة؟ 🚀",
-        "يلا يا بطل، مستقبلك مستنيك! 🔥",
-        "مستوى جديد قريب جدًا 👀",
-        "أنا واثق إنك تقدر! 💪",
-        "ركز شوية وهتكسر الامتحان! ⚔️",
-        "كل درس بتخلصه بيقربك من هدفك! 📚",
-        "استمر... أنت بتتطور! ⚡",
-        "Nova Future معاك في كل خطوة 🌌"
-    ];
-
-    const moods = [
-        "🔥 متحمس",
-        "💪 جاهز للتحدي",
-        "🚀 في وضع التطور",
-        "🏆 فخور بيك"
-    ];
-
-    function interact() {
-
-        const randomMessage =
-            messages[Math.floor(Math.random() * messages.length)];
-
-        const randomMood =
-            moods[Math.floor(Math.random() * moods.length)];
-
-        bubble.textContent = randomMessage;
-        mood.textContent = randomMood;
-
-        character.classList.remove("nova-character-jump");
-
-        void character.offsetWidth;
-
-        character.classList.add("nova-character-jump");
-    }
-
-    character.addEventListener("click", interact);
-
-    // تفاعل تلقائي عند فتح الصفحة
-    setTimeout(() => {
-        interact();
-    }, 1200);
-
-    console.log("Nova Character 2.0 initialized.");
-}
