@@ -9,14 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta
-        name="description"
-        content="Nova Future - Level 0 Classified Mission"
-    >
-
-    <title>LEVEL 0 — CLASSIFIED | Nova Future</title>
-
-    
+    <title>LEVEL 0 — CLASSIFIED</title>
 
     <link
         rel="stylesheet"
@@ -26,33 +19,18 @@
 
 <body>
 
-    <!-- =====================================================
-         NOVA FUTURE - LEVEL 0
-         CLASSIFIED MISSION
-    ====================================================== -->
-
-    <main id="level0App">
+    <div id="level0App">
 
         <!-- STORY -->
-        <section
-    id="level0Story"
-    class="level0-screen"
-    hidden
->
+        <section id="level0Story" hidden>
 
             <div class="level0-card">
 
-                <div
-                    id="level0SceneNumber"
-                    class="level0-scene-number"
-                >
+                <div id="level0SceneNumber">
                     LEVEL 0
                 </div>
 
-                <div
-                    id="level0StoryIcon"
-                    class="level0-story-icon"
-                >
+                <div id="level0StoryIcon">
                     🌙
                 </div>
 
@@ -64,16 +42,12 @@
                     جاري تحميل المهمة...
                 </p>
 
-                <div class="level0-actions">
-
-                    <button
-                        id="level0NextBtn"
-                        type="button"
-                    >
-                        التالي →
-                    </button>
-
-                </div>
+                <button
+                    id="level0NextBtn"
+                    type="button"
+                >
+                    التالي →
+                </button>
 
             </div>
 
@@ -81,15 +55,11 @@
 
 
         <!-- INVESTIGATION -->
-        <section
-            id="level0Investigation"
-            class="level0-screen"
-            hidden
-        >
+        <section id="level0Investigation" hidden>
 
             <div class="level0-card">
 
-                <div class="level0-story-icon">
+                <div class="level0-icon">
                     🕵️
                 </div>
 
@@ -103,27 +73,19 @@
                     دورك الآن أن تعرف أين ذهبت.
                 </p>
 
-                <div
-                    id="level0Clues"
-                    class="level0-clues"
-                >
-                    <div>
-                        🔎 الأدلة المكتشفة:
-                        <strong id="level0ClueCount">0</strong>
-                    </div>
+                <div id="level0Clues">
+                    🔎 الأدلة المكتشفة:
+                    <strong id="level0ClueCount">0</strong>
                 </div>
 
-                <div
-                    id="level0Locations"
-                    class="level0-locations"
-                >
+                <div id="level0Locations">
 
                     <button
                         class="level0-location"
                         data-location="dashboard"
                         type="button"
                     >
-                        💻
+                        <span class="location-icon">💻</span>
                         <span>لوحة الطالب</span>
                     </button>
 
@@ -132,7 +94,7 @@
                         data-location="library"
                         type="button"
                     >
-                        📚
+                        <span class="location-icon">📚</span>
                         <span>المكتبة</span>
                     </button>
 
@@ -141,17 +103,13 @@
                         data-location="terminal"
                         type="button"
                     >
-                        🖥️
+                        <span class="location-icon">🖥️</span>
                         <span>المحطة السرية</span>
                     </button>
 
                 </div>
 
-                <div
-                    id="level0Puzzle"
-                    class="level0-puzzle"
-                    hidden
-                >
+                <div id="level0Puzzle" hidden>
 
                     <h2>
                         🔐 الملف السري
@@ -163,7 +121,7 @@
                         ما هو الرمز الصحيح؟
                     </p>
 
-                    <div class="level0-puzzle-options">
+                    <div id="level0PuzzleOptions">
 
                         <button
                             type="button"
@@ -190,26 +148,19 @@
 
                 </div>
 
-                <div
-                    id="level0InvestigationMessage"
-                    class="level0-message"
-                ></div>
+                <div id="level0InvestigationMessage"></div>
 
             </div>
 
         </section>
 
 
-        <!-- COMPLETED -->
-        <section
-            id="level0Complete"
-            class="level0-screen"
-            hidden
-        >
+        <!-- COMPLETE -->
+        <section id="level0Complete" hidden>
 
-            <div class="level0-card level0-success">
+            <div class="level0-card">
 
-                <div class="level0-story-icon">
+                <div class="level0-icon">
                     🏆
                 </div>
 
@@ -221,16 +172,10 @@
                     لقد نجحت في استعادة شخصيتك.
                 </p>
 
-                <div class="level0-reward">
-
-                    <div>
-                        🏆 محقق نوفا
-                    </div>
-
-                    <div>
-                        ⭐ +50 XP
-                    </div>
-
+                <div id="level0Reward">
+                    🏆 محقق نوفا
+                    <br>
+                    ⭐ +50 XP
                 </div>
 
                 <button
@@ -244,10 +189,9 @@
 
         </section>
 
-    </main>
+    </div>
 
 
-    <!-- LEVEL 0 JAVASCRIPT -->
     <script
         type="module"
         src="../js/level0.js"
