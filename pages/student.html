@@ -7847,6 +7847,61 @@ document
 <script src="../js/app.js"></script>
 
 <script type="module" src="../js/gamification.js"></script>
+
+<script>
+(function () {
+    const secretButton = document.getElementById("characterMessage");
+
+    if (!secretButton) return;
+
+    let clickCount = 0;
+    let clickTimer = null;
+
+    secretButton.addEventListener("click", function () {
+
+        clickCount++;
+
+        if (clickCount === 1) {
+            clickTimer = setTimeout(function () {
+                clickCount = 0;
+            }, 500);
+
+            return;
+        }
+
+        if (clickCount === 2) {
+            clearTimeout(clickTimer);
+            clickCount = 0;
+
+            startLevelZero();
+        }
+    });
+
+    function startLevelZero() {
+
+        const character = document.getElementById("studentCharacter");
+
+        if (character) {
+            character.style.transition = "0.5s ease";
+            character.style.opacity = "0";
+            character.style.transform = "scale(0.5)";
+        }
+
+        secretButton.disabled = true;
+
+        setTimeout(function () {
+
+            secretButton.textContent =
+                "🚨 تم اختطاف شخصيتك! حاول ترجعها تاني";
+
+            secretButton.disabled = false;
+
+        }, 600);
+    }
+
+})();
+</script>
+    
 </body>
 
 </html>
